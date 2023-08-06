@@ -149,6 +149,9 @@
     <ClInclude Include="MorphemeConnect.h" />
     <ClInclude Include="Morpheme\Morpheme.h" />
     <ClInclude Include="NMBReader\MemHelper\MemHelper.h" />
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h" />
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
     <ClInclude Include="NMBReader\NMBReader.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -171,6 +174,9 @@
     <ClCompile Include="MorphemeConnect.cpp" />
     <ClCompile Include="Morpheme\Morpheme.cpp" />
     <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp" />
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
     <ClCompile Include="NMBReader\NMBReader.cpp" />
     <ClCompile Include="Timeline\Timeline.cpp" />
   </ItemGroup>

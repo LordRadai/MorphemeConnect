@@ -73,6 +73,12 @@
     <Filter Include="File di origine\NMBReader\MemHelper">
       <UniqueIdentifier>{264f60e0-b213-4a59-8ec4-b48118a276f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di origine\NMBReader\MorphemeBundle">
+      <UniqueIdentifier>{b0b47202-ad2e-4c3c-b805-1aaab93d6cf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\NMBReader\MorphemeBundle">
+      <UniqueIdentifier>{5259aba0-165e-4a24-babb-275199c63f53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -147,6 +153,15 @@
     <ClInclude Include="NMBReader\MemHelper\MemHelper.h">
       <Filter>File di intestazione\NMBReader\MemHelper</Filter>
     </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MorphemeConnect.cpp">
@@ -202,6 +217,15 @@
     </ClCompile>
     <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp">
       <Filter>File di origine\NMBReader\MemHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp">
+      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp">
+      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
+      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

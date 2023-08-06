@@ -31,7 +31,10 @@ void Debug::DebuggerMessage(MsgLevel level, const char* fmt, ...)
 	msg_body = fmt;
 	vsprintf_s(msg, (msg_level + " " + msg_body).c_str(), args);
 
+#ifdef _PRINTDEBUG
 	printf_s(msg);
+#endif
+
 	OutputDebugStringA(msg);
 #endif
 }

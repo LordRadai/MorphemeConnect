@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="File di origine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="File di intestazione">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="File di risorse">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="File di intestazione\imgui">
+      <UniqueIdentifier>{50207dc8-9062-44eb-845c-5ae8e547da68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\imgui">
+      <UniqueIdentifier>{a62b45f2-c171-4f60-9b0c-57126fdba950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\imnodes">
+      <UniqueIdentifier>{9aac30d4-dff1-4926-982a-ee6851566dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\imnodes">
+      <UniqueIdentifier>{5e8ba20b-a718-4dc8-96be-8475652943f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\imsequencer">
+      <UniqueIdentifier>{143596c9-aa42-4fe1-96e7-68dc9438e938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\imsequencer">
+      <UniqueIdentifier>{7bb828a9-4437-4075-9fab-61411b123365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\MathHelper">
+      <UniqueIdentifier>{18884175-aea7-40e0-a642-8352251ab941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\MathHelper">
+      <UniqueIdentifier>{7a18bde1-53c3-4692-90b8-233dc778fe3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Debug">
+      <UniqueIdentifier>{ac078bb4-07fa-448e-965b-0ce4a0d46148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Debug">
+      <UniqueIdentifier>{e3f75dcc-0912-434c-9c91-4e365006d907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Morpheme">
+      <UniqueIdentifier>{6ac1b866-8992-4cf7-bcdd-60a0309f7d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Morpheme">
+      <UniqueIdentifier>{bbb46251-9839-487b-8c52-23f44a210226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Timeline">
+      <UniqueIdentifier>{caf76a84-aafd-4652-95f9-89338116feac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Timeline">
+      <UniqueIdentifier>{d5c1b3bd-45cf-4b4a-8bde-689bc001ced9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Application">
+      <UniqueIdentifier>{3bba3573-d615-4e3e-8f08-576ed3ab41b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Application">
+      <UniqueIdentifier>{eff5ee9a-c225-4365-a997-19d31edadea1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeConnect.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>File di intestazione\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imnodes\imnodes.h">
+      <Filter>File di intestazione\imnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="imnodes\imnodes_internal.h">
+      <Filter>File di intestazione\imnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="imsequencer\ImSequencer.h">
+      <Filter>File di intestazione\imsequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="imsequencer\ImCurveEdit.h">
+      <Filter>File di intestazione\imsequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper\MathHelper.h">
+      <Filter>File di intestazione\MathHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\Debug.h">
+      <Filter>File di intestazione\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Morpheme\Morpheme.h">
+      <Filter>File di intestazione\Morpheme</Filter>
+    </ClInclude>
+    <ClInclude Include="Timeline\Timeline.h">
+      <Filter>File di intestazione\Timeline</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Application.h">
+      <Filter>File di intestazione\Application</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MorphemeConnect.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>File di origine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imnodes\imnodes.cpp">
+      <Filter>File di origine\imnodes</Filter>
+    </ClCompile>
+    <ClCompile Include="imsequencer\ImCurveEdit.cpp">
+      <Filter>File di origine\imsequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="imsequencer\ImSequencer.cpp">
+      <Filter>File di origine\imsequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper\MathHelper.cpp">
+      <Filter>File di origine\MathHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\Debug.cpp">
+      <Filter>File di origine\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Morpheme\Morpheme.cpp">
+      <Filter>File di origine\Morpheme</Filter>
+    </ClCompile>
+    <ClCompile Include="Timeline\Timeline.cpp">
+      <Filter>File di origine\Timeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>File di origine\Application</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MorphemeConnect.rc">
+      <Filter>File di risorse</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+    <Image Include="MorphemeConnect.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

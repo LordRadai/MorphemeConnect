@@ -1,8 +1,8 @@
 #include "NMBReader.h"
-//define PACKET_DEBUG to log to console the read packets. Not recommended unless you think you're getting invalid results
-//#define PACKET_DEBUG 
+//define BUNDLE_DEBUG to log to console the read packets. Not recommended unless you think you're getting invalid results
+//#define BUNDLE_DEBUG 
 
-NmbPacket::NmbPacket(ifstream* pFile)
+MorphemeBundle::MorphemeBundle(ifstream* pFile)
 {
 	streampos offset = 0;
 	streampos pStart = pFile->tellg();
@@ -32,8 +32,8 @@ NmbPacket::NmbPacket(ifstream* pFile)
 	streampos pNext = ((streampos)this->m_dataSize + (streampos)3 + pDataStart) & 0xfffffffffffffffcLL; //Align the next section to 32 bits. The NMB file is compiled in 32 bits and then padded for 64
 	pFile->seekg(pNext + offset);
 
-#ifdef PACKET_DEBUG
-	printf_s("Packet {\n");
+#ifdef BUNDLE_DEBUG
+	printf_s("Bundle {\n");
 	printf_s("\tm_magic=(%d, %d)\n", this->m_magic[0], this->m_magic[1]);
 	printf_s("\tm_packetType=%d\n", this->m_packetType);
 	printf_s("\tm_signature=%x\n", this->m_signature);
@@ -79,11 +79,11 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 
 	nmb.open(this->m_filePath, ios::binary);
 
-	int iPacketType = 0;
-	while ((nmb.eof() == false) && (iPacketType < Packet_FileNameLookupTable))
+	int iBundleType = 0;
+	while ((nmb.eof() == false) && (iBundleType < Packet_FileNameLookupTable))
 	{
-		this->m_packets.push_back(NmbPacket(&nmb));
-		iPacketType = this->m_packets.back().m_packetType;
+		this->m_bundles.push_back(MorphemeBundle(&nmb));
+		iBundleType = this->m_bundles.back().m_packetType;
 	}
 }
 

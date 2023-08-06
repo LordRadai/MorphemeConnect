@@ -17,7 +17,7 @@ enum ePacketType
 	Packet_FileNameLookupTable = 13
 };
 
-struct NmbPacket
+struct MorphemeBundle
 {
 	UINT m_magic[2];			//They must always be 24 and 10 in order
 	ePacketType m_packetType;	//Enumerator used to determine what kind of data the packet holds
@@ -28,7 +28,7 @@ struct NmbPacket
 	UINT m_iVar2C;
 	byte* m_data;				//Pointer in which memory will be allocated
 
-	NmbPacket(ifstream* pFile);
+	MorphemeBundle(ifstream* pFile);
 };
 
 class NMBReader
@@ -37,7 +37,7 @@ public:
 	PWSTR m_filePath;
 	UINT64 m_fileSize;
 
-	std::vector<NmbPacket> m_packets;
+	std::vector<MorphemeBundle> m_bundles;
 
 	NMBReader(PWSTR pszFilePath);
 	~NMBReader();

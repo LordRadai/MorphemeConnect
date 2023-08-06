@@ -67,6 +67,12 @@
     <Filter Include="File di origine\NMBReader">
       <UniqueIdentifier>{5f8d3b4c-bd92-4e7b-a326-5138a470c716}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\NMBReader\MemHelper">
+      <UniqueIdentifier>{3008dc94-58e1-4bd9-90c1-50beb21f817f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\NMBReader\MemHelper">
+      <UniqueIdentifier>{264f60e0-b213-4a59-8ec4-b48118a276f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +144,9 @@
     <ClInclude Include="NMBReader\NMBReader.h">
       <Filter>File di intestazione\NMBReader</Filter>
     </ClInclude>
+    <ClInclude Include="NMBReader\MemHelper\MemHelper.h">
+      <Filter>File di intestazione\NMBReader\MemHelper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MorphemeConnect.cpp">
@@ -190,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="NMBReader\NMBReader.cpp">
       <Filter>File di origine\NMBReader</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp">
+      <Filter>File di origine\NMBReader\MemHelper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

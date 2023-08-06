@@ -148,6 +148,7 @@
     <ClInclude Include="MathHelper\MathHelper.h" />
     <ClInclude Include="MorphemeConnect.h" />
     <ClInclude Include="Morpheme\Morpheme.h" />
+    <ClInclude Include="NMBReader\MemHelper\MemHelper.h" />
     <ClInclude Include="NMBReader\NMBReader.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="MathHelper\MathHelper.cpp" />
     <ClCompile Include="MorphemeConnect.cpp" />
     <ClCompile Include="Morpheme\Morpheme.cpp" />
+    <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp" />
     <ClCompile Include="NMBReader\NMBReader.cpp" />
     <ClCompile Include="Timeline\Timeline.cpp" />
   </ItemGroup>

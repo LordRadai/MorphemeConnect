@@ -184,7 +184,7 @@ void Application::LoadFile()
 					if (SUCCEEDED(hr))
 					{
 						NMBReader nmb(pszFilePath);
-						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", nmb.m_filePath, nmb.m_fileSize);
+						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (packets=%d, len=%d)\n",nmb.m_filePath, nmb.m_packets.size(), nmb.m_fileSize);
 					}
 					pItem->Release();
 				}

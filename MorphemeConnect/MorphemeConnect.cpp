@@ -27,7 +27,7 @@ Application morpheme_connect;
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
-    _In_ int       nCmdShow) 
+    _In_ int       nCmdShow)
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
@@ -35,6 +35,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ::RegisterClassExW(&wc);
 
     HWND hwnd = ::CreateWindowW(wc.lpszClassName, APPNAME_W, WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
+
+#ifdef _DEBUG
+    AllocConsole();
+
+    FILE* fDummy;
+    freopen_s(&fDummy, "CONOUT$", "w", stdout);
+    freopen_s(&fDummy, "CONOUT$", "w", stderr);
+    freopen_s(&fDummy, "CONIN$", "r", stdin);
+    std::cout.clear();
+    std::clog.clear();
+    std::cerr.clear();
+    std::cin.clear();
+#endif
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))

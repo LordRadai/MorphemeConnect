@@ -61,6 +61,12 @@
     <Filter Include="File di origine\Application">
       <UniqueIdentifier>{eff5ee9a-c225-4365-a997-19d31edadea1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\NMBReader">
+      <UniqueIdentifier>{d134a0cb-1967-4f5c-b501-19d34a8f70ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\NMBReader">
+      <UniqueIdentifier>{5f8d3b4c-bd92-4e7b-a326-5138a470c716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -129,6 +135,9 @@
     <ClInclude Include="Application\Application.h">
       <Filter>File di intestazione\Application</Filter>
     </ClInclude>
+    <ClInclude Include="NMBReader\NMBReader.h">
+      <Filter>File di intestazione\NMBReader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MorphemeConnect.cpp">
@@ -178,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">
       <Filter>File di origine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\NMBReader.cpp">
+      <Filter>File di origine\NMBReader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

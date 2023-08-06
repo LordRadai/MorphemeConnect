@@ -135,6 +135,8 @@ void Application::ProcessVariables()
 	if (this->load_file)
 	{
 		this->load_file = false;
+
+		this->LoadFile();
 	}
 }
 
@@ -144,4 +146,53 @@ void Application::Dockspace(ImGuiID dockSpace)
 
 void Application::NetworkCleanup()
 {
+}
+
+void Application::LoadFile()
+{
+	COMDLG_FILTERSPEC ComDlgFS[3] = { {L"Morpheme Network Binary", L"*.nmb"},{L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+		COINIT_DISABLE_OLE1DDE);
+	if (SUCCEEDED(hr))
+	{
+		IFileOpenDialog* pFileOpen = NULL;
+
+		// Create the FileOpenDialog object.
+		hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+		if (SUCCEEDED(hr))
+		{
+			pFileOpen->SetFileTypes(3, ComDlgFS);
+
+			// Show the Open dialog box.
+			hr = pFileOpen->Show(NULL);
+
+			// Get the file name from the dialog box.
+			if (SUCCEEDED(hr))
+			{
+				IShellItem* pItem;
+				hr = pFileOpen->GetResult(&pItem);
+
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+					// Display the file name to the user.
+					if (SUCCEEDED(hr))
+					{
+						NMBReader nmb(pszFilePath);
+						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", nmb.m_filePath, nmb.m_fileSize);
+					}
+					pItem->Release();
+				}
+				else
+					MessageBoxW(NULL, L"Failed to open file", L"File Path", MB_ICONERROR);
+			}
+			pFileOpen->Release();
+		}
+		CoUninitialize();
+	}
 }

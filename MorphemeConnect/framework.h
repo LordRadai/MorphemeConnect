@@ -9,6 +9,10 @@
 #include <memory.h>
 #include <tchar.h>
 #include <vector>
+#include <commdlg.h>
+#include <shobjidl.h> 
+#include <iostream>
+#include <fstream>
 //DirectXTK
 #include <DirectXMath.h>
 #include <SimpleMath.h>

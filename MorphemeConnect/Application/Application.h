@@ -19,6 +19,7 @@
 #include "../Timeline/Timeline.h"
 #include "../Morpheme/Morpheme.h"
 #include "../TimeAct/TimeAct.h"
+#include "../NMBReader/NMBReader.h"
 
 class Application
 {

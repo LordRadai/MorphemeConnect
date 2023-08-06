@@ -5,6 +5,7 @@
 #include "framework.h"
 #include "MorphemeConnect.h"
 #include "extern.h"
+#include "Application/Application.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -33,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MORPHEMECONNECT)), LoadCursor(nullptr, IDC_ARROW), nullptr, nullptr, MAKEINTRESOURCEW(IDC_MORPHEMECONNECT),  LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL)) };
     ::RegisterClassExW(&wc);
 
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"MorphemeConnect", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, APPNAME_W, WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))

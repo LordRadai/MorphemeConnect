@@ -172,10 +172,7 @@ void Application::RenderGUI(const char* title)
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
-							if (ImGui::Selectable(anim_name.c_str()))
-							{
-								//TODO implement selection behaviour
-							}
+							ImGui::Selectable(anim_name.c_str());
 							ImGui::PopID();
 						}
 					}

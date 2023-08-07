@@ -98,9 +98,8 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->Pos);
 	ImGui::Begin(title, NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-	static const ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 	ImGuiID dockSpace = ImGui::GetID("MainWindowDockspace");
-	ImGui::DockSpace(dockSpace, ImVec2(0.0f, 0.0f), dockspaceFlags);
+	ImGui::DockSpace(dockSpace, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 
 	if (ImGui::BeginMenuBar())
 	{
@@ -120,6 +119,84 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::EndMenuBar();
 	}
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Assets");
+	{
+		ImGui::BeginTabBar("assets tab bar");
+		if (ImGui::BeginTabItem("NSA"))
+		{
+			static ImGuiTextFilter filter;
+			ImGui::Text("Filter:");
+			filter.Draw("##asset searchbar", 340.f);
+
+			if (nmb.m_init)
+			{
+				ImGui::BeginChild("NSA");
+				{
+					for (int i = 0; i < nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+					{
+						std::string anim_name = nmb.GetAnimFileName(i);
+
+						if (filter.PassFilter(anim_name.c_str()))
+						{
+							ImGui::PushID(i);
+							if (ImGui::Selectable(anim_name.c_str()))
+							{
+								//TODO implement selection behaviour
+							}
+							ImGui::PopID();
+						}
+					}
+				}
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Source XMD"))
+		{
+			static ImGuiTextFilter filter;
+			ImGui::Text("Filter:");
+			filter.Draw("##asset searchbar", 340.f);
+
+			if (nmb.m_init)
+			{
+				ImGui::BeginChild("XMD");
+				{
+					for (int i = 0; i < nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
+					{
+						std::string anim_name = nmb.GetXmdSourceAnimFileName(i);
+
+						if (filter.PassFilter(anim_name.c_str()))
+						{
+							ImGui::PushID(i);
+							if (ImGui::Selectable(anim_name.c_str()))
+							{
+								//TODO implement selection behaviour
+							}
+							ImGui::PopID();
+						}
+					}
+				}
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabItem();
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("EventTrack");
+	{
+
+	}
+	ImGui::End();
+
 	ImGui::End();
 }
 
@@ -183,7 +260,7 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						NMBReader nmb(pszFilePath);
+						nmb = NMBReader(pszFilePath);
 						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n",nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
 						
 						for (int i = 0; i < nmb.m_eventTracks.size(); i++)

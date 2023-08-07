@@ -26,6 +26,7 @@ class Application
 public:
 	bool style_editor = false;
 	bool load_file = false;
+	NMBReader nmb;
 
 	Application();
 	~Application();

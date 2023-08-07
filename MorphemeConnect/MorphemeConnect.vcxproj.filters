@@ -162,6 +162,12 @@
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
       <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
     </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MorphemeConnect.cpp">
@@ -225,6 +231,12 @@
       <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
     </ClCompile>
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
+      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp">
+      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_FIleNameLookupTable.cpp">
       <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
     </ClCompile>
   </ItemGroup>

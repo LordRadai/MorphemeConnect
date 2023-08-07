@@ -21,5 +21,5 @@ struct MorphemeBundle_Header
 	BundleData_Header* m_data;
 
 	MorphemeBundle_Header();
-	MorphemeBundle_Header(MorphemeBundle bundle);
+	MorphemeBundle_Header(MorphemeBundle* bundle);
 };

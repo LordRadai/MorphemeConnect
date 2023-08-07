@@ -258,15 +258,7 @@ void Application::LoadFile()
 					if (SUCCEEDED(hr))
 					{
 						nmb = NMBReader(pszFilePath);
-						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n",nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
-						
-						for (int i = 0; i < nmb.m_eventTracks.size(); i++)
-						{
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "EventTrack %d (%s)\n", i, nmb.m_eventTracks[i].m_data->m_trackName);
-
-							for (int j = 0; j < nmb.m_eventTracks[i].m_data->m_numEvents; j++)
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "(%.3f, %.3f, %d)\n", nmb.m_eventTracks[i].m_data->m_trackData[j].m_start, nmb.m_eventTracks[i].m_data->m_trackData[j].m_duration, nmb.m_eventTracks[i].m_data->m_trackData[j].m_userData);
-						}
+						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
 					}
 					pItem->Release();
 				}

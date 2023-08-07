@@ -39,7 +39,7 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 			this->m_unkParameters.push_back(this->m_bundles[i]);
 			break;
 		case Bundle_Network:
-			this->m_network = this->m_bundles[i];
+			this->m_network = MorphemeBundle_Network(&this->m_bundles[i]);
 			break;
 		case Bundle_FileHeader:
 			this->m_header = MorphemeBundle_Header(this->m_bundles[i]);

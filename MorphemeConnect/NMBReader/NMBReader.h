@@ -2,6 +2,7 @@
 #include "MorphemeBundle/MorphemeBundle.h"
 #include "MorphemeBundle/MorphemeBundle_Header.h"
 #include "MorphemeBundle/MorphemeBundle_EventTrack.h"
+#include "MorphemeBundle/MorphemeBundle_Network.h"
 
 class NMBReader
 {
@@ -15,7 +16,7 @@ public:
 	std::vector<MorphemeBundle> m_messageIndices;
 	std::vector<MorphemeBundle_EventTrack> m_eventTracks;
 	std::vector<MorphemeBundle> m_unkParameters;
-	MorphemeBundle m_network;
+	MorphemeBundle_Network m_network;
 	MorphemeBundle_Header m_header;
 	MorphemeBundle m_fileNameLookupTable;
 

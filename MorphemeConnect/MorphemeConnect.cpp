@@ -31,7 +31,8 @@ void initImGui(HWND hwnd)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -59,7 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HWND hwnd = ::CreateWindowW(wc.lpszClassName, APPNAME_W, WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
-#ifdef _DEBUG
+#ifdef _CONSOLE
     AllocConsole();
 
     FILE* fDummy;

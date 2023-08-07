@@ -258,7 +258,7 @@ void Application::LoadFile()
 					if (SUCCEEDED(hr))
 					{
 						nmb = NMBReader(pszFilePath);
-						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
+						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles = % d, len = % d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
 					}
 					pItem->Release();
 				}

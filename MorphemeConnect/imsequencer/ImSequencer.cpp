@@ -248,7 +248,7 @@ namespace ImSequencer
                 if (baseIndex && px > (canvas_pos.x + legendWidth))
                 {
                     char tmps[512];
-                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(i, 60));
+                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(i));
                     draw_list->AddText(ImVec2((float)(px + 6), canvas_pos.y), 0xFFBBBBBB, tmps);
                 }
             };

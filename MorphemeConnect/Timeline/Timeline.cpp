@@ -2,17 +2,17 @@
 
 const char* trackNames[50];
 
-void EventTrackEditor::AddTimeActTrack(int id, TimeActTrack* time_act_track, float multiplier)
+void EventTrackEditor::AddTimeActTrack(int id, TimeActTrack* time_act_track, float track_len)
 {
-	myItems.push_back(EventTrack{ id, time_act_track->group_id, MathHelper::TimeToFrame(time_act_track->startTime * multiplier, 60), MathHelper::TimeToFrame((time_act_track->endTime) * multiplier, 60), time_act_track->tae_id, time_act_track->tae_count, time_act_track->trackName, false, false, NULL, time_act_track });
+	myItems.push_back(EventTrack{ id, time_act_track->group_id, MathHelper::TimeToFrame(time_act_track->startTime * track_len), MathHelper::TimeToFrame((time_act_track->endTime) * track_len), time_act_track->tae_id, time_act_track->tae_count, time_act_track->trackName, false, false, NULL, time_act_track });
 }
 
-void EventTrackEditor::AddMorphemeEventTrack(int id, MorphemeEventTrack* event_track, float multiplier)
+void EventTrackEditor::AddMorphemeEventTrack(int id, MorphemeEventTrack* event_track, float track_len)
 { 
 	if (event_track->is_discrete)
-		this->myItems.push_back(EventTrack{ id, event_track->eventId, MathHelper::TimeToFrame(event_track->startTime * multiplier, 60), MathHelper::TimeToFrame((event_track->startTime) * multiplier, 60), event_track->value, event_track->eventCount, event_track->trackName, event_track->is_discrete, false, event_track, NULL });
+		this->myItems.push_back(EventTrack{ id, event_track->eventId, MathHelper::TimeToFrame(event_track->startTime * track_len), MathHelper::TimeToFrame((event_track->startTime) * track_len), event_track->value, event_track->eventCount, event_track->trackName, event_track->is_discrete, false, event_track, NULL });
 	else
-		this->myItems.push_back(EventTrack{ id, event_track->eventId, MathHelper::TimeToFrame(event_track->startTime * multiplier, 60), MathHelper::TimeToFrame((event_track->startTime + event_track->duration) * multiplier, 60), event_track->value, event_track->eventCount, event_track->trackName, event_track->is_discrete, false, event_track, NULL });
+		this->myItems.push_back(EventTrack{ id, event_track->eventId, MathHelper::TimeToFrame(event_track->startTime * track_len), MathHelper::TimeToFrame((event_track->startTime + event_track->duration) * track_len), event_track->value, event_track->eventCount, event_track->trackName, event_track->is_discrete, false, event_track, NULL });
 }
 
 void EventTrackEditor::Clear()
@@ -23,27 +23,26 @@ void EventTrackEditor::Clear()
 void EventTrackEditor::LoadTrackName(int id, MorphemeEventTrack event_track)
 {
 	trackNames[id] = event_track.trackName;
-	//printf_s("%s\n", trackNames[id]);
 }
 
-void EventTrackEditor::EventTrack::SaveEventTrackData(MorphemeEventTrack* event_track, float multiplier)
+void EventTrackEditor::EventTrack::SaveEventTrackData(MorphemeEventTrack* event_track, float track_len)
 {
 	event_track->eventCount = eventCount;
 	event_track->eventId = eventId;
 	event_track->value = value;
-	event_track->startTime = MathHelper::FrameToTime(mFrameStart, 60) / multiplier;
+	event_track->startTime = MathHelper::FrameToTime(mFrameStart) / track_len;
 
 	if (event_track->is_discrete == false)
-		event_track->duration = MathHelper::FrameToTime((mFrameEnd - mFrameStart), 60) / multiplier;	
+		event_track->duration = MathHelper::FrameToTime((mFrameEnd - mFrameStart)) / track_len;
 }
 
-void EventTrackEditor::EventTrack::SaveTaeTrackData(TimeActTrack* tae_track, float multiplier)
+void EventTrackEditor::EventTrack::SaveTaeTrackData(TimeActTrack* tae_track, float track_len)
 {
 	tae_track->tae_count = eventCount;
 	tae_track->group_id = eventId;
 	tae_track->tae_id = value;
-	tae_track->startTime = MathHelper::FrameToTime(mFrameStart, 60) / multiplier;
-	tae_track->endTime = MathHelper::FrameToTime(mFrameEnd, 60) / multiplier;
+	tae_track->startTime = MathHelper::FrameToTime(mFrameStart) / track_len;
+	tae_track->endTime = MathHelper::FrameToTime(mFrameEnd) / track_len;
 }
 
 int MorphemeEventTrackList::getSubTrackcount_discrete()
@@ -90,9 +89,7 @@ void MorphemeEventTrackList::allocSubTracks()
 {
 	count_discreteSub = getSubTrackcount_discrete();
 	tracks_discreteSub = new MorphemeEventTrack[count_discreteSub];
-	//printf_s("Allocated %d sub blend tracks\n", count_discreteSub);
 
 	count_timedSub = getSubTrackcount_timed();
 	tracks_timedSub = new MorphemeEventTrack[count_timedSub];
-	//printf_s("Allocated %d sub generic tracks\n", count_timedSub);
 }

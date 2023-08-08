@@ -49,7 +49,7 @@ namespace ImSequencer
         ImGuiIO& io = ImGui::GetIO();
         ImRect delRect(pos, ImVec2(pos.x + 16, pos.y + 16));
         bool overDel = delRect.Contains(io.MousePos);
-        int delColor = overDel ? 0xFFAAAAAA : 0x50000000;
+        int delColor = overDel ? 0xFFFFFFFF : 0xFF000000;
         float midy = pos.y + 16 / 2 - 0.5f;
         float midx = pos.x + 16 / 2 - 0.5f;
         draw_list->AddRect(delRect.Min, delRect.Max, delColor, 4);
@@ -191,7 +191,7 @@ namespace ImSequencer
             // current frame top
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
 
-            if (!MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & SEQUENCER_CHANGE_FRAME && currentFrame && *currentFrame >= 0 && topRect.Contains(io.MousePos) && io.MouseDown[0])
+            if (!MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && *currentFrame >= 0 && topRect.Contains(io.MousePos) && io.MouseDown[0])
             {
                 MovingCurrentFrame = true;
             }
@@ -212,7 +212,7 @@ namespace ImSequencer
 
             //header
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF383838, 0);
-            if (sequenceOptions & SEQUENCER_ADD)
+            if (sequenceOptions & EDITOR_TRACK_ADD)
             {
                 if (SequencerAddDelButton(draw_list, ImVec2(canvas_pos.x + legendWidth - ItemHeight, canvas_pos.y + 2), true) && io.MouseReleased[0])
                     ImGui::OpenPopup("addTrack");
@@ -221,6 +221,11 @@ namespace ImSequencer
                 {
                     ImGui::EndPopup();
                     popupOpened = true;
+                }
+
+                if (SequencerAddDelButton(draw_list, ImVec2(canvas_pos.x + legendWidth - ItemHeight - ItemHeight, canvas_pos.y + 2), false))
+                {
+
                 }
             }
 
@@ -283,13 +288,8 @@ namespace ImSequencer
             {
                 drawLine(i, ItemHeight);
             }
-            /*
-            draw_list->AddLine(canvas_pos, ImVec2(canvas_pos.x, canvas_pos.y + controlHeight), 0xFF000000, 1);
-            draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + ItemHeight), ImVec2(canvas_size.x, canvas_pos.y + ItemHeight), 0xFF000000, 1);
-            */
 
             // clip content
-
             draw_list->PushClipRect(childFramePos, childFramePos + childFrameSize, true);
 
             // draw item names in the legend rect on the left
@@ -299,14 +299,14 @@ namespace ImSequencer
                 ImVec2 tpos(contentMin.x + 3, contentMin.y + i * ItemHeight + 2 + customHeight);
                 draw_list->AddText(tpos, 0xFFFFFFFF, eventTrackEditor->GetTrackName(i));
 
-                if (sequenceOptions & SEQUENCER_DEL)
+                if (sequenceOptions & EDITOR_EVENT_ADD)
                 {
                     bool overDel = false;
 
                     if ((*selectedEvent != -1) && (i == *selectedTrack))
-                        overDel = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), false);
+                        overDel = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), false);
 
-                    bool overDup = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), true);
+                    bool overDup = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), true);
 
                     for (size_t j = 0; j < eventTrackEditor->m_eventTracks[i].m_numEvents; j++)
                     {
@@ -445,7 +445,7 @@ namespace ImSequencer
                             draw_list->AddText(textP, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
                         }
 
-                        if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
+                        if (sequenceOptions & EDITOR_EVENT_LOOP)
                         {
                             if (slotP2.x > frameMax.x)
                             {
@@ -516,7 +516,7 @@ namespace ImSequencer
                         const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
 
                         //Tracks
-                        if (movingTrack == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                        if (movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                         {
                             if (!isDiscrete)
                             {
@@ -572,9 +572,9 @@ namespace ImSequencer
                         }
 
                         //Looped entries
-                        if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
+                        if (sequenceOptions & EDITOR_EVENT_LOOP)
                         {
-                            if (movingTrack == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                            if (movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                             {
                                 for (int j = 2; j >= 0; j--)
                                 {
@@ -706,7 +706,7 @@ namespace ImSequencer
             draw_list->PopClipRect();
 
             // copy paste
-            if (sequenceOptions & SEQUENCER_COPYPASTE)
+            if (sequenceOptions & EDITOR_COPYPASTE)
             {
                 ImRect rectCopy(ImVec2(contentMin.x + 100, canvas_pos.y + 2)
                     , ImVec2(contentMin.x + 100 + 30, canvas_pos.y + ItemHeight - 2));
@@ -894,9 +894,12 @@ namespace ImSequencer
 
         if (expanded)
         {
-            bool overExpanded = SequencerAddDelButton(draw_list, ImVec2(canvas_pos.x + 2, canvas_pos.y + 2), !*expanded);
-            if (overExpanded && io.MouseReleased[0])
-                *expanded = !*expanded;
+            if (sequenceOptions & EDITOR_COLLAPSE)
+            {
+                bool overExpanded = SequencerAddDelButton(draw_list, ImVec2(canvas_pos.x + 2, canvas_pos.y + 2), !*expanded);
+                if (overExpanded && io.MouseReleased[0])
+                    *expanded = !*expanded;
+            }
         }
 
         if (delTrack != -1)

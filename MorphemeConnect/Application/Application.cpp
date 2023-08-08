@@ -208,7 +208,7 @@ void Application::RenderGUI(const char* title)
 			}
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_ADD | ImSequencer::SEQUENCER_DEL);
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EVENT_EDIT_STARTEND | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
 			ImGui::EndChild();
 		}
 		ImGui::End();

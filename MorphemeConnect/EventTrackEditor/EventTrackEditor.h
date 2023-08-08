@@ -48,9 +48,10 @@ struct EventTrackEditor
     std::string GetEventLabel(int track_idx, int event_idx) const;
 
     void AddTrack(int event_id, const char* name, bool discrete);
+    void DeleteTrack(int idx);
 
-    void DeleteEvent(int track_idx, int event_idx);
     void AddEvent(int track_idx, EventTrack::Event event);
+    void DeleteEvent(int track_idx, int event_idx);
 
     EventTrackEditor();
 

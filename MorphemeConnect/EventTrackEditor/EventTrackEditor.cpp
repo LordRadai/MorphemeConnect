@@ -109,6 +109,52 @@ void EventTrackEditor::AddTrack(int event_id, const char* name, bool discrete)
         m_eventTracks.push_back(EventTrack(signature, 0, event_id, NULL, name, true));
 };
 
+void EventTrackEditor::DeleteTrack(int idx)
+{
+    this->m_eventTracks.erase(this->m_eventTracks.begin() + idx);
+}
+
+void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
+{
+    EventTrack* track = &this->m_eventTracks[track_idx];
+
+    if (track->m_numEvents == 0)
+    {
+        track->m_numEvents++;
+        track->source->m_data->m_numEvents++;
+
+        track->m_event = new EventTrack::Event{ event.m_frameStart, event.m_duration, event.m_value };
+        track->source->m_data->m_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
+        return;
+    }
+
+    EventTrack::Event* new_events = new EventTrack::Event[track->m_numEvents + 1];
+
+    for (size_t i = 0; i < track->m_numEvents; i++)
+        new_events[i] = track->m_event[i];
+
+    new_events[track->m_numEvents] = event;
+
+    track->m_numEvents++;
+
+    delete[] track->m_event;
+
+    track->m_event = new_events;
+
+    MorphemeBundle_EventTrack::BundleData_EventTrack::Event* new_src_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event[track->source->m_data->m_numEvents + 1];
+
+    for (size_t i = 0; i < track->source->m_data->m_numEvents; i++)
+        new_src_events[i] = track->source->m_data->m_events[i];
+
+    new_src_events[track->source->m_data->m_numEvents] = MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
+
+    track->source->m_data->m_numEvents++;
+
+    delete[] track->source->m_data->m_events;
+
+    track->source->m_data->m_events = new_src_events;
+}
+
 void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 {
     EventTrack* track = &this->m_eventTracks[track_idx];
@@ -155,47 +201,6 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
     delete[] track->m_event;
     delete[] track->source->m_data->m_events;
-}
-
-void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
-{
-    EventTrack* track = &this->m_eventTracks[track_idx];
-
-    if (track->m_numEvents == 0)
-    {
-        track->m_numEvents++;
-        track->source->m_data->m_numEvents++;
-
-        track->m_event = new EventTrack::Event{ event.m_frameStart, event.m_duration, event.m_value };
-        track->source->m_data->m_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
-        return;
-    }
-
-    EventTrack::Event* new_events = new EventTrack::Event[track->m_numEvents + 1];
-
-    for (size_t i = 0; i < track->m_numEvents; i++)
-        new_events[i] = track->m_event[i];
-
-    new_events[track->m_numEvents] = event;
-
-    track->m_numEvents++;
-
-    delete[] track->m_event;
-
-    track->m_event = new_events;
-
-    MorphemeBundle_EventTrack::BundleData_EventTrack::Event* new_src_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event[track->source->m_data->m_numEvents + 1];
-
-    for (size_t i = 0; i < track->source->m_data->m_numEvents; i++)
-        new_src_events[i] = track->source->m_data->m_events[i];
-
-    new_src_events[track->source->m_data->m_numEvents] = MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
-
-    track->source->m_data->m_numEvents++;
-
-    delete[] track->source->m_data->m_events;
-
-    track->source->m_data->m_events = new_src_events;
 }
 
 EventTrackEditor::EventTrackEditor() {}

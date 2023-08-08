@@ -40,14 +40,15 @@ namespace ImSequencer
 {
     enum SEQUENCER_OPTIONS
     {
-        SEQUENCER_EDIT_NONE = 0,
-        SEQUENCER_EDIT_STARTEND = 1 << 1,
-        SEQUENCER_CHANGE_FRAME = 1 << 3,
-        SEQUENCER_ADD = 1 << 4,
-        SEQUENCER_DEL = 1 << 5,
-        SEQUENCER_COPYPASTE = 1 << 6,
-        SEQUENCER_LOOP_EVENTS = 1 << 7,
-        SEQUENCER_EDIT_ALL = SEQUENCER_EDIT_STARTEND | SEQUENCER_CHANGE_FRAME
+        EDITOR_EDIT_NONE = 0,
+        EDITOR_EVENT_EDIT_STARTEND = 1 << 1,
+        EDITOR_CHANGE_FRAME = 1 << 3,
+        EDITOR_TRACK_ADD = 1 << 4,
+        EDITOR_EVENT_ADD = 1 << 5,
+        EDITOR_COPYPASTE = 1 << 6,
+        EDITOR_EVENT_LOOP = 1 << 7,
+        EDITOR_COLLAPSE = 1 << 8,
+        EDITOR_EDIT_ALL = EDITOR_EVENT_EDIT_STARTEND | EDITOR_CHANGE_FRAME
     };
 
     // return true if selection is made

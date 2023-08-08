@@ -73,7 +73,16 @@ namespace ImSequencer
         static int movingTrack = -1;
         static int movingEvent = -1;
         static int movingPos = -1;
-        static int movingPart = -1;
+
+        enum MovingPart
+        {
+            MovingPart_None,
+            MovingPart_Start,
+            MovingPart_End,
+            MovingPart_All
+        };
+
+        static int movingPart;
 
         bool addTrack = false;
         static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
@@ -159,13 +168,7 @@ namespace ImSequencer
         else
         {
             bool hasScrollBar(true);
-            /*
-            int framesPixelWidth = int(frameCount * framePixelWidth);
-            if ((framesPixelWidth + legendWidth) >= canvas_size.x)
-            {
-                hasScrollBar = true;
-            }
-            */
+
             // test scroll area
             ImVec2 headerSize(canvas_size.x, (float)ItemHeight);
             ImVec2 scrollBarSize(canvas_size.x, 14.f);
@@ -374,8 +377,11 @@ namespace ImSequencer
                 {
                     std::string event_value = eventTrackEditor->GetEventLabel(trackIndex, eventIdx);
 
-                    if ((*currentFrame >= track->m_event[eventIdx].m_frameStart) && *currentFrame <= (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart))
-                        slotColor = TRACK_COLOR_ACTIVE;
+                    if (*currentFrame > -1)
+                    {
+                        if ((*currentFrame >= track->m_event[eventIdx].m_frameStart) && *currentFrame <= (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart))
+                            slotColor = TRACK_COLOR_ACTIVE;
+                    }
 
                     ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * trackIndex + 1 + customHeight);
                     ImVec2 slotP1(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + 2);
@@ -645,11 +651,15 @@ namespace ImSequencer
 
                     if (track->m_event[movingEvent].m_frameStart + diffFrame >= -eventTrackEditor->GetFrameMax() && (track->m_event[movingEvent].m_frameStart + track->m_event[movingEvent].m_duration) + diffFrame <= 2 * eventTrackEditor->GetFrameMax())
                     {
-                        if (movingPart & 1)
+                        if (movingPart == MovingPart_Start)
+                        {
                             track->m_event[movingEvent].m_frameStart += diffFrame;
-
-                        if (movingPart & 2)
+                            track->m_event[movingEvent].m_duration -= diffFrame;
+                        }
+                        else if (movingPart == MovingPart_End)
                             track->m_event[movingEvent].m_duration += diffFrame;
+                        else if (movingPart == MovingPart_All)
+                            track->m_event[movingEvent].m_frameStart += diffFrame;
 
                         movingPos += int(diffFrame * framePixelWidth);
                     }

@@ -27,6 +27,8 @@
 #include "../imgui/imgui.h"
 #include "../MathHelper/MathHelper.h"
 #include <cstdlib>
+#include "../Application/Application.h"
+
 #define TRACK_COLOR 0xFFEB5050
 #define TRACK_COLOR_INACTIVE 0xFF464646
 #define TRACK_COLOR_INVERT 0xFF633132
@@ -57,7 +59,7 @@ namespace ImSequencer
         return overDel;
     }
 
-    bool Sequencer(SequenceInterface* sequence, int* currentFrame, bool* expanded, int* selectedEntry, int* firstFrame, int sequenceOptions)
+    bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions)
     {
         bool ret = false;
         ImGuiIO& io = ImGui::GetIO();
@@ -65,9 +67,11 @@ namespace ImSequencer
         int cy = (int)(io.MousePos.y);
         static float framePixelWidth = 9.f;
         static float framePixelWidthTarget = 9.f;
+
         int legendWidth = 210;
 
-        static int movingEntry = -1;
+        static int movingTrack = -1;
+        static int movingEvent = -1;
         static int movingPos = -1;
         static int movingPart = -1;
         int delEntry = -1;
@@ -75,7 +79,7 @@ namespace ImSequencer
         int ItemHeight = 20;
 
         bool popupOpened = false;
-        int sequenceCount = sequence->GetItemCount();
+        int sequenceCount = eventTrackEditor->GetTrackCount();
         if (!sequenceCount)
             return false;
         ImGui::BeginGroup();
@@ -88,9 +92,8 @@ namespace ImSequencer
         int firstFrameUsed = firstFrame ? *firstFrame : 0;
 
         int controlHeight = sequenceCount * ItemHeight;
-        for (int i = 0; i < sequenceCount; i++)
-            controlHeight += int(sequence->GetCustomHeight(i));
-        int frameCount = ImMax(sequence->GetFrameMax() - sequence->GetFrameMin(), 1);
+
+        int frameCount = ImMax(eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin(), 1);
 
         canvas_size.y = controlHeight + 2.5 * ItemHeight;
 
@@ -126,7 +129,7 @@ namespace ImSequencer
                 panningViewFrame = *firstFrame;
             }
             *firstFrame = panningViewFrame - int((io.MousePos.x - panningViewSource.x) / framePixelWidth);
-            *firstFrame = ImClamp(*firstFrame, sequence->GetFrameMin(), sequence->GetFrameMax() - visibleFrameCount);
+            *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), eventTrackEditor->GetFrameMax() - visibleFrameCount);
         }
         if (panningView && !io.MouseDown[2])
         {
@@ -136,9 +139,9 @@ namespace ImSequencer
 
         framePixelWidth = ImLerp(framePixelWidth, framePixelWidthTarget, 0.33f);
 
-        frameCount = sequence->GetFrameMax() - sequence->GetFrameMin();
+        frameCount = eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin();
         if (visibleFrameCount >= frameCount && firstFrame)
-            *firstFrame = sequence->GetFrameMin();
+            *firstFrame = eventTrackEditor->GetFrameMin();
 
         // --
         if (expanded && !*expanded)
@@ -146,7 +149,7 @@ namespace ImSequencer
             ImGui::InvisibleButton("canvas", ImVec2(canvas_size.x - canvas_pos.x, (float)ItemHeight));
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF3D3837, 0);
             char tmps[512];
-            ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%d Frames / %d entries", frameCount, sequenceCount);
+            ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%d Frames / %d tracks", frameCount, sequenceCount);
             draw_list->AddText(ImVec2(canvas_pos.x + 26, canvas_pos.y + 2), 0xFFFFFFFF, tmps);
         }
         else
@@ -168,7 +171,7 @@ namespace ImSequencer
             ImVec2 childFrameSize(canvas_size.x, canvas_size.y - 8.f - headerSize.y - (hasScrollBar ? scrollBarSize.y : 0));
             ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             ImGui::BeginChildFrame(889, childFrameSize);
-            sequence->focused = ImGui::IsWindowFocused();
+            eventTrackEditor->focused = ImGui::IsWindowFocused();
             ImGui::InvisibleButton("contentBar", ImVec2(canvas_size.x, float(controlHeight)));
             const ImVec2 contentMin = ImGui::GetItemRectMin();
             const ImVec2 contentMax = ImGui::GetItemRectMax();
@@ -181,19 +184,20 @@ namespace ImSequencer
             // current frame top
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
 
-            if (!MovingCurrentFrame && !MovingScrollBar && movingEntry == -1 && sequenceOptions & SEQUENCER_CHANGE_FRAME && currentFrame && *currentFrame >= 0 && topRect.Contains(io.MousePos) && io.MouseDown[0])
+            if (!MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & SEQUENCER_CHANGE_FRAME && currentFrame && *currentFrame >= 0 && topRect.Contains(io.MousePos) && io.MouseDown[0])
             {
                 MovingCurrentFrame = true;
             }
+
             if (MovingCurrentFrame)
             {
                 if (frameCount)
                 {
                     *currentFrame = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
-                    if (*currentFrame < sequence->GetFrameMin())
-                        *currentFrame = sequence->GetFrameMin();
-                    if (*currentFrame >= sequence->GetFrameMax())
-                        *currentFrame = sequence->GetFrameMax();
+                    if (*currentFrame < eventTrackEditor->GetFrameMin())
+                        *currentFrame = eventTrackEditor->GetFrameMin();
+                    if (*currentFrame >= eventTrackEditor->GetFrameMax())
+                        *currentFrame = eventTrackEditor->GetFrameMax();
                 }
                 if (!io.MouseDown[0])
                     MovingCurrentFrame = false;
@@ -208,13 +212,6 @@ namespace ImSequencer
 
                 if (ImGui::BeginPopup("addEntry"))
                 {
-                    for (int i = 0; i < sequence->GetItemTypeCount(); i++)
-                        if (ImGui::Selectable(sequence->GetItemTypeName(i)))
-                        {
-                            sequence->Add(i);
-                            *selectedEntry = sequence->GetItemCount() - 1;
-                        }
-
                     ImGui::EndPopup();
                     popupOpened = true;
                 }
@@ -231,7 +228,7 @@ namespace ImSequencer
             int halfModFrameCount = modFrameCount / 2;
 
             auto drawLine = [&](int i, int regionHeight) {
-                bool baseIndex = ((i % modFrameCount) == 0) || (i == sequence->GetFrameMax() || i == sequence->GetFrameMin());
+                bool baseIndex = ((i % modFrameCount) == 0) || (i == eventTrackEditor->GetFrameMax() || i == eventTrackEditor->GetFrameMin());
                 bool halfIndex = (i % halfModFrameCount) == 0;
                 ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * i + 1);
                 float px = pos.x + i * framePixelWidth - 1;
@@ -268,14 +265,14 @@ namespace ImSequencer
                     draw_list->AddLine(ImVec2(float(px), float(tiretStart)), ImVec2(float(px), float(tiretEnd)), 0x30606060, 1);
                 }
             };
-            for (int i = sequence->GetFrameMin() + 1; i <= sequence->GetFrameMax(); i += frameStep)
+            for (int i = eventTrackEditor->GetFrameMin() + 1; i <= eventTrackEditor->GetFrameMax(); i += frameStep)
             {
                 drawLine(i, ItemHeight);
             }
-            drawLine(sequence->GetFrameMin(), ItemHeight);
-            drawLine(sequence->GetFrameMax(), ItemHeight);
+            drawLine(eventTrackEditor->GetFrameMin(), ItemHeight);
+            drawLine(eventTrackEditor->GetFrameMax(), ItemHeight);
 
-            for (int i = sequence->GetFrameMax() + 1; i <= 500; i += frameStep)
+            for (int i = eventTrackEditor->GetFrameMax() + 1; i <= 500; i += frameStep)
             {
                 drawLine(i, ItemHeight);
             }
@@ -292,11 +289,8 @@ namespace ImSequencer
             size_t customHeight = 0;
             for (int i = 0; i < sequenceCount; i++)
             {
-                int type;
-                int eventId;
-                sequence->Get(i, NULL, NULL, &type, &eventId, NULL, NULL, NULL, NULL);
                 ImVec2 tpos(contentMin.x + 3, contentMin.y + i * ItemHeight + 2 + customHeight);
-                draw_list->AddText(tpos, 0xFFFFFFFF, sequence->GetItemLabel(i, eventId));
+                draw_list->AddText(tpos, 0xFFFFFFFF, eventTrackEditor->GetTrackName(i));
 
                 if (sequenceOptions & SEQUENCER_DEL)
                 {
@@ -308,400 +302,343 @@ namespace ImSequencer
                     if (overDup && io.MouseReleased[0])
                         dupEntry = i;
                 }
-                customHeight += sequence->GetCustomHeight(i);
             }
 
             // clipping rect so items bars are not visible in the legend on the left when scrolled
             //
 
             // slots background
-            customHeight = 0;
             for (int i = 0; i < sequenceCount; i++)
             {
                 unsigned int col = (i & 1) ? 0xFF313131 : 0xFF282828;
 
-                size_t localCustomHeight = sequence->GetCustomHeight(i);
                 ImVec2 pos = ImVec2(contentMin.x + legendWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
-                ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1 + localCustomHeight);
-                if (!popupOpened && cy >= pos.y && cy < pos.y + (ItemHeight + localCustomHeight) && movingEntry == -1 && cx>contentMin.x && cx < contentMin.x + canvas_size.x)
+                ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1);
+                if (!popupOpened && cy >= pos.y && cy < pos.y + ItemHeight && movingTrack == -1 && cx>contentMin.x && cx < contentMin.x + canvas_size.x)
                 {
                     col += 0x80201008;
                     pos.x -= legendWidth;
                 }
                 draw_list->AddRectFilled(pos, sz, col, 0);
-                customHeight += localCustomHeight;
             }
 
             draw_list->PushClipRect(childFramePos + ImVec2(float(legendWidth), 0.f), childFramePos + childFrameSize, true);
 
             // vertical frame lines in content area
-            for (int i = sequence->GetFrameMin() + 1; i <= sequence->GetFrameMax(); i += frameStep)
+            for (int i = eventTrackEditor->GetFrameMin() + 1; i <= eventTrackEditor->GetFrameMax(); i += frameStep)
             {
                 drawLineContent(i, int(contentHeight));
             }
-            drawLineContent(sequence->GetFrameMin(), int(contentHeight));
-            drawLineContent(sequence->GetFrameMax(), int(contentHeight));
+            drawLineContent(eventTrackEditor->GetFrameMin(), int(contentHeight));
+            drawLineContent(eventTrackEditor->GetFrameMax(), int(contentHeight));
 
-            for (int i = sequence->GetFrameMax() + 1; i <= 500; i += frameStep)
+            for (int i = eventTrackEditor->GetFrameMax() + 1; i <= 500; i += frameStep)
             {
                 drawLineContent(i, ItemHeight);
             }
 
-            draw_list->AddRectFilled(ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth + sequence->GetFrameMax() * framePixelWidth, canvas_pos.y), canvas_pos + canvas_size, 0x40000000, 0);
-
-            // selection
-            bool selected = selectedEntry && (*selectedEntry >= 0);
-            /*if (selected)
-            {
-                customHeight = 0;
-                for (int i = 0; i < *selectedEntry; i++)
-                    customHeight += sequence->GetCustomHeight(i);;
-                draw_list->AddRectFilled(ImVec2(contentMin.x, contentMin.y + ItemHeight * *selectedEntry + customHeight), ImVec2(contentMin.x + canvas_size.x, contentMin.y + ItemHeight * (*selectedEntry + 1) + customHeight), 0x801080FF, 1.f);                      
-            }*/
+            draw_list->AddRectFilled(ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth + eventTrackEditor->GetFrameMax() * framePixelWidth, canvas_pos.y), canvas_pos + canvas_size, 0x40000000, 0);
 
             // tracks
             customHeight = 0;
             for (int i = 0; i < sequenceCount; i++)
             {
-                int* start, * end, * value;
-                int isActive;
-                bool isDiscrete;
                 unsigned int color;
-                char buffer[10];
                 unsigned int slotColor = TRACK_COLOR;
                 unsigned int slotColorHalf = slotColor | 0x40000000;
                 unsigned int boundColor = TRACK_BOUND;
 
-                sequence->Get(i, &start, &end, NULL, NULL, &value, &isDiscrete, &isActive, NULL);
+                EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[i];
 
-                if (*start > *end)
-                    slotColor = TRACK_COLOR_INVERT;
+                bool isDiscrete = track->m_discrete;
 
-                if (!isActive)
-                    slotColor = TRACK_COLOR_INACTIVE;
-
-                if (*currentFrame >= *start && *currentFrame <= *end)
+                for (int eventIdx = 0; eventIdx < track->m_numEvents; eventIdx++)
                 {
-                    slotColor = TRACK_COLOR_ACTIVE;
-                    //boundColor = TRACK_BOUND_ACTIVE;
-                }
+                    std::string event_value = eventTrackEditor->GetEventLabel(i, eventIdx);
 
-                size_t localCustomHeight = sequence->GetCustomHeight(0);
+                    if (*currentFrame >= track->m_event[eventIdx].m_frameStart && *currentFrame <= track->m_event[eventIdx].m_frameEnd)
+                        slotColor = TRACK_COLOR_ACTIVE;
 
-                //Draw Event ID at the event's rectangle middle section
-                sprintf_s(buffer, "%d", *value);
+                    ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
+                    ImVec2 slotP1(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + 2);
+                    ImVec2 slotP2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 2);
+                    ImVec2 slotP3(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 2);
+                    ImVec2 slotP1Loop;
+                    ImVec2 slotP2Loop;
+                    ImVec2 slotP3Loop;
+                    ImVec2 slotD1Loop;
+                    ImVec2 slotD2Loop;
+                    ImVec2 slotD3Loop;
+                    ImVec2 slotT1Loop;
+                    ImVec2 slotT2Loop;
+                    ImVec2 slotT3Loop;
 
-                ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
-                ImVec2 slotP1(pos.x + *start * framePixelWidth - 1, pos.y + 2);
-                ImVec2 slotP2(pos.x + *end * framePixelWidth - 1, pos.y + ItemHeight - 2);
-                ImVec2 slotP3(pos.x + *end * framePixelWidth - 1, pos.y + ItemHeight - 2 + localCustomHeight);
-                ImVec2 slotP1Loop;
-                ImVec2 slotP2Loop;
-                ImVec2 slotP3Loop;
-                ImVec2 slotD1Loop;
-                ImVec2 slotD2Loop;
-                ImVec2 slotD3Loop;
-                ImVec2 slotT1Loop;
-                ImVec2 slotT2Loop;
-                ImVec2 slotT3Loop;
+                    ImVec2 slotD1(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + 2);
+                    ImVec2 slotD2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotD3(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotT1 = ImVec2(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotT2 = ImVec2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotT3 = ImVec2((slotT2.x + slotT1.x) / 2, (slotT2.y + slotT1.y) / 2 + 5);
 
-                ImVec2 slotD1(pos.x + *start * framePixelWidth - 1, pos.y + 2);
-                ImVec2 slotD2(pos.x + *end * framePixelWidth - 1, pos.y + ItemHeight - 2 - 5);
-                ImVec2 slotD3(pos.x + *end * framePixelWidth - 1, pos.y + ItemHeight - 2 + localCustomHeight - 5);
-                ImVec2 slotT1 = ImVec2(pos.x + *start * framePixelWidth - 1, pos.y + ItemHeight - 2 - 5);
-                ImVec2 slotT2 = ImVec2(pos.x + *end * framePixelWidth - 1, pos.y + ItemHeight - 2 - 5);
-                ImVec2 slotT3 = ImVec2((slotT2.x + slotT1.x) / 2, (slotT2.y + slotT1.y) / 2 + 5);
+                    ImVec2 frameMin = ImVec2(pos.x - 1, 0);
+                    ImVec2 frameMax = ImVec2(frameMin.x + eventTrackEditor->GetFrameMax() * framePixelWidth, 0);
 
-                ImVec2 frameMin = ImVec2(pos.x - 1, 0);
-                ImVec2 frameMax = ImVec2(frameMin.x + sequence->GetFrameMax() * framePixelWidth, 0);
+                    ImVec2 textSize = ImGui::CalcTextSize(event_value.c_str());
+                    ImVec2 textP(slotP1.x + (slotP2.x - slotP1.x - textSize.x) / 2, slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
+                    ImVec2 textD(slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2, slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
+                    ImVec2 textPLoop;
 
-                ImVec2 textSize = ImGui::CalcTextSize(buffer);
-                ImVec2 textP(slotP1.x + (slotP2.x - slotP1.x - textSize.x) / 2, slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
-                ImVec2 textD(slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2, slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
-                ImVec2 textPLoop;
-
-                /*if (*end == 0)
-                {
-                    slotP2.x = pos.x - 1;
-                }*/
-
-                if (*start == *end)
-                {
-                    slotP1.x -= framePixelWidth / 2;
-                    slotP2.x += framePixelWidth / 2;
-
-                    slotD1.x -= framePixelWidth / 2;
-                    slotD2.x += framePixelWidth / 2;
-
-                    slotT1.x -= framePixelWidth / 2;
-                    slotT2.x += framePixelWidth / 2;
-                }                             
-
-                /*if (slotP1.x <= (canvas_size.x + contentMin.x) && slotP2.x >= (contentMin.x + legendWidth + 1))
-                {
-                    draw_list->AddRectFilled(slotP1, slotP3, slotColorHalf, 0);
-                    draw_list->AddRectFilled(slotP1, slotP2, slotColor, 0); //Track Box
-                    draw_list->AddRect(slotP1, slotP2, TRACK_BOUND, 0); //Track Bounding Box
-                    draw_list->AddText(textP, TRACK_TEXT_COLOR, buffer); //Event Value
-                }*/
-
-                if ((slotP1.x <= (canvas_size.x + contentMin.x) || slotP1.x >= (contentMin.x + legendWidth)) && (slotP2.x >= (contentMin.x + legendWidth) || slotP2.x <= (canvas_size.x + contentMin.x)))
-                {
-                    if (isDiscrete)
+                    if (track->m_event[eventIdx].m_frameStart == track->m_event[eventIdx].m_frameEnd)
                     {
-                        draw_list->AddRectFilled(slotD1, slotD3, slotColorHalf, 0);
-                        draw_list->AddRectFilled(slotD1, slotD2, slotColor, 0); //Track Box
-                        draw_list->AddLine(slotD1, ImVec2(slotD2.x, slotD1.y), boundColor);
-                        draw_list->AddLine(slotD2, ImVec2(slotD2.x, slotD1.y), boundColor);
-                        draw_list->AddLine(slotD1, ImVec2(slotD1.x, slotD2.y), boundColor);
+                        slotP1.x -= framePixelWidth / 2;
+                        slotP2.x += framePixelWidth / 2;
 
-                        //draw_list->AddRect(slotD1, slotD2, boundColor, 0); //Track Bounding Box
+                        slotD1.x -= framePixelWidth / 2;
+                        slotD2.x += framePixelWidth / 2;
 
-                        draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, slotColorHalf);
-                        draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, slotColor);
-                        draw_list->AddLine(slotT1, slotT3, boundColor);
-                        draw_list->AddLine(slotT2, slotT3, boundColor);
-
-                        draw_list->AddText(textD, TRACK_TEXT_COLOR, buffer); //Event Value
-                    }
-                    else
-                    {
-                        draw_list->AddRectFilled(slotP1, slotP3, slotColorHalf, 0);
-                        draw_list->AddRectFilled(slotP1, slotP2, slotColor, 0); //Track Box
-                        draw_list->AddRect(slotP1, slotP2, boundColor, 0); //Track Bounding Box
-                        draw_list->AddText(textP, TRACK_TEXT_COLOR, buffer); //Event Value
+                        slotT1.x -= framePixelWidth / 2;
+                        slotT2.x += framePixelWidth / 2;
                     }
 
-                    if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
+                    if ((slotP1.x <= (canvas_size.x + contentMin.x) || slotP1.x >= (contentMin.x + legendWidth)) && (slotP2.x >= (contentMin.x + legendWidth) || slotP2.x <= (canvas_size.x + contentMin.x)))
                     {
-                        if (slotP2.x > frameMax.x)
+                        if (isDiscrete)
                         {
-                            if (slotP1.x < frameMax.x)
-                            {
-                                slotP1Loop = ImVec2(frameMin.x, slotP1.y);
-                                slotP2Loop = ImVec2(slotP1Loop.x + fmin(abs(slotP2.x - slotP1.x), abs(slotP2.x - frameMax.x)), slotP2.y);
-                                textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
-                            }
-                            else
-                            {
-                                slotP1Loop = ImVec2(frameMin.x + abs(slotP1.x - frameMax.x), slotP1.y);
-                                slotP2Loop = ImVec2(slotP1Loop.x + fmin(abs(slotP2.x - slotP1.x), abs(slotP2.x - frameMax.x)), slotP2.y);
-                                textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
-                            }
+                            draw_list->AddRectFilled(slotD1, slotD3, slotColorHalf, 0);
+                            draw_list->AddRectFilled(slotD1, slotD2, slotColor, 0); //Track Box
+                            draw_list->AddLine(slotD1, ImVec2(slotD2.x, slotD1.y), boundColor);
+                            draw_list->AddLine(slotD2, ImVec2(slotD2.x, slotD1.y), boundColor);
+                            draw_list->AddLine(slotD1, ImVec2(slotD1.x, slotD2.y), boundColor);
 
-                            draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
-                            draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
-                            draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, buffer); //Event Value
-                        }
-                        else if (slotP1.x < frameMin.x)
-                        {
-                            if (slotP2.x > frameMin.x)
-                            {
-                                slotP2Loop = ImVec2(frameMax.x, slotP2.y);
-                                slotP1Loop = ImVec2(slotP2Loop.x - fmin(abs(slotP2.x - slotP1.x), abs(slotP1.x - frameMin.x)), slotP1.y);
-                                textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
-                            }
-                            else
-                            {
-                                slotP2Loop = ImVec2(frameMax.x - abs(slotP2.x - frameMin.x), slotP2.y);
-                                slotP1Loop = ImVec2(slotP2Loop.x - fmin(abs(slotP2.x - slotP1.x), abs(slotP1.x - frameMin.x)), slotP1.y);
-                                textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
-                            }
+                            //draw_list->AddRect(slotD1, slotD2, boundColor, 0); //Track Bounding Box
 
-                            draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
-                            draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
-                            draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, buffer); //Event Value
+                            draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, slotColorHalf);
+                            draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, slotColor);
+                            draw_list->AddLine(slotT1, slotT3, boundColor);
+                            draw_list->AddLine(slotT2, slotT3, boundColor);
+
+                            draw_list->AddText(textD, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
                         }
                         else
                         {
-                            slotP1Loop = ImVec2(0, 0);
-                            slotP2Loop = ImVec2(0, 0);
-                            textPLoop = ImVec2(0, 0);
+                            draw_list->AddRectFilled(slotP1, slotP3, slotColorHalf, 0);
+                            draw_list->AddRectFilled(slotP1, slotP2, slotColor, 0); //Track Box
+                            draw_list->AddRect(slotP1, slotP2, boundColor, 0); //Track Bounding Box
+                            draw_list->AddText(textP, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                        }
+
+                        if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
+                        {
+                            if (slotP2.x > frameMax.x)
+                            {
+                                if (slotP1.x < frameMax.x)
+                                {
+                                    slotP1Loop = ImVec2(frameMin.x, slotP1.y);
+                                    slotP2Loop = ImVec2(slotP1Loop.x + fmin(abs(slotP2.x - slotP1.x), abs(slotP2.x - frameMax.x)), slotP2.y);
+                                    textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
+                                }
+                                else
+                                {
+                                    slotP1Loop = ImVec2(frameMin.x + abs(slotP1.x - frameMax.x), slotP1.y);
+                                    slotP2Loop = ImVec2(slotP1Loop.x + fmin(abs(slotP2.x - slotP1.x), abs(slotP2.x - frameMax.x)), slotP2.y);
+                                    textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
+                                }
+
+                                draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
+                                draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
+                                draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                            }
+                            else if (slotP1.x < frameMin.x)
+                            {
+                                if (slotP2.x > frameMin.x)
+                                {
+                                    slotP2Loop = ImVec2(frameMax.x, slotP2.y);
+                                    slotP1Loop = ImVec2(slotP2Loop.x - fmin(abs(slotP2.x - slotP1.x), abs(slotP1.x - frameMin.x)), slotP1.y);
+                                    textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
+                                }
+                                else
+                                {
+                                    slotP2Loop = ImVec2(frameMax.x - abs(slotP2.x - frameMin.x), slotP2.y);
+                                    slotP1Loop = ImVec2(slotP2Loop.x - fmin(abs(slotP2.x - slotP1.x), abs(slotP1.x - frameMin.x)), slotP1.y);
+                                    textPLoop = ImVec2(slotP1Loop.x + (slotP2Loop.x - slotP1Loop.x - textSize.x) / 2, slotP2Loop.y + (slotP1Loop.y - slotP2Loop.y - textSize.y) / 2);
+                                }
+
+                                draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
+                                draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
+                                draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                            }
+                            else
+                            {
+                                slotP1Loop = ImVec2(0, 0);
+                                slotP2Loop = ImVec2(0, 0);
+                                textPLoop = ImVec2(0, 0);
+                            }
                         }
                     }
-                }
 
-                if (ImRect(slotP1, slotP2).Contains(io.MousePos) && io.MouseDoubleClicked[0])
-                {
-                    //sequence->DoubleClick(i);
-                }
-
-                //Drag
-                {
-                    ImRect rects[3] = { ImRect(ImVec2(slotP1.x - framePixelWidth / 3, slotP1.y), ImVec2(slotP1.x, slotP2.y))
-                        , ImRect(ImVec2(slotP2.x, slotP1.y), ImVec2(slotP2.x + framePixelWidth / 3, slotP2.y))
-                        , ImRect(slotP1, slotP2) };
-
-                    ImRect rect_discrete = ImRect(slotD1, slotD2);
-
-                    ImRect rects_loop[3] = { ImRect(ImVec2(slotP1Loop.x - framePixelWidth / 3, slotP1Loop.y), ImVec2(slotP1Loop.x, slotP2Loop.y))
-                        , ImRect(ImVec2(slotP2Loop.x, slotP1Loop.y), ImVec2(slotP2Loop.x + framePixelWidth / 3, slotP2Loop.y))
-                        , ImRect(slotP1Loop, slotP2Loop) };
-
-                    //rect[1] = start drag
-                    //rect[2] = end drag
-                    //rect[3] = event drag
-
-                    if (slotP1.x > slotP2.x)
-                        rects[2] = ImRect(ImVec2(slotP2.x, slotP1.y), ImVec2(slotP1.x, slotP2.y));
-
-                    const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
-
-                    //Tracks
-                    if (movingEntry == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                    //Drag
                     {
-                        if (!isDiscrete)
-                        {
-                            for (int j = 2; j >= 0; j--)
-                            {
-                                ImRect& rc = rects[j];
-                                if (!rc.Contains(io.MousePos))
-                                    continue;
-                                draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
-                            }
+                        ImRect rects[3] = { ImRect(ImVec2(slotP1.x - framePixelWidth / 3, slotP1.y), ImVec2(slotP1.x, slotP2.y))
+                            , ImRect(ImVec2(slotP2.x, slotP1.y), ImVec2(slotP2.x + framePixelWidth / 3, slotP2.y))
+                            , ImRect(slotP1, slotP2) };
 
-                            for (int j = 0; j < 3; j++)
+                        ImRect rect_discrete = ImRect(slotD1, slotD2);
+
+                        ImRect rects_loop[3] = { ImRect(ImVec2(slotP1Loop.x - framePixelWidth / 3, slotP1Loop.y), ImVec2(slotP1Loop.x, slotP2Loop.y))
+                            , ImRect(ImVec2(slotP2Loop.x, slotP1Loop.y), ImVec2(slotP2Loop.x + framePixelWidth / 3, slotP2Loop.y))
+                            , ImRect(slotP1Loop, slotP2Loop) };
+
+                        //rect[1] = start drag
+                        //rect[2] = end drag
+                        //rect[3] = event drag
+
+                        if (slotP1.x > slotP2.x)
+                            rects[2] = ImRect(ImVec2(slotP2.x, slotP1.y), ImVec2(slotP1.x, slotP2.y));
+
+                        const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
+
+                        //Tracks
+                        if (movingTrack == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                        {
+                            if (!isDiscrete)
                             {
-                                ImRect& rc = rects[j];
+                                for (int j = 2; j >= 0; j--)
+                                {
+                                    ImRect& rc = rects[j];
+                                    if (!rc.Contains(io.MousePos))
+                                        continue;
+                                    draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
+                                }
+
+                                for (int j = 0; j < 3; j++)
+                                {
+                                    ImRect& rc = rects[j];
+                                    if (!rc.Contains(io.MousePos))
+                                        continue;
+                                    if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
+                                        continue;
+
+                                    if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
+                                    {
+                                        movingTrack = i;
+                                        movingEvent = eventIdx;
+                                        movingPos = cx;
+                                        movingPart = j + 1;
+
+                                        eventTrackEditor->BeginEdit(movingTrack);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ImRect& rc = rect_discrete;
                                 if (!rc.Contains(io.MousePos))
                                     continue;
+
+                                draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[2], 0);
+                                draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, quadColor[2]);
+
                                 if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                     continue;
 
                                 if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
                                 {
-                                    movingEntry = i;
+                                    movingTrack = i;
+                                    movingEvent = eventIdx;
                                     movingPos = cx;
-                                    movingPart = j + 1;
+                                    movingPart = 3;
 
-                                    sequence->BeginEdit(movingEntry);
+                                    eventTrackEditor->BeginEdit(movingTrack);
                                     break;
                                 }
                             }
                         }
-                        else
+
+                        //Looped entries
+                        if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
                         {
-                            ImRect& rc = rect_discrete;
-                            if (!rc.Contains(io.MousePos))
-                                continue;
-
-                            draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[2], 0);
-                            draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, quadColor[2]);
-
-                            if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
-                                continue;
-
-                            if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
+                            if (movingTrack == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                             {
-                                movingEntry = i;
-                                movingPos = cx;
-                                movingPart = 3;
-
-                                sequence->BeginEdit(movingEntry);
-                                break;
-                            }
-                        }
-                    }
-
-                    //Looped entries
-                    if (sequenceOptions & SEQUENCER_LOOP_EVENTS)
-                    {
-                        if (movingEntry == -1 && (sequenceOptions & SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
-                        {
-                            for (int j = 2; j >= 0; j--)
-                            {
-                                if (j == 2)
+                                for (int j = 2; j >= 0; j--)
                                 {
-                                    ImRect& rc = rects_loop[j];
-                                    if (!rc.Contains(io.MousePos))
-                                        continue;
-                                    draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
-                                }
-                                else if (!isDiscrete)
-                                {
-                                    ImRect& rc = rects_loop[j];
-                                    if (!rc.Contains(io.MousePos))
-                                        continue;
-                                    draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
-                                }
-                            }
-
-                            for (int j = 0; j < 3; j++)
-                            {
-                                ImRect& rc = rects_loop[j];
-                                if (!rc.Contains(io.MousePos))
-                                    continue;
-                                if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
-                                    continue;
-
-                                if (j == 2)
-                                {
-                                    if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
+                                    if (j == 2)
                                     {
-                                        movingEntry = i;
-                                        movingPos = cx;
-                                        movingPart = j + 1;
-
-                                        sequence->BeginEdit(movingEntry);
-                                        break;
+                                        ImRect& rc = rects_loop[j];
+                                        if (!rc.Contains(io.MousePos))
+                                            continue;
+                                        draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
+                                    }
+                                    else if (!isDiscrete)
+                                    {
+                                        ImRect& rc = rects_loop[j];
+                                        if (!rc.Contains(io.MousePos))
+                                            continue;
+                                        draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
                                     }
                                 }
-                                else if (!isDiscrete)
-                                {
-                                    if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
-                                    {
-                                        movingEntry = i;
-                                        movingPos = cx;
-                                        movingPart = j + 1;
 
-                                        sequence->BeginEdit(movingEntry);
-                                        break;
+                                for (int j = 0; j < 3; j++)
+                                {
+                                    ImRect& rc = rects_loop[j];
+                                    if (!rc.Contains(io.MousePos))
+                                        continue;
+                                    if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
+                                        continue;
+
+                                    if (j == 2)
+                                    {
+                                        if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
+                                        {
+                                            movingTrack = i;
+                                            movingEvent = eventIdx;
+                                            movingPos = cx;
+                                            movingPart = j + 1;
+
+                                            eventTrackEditor->BeginEdit(movingTrack);
+                                            break;
+                                        }
+                                    }
+                                    else if (!isDiscrete)
+                                    {
+                                        if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
+                                        {
+                                            movingTrack = i;
+                                            movingEvent = eventIdx;
+                                            movingPos = cx;
+                                            movingPart = j + 1;
+
+                                            eventTrackEditor->BeginEdit(movingTrack);
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-                // custom draw (black bars)
-                /*if (localCustomHeight > 0)
-                {
-                    ImVec2 rp(canvas_pos.x, contentMin.y + ItemHeight * i + 1 + customHeight);
-                    ImRect customRect(rp + ImVec2(legendWidth - (firstFrameUsed - sequence->GetFrameMin() - 0.5f) * framePixelWidth, float(ItemHeight)),
-                        rp + ImVec2(legendWidth + (sequence->GetFrameMax() - firstFrameUsed - 0.5f + 2.f) * framePixelWidth, float(localCustomHeight + ItemHeight)));
-                    ImRect clippingRect(rp + ImVec2(float(legendWidth), float(ItemHeight)), rp + ImVec2(canvas_size.x, float(localCustomHeight + ItemHeight)));
-
-                    ImRect legendRect(rp + ImVec2(0.f, float(ItemHeight)), rp + ImVec2(float(legendWidth), float(localCustomHeight)));
-                    ImRect legendClippingRect(canvas_pos + ImVec2(0.f, float(ItemHeight)), canvas_pos + ImVec2(float(legendWidth), float(localCustomHeight + ItemHeight)));
-                    customDraws.push_back({ i, customRect, legendRect, clippingRect, legendClippingRect });
-                }
-                else
-                {
-                    ImVec2 rp(canvas_pos.x, contentMin.y + ItemHeight * i + customHeight);
-                    ImRect customRect(rp + ImVec2(legendWidth - (firstFrameUsed - sequence->GetFrameMin() - 0.5f) * framePixelWidth, float(0.f)),
-                        rp + ImVec2(legendWidth + (sequence->GetFrameMax() - firstFrameUsed - 0.5f + 2.f) * framePixelWidth, float(ItemHeight)));
-                    ImRect clippingRect(rp + ImVec2(float(legendWidth), float(0.f)), rp + ImVec2(canvas_size.x, float(ItemHeight)));
-
-                    compactCustomDraws.push_back({ i, customRect, ImRect(), clippingRect, ImRect() });
-                }*/
-                customHeight += localCustomHeight;
             }
 
             // moving
-            if (/*backgroundRect.Contains(io.MousePos) && */movingEntry >= 0)
+            if (movingTrack >= 0 && movingEvent >= 0)
             {
                 ImGui::CaptureMouseFromApp();
                 int diffFrame = int((cx - movingPos) / framePixelWidth);
 
                 if (std::abs(diffFrame) > 0)
                 {
-                    int* start, * end;
-                    sequence->Get(movingEntry, &start, &end, NULL, NULL, NULL, NULL, NULL, NULL);
-                    if (selectedEntry)
-                        *selectedEntry = movingEntry;
-                    int& l = *start;
-                    int& r = *end;
+                     if (selectedTrack)
+                        *selectedTrack = movingTrack;
 
-                    if (l + diffFrame >= -sequence->GetFrameMax() && r + diffFrame <= 2 * sequence->GetFrameMax())
+                     if (selectedEvent)
+                         *selectedEvent = movingEvent;
+
+                    EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[movingTrack];
+
+                    int& l = track->m_event[movingEvent].m_frameStart;
+                    int& r = track->m_event[movingEvent].m_frameEnd;
+
+                    if (l + diffFrame >= -eventTrackEditor->GetFrameMax() && r + diffFrame <= 2 * eventTrackEditor->GetFrameMax())
                     {
                         if (movingPart & 1)
                             l += diffFrame;
@@ -713,30 +650,32 @@ namespace ImSequencer
                     }
                     else
                     {
-                        if (l < -sequence->GetFrameMax())
-                            l = -sequence->GetFrameMax();
+                        if (l < -eventTrackEditor->GetFrameMax())
+                            l = -eventTrackEditor->GetFrameMax();
 
-                        if (r > 2 * sequence->GetFrameMax())
-                            r = 2 * sequence->GetFrameMax();
+                        if (r > 2 * eventTrackEditor->GetFrameMax())
+                            r = 2 * eventTrackEditor->GetFrameMax();
                     }
                     
                 }
                 if (!io.MouseDown[0])
                 {
                     // single select
-                    if (!diffFrame && movingPart && selectedEntry)
+                    if (!diffFrame && movingPart && selectedTrack && selectedEvent)
                     {
-                        *selectedEntry = movingEntry;
+                        *selectedTrack = movingTrack;
+                        *selectedEvent = movingEvent;
                         ret = true;
                     }
 
-                    movingEntry = -1;
-                    sequence->EndEdit();
+                    movingTrack = -1;
+                    movingEvent = -1;
+                    eventTrackEditor->EndEdit();
                 }
             }
 
             // cursor
-            if (currentFrame && firstFrame && *currentFrame >= *firstFrame && *currentFrame <= sequence->GetFrameMax())
+            if (currentFrame && firstFrame && *currentFrame >= *firstFrame && *currentFrame <= eventTrackEditor->GetFrameMax())
             {
                 static const float cursorWidth = 1.f;
 
@@ -750,11 +689,6 @@ namespace ImSequencer
 
             draw_list->PopClipRect();
             draw_list->PopClipRect();
-
-            for (auto& customDraw : customDraws)
-                sequence->CustomDraw(customDraw.index, draw_list, customDraw.customRect, customDraw.legendRect, customDraw.clippingRect, customDraw.legendClippingRect);
-            for (auto& customDraw : compactCustomDraws)
-                sequence->CustomDrawCompact(customDraw.index, draw_list, customDraw.customRect, customDraw.clippingRect);
 
             // copy paste
             if (sequenceOptions & SEQUENCER_COPYPASTE)
@@ -773,11 +707,11 @@ namespace ImSequencer
 
                 if (inRectCopy && io.MouseReleased[0])
                 {
-                    sequence->Copy();
+                    //eventTrackEditor->Copy();
                 }
                 if (inRectPaste && io.MouseReleased[0])
                 {
-                    sequence->Paste();
+                    //eventTrackEditor->Paste();
                 }
             }
             //
@@ -792,7 +726,7 @@ namespace ImSequencer
 
                 // ratio = number of frames visible in control / number to total frames
 
-                float startFrameOffset = ((float)(firstFrameUsed - sequence->GetFrameMin()) / (float)frameCount) * (canvas_size.x - legendWidth);
+                float startFrameOffset = ((float)(firstFrameUsed - eventTrackEditor->GetFrameMin()) / (float)frameCount) * (canvas_size.x - legendWidth);
                 ImVec2 scrollBarA(scrollBarMin.x + legendWidth, scrollBarMin.y - 2);
                 ImVec2 scrollBarB(scrollBarMin.x + canvas_size.x, scrollBarMax.y - 1);
                 draw_list->AddRectFilled(scrollBarA, scrollBarB, 0xFF222222, 0);
@@ -834,9 +768,9 @@ namespace ImSequencer
                         framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
                         int newVisibleFrameCount = int((canvas_size.x - legendWidth) / framePixelWidthTarget);
                         int lastFrame = *firstFrame + newVisibleFrameCount;
-                        if (lastFrame > sequence->GetFrameMax())
+                        if (lastFrame > eventTrackEditor->GetFrameMax())
                         {
-                            framePixelWidthTarget = framePixelWidth = (canvas_size.x - legendWidth) / float(sequence->GetFrameMax() - *firstFrame);
+                            framePixelWidthTarget = framePixelWidth = (canvas_size.x - legendWidth) / float(eventTrackEditor->GetFrameMax() - *firstFrame);
                         }
                     }
                 }
@@ -856,7 +790,7 @@ namespace ImSequencer
                             framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
                             int newVisibleFrameCount = int(visibleFrameCount / barRatio);
                             int newFirstFrame = *firstFrame + newVisibleFrameCount - visibleFrameCount;
-                            newFirstFrame = ImClamp(newFirstFrame, sequence->GetFrameMin(), ImMax(sequence->GetFrameMax() - visibleFrameCount, sequence->GetFrameMin()));
+                            newFirstFrame = ImClamp(newFirstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount, eventTrackEditor->GetFrameMin()));
                             if (newFirstFrame == *firstFrame)
                             {
                                 framePixelWidth = framePixelWidthTarget = previousFramePixelWidthTarget;
@@ -880,12 +814,12 @@ namespace ImSequencer
                         {
                             float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
                             *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
-                            *firstFrame = ImClamp(*firstFrame, sequence->GetFrameMin(), ImMax(sequence->GetFrameMax() - visibleFrameCount, sequence->GetFrameMin()));
+                            *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount, eventTrackEditor->GetFrameMin()));
                         }
                     }
                     else
                     {
-                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingEntry == -1)
+                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1)
                         {
                             MovingScrollBar = true;
                             panningViewSource = io.MousePos;
@@ -899,49 +833,6 @@ namespace ImSequencer
                     }
                 }
             }
-
-            /*if (regionRect.Contains(io.MousePos))
-            {
-                bool overCustomDraw = false;
-                for (auto& custom : customDraws)
-                {
-                    if (custom.customRect.Contains(io.MousePos))
-                    {
-                        overCustomDraw = true;
-                    }
-                }
-                if (overCustomDraw)
-                {
-                }
-                else
-                {
-                    int frameOverCursor = *firstFrame + (int)(visibleFrameCount * ((io.MousePos.x - (float)legendWidth - canvas_pos.x) / (canvas_size.x - legendWidth)));
-                    //frameOverCursor = max(min(*firstFrame - visibleFrameCount / 2, frameCount - visibleFrameCount), 0);
-
-                    /**firstFrame -= frameOverCursor;
-                    *firstFrame *= framePixelWidthTarget / framePixelWidth;
-                    *firstFrame += frameOverCursor;
-
-                    if (ImGui::IsKeyDown(VK_CONTROL))
-                    {
-                        if (io.MouseWheel < -FLT_EPSILON)
-                        {
-                            framePixelWidthTarget *= 0.9f;
-                            framePixelWidth *= 0.9f;
-                            int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
-                            *firstFrame += frameOverCursor - newFrameOverCursor;
-                        }
-
-                        if (io.MouseWheel > FLT_EPSILON)
-                        {
-                            framePixelWidthTarget *= 1.1f;
-                            framePixelWidth *= 1.1f;
-                            int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
-                            *firstFrame += frameOverCursor - newFrameOverCursor;
-                        }
-                    }
-                }
-            }*/
 
             if (regionRect.Contains(io.MousePos))
             {
@@ -995,14 +886,14 @@ namespace ImSequencer
 
         if (delEntry != -1)
         {
-            sequence->Del(delEntry);
-            if (selectedEntry && (*selectedEntry == delEntry || *selectedEntry >= sequence->GetItemCount()))
-                *selectedEntry = -1;
+            eventTrackEditor->DelTrack(delEntry);
+            if (selectedTrack && (*selectedTrack == delEntry || *selectedTrack >= eventTrackEditor->GetTrackCount()))
+                *selectedTrack = -1;
         }
 
         if (dupEntry != -1)
         {
-            sequence->Duplicate(dupEntry);
+            eventTrackEditor->DuplicateTrack(dupEntry);
         }
         return ret;
     }

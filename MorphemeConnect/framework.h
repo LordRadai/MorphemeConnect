@@ -29,8 +29,5 @@
 //ImNodes
 #include "imnodes/imnodes.h"
 #include "imnodes/imnodes_internal.h"
-//ImSequencer
-#include "imsequencer/ImCurveEdit.h"
-#include "imsequencer/ImSequencer.h"
 
 #include "Debug/Debug.h"

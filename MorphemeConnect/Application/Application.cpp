@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "../extern.h"
+#include "../MathHelper/MathHelper.h"
 
 Application::Application()
 {
@@ -190,7 +191,8 @@ void Application::RenderGUI(const char* title)
 
 	{
 		static char categoryInfo[100], valueInfo[255];
-		static int selectedEntry = -1;
+		static int selectedTrack = -1;
+		static int selectedEvent = -1;
 		static int firstFrame = 0;
 		static bool expanded = true;
 		static int currentFrame = -1;
@@ -201,34 +203,35 @@ void Application::RenderGUI(const char* title)
 			if (ImGui::Button("Load")) 
 			{ 
 				this->m_eventTrackEditorFlags.m_load = true;
-				selectedEntry = -1;
+				selectedTrack = -1;
+				selectedEvent = -1;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Save")) { this->m_eventTrackEditorFlags.m_save = true; }
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &expanded, &selectedEntry, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND /*| ImSequencer::SEQUENCER_LOOP_EVENTS*/); //Morpheme supports looped events, DS2 does not use it
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_ADD | ImSequencer::SEQUENCER_DEL);
 			ImGui::EndChild();
 		}
 		ImGui::End();
 
 		ImGui::Begin("Event Data");
 		{
-			if (selectedEntry != -1)
+			if (selectedTrack != -1)
 			{
-				EventTrackEditor::EventTrack& item = m_eventTrackEditor.myItems[selectedEntry];
-				float startTime = MathHelper::FrameToTime(item.mFrameStart);
-				float duration = MathHelper::FrameToTime(item.mFrameEnd);
+				EventTrackEditor::EventTrack track = this->m_eventTrackEditor.m_eventTracks[selectedTrack];
+				float startTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_frameStart);
+				float endTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_frameEnd);
 
-				ImGui::Text("%s", item.trackName);
+				ImGui::Text(track.m_name);
 				ImGui::PushItemWidth(100);
-				ImGui::InputInt("Event ID", &item.eventId, 1, 0);
+				ImGui::InputInt("Event ID", &track.m_eventId, 1, 0);
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::Text(categoryInfo);
 				}
 
-				ImGui::InputInt("Event Value", &item.value, 1, 0);
+				ImGui::InputInt("Event Value", &track.m_event[selectedEvent].m_value, 1, 0);
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::Text("Info");
@@ -238,10 +241,10 @@ void Application::RenderGUI(const char* title)
 				}
 
 				ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
-				ImGui::DragFloat("End Time", &duration, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
+				ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
 				ImGui::PopItemWidth();
 
-				item.SaveEventTrackData(item.morpheme_track, this->m_eventTrackEditorFlags.m_lenMult);
+				//track.SaveEventTrackData(track.morpheme_track, this->m_eventTrackEditorFlags.m_lenMult);
 			}
 		}
 		ImGui::End();
@@ -270,7 +273,6 @@ void Application::ProcessVariables()
 	{
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
-		this->m_eventTrackList.ClearTrackList();
 
 		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
@@ -288,85 +290,30 @@ void Application::ProcessVariables()
 					{
 						if (node_data->m_attribSourceAnim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
+							found = true;
+
 							this->m_eventTrackEditor.mFrameMin = 0;
 							this->m_eventTrackEditor.mFrameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
 
-							this->m_eventTrackList = MorphemeEventTrackList(node_data->m_attribEventTrack);
-							this->m_eventTrackEditorFlags.m_lenMult = node_data->m_attribSourceAnim->m_animLen / node_data->m_attribSourceAnim->m_trackLen;
-
-							int id = 0;
-
-							for (size_t i = 0; i < m_eventTrackList.count_discrete; i++)
+							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
 							{
-								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_discrete[i]);
-								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_discrete[i], this->m_eventTrackEditorFlags.m_lenMult);
-
-								if (m_eventTrackList.tracks_discrete[i].eventCount > 1)
-								{
-									for (size_t j = 0; j < m_eventTrackList.count_discreteSub; j++)
-									{
-										if (m_eventTrackList.tracks_discreteSub[j].parentId == i)
-										{
-											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_discreteSub[j]);
-											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_discreteSub[j], this->m_eventTrackEditorFlags.m_lenMult);
-
-											id++;
-										}
-									}
-								}
-								else
-									id++;
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i]);
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, true));
 							}
 
-							for (size_t i = 0; i < m_eventTrackList.count_unk; i++)
+							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[1].m_trackCount; i++)
 							{
-								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_unk[i]);
-								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_unk[i], this->m_eventTrackEditorFlags.m_lenMult);
-
-								if (m_eventTrackList.tracks_unk[i].eventCount > 1)
-								{
-									for (size_t j = 0; j < m_eventTrackList.count_unkSub; j++)
-									{
-										if (m_eventTrackList.tracks_unkSub[j].parentId == i)
-										{
-											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_unkSub[j]);
-											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_unkSub[j], this->m_eventTrackEditorFlags.m_lenMult);
-
-											id++;
-										}
-									}
-								}
-								else
-									id++;
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[i]);
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, false));
 							}
 
-							for (size_t i = 0; i < m_eventTrackList.count_timed; i++)
+							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
 							{
-								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_timed[i]);
-								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_timed[i], this->m_eventTrackEditorFlags.m_lenMult);
-
-								if (m_eventTrackList.tracks_timed[i].eventCount > 1)
-								{
-									for (size_t j = 0; j < m_eventTrackList.count_timedSub; j++)
-									{
-										if (m_eventTrackList.tracks_timedSub[j].parentId == i)
-										{
-											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_timedSub[j]);
-											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_timedSub[j], this->m_eventTrackEditorFlags.m_lenMult);
-
-											id++;
-										}
-									}
-								}
-								else
-									id++;
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i]);
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, false));
 							}
 
-							if ((m_eventTrackList.count_discrete > 0) || (m_eventTrackList.count_unk > 0) || (m_eventTrackList.count_timed > 0))
-							{	
-								found = true;
-								break;
-							}
+							break;
 						}
 					}
 				}
@@ -386,7 +333,7 @@ void Application::ProcessVariables()
 
 		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
-			this->m_eventTrackList.SaveEventTracks();
+			//this->m_eventTrackList.SaveEventTracks();
 		}
 	}
 }

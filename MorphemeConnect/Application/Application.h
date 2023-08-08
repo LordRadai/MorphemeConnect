@@ -15,9 +15,7 @@
 #include <vector>
 
 #include "../framework.h"
-
-#include "../Timeline/Timeline.h"
-#include "../TimeAct/TimeAct.h"
+#include "../imsequencer/ImSequencer.h"
 #include "../NMBReader/NMBReader.h"
 
 class Application
@@ -38,10 +36,8 @@ public:
 
 	} m_eventTrackEditorFlags;
 
-	MorphemeEventTrackList m_eventTrackList;
-	EventTrackEditor m_eventTrackEditor;
-
 	NMBReader nmb;
+	EventTrackEditor m_eventTrackEditor;
 
 	Application();
 	~Application();

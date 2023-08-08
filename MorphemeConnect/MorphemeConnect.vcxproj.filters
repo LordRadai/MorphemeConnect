@@ -43,18 +43,6 @@
     <Filter Include="File di origine\Debug">
       <UniqueIdentifier>{e3f75dcc-0912-434c-9c91-4e365006d907}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\Morpheme">
-      <UniqueIdentifier>{6ac1b866-8992-4cf7-bcdd-60a0309f7d41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\Morpheme">
-      <UniqueIdentifier>{bbb46251-9839-487b-8c52-23f44a210226}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di intestazione\Timeline">
-      <UniqueIdentifier>{caf76a84-aafd-4652-95f9-89338116feac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\Timeline">
-      <UniqueIdentifier>{d5c1b3bd-45cf-4b4a-8bde-689bc001ced9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="File di intestazione\Application">
       <UniqueIdentifier>{3bba3573-d615-4e3e-8f08-576ed3ab41b2}</UniqueIdentifier>
     </Filter>
@@ -78,6 +66,12 @@
     </Filter>
     <Filter Include="File di intestazione\NMBReader\MorphemeBundle">
       <UniqueIdentifier>{5259aba0-165e-4a24-babb-275199c63f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\EventTrackEditor">
+      <UniqueIdentifier>{9475d9c6-e5e4-41c3-9c5a-155a5b1802a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\EventTrackEditor">
+      <UniqueIdentifier>{4d357545-7b52-4654-9a1e-2e5da3e498f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,20 +120,11 @@
     <ClInclude Include="imsequencer\ImSequencer.h">
       <Filter>File di intestazione\imsequencer</Filter>
     </ClInclude>
-    <ClInclude Include="imsequencer\ImCurveEdit.h">
-      <Filter>File di intestazione\imsequencer</Filter>
-    </ClInclude>
     <ClInclude Include="MathHelper\MathHelper.h">
       <Filter>File di intestazione\MathHelper</Filter>
     </ClInclude>
     <ClInclude Include="Debug\Debug.h">
       <Filter>File di intestazione\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Morpheme\Morpheme.h">
-      <Filter>File di intestazione\Morpheme</Filter>
-    </ClInclude>
-    <ClInclude Include="Timeline\Timeline.h">
-      <Filter>File di intestazione\Timeline</Filter>
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>File di intestazione</Filter>
@@ -197,9 +182,6 @@
     <ClCompile Include="imnodes\imnodes.cpp">
       <Filter>File di origine\imnodes</Filter>
     </ClCompile>
-    <ClCompile Include="imsequencer\ImCurveEdit.cpp">
-      <Filter>File di origine\imsequencer</Filter>
-    </ClCompile>
     <ClCompile Include="imsequencer\ImSequencer.cpp">
       <Filter>File di origine\imsequencer</Filter>
     </ClCompile>
@@ -208,12 +190,6 @@
     </ClCompile>
     <ClCompile Include="Debug\Debug.cpp">
       <Filter>File di origine\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Morpheme\Morpheme.cpp">
-      <Filter>File di origine\Morpheme</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline\Timeline.cpp">
-      <Filter>File di origine\Timeline</Filter>
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">
       <Filter>File di origine\Application</Filter>
@@ -238,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_FIleNameLookupTable.cpp">
       <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="EventTrackEditor\EventTrackEditor.h">
+      <Filter>File di intestazione\EventTrackEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp">
+      <Filter>File di origine\EventTrackEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -143,11 +143,9 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="imnodes\imnodes.h" />
     <ClInclude Include="imnodes\imnodes_internal.h" />
-    <ClInclude Include="imsequencer\ImCurveEdit.h" />
     <ClInclude Include="imsequencer\ImSequencer.h" />
     <ClInclude Include="MathHelper\MathHelper.h" />
     <ClInclude Include="MorphemeConnect.h" />
-    <ClInclude Include="Morpheme\Morpheme.h" />
     <ClInclude Include="NMBReader\MemHelper\MemHelper.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
@@ -157,11 +155,12 @@
     <ClInclude Include="NMBReader\NMBReader.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Timeline\Timeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Debug\Debug.cpp" />
+    <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
+    <ClCompile Include="EventTrackEditor\EventTrackEditor.h" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -170,11 +169,9 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="imnodes\imnodes.cpp" />
-    <ClCompile Include="imsequencer\ImCurveEdit.cpp" />
     <ClCompile Include="imsequencer\ImSequencer.cpp" />
     <ClCompile Include="MathHelper\MathHelper.cpp" />
     <ClCompile Include="MorphemeConnect.cpp" />
-    <ClCompile Include="Morpheme\Morpheme.cpp" />
     <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
@@ -182,7 +179,6 @@
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
     <ClCompile Include="NMBReader\NMBReader.cpp" />
-    <ClCompile Include="Timeline\Timeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MorphemeConnect.rc" />

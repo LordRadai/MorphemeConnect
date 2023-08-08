@@ -13,8 +13,9 @@ struct EventTrackEditor
     {
         struct Event
         {
-            int m_frameStart, m_frameEnd;
-            int m_value;
+            int m_frameStart = 0;
+            int m_duration = 0;
+            int m_value = 0;
         };
 
         MorphemeBundle_EventTrack* source;
@@ -26,55 +27,14 @@ struct EventTrackEditor
         const char* m_name;
         bool m_discrete;
 
-        EventTrack(int signature, int numEvents, int eventId, Event* event, const char* name, bool is_discrete)
-        {
-            this->source = NULL;
+        EventTrack(int signature, int numEvents, int eventId, Event* event, const char* name, bool is_discrete);
+        EventTrack(MorphemeBundle_EventTrack* src, float len, bool discrete);
 
-            this->m_signature = signature;
-            this->m_numEvents = numEvents;
-            this->m_eventId = eventId;
-            this->m_name = name;
-            this->m_discrete = is_discrete;
-
-            this->m_event = new Event[this->m_numEvents];
-
-            for (size_t i = 0; i < numEvents; i++)
-            {
-                this->m_event[i].m_frameStart = event[i].m_frameStart;
-                this->m_event[i].m_frameEnd = event[i].m_frameEnd;
-                this->m_event[i].m_value = event[i].m_value;
-            }
-        }
-
-        EventTrack(MorphemeBundle_EventTrack* src, float len, bool discrete)
-        {
-            this->source = src;
-            this->m_signature = src->m_signature;
-            this->m_numEvents = src->m_data->m_numEvents;
-            this->m_eventId = src->m_data->m_eventId;
-            this->m_name = src->m_data->m_trackName;
-
-            this->m_discrete = discrete;
-
-            this->m_event = new Event[this->m_numEvents];
-
-            for (size_t i = 0; i < src->m_data->m_numEvents; i++)
-            {
-                this->m_event[i].m_frameStart = MathHelper::TimeToFrame(src->m_data->m_trackData[i].m_start * len);
-                
-                if (this->m_discrete == false)
-                    this->m_event[i].m_frameEnd = MathHelper::TimeToFrame((src->m_data->m_trackData[i].m_start + src->m_data->m_trackData[i].m_duration) * len);
-                else
-                    this->m_event[i].m_frameEnd = this->m_event[i].m_frameStart;
-
-                this->m_event[i].m_value = src->m_data->m_trackData[i].m_userData;
-            }
-        }
-
-        //void SaveEventTrackData(float multiplier);
+        void SaveEventTrackData(float len);
     };
+
     std::vector<EventTrack> m_eventTracks;
-    int mFrameMin, mFrameMax;
+    int m_frameMin, m_frameMax;
     bool focused = false;
 
     int GetFrameMin() const;
@@ -87,10 +47,10 @@ struct EventTrackEditor
     const char* GetTrackName(int idx) const;
     std::string GetEventLabel(int track_idx, int event_idx) const;
 
-    void AddTrack(bool discrete);
+    void AddTrack(int event_id, const char* name, bool discrete);
 
-    void DelTrack(int index);
-    void DuplicateTrack(int index);
+    void DeleteEvent(int track_idx, int event_idx);
+    void AddEvent(int track_idx, EventTrack::Event event);
 
     EventTrackEditor();
 

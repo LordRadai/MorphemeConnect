@@ -74,8 +74,12 @@ namespace ImSequencer
         static int movingEvent = -1;
         static int movingPos = -1;
         static int movingPart = -1;
-        int delEntry = -1;
-        int dupEntry = -1;
+
+        bool addTrack = false;
+        static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
+        int delTrack = -1;
+        int delEvent = -1;
+
         int ItemHeight = 20;
 
         bool popupOpened = false;
@@ -208,9 +212,9 @@ namespace ImSequencer
             if (sequenceOptions & SEQUENCER_ADD)
             {
                 if (SequencerAddDelButton(draw_list, ImVec2(canvas_pos.x + legendWidth - ItemHeight, canvas_pos.y + 2), true) && io.MouseReleased[0])
-                    ImGui::OpenPopup("addEntry");
+                    ImGui::OpenPopup("addTrack");
 
-                if (ImGui::BeginPopup("addEntry"))
+                if (ImGui::BeginPopup("addTrack"))
                 {
                     ImGui::EndPopup();
                     popupOpened = true;
@@ -294,13 +298,27 @@ namespace ImSequencer
 
                 if (sequenceOptions & SEQUENCER_DEL)
                 {
-                    bool overDel = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), false);
-                    if (overDel && io.MouseReleased[0])
-                        delEntry = i;
+                    bool overDel = false;
+
+                    if ((*selectedEvent != -1) && (i == *selectedTrack))
+                        overDel = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), false);
 
                     bool overDup = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), true);
-                    if (overDup && io.MouseReleased[0])
-                        dupEntry = i;
+
+                    for (size_t j = 0; j < eventTrackEditor->m_eventTracks[i].m_numEvents; j++)
+                    {
+                        if (overDel && io.MouseReleased[0])
+                        {
+                            delTrack = i;
+                            delEvent = *selectedEvent;
+                        }
+
+                        if (overDup && io.MouseReleased[0])
+                        {
+                            addTrack = true;
+                            *selectedTrack = i;
+                        }
+                    }
                 }
             }
 
@@ -341,28 +359,28 @@ namespace ImSequencer
 
             // tracks
             customHeight = 0;
-            for (int i = 0; i < sequenceCount; i++)
+            for (int trackIndex = 0; trackIndex < sequenceCount; trackIndex++)
             {
                 unsigned int color;
                 unsigned int slotColor = TRACK_COLOR;
                 unsigned int slotColorHalf = slotColor | 0x40000000;
                 unsigned int boundColor = TRACK_BOUND;
 
-                EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[i];
+                EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[trackIndex];
 
                 bool isDiscrete = track->m_discrete;
 
                 for (int eventIdx = 0; eventIdx < track->m_numEvents; eventIdx++)
                 {
-                    std::string event_value = eventTrackEditor->GetEventLabel(i, eventIdx);
+                    std::string event_value = eventTrackEditor->GetEventLabel(trackIndex, eventIdx);
 
-                    if (*currentFrame >= track->m_event[eventIdx].m_frameStart && *currentFrame <= track->m_event[eventIdx].m_frameEnd)
+                    if ((*currentFrame >= track->m_event[eventIdx].m_frameStart) && *currentFrame <= (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart))
                         slotColor = TRACK_COLOR_ACTIVE;
 
-                    ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
+                    ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * trackIndex + 1 + customHeight);
                     ImVec2 slotP1(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + 2);
-                    ImVec2 slotP2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 2);
-                    ImVec2 slotP3(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 2);
+                    ImVec2 slotP2(pos.x + (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart) * framePixelWidth - 1, pos.y + ItemHeight - 2);
+                    ImVec2 slotP3(pos.x + (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart) * framePixelWidth - 1, pos.y + ItemHeight - 2);
                     ImVec2 slotP1Loop;
                     ImVec2 slotP2Loop;
                     ImVec2 slotP3Loop;
@@ -374,10 +392,10 @@ namespace ImSequencer
                     ImVec2 slotT3Loop;
 
                     ImVec2 slotD1(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + 2);
-                    ImVec2 slotD2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
-                    ImVec2 slotD3(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotD2(pos.x + track->m_event[eventIdx].m_frameStart  * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotD3(pos.x + track->m_event[eventIdx].m_frameStart  * framePixelWidth - 1, pos.y + ItemHeight - 7);
                     ImVec2 slotT1 = ImVec2(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + ItemHeight - 7);
-                    ImVec2 slotT2 = ImVec2(pos.x + track->m_event[eventIdx].m_frameEnd * framePixelWidth - 1, pos.y + ItemHeight - 7);
+                    ImVec2 slotT2 = ImVec2(pos.x + track->m_event[eventIdx].m_frameStart * framePixelWidth - 1, pos.y + ItemHeight - 7);
                     ImVec2 slotT3 = ImVec2((slotT2.x + slotT1.x) / 2, (slotT2.y + slotT1.y) / 2 + 5);
 
                     ImVec2 frameMin = ImVec2(pos.x - 1, 0);
@@ -388,22 +406,16 @@ namespace ImSequencer
                     ImVec2 textD(slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2, slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
                     ImVec2 textPLoop;
 
-                    if (track->m_event[eventIdx].m_frameStart == track->m_event[eventIdx].m_frameEnd)
-                    {
-                        slotP1.x -= framePixelWidth / 2;
-                        slotP2.x += framePixelWidth / 2;
-
-                        slotD1.x -= framePixelWidth / 2;
-                        slotD2.x += framePixelWidth / 2;
-
-                        slotT1.x -= framePixelWidth / 2;
-                        slotT2.x += framePixelWidth / 2;
-                    }
-
                     if ((slotP1.x <= (canvas_size.x + contentMin.x) || slotP1.x >= (contentMin.x + legendWidth)) && (slotP2.x >= (contentMin.x + legendWidth) || slotP2.x <= (canvas_size.x + contentMin.x)))
                     {
                         if (isDiscrete)
                         {
+                            slotD1.x -= framePixelWidth / 2;
+                            slotD2.x += framePixelWidth / 2;
+
+                            slotT1.x -= framePixelWidth / 2;
+                            slotT2.x += framePixelWidth / 2;
+
                             draw_list->AddRectFilled(slotD1, slotD3, slotColorHalf, 0);
                             draw_list->AddRectFilled(slotD1, slotD2, slotColor, 0); //Track Box
                             draw_list->AddLine(slotD1, ImVec2(slotD2.x, slotD1.y), boundColor);
@@ -520,12 +532,11 @@ namespace ImSequencer
 
                                     if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
                                     {
-                                        movingTrack = i;
+                                        movingTrack = trackIndex;
                                         movingEvent = eventIdx;
                                         movingPos = cx;
                                         movingPart = j + 1;
 
-                                        eventTrackEditor->BeginEdit(movingTrack);
                                         break;
                                     }
                                 }
@@ -544,12 +555,11 @@ namespace ImSequencer
 
                                 if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
                                 {
-                                    movingTrack = i;
+                                    movingTrack = trackIndex;
                                     movingEvent = eventIdx;
                                     movingPos = cx;
                                     movingPart = 3;
 
-                                    eventTrackEditor->BeginEdit(movingTrack);
                                     break;
                                 }
                             }
@@ -590,12 +600,11 @@ namespace ImSequencer
                                     {
                                         if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
                                         {
-                                            movingTrack = i;
+                                            movingTrack = trackIndex;
                                             movingEvent = eventIdx;
                                             movingPos = cx;
                                             movingPart = j + 1;
 
-                                            eventTrackEditor->BeginEdit(movingTrack);
                                             break;
                                         }
                                     }
@@ -603,12 +612,11 @@ namespace ImSequencer
                                     {
                                         if (ImGui::IsMouseClicked(0) && !MovingScrollBar && !MovingCurrentFrame)
                                         {
-                                            movingTrack = i;
+                                            movingTrack = trackIndex;
                                             movingEvent = eventIdx;
                                             movingPos = cx;
                                             movingPart = j + 1;
 
-                                            eventTrackEditor->BeginEdit(movingTrack);
                                             break;
                                         }
                                     }
@@ -635,26 +643,23 @@ namespace ImSequencer
 
                     EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[movingTrack];
 
-                    int& l = track->m_event[movingEvent].m_frameStart;
-                    int& r = track->m_event[movingEvent].m_frameEnd;
-
-                    if (l + diffFrame >= -eventTrackEditor->GetFrameMax() && r + diffFrame <= 2 * eventTrackEditor->GetFrameMax())
+                    if (track->m_event[movingEvent].m_frameStart + diffFrame >= -eventTrackEditor->GetFrameMax() && (track->m_event[movingEvent].m_frameStart + track->m_event[movingEvent].m_duration) + diffFrame <= 2 * eventTrackEditor->GetFrameMax())
                     {
                         if (movingPart & 1)
-                            l += diffFrame;
+                            track->m_event[movingEvent].m_frameStart += diffFrame;
 
                         if (movingPart & 2)
-                            r += diffFrame;
+                            track->m_event[movingEvent].m_duration += diffFrame;
 
                         movingPos += int(diffFrame * framePixelWidth);
                     }
                     else
                     {
-                        if (l < -eventTrackEditor->GetFrameMax())
-                            l = -eventTrackEditor->GetFrameMax();
+                        if (track->m_event[movingEvent].m_frameStart < -eventTrackEditor->GetFrameMax())
+                            track->m_event[movingEvent].m_frameStart = -eventTrackEditor->GetFrameMax();
 
-                        if (r > 2 * eventTrackEditor->GetFrameMax())
-                            r = 2 * eventTrackEditor->GetFrameMax();
+                        if ((track->m_event[movingEvent].m_frameStart + track->m_event[movingEvent].m_duration) > 2 * eventTrackEditor->GetFrameMax())
+                            track->m_event[movingEvent].m_duration = (2 * eventTrackEditor->GetFrameMax() - track->m_event[movingEvent].m_frameStart);
                     }
                     
                 }
@@ -884,17 +889,39 @@ namespace ImSequencer
                 *expanded = !*expanded;
         }
 
-        if (delEntry != -1)
+        if (delTrack != -1)
         {
-            eventTrackEditor->DelTrack(delEntry);
-            if (selectedTrack && (*selectedTrack == delEntry || *selectedTrack >= eventTrackEditor->GetTrackCount()))
+            eventTrackEditor->DeleteEvent(delTrack, delEvent);
+
+            if (selectedTrack && (*selectedTrack == delTrack || *selectedTrack >= eventTrackEditor->GetTrackCount()))
                 *selectedTrack = -1;
         }
 
-        if (dupEntry != -1)
+        if (addTrack)
         {
-            eventTrackEditor->DuplicateTrack(dupEntry);
+            ImGui::OpenPopup("addEvent");
         }
+
+        if (ImGui::BeginPopup("addEvent"))
+        {
+            ImGui::Text(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
+            ImGui::Separator();
+
+            ImGui::InputFloat("Start", &addEvent.m_start);
+
+            if (eventTrackEditor->m_eventTracks[*selectedTrack].m_discrete == false)
+                ImGui::InputFloat("Duration", &addEvent.m_duration);
+            else
+                addEvent.m_duration = 0.f;
+
+            ImGui::InputInt("Value", &addEvent.m_value);
+
+            if (ImGui::Button("Add Event"))
+                eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ MathHelper::TimeToFrame(addEvent.m_start), MathHelper::TimeToFrame(addEvent.m_duration), addEvent.m_value});
+
+            ImGui::EndPopup();
+        }
+
         return ret;
     }
 }

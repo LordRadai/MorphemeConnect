@@ -155,9 +155,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MorphemeConnect.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>File di origine\imgui</Filter>
     </ClCompile>
@@ -220,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp">
       <Filter>File di origine\EventTrackEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeConnect.cpp">
+      <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

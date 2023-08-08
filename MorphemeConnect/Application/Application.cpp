@@ -206,8 +206,6 @@ void Application::RenderGUI(const char* title)
 				selectedTrack = -1;
 				selectedEvent = -1;
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save")) { this->m_eventTrackEditorFlags.m_save = true; }
 
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_ADD | ImSequencer::SEQUENCER_DEL);
@@ -217,11 +215,11 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::Begin("Event Data");
 		{
-			if (selectedTrack != -1)
+			if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (selectedTrack != -1) && (selectedEvent != -1))
 			{
 				EventTrackEditor::EventTrack track = this->m_eventTrackEditor.m_eventTracks[selectedTrack];
 				float startTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_frameStart);
-				float endTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_frameEnd);
+				float endTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_duration + track.m_event[selectedEvent].m_frameStart);
 
 				ImGui::Text(track.m_name);
 				ImGui::PushItemWidth(100);
@@ -240,11 +238,11 @@ void Application::RenderGUI(const char* title)
 					ImGui::Text(valueInfo);
 				}
 
-				ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
-				ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
+				ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+				ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
 				ImGui::PopItemWidth();
 
-				//track.SaveEventTrackData(track.morpheme_track, this->m_eventTrackEditorFlags.m_lenMult);
+				track.SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
 			}
 		}
 		ImGui::End();
@@ -266,7 +264,16 @@ void Application::ProcessVariables()
 	{
 		this->m_flags.load_file = false;
 
+		m_eventTrackEditorFlags.m_load = false;
+		this->m_eventTrackEditor.Clear();
 		this->LoadFile();
+	}
+
+	if (this->nmb.m_init == false)
+	{
+		this->m_eventTrackEditor.Clear();
+
+		m_eventTrackEditorFlags.m_load = false;
 	}
 
 	if (this->m_eventTrackEditorFlags.m_load)
@@ -290,30 +297,37 @@ void Application::ProcessVariables()
 					{
 						if (node_data->m_attribSourceAnim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
-							found = true;
-
-							this->m_eventTrackEditor.mFrameMin = 0;
-							this->m_eventTrackEditor.mFrameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = 0;
+							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
+							this->m_eventTrackEditorFlags.m_lenMult = node_data->m_attribSourceAnim->m_animLen / node_data->m_attribSourceAnim->m_trackLen;
 
 							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
 							{
 								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i]);
-								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, true));
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
 							}
 
 							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[1].m_trackCount; i++)
 							{
 								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[i]);
-								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, false));
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 							}
 
 							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
 							{
 								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i]);
-								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, node_data->m_attribSourceAnim->m_animLen, false));
+								this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 							}
 
-							break;
+							int track_count = 0;
+							for (size_t i = 0; i < 3; i++)
+								track_count += node_data->m_attribEventTrack->m_eventTracks[i].m_trackCount;
+
+							if (track_count > 0)
+								found = true;
+
+							if (found)
+								break;
 						}
 					}
 				}
@@ -326,20 +340,6 @@ void Application::ProcessVariables()
 			}
 		}
 	}
-
-	if (this->m_eventTrackEditorFlags.m_save)
-	{
-		this->m_eventTrackEditorFlags.m_save = false;
-
-		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
-		{
-			//this->m_eventTrackList.SaveEventTracks();
-		}
-	}
-}
-
-void Application::Dockspace(ImGuiID dockSpace)
-{
 }
 
 void Application::NetworkCleanup()
@@ -381,6 +381,7 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
+						nmb.m_init = false;
 						nmb = NMBReader(pszFilePath);
 						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
 					}

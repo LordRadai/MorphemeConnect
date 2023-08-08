@@ -46,6 +46,5 @@ public:
 	void RenderGUI(const char* title);
 	void ProcessVariables();
 	void LoadFile();
-	void Dockspace(ImGuiID dockSpace);
 	void NetworkCleanup();
 };

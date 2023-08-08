@@ -23,8 +23,24 @@
 class Application
 {
 public:
-	bool style_editor = false;
-	bool load_file = false;
+	struct Flags
+	{
+		bool style_editor = false;
+		bool load_file = false;
+	} m_flags;
+
+	struct EventTrackEditorFlags
+	{
+		bool m_load = false;
+		bool m_save = false;
+		int m_targetAnimIdx = 0;
+		float m_lenMult = 1.f;
+
+	} m_eventTrackEditorFlags;
+
+	MorphemeEventTrackList m_eventTrackList;
+	EventTrackEditor m_eventTrackEditor;
+
 	NMBReader nmb;
 
 	Application();

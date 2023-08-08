@@ -60,3 +60,16 @@ void Debug::Panic(const char* src_module, const char* fmt, ...)
 
 	abort();
 }
+
+void Debug::Alert(UINT type, const char* src_module, const char* fmt, ...)
+{
+	va_list args;
+	__va_start(&args, fmt);
+
+	char msg[256];
+
+	vsprintf_s(msg, fmt, args);
+
+	ShowCursor(true);
+	MessageBoxA(NULL, msg, src_module, type);
+}

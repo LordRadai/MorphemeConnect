@@ -83,7 +83,8 @@ namespace ImSequencer
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
          
         ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
-        ImVec2 canvas_size = ImGui::GetContentRegionAvail();        // Resize canvas to what's available
+        ImVec2 canvas_size = ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);        // Resize canvas to what's available
+
         int firstFrameUsed = firstFrame ? *firstFrame : 0;
 
         int controlHeight = sequenceCount * ItemHeight;

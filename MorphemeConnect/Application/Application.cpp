@@ -3,12 +3,12 @@
 
 Application::Application()
 {
-	this->style_editor = false;
+	this->m_flags.style_editor = false;
 }
 
 Application::~Application()
 {
-	this->style_editor = false;
+	this->m_flags.style_editor = false;
 }
 
 void Application::GUIStyle()
@@ -105,14 +105,15 @@ void Application::RenderGUI(const char* title)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open", NULL, &this->load_file)) { this->load_file = true; }
-			
+			if (ImGui::MenuItem("Open", NULL, &this->m_flags.load_file)) { this->m_flags.load_file = true; }
+			if (ImGui::MenuItem("Save", NULL)) {}
+
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Style Editor", NULL, &this->style_editor)) { style_editor != style_editor; }
+			if (ImGui::MenuItem("Style Editor", NULL, &this->m_flags.style_editor)) { this->m_flags.style_editor != this->m_flags.style_editor; }
 
 			ImGui::EndMenu();
 		}
@@ -143,7 +144,7 @@ void Application::RenderGUI(const char* title)
 							ImGui::PushID(i);
 							if (ImGui::Selectable(anim_name.c_str()))
 							{
-								//TODO implement selection behaviour
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
 							}
 							ImGui::PopID();
 						}
@@ -187,30 +188,206 @@ void Application::RenderGUI(const char* title)
 	}
 	ImGui::End();
 
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
-	ImGui::Begin("EventTrack");
 	{
+		static char categoryInfo[100], valueInfo[255];
+		static int selectedEntry = -1;
+		static int firstFrame = 0;
+		static bool expanded = true;
+		static int currentFrame = -1;
 
+		ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+		ImGui::Begin("EventTrack");
+		{
+			if (ImGui::Button("Load")) 
+			{ 
+				this->m_eventTrackEditorFlags.m_load = true;
+				selectedEntry = -1;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save")) { this->m_eventTrackEditorFlags.m_save = true; }
+
+			ImGui::BeginChild("sequencer");
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &expanded, &selectedEntry, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND /*| ImSequencer::SEQUENCER_LOOP_EVENTS*/); //Morpheme supports looped events, DS2 does not use it
+			ImGui::EndChild();
+		}
+		ImGui::End();
+
+		ImGui::Begin("Event Data");
+		{
+			if (selectedEntry != -1)
+			{
+				EventTrackEditor::EventTrack& item = m_eventTrackEditor.myItems[selectedEntry];
+				float startTime = MathHelper::FrameToTime(item.mFrameStart);
+				float duration = MathHelper::FrameToTime(item.mFrameEnd);
+
+				ImGui::Text("%s", item.trackName);
+				ImGui::PushItemWidth(100);
+				ImGui::InputInt("Event ID", &item.eventId, 1, 0);
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::Text(categoryInfo);
+				}
+
+				ImGui::InputInt("Event Value", &item.value, 1, 0);
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::Text("Info");
+					ImGui::Separator();
+
+					ImGui::Text(valueInfo);
+				}
+
+				ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
+				ImGui::DragFloat("End Time", &duration, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.mFrameMax, 60), "%.3f", ImGuiSliderFlags_ReadOnly);
+				ImGui::PopItemWidth();
+
+				item.SaveEventTrackData(item.morpheme_track, this->m_eventTrackEditorFlags.m_lenMult);
+			}
+		}
+		ImGui::End();
 	}
-	ImGui::End();
 
 	ImGui::End();
 }
 
 void Application::ProcessVariables()
 {
-	if (this->style_editor)
+	if (this->m_flags.style_editor)
 	{
-		ImGui::Begin("Style Editor", &this->style_editor);
+		ImGui::Begin("Style Editor", &this->m_flags.style_editor);
 		ImGui::ShowStyleEditor();
 		ImGui::End();
 	}
 
-	if (this->load_file)
+	if (this->m_flags.load_file)
 	{
-		this->load_file = false;
+		this->m_flags.load_file = false;
 
 		this->LoadFile();
+	}
+
+	if (this->m_eventTrackEditorFlags.m_load)
+	{
+		this->m_eventTrackEditorFlags.m_load = false;
+		this->m_eventTrackEditor.Clear();
+		this->m_eventTrackList.ClearTrackList();
+
+		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+		{
+			bool found = false;
+
+			for (int idx = 0; idx < this->nmb.m_network.m_data->m_numNodes; idx++)
+			{
+				NodeDef* node = this->nmb.m_network.m_data->m_nodes[idx];
+
+				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+				{
+					NodeData104* node_data = (NodeData104*)this->nmb.m_network.m_data->m_nodes[idx]->node_data;
+
+					if (node_data != NULL)
+					{
+						if (node_data->m_attribSourceAnim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
+						{
+							this->m_eventTrackEditor.mFrameMin = 0;
+							this->m_eventTrackEditor.mFrameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
+
+							this->m_eventTrackList = MorphemeEventTrackList(node_data->m_attribEventTrack);
+							this->m_eventTrackEditorFlags.m_lenMult = node_data->m_attribSourceAnim->m_animLen / node_data->m_attribSourceAnim->m_trackLen;
+
+							int id = 0;
+
+							for (size_t i = 0; i < m_eventTrackList.count_discrete; i++)
+							{
+								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_discrete[i]);
+								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_discrete[i], this->m_eventTrackEditorFlags.m_lenMult);
+
+								if (m_eventTrackList.tracks_discrete[i].eventCount > 1)
+								{
+									for (size_t j = 0; j < m_eventTrackList.count_discreteSub; j++)
+									{
+										if (m_eventTrackList.tracks_discreteSub[j].parentId == i)
+										{
+											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_discreteSub[j]);
+											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_discreteSub[j], this->m_eventTrackEditorFlags.m_lenMult);
+
+											id++;
+										}
+									}
+								}
+								else
+									id++;
+							}
+
+							for (size_t i = 0; i < m_eventTrackList.count_unk; i++)
+							{
+								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_unk[i]);
+								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_unk[i], this->m_eventTrackEditorFlags.m_lenMult);
+
+								if (m_eventTrackList.tracks_unk[i].eventCount > 1)
+								{
+									for (size_t j = 0; j < m_eventTrackList.count_unkSub; j++)
+									{
+										if (m_eventTrackList.tracks_unkSub[j].parentId == i)
+										{
+											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_unkSub[j]);
+											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_unkSub[j], this->m_eventTrackEditorFlags.m_lenMult);
+
+											id++;
+										}
+									}
+								}
+								else
+									id++;
+							}
+
+							for (size_t i = 0; i < m_eventTrackList.count_timed; i++)
+							{
+								m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_timed[i]);
+								m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_timed[i], this->m_eventTrackEditorFlags.m_lenMult);
+
+								if (m_eventTrackList.tracks_timed[i].eventCount > 1)
+								{
+									for (size_t j = 0; j < m_eventTrackList.count_timedSub; j++)
+									{
+										if (m_eventTrackList.tracks_timedSub[j].parentId == i)
+										{
+											m_eventTrackEditor.LoadTrackName(id, m_eventTrackList.tracks_timedSub[j]);
+											m_eventTrackEditor.AddMorphemeEventTrack(id, &m_eventTrackList.tracks_timedSub[j], this->m_eventTrackEditorFlags.m_lenMult);
+
+											id++;
+										}
+									}
+								}
+								else
+									id++;
+							}
+
+							if ((m_eventTrackList.count_discrete > 0) || (m_eventTrackList.count_unk > 0) || (m_eventTrackList.count_timed > 0))
+							{	
+								found = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if (found == false)
+			{
+				Debug::DebuggerMessage(Debug::LVL_INFO, "This animation does not have any event tracks associated to it\n");
+				Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "This animation does not have any event tracks associated to it\n");
+			}
+		}
+	}
+
+	if (this->m_eventTrackEditorFlags.m_save)
+	{
+		this->m_eventTrackEditorFlags.m_save = false;
+
+		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+		{
+			this->m_eventTrackList.SaveEventTracks();
+		}
 	}
 }
 

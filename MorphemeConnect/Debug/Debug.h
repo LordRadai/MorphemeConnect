@@ -15,4 +15,5 @@ namespace Debug
 
 	void DebuggerMessage(MsgLevel level, const char* fmt, ...);
 	void Panic(const char* src_module, const char* fmt, ...);
+	void Alert(UINT type, const char* src_module, const char* fmt, ...);
 }

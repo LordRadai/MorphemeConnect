@@ -1,9 +1,8 @@
 #pragma once
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_internal.h"
-#include "../imsequencer/ImSequencer.h"
-#include "../imsequencer/ImCurveEdit.h"
+#include "../framework.h"
+#include "../extern.h"
 #include "../MathHelper/MathHelper.h"
+#include "../NMBReader/NMBReader.h"
 #include <math.h>
 #include <vector>
 #include <algorithm>
@@ -58,7 +57,7 @@ struct MorphemeEventTrack
     int value;
     float startTime;
     float duration;
-    char trackName[50];
+    const char* trackName;
     int parentId;
     int childId;
     bool is_discrete;
@@ -66,10 +65,13 @@ struct MorphemeEventTrack
 
 struct MorphemeEventTrackList
 {
-    uint64_t parent;
-    int count_discrete, count_discreteSub;
-    int count_unk, count_unkSub;
-    int count_timed, count_timedSub;
+    NodeDataContent_EventTrack* parent;
+    int count_discrete = 0;
+    int count_discreteSub = 0;
+    int count_unk = 0;
+    int count_unkSub = 0;
+    int count_timed = 0;
+    int count_timedSub = 0;
     MorphemeEventTrack* tracks_discrete;
     MorphemeEventTrack* tracks_discreteSub;
     MorphemeEventTrack* tracks_unk;
@@ -77,10 +79,14 @@ struct MorphemeEventTrackList
     MorphemeEventTrack* tracks_timed;
     MorphemeEventTrack* tracks_timedSub;
 
-    int getSubTrackcount_discrete();
-    int getSubTrackcount_unk();
-    int getSubTrackcount_timed();
-    void allocSubTracks();
+    MorphemeEventTrackList() {}
+    MorphemeEventTrackList(NodeDataContent_EventTrack* src);
+    void ClearTrackList();
+    void SaveEventTracks();
+    int GetSubTrackcount_discrete();
+    int GetSubTrackcount_unk();
+    int GetSubTrackcount();
+    void AllocSubTracks();
 };
 
 struct RampEdit : public ImCurveEdit::Delegate

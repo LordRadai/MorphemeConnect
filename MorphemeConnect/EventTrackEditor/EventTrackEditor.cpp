@@ -270,11 +270,11 @@ void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
     if (track->m_numEvents == 0)
     {
         track->m_source->m_data->m_numEvents++;
-        track->m_source->m_data->m_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
+        track->m_source->m_data->m_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart / this->m_frameMax), MathHelper::FrameToTime(event.m_duration / this->m_frameMax), event.m_value };
         
         this->ReloadTracks();
 
-        Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event to track %d (%.3f, %.3f, %d) (node=%d)\n", track->m_signature, MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value, this->m_nodeSource->m_nodeID);
+        Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event to track %d (%.3f, %.3f, %d) (node=%d)\n", track->m_signature, MathHelper::FrameToTime(event.m_frameStart) / MathHelper::FrameToTime(this->m_frameMax), MathHelper::FrameToTime(event.m_duration) / MathHelper::FrameToTime(this->m_frameMax), event.m_value, this->m_nodeSource->m_nodeID);
 
         return;
     }
@@ -284,7 +284,7 @@ void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
     for (size_t i = 0; i < track->m_source->m_data->m_numEvents; i++)
         new_src_events[i] = track->m_source->m_data->m_events[i];
 
-    new_src_events[track->m_source->m_data->m_numEvents] = MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
+    new_src_events[track->m_source->m_data->m_numEvents] = MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart) / MathHelper::FrameToTime(this->m_frameMax), MathHelper::FrameToTime(event.m_duration) / MathHelper::FrameToTime(this->m_frameMax), event.m_value};
     track->m_source->m_data->m_numEvents++;
 
     delete[] track->m_source->m_data->m_events;

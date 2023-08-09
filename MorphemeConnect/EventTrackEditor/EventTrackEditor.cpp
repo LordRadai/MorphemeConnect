@@ -80,7 +80,7 @@ void EventTrackEditor::BeginEdit(int idx) {}
 
 void EventTrackEditor::EndEdit() {}
 
-const char* EventTrackEditor::GetTrackName(int idx) const { return m_eventTracks[idx].m_name; }
+char* EventTrackEditor::GetTrackName(int idx) const { return m_eventTracks[idx].m_name; }
 
 std::string EventTrackEditor::GetEventLabel(int track_idx, int event_idx) const
 {

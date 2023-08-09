@@ -46,7 +46,7 @@ struct EventTrackEditor
     void BeginEdit(int idx);
     void EndEdit();
 
-    const char* GetTrackName(int idx) const;
+    char* GetTrackName(int idx) const;
     std::string GetEventLabel(int track_idx, int event_idx) const;
 
     void AddTrack(int event_id, char* name, bool discrete);

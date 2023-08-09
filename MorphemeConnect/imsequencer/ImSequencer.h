@@ -48,6 +48,7 @@ namespace ImSequencer
         EDITOR_COPYPASTE = 1 << 6,
         EDITOR_EVENT_LOOP = 1 << 7,
         EDITOR_COLLAPSE = 1 << 8,
+        EDITOR_MARK_ACTIVE_EVENTS = 1 << 9,
         EDITOR_EDIT_ALL = EDITOR_EVENT_EDIT_STARTEND | EDITOR_CHANGE_FRAME
     };
 

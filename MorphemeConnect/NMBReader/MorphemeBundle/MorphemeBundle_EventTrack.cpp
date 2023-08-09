@@ -39,15 +39,15 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 
 	if (this->m_data->m_numEvents > 0)
 	{
-		this->m_data->m_trackData = new BundleData_EventTrack::Bundle_EventTrackData[this->m_data->m_numEvents];
+		this->m_data->m_events = new BundleData_EventTrack::Event[this->m_data->m_numEvents];
 
 		UINT64 offset = *(UINT64*)(bundle->m_data + 0x18);
 
 		for (size_t i = 0; i < this->m_data->m_numEvents; i++)
 		{
-			this->m_data->m_trackData[i].m_start = *(float*)(bundle->m_data + offset);
-			this->m_data->m_trackData[i].m_duration = *(float*)(bundle->m_data + offset + 0x4);
-			this->m_data->m_trackData[i].m_userData = *(int*)(bundle->m_data + offset + 0x8);
+			this->m_data->m_events[i].m_start = *(float*)(bundle->m_data + offset);
+			this->m_data->m_events[i].m_duration = *(float*)(bundle->m_data + offset + 0x4);
+			this->m_data->m_events[i].m_value = *(int*)(bundle->m_data + offset + 0x8);
 
 			offset += 0xC;
 		}

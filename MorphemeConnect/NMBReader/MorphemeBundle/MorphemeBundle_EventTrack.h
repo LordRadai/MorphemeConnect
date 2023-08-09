@@ -5,11 +5,11 @@ struct MorphemeBundle_EventTrack
 {
 	struct BundleData_EventTrack
 	{
-		struct Bundle_EventTrackData
+		struct Event
 		{
 			float m_start;
 			float m_duration;
-			int m_userData;
+			int m_value;
 		};
 
 		int m_numEvents;
@@ -17,7 +17,7 @@ struct MorphemeBundle_EventTrack
 		const char* m_trackName;
 		int m_eventId;
 		int m_iVar14;
-		Bundle_EventTrackData* m_trackData;
+		Event* m_events;
 	};
 
 	UINT m_magic[2];			//They must always be 24 and 10 in order

@@ -207,8 +207,13 @@ void Application::RenderGUI(const char* title)
 				selectedEvent = -1;
 			}
 
+			if (this->m_eventTrackEditor.m_animIdx > -1)
+				ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
+			else
+				ImGui::Text("");
+
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EVENT_EDIT_STARTEND | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EVENT_EDIT_STARTEND | ImSequencer::EDITOR_CHANGE_FRAME | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
 			ImGui::EndChild();
 		}
 		ImGui::End();
@@ -297,8 +302,11 @@ void Application::ProcessVariables()
 					{
 						if (node_data->m_attribSourceAnim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
+							this->m_eventTrackEditor.m_nodeSource = node;
 							this->m_eventTrackEditor.m_frameMin = 0;
 							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
+							this->m_eventTrackEditor.m_animIdx = node_data->m_attribSourceAnim->m_animIdx;
+
 							this->m_eventTrackEditorFlags.m_lenMult = node_data->m_attribSourceAnim->m_animLen / node_data->m_attribSourceAnim->m_trackLen;
 
 							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)

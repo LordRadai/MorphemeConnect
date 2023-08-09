@@ -31,7 +31,7 @@ public:
 	{
 		bool m_load = false;
 		bool m_save = false;
-		int m_targetAnimIdx = 0;
+		int m_targetAnimIdx = -1;
 		float m_lenMult = 1.f;
 
 	} m_eventTrackEditorFlags;

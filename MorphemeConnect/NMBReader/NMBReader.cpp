@@ -62,12 +62,18 @@ std::string NMBReader::GetAnimFileName(int idx)
 	if (this->m_init == false)
 		return "";
 
+	if (idx > this->m_fileNameLookupTable.m_data->m_animList.m_elemCount)
+		return "";
+
 	return std::string(&this->m_fileNameLookupTable.m_data->m_animList.m_strings[this->m_fileNameLookupTable.m_data->m_animList.m_localOffsets[idx]]);
 }
 
 std::string NMBReader::GetXmdSourceAnimFileName(int idx)
 {
 	if (this->m_init == false)
+		return "";
+
+	if (idx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
 		return "";
 
 	return std::string(&this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_strings[this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_localOffsets[idx]]);
@@ -85,6 +91,9 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 	}
 
 	NodeData104* node_data = (NodeData104*)m_node->node_data;
+
+	if (node_data->m_attribSourceAnim->m_animIdx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
+		return "";
 
 	return this->GetAnimFileName(node_data->m_attribSourceAnim->m_animIdx);
 }

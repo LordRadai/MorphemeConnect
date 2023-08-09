@@ -18,7 +18,7 @@ struct EventTrackEditor
             int m_value = 0;
         };
 
-        MorphemeBundle_EventTrack* source;
+        MorphemeBundle_EventTrack* m_source;
 
         int m_signature;
         int m_numEvents;
@@ -33,6 +33,8 @@ struct EventTrackEditor
         void SaveEventTrackData(float len);
     };
 
+    NodeDef* m_nodeSource = NULL;
+    int m_animIdx = -1;
     std::vector<EventTrack> m_eventTracks;
     int m_frameMin, m_frameMax;
     bool focused = false;

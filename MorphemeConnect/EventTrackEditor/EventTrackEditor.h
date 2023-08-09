@@ -43,18 +43,16 @@ struct EventTrackEditor
     int GetFrameMax() const;
     int GetTrackCount() const;
 
-    void BeginEdit(int idx);
-    void EndEdit();
-
     char* GetTrackName(int idx) const;
     std::string GetEventLabel(int track_idx, int event_idx) const;
 
     void AddTrack(int event_id, char* name, bool discrete);
     void DeleteTrack(int idx);
-    void RenameTrack(int idx, char* name);
 
     void AddEvent(int track_idx, EventTrack::Event event);
     void DeleteEvent(int track_idx, int event_idx);
+
+    void ReloadTracks();
 
     EventTrackEditor();
 

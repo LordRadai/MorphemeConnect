@@ -76,10 +76,6 @@ int EventTrackEditor::GetFrameMax() const
 
 int EventTrackEditor::GetTrackCount() const { return (int)m_eventTracks.size(); }
 
-void EventTrackEditor::BeginEdit(int idx) {}
-
-void EventTrackEditor::EndEdit() {}
-
 char* EventTrackEditor::GetTrackName(int idx) const { return m_eventTracks[idx].m_name; }
 
 std::string EventTrackEditor::GetEventLabel(int track_idx, int event_idx) const
@@ -91,6 +87,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
 {
     int signature = rand();
     bool valid = true;
+
     do
     {
         signature = rand();
@@ -118,9 +115,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
     new_bundle.m_signature = signature;
 
     for (size_t i = 0; i < 16; i++)
-    {
         new_bundle.m_header[i] = 0; //This is most likely incorrect. Need a way to generate the header
-    }
 
     int data_size = 32 + 12 * 0 + strlen(name); //32 bytes fixed + 12 * trackCount + nameLenght + padding for alignment
     int remainder = data_size % 16;
@@ -148,9 +143,6 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
     new_bundle.m_data->m_events = NULL;
 
     morpheme_connect.nmb.m_eventTracks.push_back(new_bundle);
-
-    m_eventTracks.push_back(EventTrack(signature, 0, event_id, NULL, name, discrete));
-    m_eventTracks.back().m_source = &morpheme_connect.nmb.m_eventTracks.back();
 
     NodeData104* data = (NodeData104*)this->m_nodeSource->node_data;
 
@@ -198,6 +190,8 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
             node_data->m_attribEventTrack->m_eventTracks[2] = data->m_attribEventTrack->m_eventTracks[2];
         }
     }
+
+    this->ReloadTracks();
 
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added EventTrack %d (%s) (node=%d)\n", signature, name, this->m_nodeSource->m_nodeID);
 };
@@ -264,21 +258,9 @@ void EventTrackEditor::DeleteTrack(int idx)
         }
     }
 
+    this->ReloadTracks();
+
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted track %d (%s) (node=%d)\n", this->m_eventTracks[idx].m_signature, this->m_eventTracks[idx].m_name, this->m_nodeSource->m_nodeID);
-
-    this->m_eventTracks.erase(this->m_eventTracks.begin() + idx);
-}
-
-void EventTrackEditor::RenameTrack(int idx, char* name)
-{
-    strcpy(this->m_eventTracks[idx].m_name, name);
-    
-    MorphemeBundle_EventTrack* track_src = morpheme_connect.nmb.GetEventTrackBundle(this->m_eventTracks[idx].m_signature);
-
-    if (track_src == NULL)
-        Debug::Panic("EventTrackEditor.cpp", "EventTrack Bundle source was not found yet event tracks are present");
-
-    strcpy(track_src->m_data->m_trackName, name);
 }
 
 void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
@@ -287,29 +269,15 @@ void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
 
     if (track->m_numEvents == 0)
     {
-        track->m_numEvents++;
         track->m_source->m_data->m_numEvents++;
-
-        track->m_event = new EventTrack::Event{ event.m_frameStart, event.m_duration, event.m_value };
         track->m_source->m_data->m_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
         
+        this->ReloadTracks();
+
         Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event to track %d (%.3f, %.3f, %d) (node=%d)\n", track->m_signature, MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value, this->m_nodeSource->m_nodeID);
 
         return;
     }
-
-    EventTrack::Event* new_events = new EventTrack::Event[track->m_numEvents + 1];
-
-    for (size_t i = 0; i < track->m_numEvents; i++)
-        new_events[i] = track->m_event[i];
-
-    new_events[track->m_numEvents] = event;
-
-    track->m_numEvents++;
-
-    delete[] track->m_event;
-
-    track->m_event = new_events;
 
     MorphemeBundle_EventTrack::BundleData_EventTrack::Event* new_src_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event[track->m_source->m_data->m_numEvents + 1];
 
@@ -317,12 +285,12 @@ void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
         new_src_events[i] = track->m_source->m_data->m_events[i];
 
     new_src_events[track->m_source->m_data->m_numEvents] = MorphemeBundle_EventTrack::BundleData_EventTrack::Event{ MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value };
-
     track->m_source->m_data->m_numEvents++;
 
     delete[] track->m_source->m_data->m_events;
-
     track->m_source->m_data->m_events = new_src_events;
+
+    this->ReloadTracks();
 
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event to track %d (%.3f, %.3f, %d) (node=%d)\n", track->m_signature, MathHelper::FrameToTime(event.m_frameStart), MathHelper::FrameToTime(event.m_duration), event.m_value, this->m_nodeSource->m_nodeID);
 }
@@ -333,27 +301,9 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
     if (track->m_numEvents > 1)
     {
-        EventTrack::Event* new_events = new EventTrack::Event[track->m_numEvents - 1];
-
-        int new_event_idx = 0;
-        for (size_t i = 0; i < track->m_numEvents; i++)
-        {
-            if (i != event_idx)
-            {
-                new_events[new_event_idx] = track->m_event[i];
-                new_event_idx++;
-            }
-        }
-
-        track->m_numEvents--;
-
-        delete[] track->m_event;
-
-        track->m_event = new_events;
-
         MorphemeBundle_EventTrack::BundleData_EventTrack::Event* new_src_events = new MorphemeBundle_EventTrack::BundleData_EventTrack::Event[track->m_source->m_data->m_numEvents - 1];
 
-        new_event_idx = 0;
+        int new_event_idx = 0;
         for (size_t i = 0; i < track->m_source->m_data->m_numEvents; i++)
         {
             if (i != event_idx)
@@ -371,16 +321,57 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
         Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d from Track %d (node=%d)\n", event_idx, track->m_signature, this->m_nodeSource->m_nodeID);
 
+        this->ReloadTracks();
+
         return;
     }
 
-    track->m_numEvents--;
     track->m_source->m_data->m_numEvents--;
 
-    delete[] track->m_event;
     delete[] track->m_source->m_data->m_events;
 
+    this->ReloadTracks();
+
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d from Track %d (node=%d)\n", event_idx, track->m_signature, this->m_nodeSource->m_nodeID);
+}
+
+void EventTrackEditor::ReloadTracks()
+{
+    this->Clear();
+
+    if ((morpheme_connect.nmb.m_init == true) && (morpheme_connect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+    {
+        bool found = false;
+
+        NodeData104* node_data = (NodeData104*)this->m_nodeSource->node_data;
+
+        if (node_data != NULL)
+        {
+            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
+            {
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i]);
+
+                if (event_tracks)
+                    this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), true));
+            }
+
+            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[1].m_trackCount; i++)
+            {
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[i]);
+
+                if (event_tracks)
+                    this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));
+            }
+
+            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
+            {
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i]);
+
+                if (event_tracks)
+                    this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));
+            }
+        }
+    }
 }
 
 EventTrackEditor::EventTrackEditor() {}

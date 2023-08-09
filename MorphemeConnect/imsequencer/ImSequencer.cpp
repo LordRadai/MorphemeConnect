@@ -52,8 +52,10 @@ namespace ImSequencer
         ImRect delRect(pos, ImVec2(pos.x + size.x, pos.y + size.y));
         bool overDel = delRect.Contains(io.MousePos);
 
-        int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
-        int delColor = overDel ? 0xFFFFFFFF : 0xFFA0A0A0;
+        int delColor = overDel ? 0xFFC0C0C0 : 0xFFA0A0A0;
+
+        if (overDel && io.MouseDown[0])
+            delColor = 0xFFFFFFFF;
 
         float midy = pos.y + size.x / 2 - 0.5f;
         float midx = pos.x + size.y / 2 - 0.5f;
@@ -86,10 +88,14 @@ namespace ImSequencer
         bool overDel = delRect.Contains(io.MousePos);
 
         int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
-        int delColor = overDel ? 0xFFFFFFFF : 0xFFA0A0A0;
+        int delColor = overDel ? 0xFFC0C0C0 : 0xFFA0A0A0;
+
+        if (overDel && io.MouseDown[0])
+            delColor = 0xFFFFFFFF;
 
         //draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
         //draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
+
         draw_list->AddLine(ImVec2(delRect.Min.x + 5, delRect.Min.y + 5), ImVec2(delRect.Max.x - 5, delRect.Max.y - 5), 0xFF000000, 5);
         draw_list->AddLine(ImVec2(delRect.Min.x + 5, delRect.Max.y - 5), ImVec2(delRect.Max.x - 5, delRect.Min.y + 5), 0xFF000000, 5);
 
@@ -111,7 +117,10 @@ namespace ImSequencer
 
         bool overDel = delRect.Contains(io.MousePos);
 
-        int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
+        int buttonCol = overDel ? 0xFF404040 : 0xFF303030;
+
+        if (overDel && io.MouseDown[0])
+            buttonCol = 0xFF636363;
 
         draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
         draw_list->AddRect(delRect.Min, delRect.Max, 0xFF000000, 0);
@@ -952,7 +961,6 @@ namespace ImSequencer
 
                         movingTrack = -1;
                         movingEvent = -1;
-                        eventTrackEditor->EndEdit();
                     }
                 }
             }

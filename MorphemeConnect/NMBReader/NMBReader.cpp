@@ -111,3 +111,58 @@ MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
 
 	return NULL;
 }
+
+std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signature)
+{
+	std::vector<EventTrackList*> track_lists;
+
+	for (int i = 0; i < this->m_network.m_data->m_numNodes; i++)
+	{
+		NodeDef* node = this->m_network.m_data->m_nodes[i];
+
+		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+		{
+			NodeData104* data = (NodeData104*)node->node_data;
+
+			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[0].m_trackCount; j++)
+			{
+				if (data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[j] == signature)
+					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[0]);
+			}
+
+			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[1].m_trackCount; j++)
+			{
+				if (data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[j] == signature)
+					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[1]);
+			}
+
+			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[2].m_trackCount; j++)
+			{
+				if (data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[j] == signature)
+					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[2]);
+			}
+		}
+	}
+
+	return track_lists;
+}
+
+std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
+{
+	std::vector<NodeDef*> nodes;
+
+	for (int i = 0; i < this->m_network.m_data->m_numNodes; i++)
+	{
+		NodeDef* node = this->m_network.m_data->m_nodes[i];
+
+		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+		{
+			NodeData104* data = (NodeData104*)node->node_data;
+
+			if (data->m_attribSourceAnim->m_animIdx == anim_idx)
+				nodes.push_back(node);
+		}
+	}
+
+	return nodes;
+}

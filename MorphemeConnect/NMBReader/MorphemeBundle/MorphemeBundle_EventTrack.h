@@ -14,7 +14,7 @@ struct MorphemeBundle_EventTrack
 
 		int m_numEvents;
 		int m_iVar4;
-		const char* m_trackName;
+		char* m_trackName;
 		int m_eventId;
 		int m_iVar14;
 		Event* m_events;

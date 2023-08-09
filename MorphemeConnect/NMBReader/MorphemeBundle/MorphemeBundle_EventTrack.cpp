@@ -33,7 +33,7 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 
 	this->m_data->m_numEvents = *(int*)(bundle->m_data);
 	this->m_data->m_iVar4 = *(int*)(bundle->m_data + 0x4);
-	this->m_data->m_trackName = (const char*)(bundle->m_data + *(UINT64*)(bundle->m_data + 0x8));
+	this->m_data->m_trackName = (char*)(bundle->m_data + *(UINT64*)(bundle->m_data + 0x8));
 	this->m_data->m_eventId = *(int*)(bundle->m_data + 0x10);
 	this->m_data->m_iVar14 = *(int*)(bundle->m_data + 0x14);
 

@@ -117,7 +117,8 @@ namespace ImSequencer
         static float framePixelWidth = 11.f;
         static float framePixelWidthTarget = 11.f;
 
-        int legendWidth = 210;
+        static bool resizeLegend = false;
+        static int legendWidth = 210;
 
         static int movingTrack = -1;
         static int movingEvent = -1;
@@ -250,6 +251,23 @@ namespace ImSequencer
 
             // current frame top
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
+            ImRect legendRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 10, canvas_pos.y + ItemHeight));
+
+            if (!popupOpened && !MovingScrollBar && movingTrack == -1 && legendRect.Contains(io.MousePos))
+            {
+                SetCursor(LoadCursor(NULL, IDC_SIZEWE));
+
+                if (io.MouseDown[0])
+                    resizeLegend = true;
+            }
+
+            if (resizeLegend)
+            {
+                legendWidth = (int)((io.MousePos.x - contentMin.x));
+            }
+
+            if (resizeLegend && io.MouseReleased[0])
+                resizeLegend = false;
 
             //header
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
@@ -298,7 +316,7 @@ namespace ImSequencer
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             }
 
-            if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos) && io.MouseDown[0])
+            if (!resizeLegend && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos) && io.MouseDown[0])
             {
                 MovingCurrentFrame = true;
             }

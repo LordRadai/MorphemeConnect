@@ -195,7 +195,7 @@ void Application::RenderGUI(const char* title)
 		static int selectedEvent = -1;
 		static int firstFrame = 0;
 		static bool expanded = true;
-		static int currentFrame = -1;
+		static int currentFrame = 0;
 
 		ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 		ImGui::Begin("EventTrack");

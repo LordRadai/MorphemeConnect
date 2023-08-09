@@ -58,12 +58,22 @@ namespace ImSequencer
         float midy = pos.y + size.x / 2 - 0.5f;
         float midx = pos.x + size.y / 2 - 0.5f;
 
-        draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
-        draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
-        draw_list->AddLine(ImVec2(delRect.Min.x + 3, midy), ImVec2(delRect.Max.x - 3, midy), delColor, 2);
-
+        //draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
+        //draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
         if (add)
+        {
+            draw_list->AddLine(ImVec2(delRect.Min.x + 5, midy), ImVec2(delRect.Max.x - 5, midy), 0xFF000000, 5);
+            draw_list->AddLine(ImVec2(midx, delRect.Min.y + 5), ImVec2(midx, delRect.Max.y - 5), 0xFF000000, 5);
+
+            draw_list->AddLine(ImVec2(delRect.Min.x + 3, midy), ImVec2(delRect.Max.x - 3, midy), delColor, 2);
             draw_list->AddLine(ImVec2(midx, delRect.Min.y + 3), ImVec2(midx, delRect.Max.y - 3), delColor, 2);
+        }
+        else
+        {
+            draw_list->AddLine(ImVec2(delRect.Min.x + 5, midy), ImVec2(delRect.Max.x - 5, midy), 0xFF000000, 5);
+
+            draw_list->AddLine(ImVec2(delRect.Min.x + 3, midy), ImVec2(delRect.Max.x - 3, midy), delColor, 2);
+        }
 
         return overDel;
     }
@@ -78,8 +88,11 @@ namespace ImSequencer
         int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
         int delColor = overDel ? 0xFFFFFFFF : 0xFFA0A0A0;
 
-        draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
-        draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
+        //draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
+        //draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
+        draw_list->AddLine(ImVec2(delRect.Min.x + 5, delRect.Min.y + 5), ImVec2(delRect.Max.x - 5, delRect.Max.y - 5), 0xFF000000, 5);
+        draw_list->AddLine(ImVec2(delRect.Min.x + 5, delRect.Max.y - 5), ImVec2(delRect.Max.x - 5, delRect.Min.y + 5), 0xFF000000, 5);
+
         draw_list->AddLine(ImVec2(delRect.Min.x + 3, delRect.Min.y + 3), ImVec2(delRect.Max.x - 3, delRect.Max.y - 3), delColor, 2);
         draw_list->AddLine(ImVec2(delRect.Min.x + 3, delRect.Max.y - 3), ImVec2(delRect.Max.x - 3, delRect.Min.y + 3), delColor, 2);
 
@@ -99,11 +112,28 @@ namespace ImSequencer
         bool overDel = delRect.Contains(io.MousePos);
 
         int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
-        int delColor = overDel ? 0xFFFFFFFF : 0xFFA0A0A0;
 
         draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
-        draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
-        draw_list->AddText(textP, delColor, "Add Track");
+        draw_list->AddRect(delRect.Min, delRect.Max, 0xFF000000, 0);
+        draw_list->AddText(textP, 0xFFFFFFFF, "Add Track");
+
+        return overDel;
+    }
+
+    static bool SequencerAddTrackLabel(ImDrawList* draw_list, ImVec2 pos, ImVec2 size, char* label)
+    {
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImVec2 textSize = ImGui::CalcTextSize(label);
+
+        ImRect delRect(ImVec2(pos.x, pos.y), ImVec2(pos.x + size.x, pos.y + size.y));
+
+        bool overDel = delRect.Contains(io.MousePos);
+
+        draw_list->AddRectFilled(delRect.Min, delRect.Max, 0xFF303030, 0);
+        draw_list->AddRect(delRect.Min, delRect.Max, 0xFF000000, 0);
+
+        ImGui::RenderTextClipped(delRect.Min + ImVec2(5, 0), delRect.Max - ImVec2(5, 0), label, NULL, &textSize, ImVec2(0.f, 0.5f), &delRect);
 
         return overDel;
     }
@@ -403,7 +433,7 @@ namespace ImSequencer
             for (int i = 0; i < eventTrackEditor->GetTrackCount(); i++)
             {
                 ImVec2 tpos(contentMin.x + 3, contentMin.y + i * ItemHeight + 2 + customHeight);
-                draw_list->AddText(tpos, 0xFFFFFFFF, eventTrackEditor->GetTrackName(i));
+                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), ImVec2(legendWidth - ItemHeight - ItemHeight - 15, ItemHeight * 0.9f), eventTrackEditor->GetTrackName(i));
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {
@@ -418,7 +448,7 @@ namespace ImSequencer
 
                     ImVec2 pos = ImVec2(contentMin.x + legendWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
                     ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1);
-                    if (!popupOpened && cy >= pos.y && cy < pos.y + ItemHeight && movingTrack == -1 && cx>contentMin.x && cx < contentMin.x + canvas_size.x && io.MouseReleased[1] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar)
+                    if (overLabel && io.MouseReleased[1] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar)
                     {
                         *selectedTrack = i;
                         *selectedEvent = -1;
@@ -482,17 +512,7 @@ namespace ImSequencer
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
-                ImGui::InputText("Name", trackRename, 50);
-
-                if (ImGui::Button("Rename"))
-                {
-                    eventTrackEditor->RenameTrack(*selectedTrack, trackRename);
-
-                    *selectedTrack = -1;
-                    *selectedEvent = -1;
-
-                    ImGui::CloseCurrentPopup();
-                }
+                ImGui::InputText("Name", eventTrackEditor->m_eventTracks[*selectedTrack].m_name, 50);
 
                 popupOpened = true;
 
@@ -676,6 +696,8 @@ namespace ImSequencer
                             draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, slotColor);
                             draw_list->AddLine(slotT1, slotT3, boundColor);
                             draw_list->AddLine(slotT2, slotT3, boundColor);
+
+                            ImRect track_box(slotD1, slotD2);
 
                             draw_list->AddText(textD, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
                             //draw_list->AddText(textDIdx, TRACK_TEXT_COLOR, std::to_string(eventIdx).c_str()); //Event Idx

@@ -467,12 +467,14 @@ namespace ImSequencer
                 ImGui::Text(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
                 ImGui::Separator();
 
-                ImGui::InputFloat("Start", &addEvent.m_start);
+                ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
 
                 if (eventTrackEditor->m_eventTracks[*selectedTrack].m_discrete == false)
-                    ImGui::InputFloat("Duration", &addEvent.m_duration);
+                    ImGui::InputFloat("Duration", &addEvent.m_duration, 1.f / 60.f);
                 else
                     addEvent.m_duration = 0.f;
+
+                *currentFrame = MathHelper::TimeToFrame(addEvent.m_start);
 
                 ImGui::InputInt("Value", &addEvent.m_value);
 

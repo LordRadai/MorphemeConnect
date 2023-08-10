@@ -198,6 +198,11 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
 
 void EventTrackEditor::DeleteTrack(int idx)
 {
+    int delete_signature = this->m_eventTracks[idx].m_signature;
+    char delete_name[50];
+
+    strcpy(delete_name, this->m_eventTracks[idx].m_name);
+
     for (size_t i = 0; i < this->m_eventTracks[idx].m_numEvents; i++)
         this->DeleteEvent(idx, i);
 
@@ -260,7 +265,7 @@ void EventTrackEditor::DeleteTrack(int idx)
 
     this->ReloadTracks();
 
-    Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted track %d (%s) (node=%d)\n", this->m_eventTracks[idx].m_signature, this->m_eventTracks[idx].m_name, this->m_nodeSource->m_nodeID);
+    Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted track %d (%s) (node=%d)\n", delete_signature, delete_name, this->m_nodeSource->m_nodeID);
 }
 
 void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)

@@ -83,7 +83,7 @@ std::string EventTrackEditor::GetEventLabel(int track_idx, int event_idx) const
     return std::to_string(this->m_eventTracks[track_idx].m_event[event_idx].m_value);
 }
 
-void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
+void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 {
     int signature = rand();
     bool valid = true;
@@ -107,7 +107,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
     new_bundle.m_magic[0] = 24;
     new_bundle.m_magic[1] = 10;
 
-    if (discrete)
+    if (!duration)
         new_bundle.m_bundleType = Bundle_DiscreteEventTrack;
     else
         new_bundle.m_bundleType = Bundle_DurationEventTrack;
@@ -146,7 +146,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool discrete)
 
     NodeData104* data = (NodeData104*)this->m_nodeSource->node_data;
 
-    if (discrete)
+    if (!duration)
     {
         UINT64* new_signatures = new UINT64[data->m_attribEventTrack->m_eventTracks[0].m_trackCount + 1];
 

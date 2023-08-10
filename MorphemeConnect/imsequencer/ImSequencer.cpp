@@ -182,7 +182,7 @@ namespace ImSequencer
         bool addTrack = false;
         static int addTrackEventId = 0;
         static char addTrackName[50] = "MyTrack";
-        static bool addTrackDiscrete = true;
+        static bool addTrackType = true;
 
         static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
 
@@ -334,15 +334,15 @@ namespace ImSequencer
                     ImGui::InputText("Name", addTrackName, 50);
                     ImGui::InputInt("Event ID", &addTrackEventId);
 
-                    const char* types[2] = {"Duration", "Discrete"};
+                    const char* types[2] = {"Discrete", "Duration"};
 
-                    if (ImGui::BeginCombo("Type", types[addTrackDiscrete]))
+                    if (ImGui::BeginCombo("Type", types[addTrackType]))
                     {
                         for (size_t i = 0; i < 2; i++)
                         {
-                            const bool selected = (addTrackDiscrete == i);
-                            if (ImGui::Selectable(types[i], addTrackDiscrete))
-                                addTrackDiscrete = i;
+                            const bool selected = (addTrackType == i);
+                            if (ImGui::Selectable(types[i], addTrackType))
+                                addTrackType = i;
                         }
 
                         ImGui::EndCombo();
@@ -350,7 +350,7 @@ namespace ImSequencer
 
                     if (ImGui::Button("Add Track") || GetAsyncKeyState(VK_RETURN) & 1)
                     {
-                        eventTrackEditor->AddTrack(addTrackEventId, addTrackName, addTrackDiscrete);
+                        eventTrackEditor->AddTrack(addTrackEventId, addTrackName, addTrackType);
                         ImGui::CloseCurrentPopup();
 
                         *selectedTrack = -1;

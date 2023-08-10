@@ -52,10 +52,10 @@ namespace ImSequencer
         ImRect delRect(pos, ImVec2(pos.x + size.x, pos.y + size.y));
         bool overDel = delRect.Contains(io.MousePos);
 
-        int delColor = overDel ? 0xFFC0C0C0 : 0xFFA0A0A0;
+        int delColor = 0xFFFF9E61;
 
         if (overDel && io.MouseDown[0])
-            delColor = 0xFFFFFFFF;
+            delColor = 0xFFFFC099;
 
         float midy = pos.y + size.x / 2 - 0.5f;
         float midx = pos.x + size.y / 2 - 0.5f;
@@ -87,11 +87,10 @@ namespace ImSequencer
         ImRect delRect(pos, ImVec2(pos.x + size.x, pos.y + size.y));
         bool overDel = delRect.Contains(io.MousePos);
 
-        int buttonCol = overDel ? 0xFF636363 : 0xFF303030;
-        int delColor = overDel ? 0xFFC0C0C0 : 0xFFA0A0A0;
+        int delColor = 0xFFFF9E61;
 
         if (overDel && io.MouseDown[0])
-            delColor = 0xFFFFFFFF;
+            delColor = 0xFFFFC099;
 
         //draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
         //draw_list->AddRect(delRect.Min, delRect.Max, delColor, 0);
@@ -117,10 +116,10 @@ namespace ImSequencer
 
         bool overDel = delRect.Contains(io.MousePos);
 
-        int buttonCol = overDel ? 0xFF404040 : 0xFF303030;
+        int buttonCol = 0xFF303030;
 
         if (overDel && io.MouseDown[0])
-            buttonCol = 0xFF636363;
+            buttonCol = 0xFF606060;
 
         draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
         draw_list->AddRect(delRect.Min, delRect.Max, 0xFF000000, 0);
@@ -139,7 +138,9 @@ namespace ImSequencer
 
         bool overDel = delRect.Contains(io.MousePos);
 
-        draw_list->AddRectFilled(delRect.Min, delRect.Max, 0xFF303030, 0);
+        int buttonCol = 0xFF303030;
+
+        draw_list->AddRectFilled(delRect.Min, delRect.Max, buttonCol, 0);
         draw_list->AddRect(delRect.Min, delRect.Max, 0xFF000000, 0);
 
         ImGui::RenderTextClipped(delRect.Min + ImVec2(5, 0), delRect.Max - ImVec2(5, 0), label, NULL, &textSize, ImVec2(0.f, 0.5f), &delRect);
@@ -189,7 +190,7 @@ namespace ImSequencer
 
         int ItemHeight = 22;
 
-        bool popupOpened = false;
+        static bool popupOpened = false;
 
         if (!eventTrackEditor->GetTrackCount())
             return false;
@@ -293,7 +294,7 @@ namespace ImSequencer
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
             ImRect legendRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 10, canvas_pos.y + ItemHeight));
 
-            if (!popupOpened && !MovingScrollBar && movingTrack == -1 && legendRect.Contains(io.MousePos))
+            if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendRect.Contains(io.MousePos))
             {
                 SetCursor(LoadCursor(NULL, IDC_SIZEWE));
 
@@ -313,8 +314,16 @@ namespace ImSequencer
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
             if (sequenceOptions & EDITOR_TRACK_ADD)
             {
-                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && io.MouseReleased[0] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
-                    ImGui::OpenPopup("addTrack");
+                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                {
+                    SetCursor(LoadCursor(NULL, IDC_HAND));
+
+                    if (io.MouseReleased[0])
+                    {
+                        popupOpened = true;
+                        ImGui::OpenPopup("addTrack");
+                    }
+                }
 
                 ImGui::PopStyleColor();
                 if (ImGui::BeginPopup("addTrack"))
@@ -339,7 +348,7 @@ namespace ImSequencer
                         ImGui::EndCombo();
                     }
 
-                    if (ImGui::Button("Add Track"))
+                    if (ImGui::Button("Add Track") || GetAsyncKeyState(VK_RETURN) & 1)
                     {
                         eventTrackEditor->AddTrack(addTrackEventId, addTrackName, addTrackDiscrete);
                         ImGui::CloseCurrentPopup();
@@ -351,16 +360,17 @@ namespace ImSequencer
                     }
 
                     ImGui::EndPopup();
-
-                    popupOpened = true;
                 }
 
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             }
 
-            if (!resizeLegend && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos) && io.MouseDown[0])
+            if (sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos))
             {
-                MovingCurrentFrame = true;
+                SetCursor(LoadCursor(NULL, IDC_HAND));
+
+                if (!resizeLegend && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && io.MouseDown[0])
+                    MovingCurrentFrame = true;
             }
 
             if (MovingCurrentFrame)
@@ -448,34 +458,45 @@ namespace ImSequencer
                 bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), ImVec2(legendWidth - ItemHeight - ItemHeight - 15, ItemHeight * 0.9f), eventTrackEditor->GetTrackName(i));
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
-                {
-                    bool overDel = SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f));
-                    
-                    if (overDel && io.MouseReleased[0] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                {                    
+                    if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        *selectedTrack = i;
-                        *selectedEvent = -1;
-                        removeTrack = true;
+                        SetCursor(LoadCursor(NULL, IDC_HAND));
+
+                        if (io.MouseReleased[0])
+                        {
+                            *selectedTrack = i;
+                            *selectedEvent = -1;
+                            removeTrack = true;
+                        }
                     }
 
                     ImVec2 pos = ImVec2(contentMin.x + legendWidth, contentMin.y + ItemHeight * i + 1 + customHeight);
                     ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1);
-                    if (overLabel && io.MouseReleased[1] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar)
+                    if (overLabel && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        *selectedTrack = i;
-                        *selectedEvent = -1;
-                        renameTrack = true;
+                        SetCursor(LoadCursor(NULL, IDC_HAND));
+
+                        if (io.MouseReleased[0])
+                        {
+                            *selectedTrack = i;
+                            *selectedEvent = -1;
+                            renameTrack = true;
+                        }
                     }
                 }
 
                 if (sequenceOptions & EDITOR_EVENT_ADD)
                 {
-                    bool overDup = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true);
-
-                    if (overDup && io.MouseReleased[0] && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        addTrack = true;
-                        *selectedTrack = i;
+                        SetCursor(LoadCursor(NULL, IDC_HAND));
+
+                        if (io.MouseReleased[0])
+                        {
+                            addTrack = true;
+                            *selectedTrack = i;
+                        }
                     }
 
                     if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
@@ -491,7 +512,10 @@ namespace ImSequencer
 
             ImGui::PopStyleColor();
             if (removeTrack && !reload)
+            {
+                popupOpened = true;
                 ImGui::OpenPopup("deleteTrack");
+            }
 
             if (ImGui::BeginPopup("deleteTrack"))
             {
@@ -500,7 +524,7 @@ namespace ImSequencer
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button("Delete Track"))
+                if (ImGui::Button("Delete Track") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
                     reload = true;
 
@@ -511,13 +535,14 @@ namespace ImSequencer
                     ImGui::CloseCurrentPopup();
                 }
 
-                popupOpened = true;
-
                 ImGui::EndPopup();
             }
 
             if (renameTrack && !reload)
+            {
+                popupOpened = true;
                 ImGui::OpenPopup("renameTrack");
+            }
 
             if (ImGui::BeginPopup("renameTrack"))
             {
@@ -528,13 +553,17 @@ namespace ImSequencer
 
                 ImGui::InputText("Name", eventTrackEditor->m_eventTracks[*selectedTrack].m_name, 50);
 
-                popupOpened = true;
+                if (GetAsyncKeyState(VK_RETURN))
+                    ImGui::CloseCurrentPopup();
 
                 ImGui::EndPopup();
             }
 
             if (delEvent && !reload)
+            {
+                popupOpened = true;
                 ImGui::OpenPopup("deleteEvent");
+            }
 
             if (ImGui::BeginPopup("deleteEvent"))
             {
@@ -543,7 +572,7 @@ namespace ImSequencer
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button("Delete Event"))
+                if (ImGui::Button("Delete Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
                     eventTrackEditor->DeleteEvent(*selectedTrack, *selectedEvent);
 
@@ -555,13 +584,14 @@ namespace ImSequencer
                     reload = true;
                 }
 
-                popupOpened = true;
-
                 ImGui::EndPopup();
             }
 
             if (addTrack && !reload)
+            {
+                popupOpened = true;
                 ImGui::OpenPopup("addEvent");
+            }
 
             if (ImGui::BeginPopup("addEvent"))
             {
@@ -579,14 +609,13 @@ namespace ImSequencer
 
                 ImGui::InputInt("Value", &addEvent.m_value);
 
-                if (ImGui::Button("Add Event"))
+                if (ImGui::Button("Add Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
                     eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ MathHelper::TimeToFrame(addEvent.m_start), MathHelper::TimeToFrame(addEvent.m_duration), addEvent.m_value});
                     ImGui::CloseCurrentPopup();
 
                     reload = true;
                 }
-                popupOpened = true;
 
                 ImGui::EndPopup();
             }
@@ -805,14 +834,6 @@ namespace ImSequencer
                             {
                                 if (!isDiscrete)
                                 {
-                                    for (int j = 2; j >= 0; j--)
-                                    {
-                                        ImRect& rc = rects[j];
-                                        if (!rc.Contains(io.MousePos) && !popupOpened)
-                                            continue;
-                                        draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[j], 0);
-                                    }
-
                                     for (int j = 0; j < 3; j++)
                                     {
                                         ImRect& rc = rects[j];
@@ -820,6 +841,11 @@ namespace ImSequencer
                                             continue;
                                         if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                             continue;
+
+                                        if (j == 2)
+                                            SetCursor(LoadCursor(NULL, IDC_HAND));
+                                        else
+                                            SetCursor(LoadCursor(NULL, IDC_SIZEWE));
 
                                         if (ImGui::IsMouseClicked(0) && !popupOpened && !MovingScrollBar && !MovingCurrentFrame)
                                         {
@@ -838,8 +864,7 @@ namespace ImSequencer
                                     if (!rc.Contains(io.MousePos) && !popupOpened)
                                         continue;
 
-                                    draw_list->AddRectFilled(rc.Min, rc.Max, quadColor[2], 0);
-                                    draw_list->AddTriangleFilled(slotT1, slotT2, slotT3, quadColor[2]);
+                                    SetCursor(LoadCursor(NULL, IDC_HAND));                                
 
                                     if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                         continue;
@@ -1197,6 +1222,9 @@ namespace ImSequencer
                     *expanded = !*expanded;
             }
         }
+
+        if (!ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId | ImGuiPopupFlags_AnyPopupLevel))
+            popupOpened = false;
 
         return ret;
     }

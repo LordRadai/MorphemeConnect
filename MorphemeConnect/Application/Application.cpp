@@ -202,9 +202,14 @@ void Application::RenderGUI(const char* title)
 		{
 			if (ImGui::Button("Load")) 
 			{ 
-				this->m_eventTrackEditorFlags.m_load = true;
-				selectedTrack = -1;
-				selectedEvent = -1;
+				if (this->nmb.m_init)
+				{
+					this->m_eventTrackEditorFlags.m_load = true;
+					selectedTrack = -1;
+					selectedEvent = -1;
+				}
+				else
+					Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)

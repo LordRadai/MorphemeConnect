@@ -835,15 +835,18 @@ namespace ImSequencer
                                         if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                             continue;
 
-                                        if (j == 2)
-                                            if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
-                                                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-                                        else
-                                            if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)   
-                                               ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+                                        if (j == 2 && (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow))
+                                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+                                        else if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                                            ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
 
                                         if (ImGui::IsMouseClicked(0))
                                         {
+                                            if (j == 2 && (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow))
+                                                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+                                            else if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                                                ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+
                                             movingTrack = trackIndex;
                                             movingEvent = eventIdx;
                                             movingPos = cx;
@@ -867,6 +870,9 @@ namespace ImSequencer
 
                                     if (ImGui::IsMouseClicked(0))
                                     {
+                                        if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
                                         movingTrack = trackIndex;
                                         movingEvent = eventIdx;
                                         movingPos = cx;

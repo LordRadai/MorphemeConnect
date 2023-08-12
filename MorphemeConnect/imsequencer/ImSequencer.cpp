@@ -150,6 +150,8 @@ namespace ImSequencer
 
     bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions)
     {
+        ImGuiContext& g = *GImGui;
+
         bool ret = false;
         ImGuiIO& io = ImGui::GetIO();
         int cx = (int)(io.MousePos.x);
@@ -216,7 +218,7 @@ namespace ImSequencer
         {
             int index;
             ImRect customRect;
-            ImRect legendRect;
+            ImRect legendResizeRect;
             ImRect clippingRect;
             ImRect legendClippingRect;
         };
@@ -292,12 +294,12 @@ namespace ImSequencer
 
             // current frame top
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
-            ImRect legendRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 10, canvas_pos.y + ItemHeight));
+            ImRect legendResizeRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 10, canvas_pos.y + ItemHeight));
 
-            if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendRect.Contains(io.MousePos))
+            if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos))
             {
-                SetCursor(LoadCursor(NULL, IDC_SIZEWE));
-
+                g.MouseCursor = ImGuiMouseCursor_ResizeEW;
+                
                 if (io.MouseDown[0])
                     resizeLegend = true;
             }
@@ -314,7 +316,7 @@ namespace ImSequencer
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
             if (sequenceOptions & EDITOR_TRACK_ADD)
             {
-                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {
                     SetCursor(LoadCursor(NULL, IDC_HAND));
 
@@ -339,7 +341,7 @@ namespace ImSequencer
                     if (ImGui::BeginCombo("Type", types[addTrackType]))
                     {
                         for (size_t i = 0; i < 2; i++)
-                        {
+                        { 
                             const bool selected = (addTrackType == i);
                             if (ImGui::Selectable(types[i], addTrackType))
                                 addTrackType = i;
@@ -365,11 +367,11 @@ namespace ImSequencer
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             }
 
-            if (sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos))
+            if (sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos) && !popupOpened && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
             {
-                SetCursor(LoadCursor(NULL, IDC_HAND));
+                g.MouseCursor = ImGuiMouseCursor_Hand;
 
-                if (!resizeLegend && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && io.MouseDown[0])
+                if (!resizeLegend && !popupOpened && !MovingScrollBar && movingTrack == -1 && io.MouseDown[0])
                     MovingCurrentFrame = true;
             }
 
@@ -417,7 +419,7 @@ namespace ImSequencer
                 {
                     char tmps[512];
                     ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(i));
-                    draw_list->AddText(ImVec2((float)(px + 6), canvas_pos.y), 0xFFBBBBBB, tmps);
+                    draw_list->AddText(ImVec2((float)(px + 6), canvas_pos.y), 0xFFFFFFFF, tmps);
                 }
             };
 
@@ -461,7 +463,7 @@ namespace ImSequencer
                 {                    
                     if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        SetCursor(LoadCursor(NULL, IDC_HAND));
+                        g.MouseCursor = ImGuiMouseCursor_Hand;
 
                         if (io.MouseReleased[0])
                         {
@@ -475,7 +477,7 @@ namespace ImSequencer
                     ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1);
                     if (overLabel && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        SetCursor(LoadCursor(NULL, IDC_HAND));
+                        g.MouseCursor = ImGuiMouseCursor_Hand;
 
                         if (io.MouseReleased[0])
                         {
@@ -490,7 +492,7 @@ namespace ImSequencer
                 {
                     if (SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        SetCursor(LoadCursor(NULL, IDC_HAND));
+                        g.MouseCursor = ImGuiMouseCursor_Hand;
 
                         if (io.MouseReleased[0])
                         {
@@ -837,17 +839,17 @@ namespace ImSequencer
                                     for (int j = 0; j < 3; j++)
                                     {
                                         ImRect& rc = rects[j];
-                                        if (!rc.Contains(io.MousePos) && !popupOpened)
+                                        if (!rc.Contains(io.MousePos) || popupOpened || MovingScrollBar || MovingCurrentFrame)
                                             continue;
                                         if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                             continue;
 
                                         if (j == 2)
-                                            SetCursor(LoadCursor(NULL, IDC_HAND));
+                                            g.MouseCursor = ImGuiMouseCursor_Hand;
                                         else
-                                            SetCursor(LoadCursor(NULL, IDC_SIZEWE));
+                                            g.MouseCursor = ImGuiMouseCursor_ResizeEW;
 
-                                        if (ImGui::IsMouseClicked(0) && !popupOpened && !MovingScrollBar && !MovingCurrentFrame)
+                                        if (ImGui::IsMouseClicked(0))
                                         {
                                             movingTrack = trackIndex;
                                             movingEvent = eventIdx;
@@ -861,7 +863,7 @@ namespace ImSequencer
                                 else
                                 {
                                     ImRect& rc = rect_discrete;
-                                    if (!rc.Contains(io.MousePos) && !popupOpened)
+                                    if (!rc.Contains(io.MousePos) || popupOpened || MovingScrollBar || MovingCurrentFrame)
                                         continue;
 
                                     SetCursor(LoadCursor(NULL, IDC_HAND));                                
@@ -869,7 +871,7 @@ namespace ImSequencer
                                     if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                         continue;
 
-                                    if (ImGui::IsMouseClicked(0) && !popupOpened && !MovingScrollBar && !MovingCurrentFrame)
+                                    if (ImGui::IsMouseClicked(0))
                                     {
                                         movingTrack = trackIndex;
                                         movingEvent = eventIdx;
@@ -1068,7 +1070,6 @@ namespace ImSequencer
 
                 draw_list->AddRectFilled(scrollBarA, scrollBarB, 0xFF101010, 8);
 
-
                 ImVec2 scrollBarC(scrollBarMin.x + legendWidth + startFrameOffset, scrollBarMin.y);
                 ImVec2 scrollBarD(scrollBarMin.x + legendWidth + barWidthInPixels + startFrameOffset, scrollBarMax.y - 2);
                 draw_list->AddRectFilled(scrollBarC, scrollBarD, (inScrollBar || MovingScrollBar) ? 0xFF606060 : 0xFF505050, 6);
@@ -1089,7 +1090,7 @@ namespace ImSequencer
                 static const float MinBarWidth = 44.f;
                 if (sizingRBar)
                 {
-                    if (!io.MouseDown[0] && !popupOpened)
+                    if (!io.MouseDown[0])
                     {
                         sizingRBar = false;
                     }
@@ -1108,7 +1109,7 @@ namespace ImSequencer
                 }
                 else if (sizingLBar)
                 {
-                    if (!io.MouseDown[0] && !popupOpened)
+                    if (!io.MouseDown[0])
                     {
                         sizingLBar = false;
                     }
@@ -1138,7 +1139,7 @@ namespace ImSequencer
                 {
                     if (MovingScrollBar)
                     {
-                        if (!io.MouseDown[0] && !popupOpened)
+                        if (!io.MouseDown[0])
                         {
                             MovingScrollBar = false;
                         }
@@ -1151,7 +1152,7 @@ namespace ImSequencer
                     }
                     else
                     {
-                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1)
+                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
                         {
                             MovingScrollBar = true;
                             panningViewSource = io.MousePos;

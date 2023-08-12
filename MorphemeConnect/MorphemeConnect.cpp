@@ -232,6 +232,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
             return 0;
         break;
+    case WM_SETCURSOR:
+        break;
     case WM_DESTROY:
         ::PostQuitMessage(0);
         return 0;

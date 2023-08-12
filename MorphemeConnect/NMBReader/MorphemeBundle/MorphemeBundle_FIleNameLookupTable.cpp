@@ -51,3 +51,13 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 	this->m_iVar2C = bundle->m_iVar2C;
 	this->m_data = new BundleData_FileNameLookupTable(bundle->m_data);
 }
+
+void MorphemeBundle_FileNameLookupTable::GenerateBundle()
+{
+
+}
+
+int MorphemeBundle_FileNameLookupTable::CalculateBundleSize()
+{
+	return this->m_dataSize;
+}

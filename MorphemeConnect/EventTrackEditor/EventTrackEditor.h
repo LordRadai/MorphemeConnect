@@ -31,6 +31,7 @@ struct EventTrackEditor
         EventTrack(MorphemeBundle_EventTrack* src, float len, bool discrete);
 
         void SaveEventTrackData(float len);
+        bool IsEventActive(int event_idx, int frame);
     };
 
     NodeDef* m_nodeSource = NULL;
@@ -38,6 +39,19 @@ struct EventTrackEditor
     std::vector<EventTrack> m_eventTracks;
     int m_frameMin, m_frameMax;
     bool focused = false;
+
+    struct EventTrackColor
+    {
+        UINT m_trackColor = 0xFFEB5050;
+        UINT m_trackColorInactive = 0xFF464646;
+        UINT m_trackColorInvert = 0xFF633132;
+        UINT m_trackColorActive = 0xFF633132;
+        UINT m_trackBoundingBox = 0xFF000000;
+        UINT m_trackBoundingBoxActive = 0xFF0000FF;
+        UINT m_trackTextColor = 0xFFFFFFFF;
+    } m_colors;
+
+    EventTrackEditor();
 
     int GetFrameMin() const;
     int GetFrameMax() const;
@@ -53,8 +67,6 @@ struct EventTrackEditor
     void DeleteEvent(int track_idx, int event_idx);
 
     void ReloadTracks();
-
-    EventTrackEditor();
 
     void Clear();
 };

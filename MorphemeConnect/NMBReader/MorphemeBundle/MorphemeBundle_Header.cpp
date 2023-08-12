@@ -31,3 +31,13 @@ MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)
 	this->m_iVar2C = bundle->m_iVar2C;
 	this->m_data = (BundleData_Header*)bundle->m_data;
 }
+
+void MorphemeBundle_Header::GenerateBundle()
+{
+
+}
+
+int MorphemeBundle_Header::CalculateBundleSize()
+{
+	return this->m_dataSize;
+}

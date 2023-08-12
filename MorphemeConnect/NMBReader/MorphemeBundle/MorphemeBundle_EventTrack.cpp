@@ -53,3 +53,23 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 		}
 	}	
 }
+
+void MorphemeBundle_EventTrack::GenerateBundle()
+{
+
+}
+
+int MorphemeBundle_EventTrack::CalculateBundleSize()
+{
+	int size = 32 + 12 * this->m_data->m_numEvents + strlen(this->m_data->m_trackName);
+
+	int remainder = size % this->m_dataAlignment;
+
+	if (remainder != 0)
+	{
+		int next_integer = (size - remainder) + 16; //Adjust so that the bundle end address will be aligned to 16 bytes
+		size = next_integer;
+	}
+
+	return size;
+}

@@ -64,6 +64,23 @@ void EventTrackEditor::EventTrack::SaveEventTrackData(float len)
     }
 }
 
+bool EventTrackEditor::EventTrack::IsEventActive(int event_idx, int frame)
+{
+    if (!this->m_discrete)
+    {
+        if ((frame >= this->m_event[event_idx].m_frameStart) && frame <= (this->m_event[event_idx].m_duration + this->m_event[event_idx].m_frameStart))
+            return true;
+    }
+    else
+    {
+        if (frame == this->m_event[event_idx].m_frameStart)
+            return true;
+    }
+
+    return false;
+}
+
+
 int EventTrackEditor::GetFrameMin() const
 {
     return m_frameMin;
@@ -117,16 +134,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
     for (size_t i = 0; i < 16; i++)
         new_bundle.m_header[i] = 0; //This is most likely incorrect. Need a way to generate the header
 
-    int data_size = 32 + 12 * 0 + strlen(name); //32 bytes fixed + 12 * trackCount + nameLenght + padding for alignment
-    int remainder = data_size % 16;
-
-    if (remainder != 0)
-    {
-        int next_integer = (data_size - remainder) + 16; //Adjust so that the bundle end address will be aligned to 16 bytes
-        data_size = next_integer;
-    }
-
-    new_bundle.m_dataSize = data_size;
+    new_bundle.m_dataSize = 0;
     new_bundle.m_dataAlignment = 16;
     new_bundle.m_iVar2C = 0;
 
@@ -141,6 +149,8 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
     new_bundle.m_data->m_eventId = event_id;
     new_bundle.m_data->m_iVar14 = 0;
     new_bundle.m_data->m_events = NULL;
+
+    new_bundle.CalculateBundleSize();
 
     morpheme_connect.nmb.m_eventTracks.push_back(new_bundle);
 

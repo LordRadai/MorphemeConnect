@@ -83,3 +83,14 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 	printf_s("}\n");
 #endif
 }
+
+void MorphemeBundle::GenerateBundle()
+{
+
+}
+
+int MorphemeBundle::CalculateBundleSize()
+{
+
+	return this->m_dataSize;
+}

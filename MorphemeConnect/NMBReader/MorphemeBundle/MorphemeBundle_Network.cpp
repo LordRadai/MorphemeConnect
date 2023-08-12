@@ -337,3 +337,13 @@ MorphemeBundle_Network::MorphemeBundle_Network(MorphemeBundle* bundle)
 	this->m_iVar2C = bundle->m_iVar2C;
 	this->m_data = new BundleData_Network(bundle->m_data);	
 }
+
+void MorphemeBundle_Network::GenerateBundle()
+{
+
+}
+
+int MorphemeBundle_Network::CalculateBundleSize()
+{
+    return this->m_dataSize;
+}

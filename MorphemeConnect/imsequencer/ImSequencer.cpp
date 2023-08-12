@@ -29,14 +29,6 @@
 #include <cstdlib>
 #include "../Application/Application.h"
 
-#define TRACK_COLOR 0xFFEB5050
-#define TRACK_COLOR_INACTIVE 0xFF464646
-#define TRACK_COLOR_INVERT 0xFF633132
-#define TRACK_COLOR_ACTIVE 0xFF633132
-#define TRACK_BOUND 0xFF1D0D0E
-#define TRACK_BOUND_ACTIVE 0xFF0000FF
-#define TRACK_TEXT_COLOR 0xFFFFFFFF
-
 namespace ImSequencer
 {
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
@@ -150,8 +142,6 @@ namespace ImSequencer
 
     bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions)
     {
-        ImGuiContext& g = *GImGui;
-
         bool ret = false;
         ImGuiIO& io = ImGui::GetIO();
         int cx = (int)(io.MousePos.x);
@@ -184,13 +174,13 @@ namespace ImSequencer
         bool addTrack = false;
         static int addTrackEventId = 0;
         static char addTrackName[50] = "MyTrack";
-        static bool addTrackType = true;
+        static bool addTrackIsDuration = false;
 
         static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
 
         bool delEvent = false;
 
-        int ItemHeight = 22;
+        int ItemHeight = 23;
 
         static bool popupOpened = false;
 
@@ -294,12 +284,13 @@ namespace ImSequencer
 
             // current frame top
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
-            ImRect legendResizeRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 10, canvas_pos.y + ItemHeight));
+            ImRect legendResizeRect(ImVec2(canvas_pos.x + legendWidth - 2, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 2, canvas_pos.y + ItemHeight));
 
-            if (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos))
+            if ((!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos)) || resizeLegend)
             {
-                g.MouseCursor = ImGuiMouseCursor_ResizeEW;
-                
+                if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+
                 if (io.MouseDown[0])
                     resizeLegend = true;
             }
@@ -318,7 +309,8 @@ namespace ImSequencer
             {
                 if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {
-                    SetCursor(LoadCursor(NULL, IDC_HAND));
+                    if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                     if (io.MouseReleased[0])
                     {
@@ -338,13 +330,13 @@ namespace ImSequencer
 
                     const char* types[2] = {"Discrete", "Duration"};
 
-                    if (ImGui::BeginCombo("Type", types[addTrackType]))
+                    if (ImGui::BeginCombo("Type", types[addTrackIsDuration]))
                     {
                         for (size_t i = 0; i < 2; i++)
                         { 
-                            const bool selected = (addTrackType == i);
-                            if (ImGui::Selectable(types[i], addTrackType))
-                                addTrackType = i;
+                            const bool selected = (addTrackIsDuration == i);
+                            if (ImGui::Selectable(types[i], addTrackIsDuration))
+                                addTrackIsDuration = i;
                         }
 
                         ImGui::EndCombo();
@@ -352,7 +344,7 @@ namespace ImSequencer
 
                     if (ImGui::Button("Add Track") || GetAsyncKeyState(VK_RETURN) & 1)
                     {
-                        eventTrackEditor->AddTrack(addTrackEventId, addTrackName, addTrackType);
+                        eventTrackEditor->AddTrack(addTrackEventId, addTrackName, addTrackIsDuration);
                         ImGui::CloseCurrentPopup();
 
                         *selectedTrack = -1;
@@ -367,9 +359,10 @@ namespace ImSequencer
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             }
 
-            if (sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && topRect.Contains(io.MousePos) && !popupOpened && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
+            if (sequenceOptions & EDITOR_CHANGE_FRAME && currentFrame && ((topRect.Contains(io.MousePos) && !popupOpened && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos) && !resizeLegend) || MovingCurrentFrame))
             {
-                g.MouseCursor = ImGuiMouseCursor_Hand;
+                if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                 if (!resizeLegend && !popupOpened && !MovingScrollBar && movingTrack == -1 && io.MouseDown[0])
                     MovingCurrentFrame = true;
@@ -463,7 +456,8 @@ namespace ImSequencer
                 {                    
                     if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        g.MouseCursor = ImGuiMouseCursor_Hand;
+                        if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                         if (io.MouseReleased[0])
                         {
@@ -477,7 +471,8 @@ namespace ImSequencer
                     ImVec2 sz = ImVec2(canvas_size.x + canvas_pos.x, pos.y + ItemHeight - 1);
                     if (overLabel && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        g.MouseCursor = ImGuiMouseCursor_Hand;
+                        if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                         if (io.MouseReleased[0])
                         {
@@ -492,7 +487,8 @@ namespace ImSequencer
                 {
                     if (SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
-                        g.MouseCursor = ImGuiMouseCursor_Hand;
+                        if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                         if (io.MouseReleased[0])
                         {
@@ -668,9 +664,9 @@ namespace ImSequencer
                 for (int trackIndex = 0; trackIndex < eventTrackEditor->GetTrackCount(); trackIndex++)
                 {
                     unsigned int color;
-                    unsigned int slotColor = TRACK_COLOR;
+                    unsigned int slotColor = eventTrackEditor->m_colors.m_trackColor;
                     unsigned int slotColorHalf = slotColor | 0x40000000;
-                    unsigned int boundColor = TRACK_BOUND;
+                    unsigned int boundColor = eventTrackEditor->m_colors.m_trackBoundingBox;
 
                     EventTrackEditor::EventTrack* track = &eventTrackEditor->m_eventTracks[trackIndex];
 
@@ -682,15 +678,10 @@ namespace ImSequencer
 
                         if ((sequenceOptions & EDITOR_MARK_ACTIVE_EVENTS) && *currentFrame > -1)
                         {
-                            if (!track->m_discrete)
+                            if (track->IsEventActive(eventIdx, *currentFrame))
                             {
-                                if ((*currentFrame >= track->m_event[eventIdx].m_frameStart) && *currentFrame <= (track->m_event[eventIdx].m_duration + track->m_event[eventIdx].m_frameStart))
-                                    slotColor = TRACK_COLOR_ACTIVE;
-                            }
-                            else
-                            {
-                                if (*currentFrame == track->m_event[eventIdx].m_frameStart)
-                                    slotColor = TRACK_COLOR_ACTIVE;
+                                slotColor = eventTrackEditor->m_colors.m_trackColorActive;
+                                boundColor = eventTrackEditor->m_colors.m_trackBoundingBoxActive;
                             }
                         }
 
@@ -750,15 +741,15 @@ namespace ImSequencer
 
                                 ImRect track_box(slotD1, slotD2);
 
-                                draw_list->AddText(textD, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
-                                //draw_list->AddText(textDIdx, TRACK_TEXT_COLOR, std::to_string(eventIdx).c_str()); //Event Idx
+                                draw_list->AddText(textD, eventTrackEditor->m_colors.m_trackTextColor, event_value.c_str()); //Event Value
+                                draw_list->AddText(textDIdx, eventTrackEditor->m_colors.m_trackTextColor, std::to_string(eventIdx).c_str()); //Event Idx
                             }
                             else
                             {
                                 draw_list->AddRectFilled(slotP1, slotP3, slotColorHalf, 0);
                                 draw_list->AddRectFilled(slotP1, slotP2, slotColor, 0); //Track Box
                                 draw_list->AddRect(slotP1, slotP2, boundColor, 0); //Track Bounding Box
-                                draw_list->AddText(textP, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                                draw_list->AddText(textP, eventTrackEditor->m_colors.m_trackTextColor, event_value.c_str()); //Event Value
                             }
 
                             if (sequenceOptions & EDITOR_EVENT_LOOP)
@@ -779,8 +770,8 @@ namespace ImSequencer
                                     }
 
                                     draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
-                                    draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
-                                    draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                                    draw_list->AddRect(slotP1Loop, slotP2Loop, eventTrackEditor->m_colors.m_trackBoundingBox, 0); //Track Bounding Box
+                                    draw_list->AddText(textPLoop, eventTrackEditor->m_colors.m_trackTextColor, event_value.c_str()); //Event Value
                                 }
                                 else if (slotP1.x < frameMin.x)
                                 {
@@ -798,8 +789,8 @@ namespace ImSequencer
                                     }
 
                                     draw_list->AddRectFilled(slotP1Loop, slotP2Loop, slotColor, 0); //Track Box
-                                    draw_list->AddRect(slotP1Loop, slotP2Loop, TRACK_BOUND, 0); //Track Bounding Box
-                                    draw_list->AddText(textPLoop, TRACK_TEXT_COLOR, event_value.c_str()); //Event Value
+                                    draw_list->AddRect(slotP1Loop, slotP2Loop, eventTrackEditor->m_colors.m_trackBoundingBox, 0); //Track Bounding Box
+                                    draw_list->AddText(textPLoop, eventTrackEditor->m_colors.m_trackTextColor, event_value.c_str()); //Event Value
                                 }
                                 else
                                 {
@@ -845,9 +836,11 @@ namespace ImSequencer
                                             continue;
 
                                         if (j == 2)
-                                            g.MouseCursor = ImGuiMouseCursor_Hand;
+                                            if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                                                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
                                         else
-                                            g.MouseCursor = ImGuiMouseCursor_ResizeEW;
+                                            if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)   
+                                               ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
 
                                         if (ImGui::IsMouseClicked(0))
                                         {
@@ -866,7 +859,8 @@ namespace ImSequencer
                                     if (!rc.Contains(io.MousePos) || popupOpened || MovingScrollBar || MovingCurrentFrame)
                                         continue;
 
-                                    SetCursor(LoadCursor(NULL, IDC_HAND));                                
+                                    if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
+                                        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
                                     if (!ImRect(childFramePos, childFramePos + childFrameSize).Contains(io.MousePos))
                                         continue;

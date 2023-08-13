@@ -42,6 +42,41 @@ struct FileNameLookupTable
 				this->m_strings[i] = string_list[i];
 		}
 	}
+
+	void WriteToBinary(ofstream* out)
+	{
+		MemHelper::WriteDWord(out, (LPVOID*)&this->m_elemCount);
+		MemHelper::WriteDWord(out, (LPVOID*)&this->m_stringSize);
+		MemHelper::WriteQWord(out, (LPVOID*)&this->m_idxOffset);
+		MemHelper::WriteQWord(out, (LPVOID*)&this->m_localOffsetsOffset);
+		MemHelper::WriteQWord(out, (LPVOID*)&this->m_stringsOffset);
+
+		MemHelper::WriteDWordArray(out, (LPVOID*)this->m_idx, this->m_elemCount);
+		MemHelper::WriteDWordArray(out, (LPVOID*)this->m_localOffsets, this->m_elemCount);
+
+		for (int i = 0; i < this->m_elemCount; i++)
+		{
+			int string_len = strlen(&this->m_strings[this->m_localOffsets[i]]) + 1;
+
+			MemHelper::WriteByteArray(out, (LPVOID*)&this->m_strings[this->m_localOffsets[i]], string_len);
+		}
+
+		streampos pos = out->tellp();
+
+		int remainder = pos % 4;
+
+		if (remainder != 0)
+		{
+			int pad_count = 4 - remainder;
+
+			byte* pad = new byte[pad_count];
+
+			for (size_t i = 0; i < pad_count; i++)
+				pad[i] = 0xCD;
+
+			MemHelper::WriteByteArray(out, (LPVOID*)pad, pad_count);
+		}
+	}
 };
 
 class MorphemeBundle_FileNameLookupTable : public MorphemeBundle_Base
@@ -62,6 +97,7 @@ public:
 
 		BundleData_FileNameLookupTable() {}
 		BundleData_FileNameLookupTable(byte* data);
+		void WriteToBinary(ofstream* out);
 	};
 
 	BundleData_FileNameLookupTable* m_data;

@@ -86,11 +86,21 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 
 void MorphemeBundle::GenerateBundle(ofstream* out)
 {
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_magic, 2);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
+	MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
 
+	this->m_dataSize = this->CalculateBundleSize();
+
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);
+
+	MemHelper::WriteByteArray(out, (LPVOID*)this->m_data, this->m_dataSize);
 }
 
 int MorphemeBundle::CalculateBundleSize()
 {
-
 	return this->m_dataSize;
 }

@@ -38,6 +38,9 @@ void MorphemeBundle_Header::GenerateBundle(ofstream* out)
 	MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
 	MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
 	MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
+
+	this->m_dataSize = this->CalculateBundleSize();
+
 	MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
 	MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
 	MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);

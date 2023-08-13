@@ -461,9 +461,15 @@ void Application::SaveFile()
 					{
 						if (nmb.m_init)
 						{
-							nmb.SaveToFile(pszOutFilePath);
+							bool status = nmb.SaveToFile(pszOutFilePath);
 
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);
+							if (status)
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);							
+							else
+							{
+								Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to generate NMB file\n");
+								Debug::Alert(MB_ICONERROR, "Failed to generate file\n", "NMBReader.cpp");
+							}
 						}
 					}
 					pItem->Release();

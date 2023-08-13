@@ -61,16 +61,41 @@ NMBReader::~NMBReader()
 
 bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 {
-	bool state = false;
+	bool state = true;
 	this->m_outFilePath = pszOutFilePath;
 
 	ofstream nmb_out;
 
 	nmb_out.open(this->m_outFilePath, ios::binary);
 
-	this->m_header.GenerateBundle(&nmb_out);
+	try
+	{
+		this->m_header.GenerateBundle(&nmb_out);
 
-	state = true;
+		for (int i = 0; i < this->m_skeletonMap.size(); i++)
+		{
+			this->m_skeletonMap[i].GenerateBundle(&nmb_out);
+
+			byte pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
+			MemHelper::WriteByteArray(&nmb_out, (LPVOID*)pad_array, 4);
+		}
+
+		for (int i = 0; i < this->m_unkParameters.size(); i++)
+			this->m_unkParameters[i].GenerateBundle(&nmb_out);
+
+		for (int i = 0; i < this->m_eventTracks.size(); i++)
+			this->m_eventTracks[i].GenerateBundle(&nmb_out);
+
+		for (int i = 0; i < this->m_messageIndices.size(); i++)
+			this->m_messageIndices[i].GenerateBundle(&nmb_out);
+
+		this->m_fileNameLookupTable.GenerateBundle(&nmb_out);
+	}
+	catch (const std::exception&)
+	{
+		state = false;
+	}
+	
 	nmb_out.close();
 
 	ifstream nmb_size;

@@ -56,12 +56,54 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 
 void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 {
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_magic, 2);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
+	MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
 
+	this->m_dataSize = this->CalculateBundleSize();
+
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);
+
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_numEvents);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_iVar4);
+
+	UINT64 name_offset = 32 + 12 * this->m_data->m_numEvents;
+	MemHelper::WriteQWord(out, (LPVOID*)&name_offset);
+
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_eventId);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_iVar14);
+
+	UINT64 data_offset = 32;
+	MemHelper::WriteQWord(out, (LPVOID*)&data_offset);
+
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_data->m_events, 3 * this->m_data->m_numEvents);
+
+	int str_len = strlen(this->m_data->m_trackName);
+
+	MemHelper::WriteByteArray(out, (LPVOID*)this->m_data->m_trackName, str_len);
+
+	char new_line = 0;
+	MemHelper::WriteByte(out, (LPVOID*)&new_line);
+
+	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len); assert(pad_count > -1);
+
+	if (pad_count > 0)
+	{
+		byte* pad_bytes = new byte[pad_count];
+
+		for (int i = 0; i < pad_count; i++)
+			pad_bytes[i] = 0xCD;
+
+		MemHelper::WriteByteArray(out, (LPVOID*)pad_bytes, pad_count - 1);
+	}	
 }
 
 int MorphemeBundle_EventTrack::CalculateBundleSize()
 {
-	int size = 32 + 12 * this->m_data->m_numEvents + strlen(this->m_data->m_trackName);
+	int size = 32 + 12 * this->m_data->m_numEvents + strlen(this->m_data->m_trackName) + 1;
 
 	int remainder = size % this->m_dataAlignment;
 

@@ -54,7 +54,45 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 
 void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 {
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_magic, 2);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
+	MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
 
+	this->m_dataSize = this->CalculateBundleSize();
+
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);
+
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_animTableOffset);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_formatTableOffset);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_sourceTableOffset);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_tagTableOffset);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_hashOffset);
+
+	this->m_data->m_animList.WriteToBinary(out);
+	this->m_data->m_animFormat.WriteToBinary(out);
+	this->m_data->m_sourceXmdList.WriteToBinary(out);
+	this->m_data->m_tagList.WriteToBinary(out);
+
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_data->m_hash, this->m_data->m_animFormat.m_elemCount);
+
+	streampos pos = out->tellp();
+
+	int remainder = pos % 4;
+
+	if (remainder != 0)
+	{
+		int pad_count = 4 - remainder;
+
+		byte* pad = new byte[pad_count];
+
+		for (size_t i = 0; i < pad_count; i++)
+			pad[i] = 0;
+
+		MemHelper::WriteByteArray(out, (LPVOID*)pad, pad_count);
+	}
 }
 
 int MorphemeBundle_FileNameLookupTable::CalculateBundleSize()

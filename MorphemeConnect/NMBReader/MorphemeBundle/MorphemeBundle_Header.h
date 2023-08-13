@@ -17,6 +17,6 @@ public:
 	MorphemeBundle_Header();
 	MorphemeBundle_Header(MorphemeBundle* bundle);
 	
-	void GenerateBundle();
+	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();
 };

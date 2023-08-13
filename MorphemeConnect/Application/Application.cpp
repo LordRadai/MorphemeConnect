@@ -107,7 +107,7 @@ void Application::RenderGUI(const char* title)
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Open", NULL, &this->m_flags.load_file)) { this->m_flags.load_file = true; }
-			if (ImGui::MenuItem("Save", NULL)) {}
+			if (ImGui::MenuItem("Save", NULL, &this->m_flags.save_file)) { this->m_flags.save_file = true; }
 
 			ImGui::EndMenu();
 		}
@@ -279,6 +279,13 @@ void Application::ProcessVariables()
 		this->LoadFile();
 	}
 
+	if (this->m_flags.save_file && this->nmb.m_init)
+	{
+		this->m_flags.save_file = false;
+
+		this->SaveFile();
+	}
+
 	if (this->nmb.m_init == false)
 	{
 		this->m_eventTrackEditor.Clear();
@@ -371,6 +378,7 @@ void Application::LoadFile()
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
+
 	if (SUCCEEDED(hr))
 	{
 		IFileOpenDialog* pFileOpen = NULL;
@@ -410,6 +418,60 @@ void Application::LoadFile()
 					MessageBoxW(NULL, L"Failed to open file", L"Application.cpp", MB_ICONERROR);
 			}
 			pFileOpen->Release();
+		}
+		CoUninitialize();
+	}
+}
+
+void Application::SaveFile()
+{
+	COMDLG_FILTERSPEC ComDlgFS[3] = { {L"Morpheme Network Binary", L"*.nmb"},{L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+		COINIT_DISABLE_OLE1DDE);
+
+	if (SUCCEEDED(hr))
+	{
+		IFileOpenDialog* pFileSave = NULL;
+
+		// Create the FileOpenDialog object.
+		hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+			IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+		if (SUCCEEDED(hr))
+		{
+			pFileSave->SetFileTypes(3, ComDlgFS);
+
+			// Show the Open dialog box.
+			hr = pFileSave->Show(NULL);
+
+			// Get the file name from the dialog box.
+			if (SUCCEEDED(hr))
+			{
+				IShellItem* pItem;
+				hr = pFileSave->GetResult(&pItem);
+
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszOutFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszOutFilePath);
+
+					// Display the file name to the user.
+					if (SUCCEEDED(hr))
+					{
+						if (nmb.m_init)
+						{
+							nmb.SaveToFile(pszOutFilePath);
+
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);
+						}
+					}
+					pItem->Release();
+				}
+				else
+					MessageBoxW(NULL, L"Failed to save file", L"Application.cpp", MB_ICONERROR);
+			}
+			pFileSave->Release();
 		}
 		CoUninitialize();
 	}

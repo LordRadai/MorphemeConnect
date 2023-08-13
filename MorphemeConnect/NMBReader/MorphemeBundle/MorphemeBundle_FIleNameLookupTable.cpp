@@ -52,7 +52,7 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 	this->m_data = new BundleData_FileNameLookupTable(bundle->m_data);
 }
 
-void MorphemeBundle_FileNameLookupTable::GenerateBundle()
+void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 {
 
 }

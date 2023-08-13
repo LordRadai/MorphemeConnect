@@ -54,7 +54,7 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 	}	
 }
 
-void MorphemeBundle_EventTrack::GenerateBundle()
+void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 {
 
 }

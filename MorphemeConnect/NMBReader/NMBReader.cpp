@@ -26,7 +26,7 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 		default:
 			break;
 		case Bundle_SkeletonMap:
-			this->m_skeletonMapBundle.push_back(this->m_bundles[i]);
+			this->m_skeletonMap.push_back(this->m_bundles[i]);
 			break;
 		case Bundle_MessageIndices:
 			this->m_messageIndices.push_back(this->m_bundles[i]);
@@ -51,10 +51,36 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 	}
 
 	this->m_init = true;
+
+	nmb.close();
 }
 
 NMBReader::~NMBReader()
 {
+}
+
+bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
+{
+	bool state = false;
+	this->m_outFilePath = pszOutFilePath;
+
+	ofstream nmb_out;
+
+	nmb_out.open(this->m_outFilePath, ios::binary);
+
+	this->m_header.GenerateBundle(&nmb_out);
+
+	state = true;
+	nmb_out.close();
+
+	ifstream nmb_size;
+	nmb_size.open(this->m_outFilePath, ios::binary | ios::ate);
+
+	this->m_outFileSize = nmb_size.tellg();
+
+	nmb_size.close();
+
+	return state;
 }
 
 std::string NMBReader::GetAnimFileName(int idx)

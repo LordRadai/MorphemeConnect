@@ -69,6 +69,6 @@ public:
 	MorphemeBundle_FileNameLookupTable();
 	MorphemeBundle_FileNameLookupTable(MorphemeBundle* bundle);
 
-	void GenerateBundle();
+	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();
 };

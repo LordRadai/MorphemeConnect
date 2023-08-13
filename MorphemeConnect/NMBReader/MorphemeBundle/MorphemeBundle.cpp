@@ -35,7 +35,7 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 
 	streampos pDataStart = pFile->tellg();
 
-	if (this->m_dataSize != 0)
+	if (this->m_dataSize > 0)
 	{
 		this->m_data = new byte[this->m_dataSize];
 		MemHelper::ReadByteArray(pFile, (LPVOID*)this->m_data, this->m_dataSize);
@@ -84,7 +84,7 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 #endif
 }
 
-void MorphemeBundle::GenerateBundle()
+void MorphemeBundle::GenerateBundle(ofstream* out)
 {
 
 }

@@ -32,12 +32,23 @@ MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)
 	this->m_data = (BundleData_Header*)bundle->m_data;
 }
 
-void MorphemeBundle_Header::GenerateBundle()
+void MorphemeBundle_Header::GenerateBundle(ofstream* out)
 {
+	MemHelper::WriteDWordArray(out, (LPVOID*)this->m_magic, 2);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
+	MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
+	MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);
 
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_iVar0);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_iVar1);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_iVar2);
+	MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->m_iVar3);
 }
 
 int MorphemeBundle_Header::CalculateBundleSize()
 {
-	return this->m_dataSize;
+	return 32;
 }

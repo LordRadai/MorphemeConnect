@@ -25,6 +25,7 @@ public:
 	{
 		bool style_editor = false;
 		bool load_file = false;
+		bool save_file = false;
 	} m_flags;
 
 	struct EventTrackEditorFlags
@@ -46,5 +47,6 @@ public:
 	void RenderGUI(const char* title);
 	void ProcessVariables();
 	void LoadFile();
+	void SaveFile();
 	void NetworkCleanup();
 };

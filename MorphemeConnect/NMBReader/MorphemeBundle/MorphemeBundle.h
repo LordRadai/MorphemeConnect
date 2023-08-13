@@ -9,6 +9,6 @@ public:
 	MorphemeBundle();
 	MorphemeBundle(ifstream* pFile);
 
-	void GenerateBundle();
+	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();
 };

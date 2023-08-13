@@ -362,6 +362,6 @@ public:
 	MorphemeBundle_Network();
 	MorphemeBundle_Network(MorphemeBundle* bundle);
 
-    void GenerateBundle();
+    void GenerateBundle(ofstream* out);
     int CalculateBundleSize();
 };

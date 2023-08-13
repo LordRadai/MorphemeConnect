@@ -22,4 +22,13 @@ namespace MemHelper
 	void ReadWordArray(ifstream* pStream, LPVOID* pDst, int iSize);
 	void ReadDWordArray(ifstream* pStream, LPVOID* pDst, int iSize);
 	void ReadQWordArray(ifstream* pStream, LPVOID* pDst, int iSize);
+
+	void WriteByte(ofstream* pStream, LPVOID* pSrc);
+	void WriteWord(ofstream* pStream, LPVOID* pSrc);
+	void WriteDWord(ofstream* pStream, LPVOID* pSrc);
+	void WriteQWord(ofstream* pStream, LPVOID* pSrc);
+	void WriteByteArray(ofstream* pStream, LPVOID* pSrc, int iSize);
+	void WriteWordArray(ofstream* pStream, LPVOID* pSrc, int iSize);
+	void WriteDWordArray(ofstream* pStream, LPVOID* pSrc, int iSize);
+	void WriteQWordArray(ofstream* pStream, LPVOID* pSrc, int iSize);
 }

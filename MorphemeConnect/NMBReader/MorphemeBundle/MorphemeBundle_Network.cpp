@@ -338,7 +338,7 @@ MorphemeBundle_Network::MorphemeBundle_Network(MorphemeBundle* bundle)
 	this->m_data = new BundleData_Network(bundle->m_data);	
 }
 
-void MorphemeBundle_Network::GenerateBundle()
+void MorphemeBundle_Network::GenerateBundle(ofstream* out)
 {
 
 }

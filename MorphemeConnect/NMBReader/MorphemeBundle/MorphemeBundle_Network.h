@@ -140,7 +140,7 @@ struct sSmStateList {
 };
 
 struct StringTable {
-    uint32_t m_NumEntrys;
+    uint32_t m_NumEntries;
     uint32_t m_DataLenght;
     uint32_t* m_IDs;
     uint32_t* m_Offsets;
@@ -163,7 +163,7 @@ struct sMessageDef {
     short* node_array;
 };
 
-struct NodeDataContentBase
+struct NodeDataAttribBase
 {
     int field0_0x0;
     int field1_0x4;
@@ -171,31 +171,33 @@ struct NodeDataContentBase
     AttribType m_type;
     int padding;
 
-    NodeDataContentBase() {}
-    NodeDataContentBase(byte* data);
+    NodeDataAttribBase() {}
+    NodeDataAttribBase(byte* data);
 };
 
-struct NodeDataContent_Bool
+struct NodeDataAttrib_Unk
 {
-    NodeDataContentBase m_contentBase;
+    NodeDataAttribBase m_attribBase;
+    byte* m_content;
+
+    NodeDataAttrib_Unk() {}
+    NodeDataAttrib_Unk(byte* data, int size);
+};
+
+struct NodeDataSet
+{
+    NodeDataAttrib_Unk* m_attrib;
+    UINT64 m_size;
+    int m_alignment;
+    int m_iVar0;
+};
+
+struct NodeDataAttrib_Bool
+{
     bool m_bool;
 
-    NodeDataContent_Bool() {}
-    NodeDataContent_Bool(byte* data);
-};
-
-struct NodeDataBase
-{
-    NodeDataContentBase* content;
-    int size;
-    int alignment;
-    int iVar0;
-    int iVar1;
-};
-
-struct sNodeData
-{
-    NodeDataBase data[10];
+    NodeDataAttrib_Bool() {}
+    NodeDataAttrib_Bool(byte* data);
 };
 
 struct EventTrackList {
@@ -205,19 +207,16 @@ struct EventTrackList {
     UINT64 m_tracksEndAddr;
 };
 
-struct NodeDataContent_EventTrack {
-    NodeDataContentBase m_contentBase;
+struct NodeDataAttrib_EventTrack 
+{
     EventTrackList m_eventTracks[3];
 
-    NodeDataContent_EventTrack() {}
-
-    NodeDataContent_EventTrack(byte* data);
+    NodeDataAttrib_EventTrack() {}
+    NodeDataAttrib_EventTrack(byte* data);
 };
 
-struct NodeDataContent_SourceAnim
+struct NodeDataAttrib_SourceAnim
 {
-    NodeDataContentBase m_contentBase;
-
     UINT64 m_pVar0;     //The runtime module will put the referenced NSA pointer here
     UINT64 m_pVar8;
     float m_fVar10;
@@ -249,28 +248,8 @@ struct NodeDataContent_SourceAnim
     BYTE m_bVar80;
     BYTE m_pad3[15];
 
-    NodeDataContent_SourceAnim() {}
-
-    NodeDataContent_SourceAnim(byte* data);
-};
-
-
-struct NodeData104 {
-    NodeDataContent_Bool* m_attribBool;
-    int size;
-    int alignment;
-    int iVar0;
-    int iVar1;
-    NodeDataContent_SourceAnim* m_attribSourceAnim;
-    int size_1;
-    int alignment_1;
-    int iVar0_1;
-    int iVar1_1;
-    NodeDataContent_EventTrack* m_attribEventTrack;
-    int size_2;
-    int alignment_2;
-    int iVar0_2;
-    int iVar1_2;
+    NodeDataAttrib_SourceAnim() {}
+    NodeDataAttrib_SourceAnim(byte* data);
 };
 
 struct NodeDef {
@@ -283,13 +262,13 @@ struct NodeDef {
     uint16_t field7_0xc = 0;
     byte m_numControlParamAndOpNodeIDs = 0;
     byte field8_0xf = 0;
-    uint16_t field9_0x10 = 0;
+    uint16_t m_numDataSet = 0;
     uint16_t field10_0x12 = 0;
     int padding = 0;
     UINT64 m_owningNetworkDef = 0; //Always 0
     short* m_childNodeIDs = NULL;
     int* m_controlParamAndOpNodeIDs = NULL;
-    sNodeData* node_data = NULL;
+    NodeDataSet* m_nodeData = NULL;
     short field16_0x38 = 0;
     short field17_0x3a = 0;
     int field18_0x3c = 0;
@@ -302,19 +281,15 @@ struct NodeDef {
     UINT64 transitFn = NULL;
     sMorphemeNodeDef* node_def = NULL;
     byte field27_0x80 = 0;
-    byte field28_0x81 = 0;
-    byte field29_0x82 = 0;
-    byte field30_0x83 = 0;
-    byte field31_0x84 = 0;
-    byte field32_0x85 = 0;
-    byte field33_0x86 = 0;
-    byte field34_0x87 = 0;
+    byte padding1[7];
     uint64_t field35_0x88 = 0;
+    uint64_t field36_0x8C = 0;
 
     NodeDef() {}
     NodeDef(byte* data);
 
-    bool LoadNodeData(NodeType type, sNodeData* dst, byte* srcNodeData);
+    bool LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, int setCount);
+    void SaveToFile(ofstream* out);
 };
 
 class MorphemeBundle_Network : public MorphemeBundle_Base

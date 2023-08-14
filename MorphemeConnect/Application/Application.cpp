@@ -308,38 +308,39 @@ void Application::ProcessVariables()
 
 				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 				{
-					NodeData104* node_data = (NodeData104*)this->nmb.m_network.m_data->m_nodes[idx]->node_data;
-
-					if (node_data != NULL)
+					if (this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
 					{
-						if (node_data->m_attribSourceAnim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
+						NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib->m_content;
+						NodeDataAttrib_EventTrack* event_track = (NodeDataAttrib_EventTrack*)this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib->m_content;
+
+						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
 							this->m_eventTrackEditor.m_nodeSource = node;
 							this->m_eventTrackEditor.m_frameMin = 0;
-							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(node_data->m_attribSourceAnim->m_animLen);
-							this->m_eventTrackEditor.m_animIdx = node_data->m_attribSourceAnim->m_animIdx;
+							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(source_anim->m_animLen);
+							this->m_eventTrackEditor.m_animIdx = source_anim->m_animIdx;
 
-							this->m_eventTrackEditorFlags.m_lenMult = node_data->m_attribSourceAnim->m_animLen / node_data->m_attribSourceAnim->m_trackLen;
+							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / source_anim->m_trackLen;
 
-							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
+							for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i]);
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
 								
 								if (event_tracks)
 									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
 							}
 
-							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[1].m_trackCount; i++)
+							for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
 							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[i]);
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
 								
 								if (event_tracks)
 									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 							}
 
-							for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
+							for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
 							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i]);
+								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
 								
 								if (event_tracks)
 									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
@@ -347,7 +348,7 @@ void Application::ProcessVariables()
 
 							int track_count = 0;
 							for (size_t i = 0; i < 3; i++)
-								track_count += node_data->m_attribEventTrack->m_eventTracks[i].m_trackCount;
+								track_count += event_track->m_eventTracks[i].m_trackCount;
 
 							if (track_count > 0)
 								found = true;

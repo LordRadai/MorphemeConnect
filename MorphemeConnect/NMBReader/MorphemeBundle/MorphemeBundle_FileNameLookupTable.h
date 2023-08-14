@@ -97,7 +97,6 @@ public:
 
 		BundleData_FileNameLookupTable() {}
 		BundleData_FileNameLookupTable(byte* data);
-		void WriteToBinary(ofstream* out);
 	};
 
 	BundleData_FileNameLookupTable* m_data;

@@ -154,50 +154,51 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 
     morpheme_connect.nmb.m_eventTracks.push_back(new_bundle);
 
-    NodeData104* data = (NodeData104*)this->m_nodeSource->node_data;
+    NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
+    NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
 
     if (!duration)
     {
-        UINT64* new_signatures = new UINT64[data->m_attribEventTrack->m_eventTracks[0].m_trackCount + 1];
+        UINT64* new_signatures = new UINT64[event_tracks->m_eventTracks[0].m_trackCount + 1];
 
-        for (size_t i = 0; i < data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
-            new_signatures[i] = data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i];
+        for (size_t i = 0; i < event_tracks->m_eventTracks[0].m_trackCount; i++)
+            new_signatures[i] = event_tracks->m_eventTracks[0].m_trackSignatures[i];
         
-        new_signatures[data->m_attribEventTrack->m_eventTracks[0].m_trackCount] = new_bundle.m_signature;
+        new_signatures[event_tracks->m_eventTracks[0].m_trackCount] = new_bundle.m_signature;
 
-        data->m_attribEventTrack->m_eventTracks[0].m_trackCount++;
+        event_tracks->m_eventTracks[0].m_trackCount++;
 
-        delete[] data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures;
+        delete[] event_tracks->m_eventTracks[0].m_trackSignatures;
 
-        data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures = new_signatures;
+        event_tracks->m_eventTracks[0].m_trackSignatures = new_signatures;
     }
     else
     {
-        UINT64* new_signatures = new UINT64[data->m_attribEventTrack->m_eventTracks[2].m_trackCount + 1];
+        UINT64* new_signatures = new UINT64[event_tracks->m_eventTracks[2].m_trackCount + 1];
 
-        for (size_t i = 0; i < data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
-            new_signatures[i] = data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i];
+        for (size_t i = 0; i < event_tracks->m_eventTracks[2].m_trackCount; i++)
+            new_signatures[i] = event_tracks->m_eventTracks[2].m_trackSignatures[i];
 
-        new_signatures[data->m_attribEventTrack->m_eventTracks[2].m_trackCount] = new_bundle.m_signature;
+        new_signatures[event_tracks->m_eventTracks[2].m_trackCount] = new_bundle.m_signature;
 
-        data->m_attribEventTrack->m_eventTracks[2].m_trackCount++;
+        event_tracks->m_eventTracks[2].m_trackCount++;
 
-        delete[] data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures;
+        delete[] event_tracks->m_eventTracks[2].m_trackSignatures;
 
-        data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures = new_signatures;
+        event_tracks->m_eventTracks[2].m_trackSignatures = new_signatures;
     }
 
-    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(data->m_attribSourceAnim->m_animIdx);
+    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
 
     for (int i = 0; i < nodes.size(); i++)
     {
         if (nodes[i] != this->m_nodeSource)
         {
-            NodeData104* node_data = (NodeData104*)nodes[i]->node_data;
+            NodeDataAttrib_EventTrack* event_tracks_new = (NodeDataAttrib_EventTrack*)nodes[i]->m_nodeData[2].m_attrib->m_content;
 
-            node_data->m_attribEventTrack->m_eventTracks[0] = data->m_attribEventTrack->m_eventTracks[0];
-            node_data->m_attribEventTrack->m_eventTracks[1] = data->m_attribEventTrack->m_eventTracks[1];
-            node_data->m_attribEventTrack->m_eventTracks[2] = data->m_attribEventTrack->m_eventTracks[2];
+            event_tracks_new->m_eventTracks[0] = event_tracks->m_eventTracks[0];
+            event_tracks_new->m_eventTracks[1] = event_tracks->m_eventTracks[1];
+            event_tracks_new->m_eventTracks[2] = event_tracks->m_eventTracks[2];
         }
     }
 
@@ -216,60 +217,61 @@ void EventTrackEditor::DeleteTrack(int idx)
     for (size_t i = 0; i < this->m_eventTracks[idx].m_numEvents; i++)
         this->DeleteEvent(idx, i);
 
-    NodeData104* data = (NodeData104*)this->m_nodeSource->node_data;
-    
+    NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
+    NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
+
     if (this->m_eventTracks[idx].m_discrete)
     {
         int sgn_idx = 0;
-        UINT64* new_signatures = new UINT64[data->m_attribEventTrack->m_eventTracks[0].m_trackCount - 1];
+        UINT64* new_signatures = new UINT64[event_tracks->m_eventTracks[0].m_trackCount - 1];
 
-        for (int i = 0; i < data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
+        for (int i = 0; i < event_tracks->m_eventTracks[0].m_trackCount; i++)
         {
-            if (data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i] != this->m_eventTracks[idx].m_signature)
+            if (event_tracks->m_eventTracks[0].m_trackSignatures[i] != this->m_eventTracks[idx].m_signature)
             {
-                new_signatures[sgn_idx] = data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i];
+                new_signatures[sgn_idx] = event_tracks->m_eventTracks[0].m_trackSignatures[i];
                 sgn_idx++;
             }
         }
 
-        data->m_attribEventTrack->m_eventTracks[0].m_trackCount--;
+        event_tracks->m_eventTracks[0].m_trackCount--;
 
-        delete[] data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures;
+        delete[] event_tracks->m_eventTracks[0].m_trackSignatures;
 
-        data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures = new_signatures;
+        event_tracks->m_eventTracks[0].m_trackSignatures = new_signatures;
     }
     else
     {
         int sgn_idx = 0;
-        UINT64* new_signatures = new UINT64[data->m_attribEventTrack->m_eventTracks[2].m_trackCount - 1];
+        UINT64* new_signatures = new UINT64[event_tracks->m_eventTracks[2].m_trackCount - 1];
 
-        for (int i = 0; i < data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
+        for (int i = 0; i < event_tracks->m_eventTracks[2].m_trackCount; i++)
         {
-            if (data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i] != this->m_eventTracks[idx].m_signature)
+            if (event_tracks->m_eventTracks[2].m_trackSignatures[i] != this->m_eventTracks[idx].m_signature)
             {
-                new_signatures[sgn_idx] = data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i];
+                new_signatures[sgn_idx] = event_tracks->m_eventTracks[2].m_trackSignatures[i];
                 sgn_idx++;
             }
         }
 
-        data->m_attribEventTrack->m_eventTracks[2].m_trackCount--;
+        event_tracks->m_eventTracks[2].m_trackCount--;
 
-        delete[] data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures;
+        delete[] event_tracks->m_eventTracks[2].m_trackSignatures;
 
-        data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures = new_signatures;
+        event_tracks->m_eventTracks[2].m_trackSignatures = new_signatures;
     }
 
-    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(data->m_attribSourceAnim->m_animIdx);
+    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
 
     for (int i = 0; i < nodes.size(); i++)
     {
         if (nodes[i] != this->m_nodeSource)
         {
-            NodeData104* node_data = (NodeData104*)nodes[i]->node_data;
+            NodeDataAttrib_EventTrack* event_tracks_new = (NodeDataAttrib_EventTrack*)nodes[i]->m_nodeData[2].m_attrib->m_content;
 
-            node_data->m_attribEventTrack->m_eventTracks[0] = data->m_attribEventTrack->m_eventTracks[0];
-            node_data->m_attribEventTrack->m_eventTracks[1] = data->m_attribEventTrack->m_eventTracks[1];
-            node_data->m_attribEventTrack->m_eventTracks[2] = data->m_attribEventTrack->m_eventTracks[2];
+            event_tracks_new->m_eventTracks[0] = event_tracks->m_eventTracks[0];
+            event_tracks_new->m_eventTracks[1] = event_tracks->m_eventTracks[1];
+            event_tracks_new->m_eventTracks[2] = event_tracks->m_eventTracks[2];
         }
     }
 
@@ -358,29 +360,30 @@ void EventTrackEditor::ReloadTracks()
     {
         bool found = false;
 
-        NodeData104* node_data = (NodeData104*)this->m_nodeSource->node_data;
+        NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
+        NodeDataAttrib_EventTrack* event_track_source = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
 
-        if (node_data != NULL)
+        if (event_track_source != NULL)
         {
-            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[0].m_trackCount; i++)
+            for (int i = 0; i < event_track_source->m_eventTracks[0].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[0].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), true));
             }
 
-            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[1].m_trackCount; i++)
+            for (int i = 0; i < event_track_source->m_eventTracks[1].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[1].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));
             }
 
-            for (int i = 0; i < node_data->m_attribEventTrack->m_eventTracks[2].m_trackCount; i++)
+            for (int i = 0; i < event_track_source->m_eventTracks[2].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(node_data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[2].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));

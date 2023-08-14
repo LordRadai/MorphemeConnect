@@ -1,6 +1,6 @@
 #include "MorphemeBundle_Network.h"
 
-NodeDataContentBase::NodeDataContentBase(byte* data)
+NodeDataAttribBase::NodeDataAttribBase(byte* data)
 {
     this->field0_0x0 = *(int*)(data);
     this->field1_0x4 = *(int*)(data + 0x4);
@@ -9,20 +9,28 @@ NodeDataContentBase::NodeDataContentBase(byte* data)
     this->padding = *(int*)(data + 0xC);
 }
 
-NodeDataContent_Bool::NodeDataContent_Bool(byte* data)
+NodeDataAttrib_Unk::NodeDataAttrib_Unk(byte* data, int size)
 {
-    this->m_contentBase.field0_0x0 = *(int*)(data);
-    this->m_contentBase.field1_0x4 = *(int*)(data + 0x4);
-    this->m_contentBase.field2_0x8 = *(short*)(data + 0x8);
-    this->m_contentBase.m_type = *(AttribType*)(data + 0xA);
-    this->m_contentBase.padding = *(int*)(data + 0xC);
+    this->m_attribBase = NodeDataAttribBase(data);
+
+    int data_size = size - 16;
+
+    if (data_size > -1)
+    {
+        this->m_content = new byte[data_size];
+
+        for (size_t i = 0; i < data_size; i++)
+            this->m_content[i] = *(data + 0x10 + (byte)i);
+    }  
+}
+
+NodeDataAttrib_Bool::NodeDataAttrib_Bool(byte* data)
+{
     this->m_bool = *(bool*)(data + 0x10);
 }
 
-NodeDataContent_EventTrack::NodeDataContent_EventTrack(byte* data)
+NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
 {
-    this->m_contentBase = NodeDataContentBase(data);
-
     this->m_eventTracks[0].m_trackCount = *(int*)(data + 0x10);
     this->m_eventTracks[0].padding = *(int*)(data + 0x14);
 
@@ -69,9 +77,8 @@ NodeDataContent_EventTrack::NodeDataContent_EventTrack(byte* data)
     this->m_eventTracks[2].m_tracksEndAddr = *(UINT64*)(*(UINT64*)(data + 0x20 + 2 * 0x18) + data);
 }
 
-NodeDataContent_SourceAnim::NodeDataContent_SourceAnim(byte* data)
+NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(byte* data)
 {
-    this->m_contentBase = NodeDataContentBase(data);
     this->m_pVar0 = *(UINT64*)(data + 0x10);
     this->m_pVar8 = *(UINT64*)(data + 0x18);
     this->m_fVar10 = *(float*)(data + 0x20);
@@ -100,9 +107,10 @@ NodeDataContent_SourceAnim::NodeDataContent_SourceAnim(byte* data)
     this->m_trackLen = *(float*)(data + 0x84);
     this->m_animLen = *(float*)(data + 0x88);
     this->m_fVar7C = *(float*)(data + 0x8C);
+    this->m_bVar80 = *(byte*)(data + 0x90);
 
     for (size_t i = 0; i < 15; i++)
-        this->m_pad3[i] = *(byte*)(data + 0x90 + (byte)i);
+        this->m_pad3[i] = *(byte*)(data + 0x91 + (byte)i);
 }
 
 NodeDef::NodeDef(byte* data)
@@ -116,7 +124,7 @@ NodeDef::NodeDef(byte* data)
     this->field7_0xc = *(short*)(data + 0xC);
     this->m_numControlParamAndOpNodeIDs = *(byte*)(data + 0xE);
     this->field8_0xf = *(byte*)(data + 0xF);
-    this->field9_0x10 = *(short*)(data + 0x10);
+    this->m_numDataSet = *(short*)(data + 0x10);
     this->field10_0x12 = *(short*)(data + 0x12);
     this->padding = *(int*)(data + 0x14);
     this->m_owningNetworkDef = *(UINT64*)(data + 0x18); assert(this->m_owningNetworkDef == 0);
@@ -139,9 +147,12 @@ NodeDef::NodeDef(byte* data)
             this->m_controlParamAndOpNodeIDs[i] = *(int*)(data + offset + (byte)i * 0x2);
     }
 
-    this->node_data = new sNodeData;
+    if (m_numDataSet > 0)
+    {
+        this->m_nodeData = new NodeDataSet[m_numDataSet];
 
-    this->LoadNodeData(this->m_nodeTypeID, this->node_data, data);
+        this->LoadNodeData(this->m_nodeTypeID, this->m_nodeData, data, m_numDataSet);
+    }
 
     this->field16_0x38 = *(short*)(data + 0x38);
     this->field17_0x3a = *(short*)(data + 0x3A);
@@ -155,124 +166,95 @@ NodeDef::NodeDef(byte* data)
     this->node_def = *(sMorphemeNodeDef**)(data + 0x70);
 }
 
-bool NodeDef::LoadNodeData(NodeType type, sNodeData* dst, byte* srcNodeData)
+bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, int setCount)
 {
     uint64_t offset = *(uint64_t*)(srcNodeData + 0x30);
     uint64_t attrib_data_offset = *(uint64_t*)(srcNodeData + offset);
 
-    NodeData104* animSyncNodeData = NULL;
-
     if (offset > 0)
     {
-        switch (type)
+        for (size_t i = 0; i < setCount; i++)
         {
-        case NodeType_NetworkInstance:
-            break;
-        case NodeType_StateMachine:
-            break;
-        case NodeType_ControlParameterFloat:
-            break;
-        case NodeType_ControlParameterVector3:
-            break;
-        case NodeType_ControlParameterBool:
-            break;
-        case NodeType_ControlParameterInt:
-            break;
-        case NodeType_NodeAnimSyncEvents:
-            animSyncNodeData = (NodeData104*)dst;
+            attrib_data_offset = *(uint64_t*)(srcNodeData + offset + (byte)i * 0x18);
 
-            animSyncNodeData->m_attribBool = new NodeDataContent_Bool((srcNodeData + attrib_data_offset));
+            dst[i].m_size = *(uint64_t*)(srcNodeData + offset + 0x8 + (byte)i * 0x18);
+            dst[i].m_alignment = *(int*)(srcNodeData + offset + 0x10 + (byte)i * 0x18);
+            dst[i].m_iVar0 = *(int*)(srcNodeData + offset + 0x14 + (byte)i * 0x18);
 
-            animSyncNodeData->size = *(uint64_t*)(srcNodeData + offset + 0x8);
-            animSyncNodeData->alignment = *(int*)(srcNodeData + offset + 0x10);
-            animSyncNodeData->iVar0 = *(int*)(srcNodeData + offset + 0x14);
+            if (attrib_data_offset != 0)
+            {
+                dst[i].m_attrib = new NodeDataAttrib_Unk((srcNodeData + attrib_data_offset), dst[i].m_size);
 
-            attrib_data_offset = *(uint64_t*)(srcNodeData + offset + 0x18);
-
-            animSyncNodeData->m_attribSourceAnim = new NodeDataContent_SourceAnim((srcNodeData + attrib_data_offset));
-            animSyncNodeData->size_1 = *(uint64_t*)(srcNodeData + offset + 0x8 + 0x18);
-            animSyncNodeData->alignment_1 = *(int*)(srcNodeData + offset + 0x10 + 0x18);
-            animSyncNodeData->iVar0_1 = *(int*)(srcNodeData + offset + 0x14 + 0x18);
-
-            attrib_data_offset = *(uint64_t*)(srcNodeData + offset + 2 * 0x18);
-
-            animSyncNodeData->m_attribEventTrack = new NodeDataContent_EventTrack((srcNodeData + attrib_data_offset));
-            animSyncNodeData->size_2 = *(uint64_t*)(srcNodeData + offset + 0x8 + 2 * 0x18);
-            animSyncNodeData->alignment_2 = *(int*)(srcNodeData + offset + 0x10 + 2 * 0x18);
-            animSyncNodeData->iVar0_2 = *(int*)(srcNodeData + offset + 0x14 + 2 * 0x18);
-
-            return true;
-        case Nodetype_ShareChildren_105:
-            break;
-        case NodeType_Blend2SyncEvents:
-            break;
-        case NodeType_Blend2Additive:
-            break;
-        case NodeType_Share1Child1InputCP_109:
-            break;
-        case NodeType_ShareCreateFloatOutputAttribute_110:
-            break;
-        case NodeType_ShareCreateFloatOutputAttribute_112:
-            break;
-        case NodeType_Blend2Additive_2:
-            break;
-        case NodeType_TwoBoneIK:
-            break;
-        case NodeType_LockFoot:
-            break;
-        case NodeType_ShareChildren1CompulsoryManyOptionalInputCPs_120:
-            break;
-        case NodeType_Share1Child1InputCP:
-            break;
-        case NodeType_Freeze:
-            break;
-        case NodeType_ShareChildrenOptionalInputCPs:
-            break;
-        case NodeType_Switch:
-            break;
-        case NodeType_ShareChildren:
-            break;
-        case NodeType_ShareChildren_2:
-            break;
-        case NodeType_ShareUpdateConnections1Child2OptionalInputCP:
-            break;
-        case NodeType_PredictiveUnevenTerrain:
-            break;
-        case NodeType_OperatorSmoothDamp:
-            break;
-        case NodeType_ShareCreateVector3OutputAttribute:
-            break;
-        case NodeType_OperatorRandomFloat:
-            break;
-        case NodeType_ShareChildren1CompulsoryManyOptionalInputCPs_150:
-            break;
-        case NodeType_ShareChild1InputCP_151:
-            break;
-        case NodeType_ShareChildren_153:
-            break;
-        case NodeType_SubtractiveBlend:
-            break;
-        case NodeType_TransitSyncEvents:
-            break;
-        case NodeType_Transit:
-            break;
-        case NodeType_Share1Child1OptionalInputCP:
-            break;
-        case Unk550:
-            break;
-        default:
-            break;
+                switch (dst[i].m_attrib->m_attribBase.m_type)
+                {
+                case ATTRIB_TYPE_SOURCE_ANIM:
+                    delete[] dst[i].m_attrib->m_content;
+                    dst[i].m_attrib->m_content = (byte*)new NodeDataAttrib_SourceAnim((srcNodeData + attrib_data_offset));
+                    break;
+                case ATTRIB_TYPE_SOURCE_EVENT_TRACKS:
+                    delete[] dst[i].m_attrib->m_content;
+                    dst[i].m_attrib->m_content = (byte*)new NodeDataAttrib_EventTrack((srcNodeData + attrib_data_offset));
+                    break;
+                default:
+                    break;
+                }
+            }
+            else
+                dst[i].m_attrib = NULL;
         }
-        dst->data->content = new NodeDataContentBase((srcNodeData + attrib_data_offset));
-
-        dst->data->size = *(uint64_t*)(srcNodeData + offset + 0x8);
-        dst->data->alignment = *(int*)(srcNodeData + offset + 0x10);
-        dst->data->iVar0 = *(int*)(srcNodeData + offset + 0x14);
 
         return true;
     }
 
     return false;
+}
+
+void NodeDef::SaveToFile(ofstream* out)
+{
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_nodeTypeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_flags1);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_nodeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_parentNodeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_numChildNodeIDs);
+    MemHelper::WriteWord(out, (LPVOID*)&this->field7_0xc);
+    MemHelper::WriteByte(out, (LPVOID*)&this->m_numControlParamAndOpNodeIDs);
+    MemHelper::WriteByte(out, (LPVOID*)&this->field8_0xf);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_numDataSet);
+    MemHelper::WriteWord(out, (LPVOID*)&this->field10_0x12);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->padding);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_owningNetworkDef);
+
+    UINT64 child_offset = 0x90;
+    MemHelper::WriteQWord(out, (LPVOID*)&child_offset);
+
+    UINT64 input_offset = child_offset + 2 * this->m_numChildNodeIDs;
+    int remainder = input_offset % 4;
+
+    if (remainder != 0)
+        input_offset += (4 - remainder);
+
+    MemHelper::WriteQWord(out, (LPVOID*)&input_offset);
+
+    UINT64 data_offset = input_offset + 4 * this->m_numControlParamAndOpNodeIDs;
+
+    MemHelper::WriteQWord(out, (LPVOID*)&data_offset);
+
+    MemHelper::WriteWord(out, (LPVOID*)&this->field16_0x38);
+    MemHelper::WriteWord(out, (LPVOID*)&this->field17_0x3a);
+    MemHelper::WriteWord(out, (LPVOID*)&this->field17_0x3a);
+    MemHelper::WriteWord(out, (LPVOID*)&this->field18_0x3c);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->field19_0x40);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->field20_0x48);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->deleteFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->updateFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->unknownFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->initFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->transitFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->node_def);
+    MemHelper::WriteByte(out, (LPVOID*)&this->field27_0x80);
+    MemHelper::WriteByteArray(out, (LPVOID*)&this->padding1, 7);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->field35_0x88);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->field36_0x8C);
 }
 
 MorphemeBundle_Network::BundleData_Network::BundleData_Network(byte* data)
@@ -340,7 +322,64 @@ MorphemeBundle_Network::MorphemeBundle_Network(MorphemeBundle* bundle)
 
 void MorphemeBundle_Network::GenerateBundle(ofstream* out)
 {
+    MemHelper::WriteDWordArray(out, (LPVOID*)this->m_magic, 2);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_bundleType);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_signature);
+    MemHelper::WriteByteArray(out, (LPVOID*)&this->m_header, 16);
 
+    this->m_dataSize = this->CalculateBundleSize();
+
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_dataSize);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_dataAlignment);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_iVar2C);
+
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->network_node_def.m_nodeTypeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.m_flags1);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.m_nodeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.m_parentNodeID);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.m_numChildNodeIDs);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field7_0xc);
+    MemHelper::WriteByte(out, (LPVOID*)&this->m_data->network_node_def.m_numControlParamAndOpNodeIDs);
+    MemHelper::WriteByte(out, (LPVOID*)&this->m_data->network_node_def.field8_0xf);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.m_numDataSet);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field10_0x12);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->network_node_def.padding);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.m_owningNetworkDef);
+
+    UINT64 child_offset = 0x140;
+    MemHelper::WriteQWord(out, (LPVOID*)&child_offset);
+
+    UINT64 input_offset = child_offset + 2 * this->m_data->network_node_def.m_numChildNodeIDs;
+    int remainder = input_offset % 4;
+
+    if (remainder != 0)
+        input_offset += (4 - remainder);
+
+    MemHelper::WriteQWord(out, (LPVOID*)&input_offset);
+
+    UINT64 data_offset = input_offset + 4 * this->m_data->network_node_def.m_numControlParamAndOpNodeIDs;
+
+    MemHelper::WriteQWord(out, (LPVOID*)&data_offset);
+
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field16_0x38);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field17_0x3a);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field17_0x3a);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->network_node_def.field18_0x3c);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.field19_0x40);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.field20_0x48);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.deleteFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.updateFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.unknownFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.initFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.transitFn);
+    MemHelper::WriteQWord(out, (LPVOID*)&this->m_data->network_node_def.node_def);
+    MemHelper::WriteByte(out, (LPVOID*)&this->m_data->network_node_def.field27_0x80);
+    MemHelper::WriteByteArray(out, (LPVOID*)&this->m_data->network_node_def.padding1, 7);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->network_node_def.field35_0x88);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->network_node_def.field36_0x8C);
+
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_numNodes);
+    MemHelper::WriteByteArray(out, (LPVOID*)&this->m_data->field2_0x94, 4);
 }
 
 int MorphemeBundle_Network::CalculateBundleSize()

@@ -89,6 +89,7 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		for (int i = 0; i < this->m_messageIndices.size(); i++)
 			this->m_messageIndices[i].GenerateBundle(&nmb_out);
 
+		this->m_network.GenerateBundle(&nmb_out);
 		this->m_fileNameLookupTable.GenerateBundle(&nmb_out);
 	}
 	catch (const std::exception&)
@@ -98,12 +99,11 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 	
 	nmb_out.close();
 
-	ifstream nmb_size;
-	nmb_size.open(this->m_outFilePath, ios::binary | ios::ate);
+	nmb_out.open(this->m_outFilePath, ios::binary | ios::ate);
 
-	this->m_outFileSize = nmb_size.tellg();
+	this->m_outFileSize = nmb_out.tellp();
 
-	nmb_size.close();
+	nmb_out.close();
 
 	return state;
 }
@@ -141,12 +141,12 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 		return "";
 	}
 
-	NodeData104* node_data = (NodeData104*)m_node->node_data;
+	NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)m_node->m_nodeData[1].m_attrib;
 
-	if (node_data->m_attribSourceAnim->m_animIdx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
+	if (source_anim->m_animIdx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
 		return "";
 
-	return this->GetAnimFileName(node_data->m_attribSourceAnim->m_animIdx);
+	return this->GetAnimFileName(source_anim->m_animIdx);
 }
 
 MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
@@ -173,24 +173,24 @@ std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signatu
 
 		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeData104* data = (NodeData104*)node->node_data;
+			NodeDataAttrib_EventTrack* source_event_track = (NodeDataAttrib_EventTrack*)node->m_nodeData[2].m_attrib;
 
-			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[0].m_trackCount; j++)
+			for (int j = 0; j < source_event_track->m_eventTracks[0].m_trackCount; j++)
 			{
-				if (data->m_attribEventTrack->m_eventTracks[0].m_trackSignatures[j] == signature)
-					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[0]);
+				if (source_event_track->m_eventTracks[0].m_trackSignatures[j] == signature)
+					track_lists.push_back(&source_event_track->m_eventTracks[0]);
 			}
 
-			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[1].m_trackCount; j++)
+			for (int j = 0; j < source_event_track->m_eventTracks[1].m_trackCount; j++)
 			{
-				if (data->m_attribEventTrack->m_eventTracks[1].m_trackSignatures[j] == signature)
-					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[1]);
+				if (source_event_track->m_eventTracks[1].m_trackSignatures[j] == signature)
+					track_lists.push_back(&source_event_track->m_eventTracks[1]);
 			}
 
-			for (int j = 0; j < data->m_attribEventTrack->m_eventTracks[2].m_trackCount; j++)
+			for (int j = 0; j < source_event_track->m_eventTracks[2].m_trackCount; j++)
 			{
-				if (data->m_attribEventTrack->m_eventTracks[2].m_trackSignatures[j] == signature)
-					track_lists.push_back(&data->m_attribEventTrack->m_eventTracks[2]);
+				if (source_event_track->m_eventTracks[2].m_trackSignatures[j] == signature)
+					track_lists.push_back(&source_event_track->m_eventTracks[2]);
 			}
 		}
 	}
@@ -208,9 +208,9 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 
 		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeData104* data = (NodeData104*)node->node_data;
+			NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)node->m_nodeData[1].m_attrib;
 
-			if (data->m_attribSourceAnim->m_animIdx == anim_idx)
+			if (source_anim->m_animIdx == anim_idx)
 				nodes.push_back(node);
 		}
 	}

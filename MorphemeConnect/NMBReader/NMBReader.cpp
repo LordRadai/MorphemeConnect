@@ -35,11 +35,12 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 		case Bundle_DurationEventTrack:
 			this->m_eventTracks.push_back(&this->m_bundles[i]);
 			break;
-		case Bundle_UnkParameters:
-			this->m_unkParameters.push_back(this->m_bundles[i]);
+		case Bundle_CharacterControllerDef:
+			this->m_characterControllerDef.push_back(this->m_bundles[i]);
 			break;
 		case Bundle_Network:
 			this->m_network = MorphemeBundle_Network(&this->m_bundles[i]);
+			this->m_networkRaw = MorphemeBundle(this->m_bundles[i]);
 			break;
 		case Bundle_FileHeader:
 			this->m_header = MorphemeBundle_Header(&this->m_bundles[i]);
@@ -72,16 +73,18 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 	{
 		this->m_header.GenerateBundle(&nmb_out);
 
-		for (int i = 0; i < this->m_skeletonMap.size(); i++)
+		if (this->m_characterControllerDef.size() == this->m_skeletonMap.size())
 		{
-			this->m_skeletonMap[i].GenerateBundle(&nmb_out);
+			for (size_t i = 0; i < this->m_characterControllerDef.size(); i++)
+			{
+				this->m_characterControllerDef[i].GenerateBundle(&nmb_out);
 
-			byte pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
-			MemHelper::WriteByteArray(&nmb_out, (LPVOID*)pad_array, 4);
+				this->m_skeletonMap[i].GenerateBundle(&nmb_out);
+
+				byte pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
+				MemHelper::WriteByteArray(&nmb_out, (LPVOID*)pad_array, 4);
+			}
 		}
-
-		for (int i = 0; i < this->m_unkParameters.size(); i++)
-			this->m_unkParameters[i].GenerateBundle(&nmb_out);
 
 		for (int i = 0; i < this->m_eventTracks.size(); i++)
 			this->m_eventTracks[i].GenerateBundle(&nmb_out);
@@ -89,17 +92,14 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		for (int i = 0; i < this->m_messageIndices.size(); i++)
 			this->m_messageIndices[i].GenerateBundle(&nmb_out);
 
-		this->m_network.GenerateBundle(&nmb_out);
+		//this->m_network.GenerateBundle(&nmb_out);
+		this->m_networkRaw.GenerateBundle(&nmb_out);
 		this->m_fileNameLookupTable.GenerateBundle(&nmb_out);
 	}
 	catch (const std::exception&)
 	{
 		state = false;
 	}
-	
-	nmb_out.close();
-
-	nmb_out.open(this->m_outFilePath, ios::binary | ios::ate);
 
 	this->m_outFileSize = nmb_out.tellp();
 

@@ -182,6 +182,7 @@ struct NodeDataAttrib_Unk
 
     NodeDataAttrib_Unk() {}
     NodeDataAttrib_Unk(byte* data, int size);
+    void SaveToFile(ofstream* out);
 };
 
 struct NodeDataSet
@@ -190,6 +191,8 @@ struct NodeDataSet
     UINT64 m_size;
     int m_alignment;
     int m_iVar0;
+
+    void SaveToFile(ofstream* out);
 };
 
 struct NodeDataAttrib_Bool
@@ -290,6 +293,7 @@ struct NodeDef {
 
     bool LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, int setCount);
     void SaveToFile(ofstream* out);
+    int CalculateNodeSize();
 };
 
 class MorphemeBundle_Network : public MorphemeBundle_Base

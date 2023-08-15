@@ -10,7 +10,7 @@ enum eBundleType
 	Bundle_MessageIndices = 2,
 	Bundle_DiscreteEventTrack = 3,
 	Bundle_DurationEventTrack = 4,
-	Bundle_UnkParameters = 7,
+	Bundle_CharacterControllerDef = 7,
 	Bundle_Network = 10,
 	Bundle_FileHeader = 12,
 	Bundle_FileNameLookupTable = 13

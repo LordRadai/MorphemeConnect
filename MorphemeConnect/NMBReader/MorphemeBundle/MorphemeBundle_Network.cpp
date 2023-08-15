@@ -24,6 +24,15 @@ NodeDataAttrib_Unk::NodeDataAttrib_Unk(byte* data, int size)
     }  
 }
 
+void NodeDataAttrib_Unk::SaveToFile(ofstream* out)
+{
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attribBase.field0_0x0);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attribBase.field1_0x4);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attribBase.field2_0x8);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_attribBase.m_type);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_attribBase.padding);
+}
+
 NodeDataAttrib_Bool::NodeDataAttrib_Bool(byte* data)
 {
     this->m_bool = *(bool*)(data + 0x10);
@@ -111,6 +120,17 @@ NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(byte* data)
 
     for (size_t i = 0; i < 15; i++)
         this->m_pad3[i] = *(byte*)(data + 0x91 + (byte)i);
+}
+
+void NodeDataSet::SaveToFile(ofstream* out)
+{
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attrib->m_attribBase.field0_0x0);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attrib->m_attribBase.field1_0x4);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_attrib->m_attribBase.field2_0x8);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_attrib->m_attribBase.m_type);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_attrib->m_attribBase.padding);
+
+    MemHelper::WriteByteArray(out, (LPVOID*)this->m_attrib->m_content, this->m_size);
 }
 
 NodeDef::NodeDef(byte* data)
@@ -255,6 +275,59 @@ void NodeDef::SaveToFile(ofstream* out)
     MemHelper::WriteByteArray(out, (LPVOID*)&this->padding1, 7);
     MemHelper::WriteDWord(out, (LPVOID*)&this->field35_0x88);
     MemHelper::WriteDWord(out, (LPVOID*)&this->field36_0x8C);
+
+    MemHelper::WriteWordArray(out, (LPVOID*)this->m_childNodeIDs, this->m_numChildNodeIDs);
+    MemHelper::WriteDWordArray(out, (LPVOID*)this->m_controlParamAndOpNodeIDs, this->m_numControlParamAndOpNodeIDs);
+
+    int size = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+
+    remainder = size % 4;
+
+    int padding = 0xCDCDCDCD;
+    if (remainder != 0)
+        MemHelper::WriteByteArray(out, (LPVOID*)&padding, 4 - remainder);
+
+    for (size_t i = 0; i < this->m_numDataSet; i++)
+    {
+        UINT64 offset = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+
+        int remainder = offset % 4;
+
+        if (remainder != 0)
+            offset += (4 - remainder);
+
+        MemHelper::WriteQWord(out, (LPVOID*)&offset);
+        MemHelper::WriteQWord(out, (LPVOID*)&this->m_nodeData[i].m_size);
+        MemHelper::WriteDWord(out, (LPVOID*)&this->m_nodeData[i].m_alignment);
+        MemHelper::WriteDWord(out, (LPVOID*)&this->m_nodeData[i].m_iVar0);
+    }
+
+    for (size_t i = 0; i < this->m_numDataSet; i++)
+        this->m_nodeData[i].SaveToFile(out);
+}
+
+int NodeDef::CalculateNodeSize()
+{
+    int size = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+
+    int remainder = size % 4;
+
+    if (remainder != 0)
+        size += (4 - remainder);
+
+    for (size_t i = 0; i < this->m_numDataSet; i++)
+    {
+        size += 24;
+
+        remainder = size % 16;
+
+        if (remainder != 0)
+            size += (16 - remainder);
+
+        size += this->m_nodeData[i].m_size;
+    }
+
+    return size;
 }
 
 MorphemeBundle_Network::BundleData_Network::BundleData_Network(byte* data)
@@ -379,7 +452,7 @@ void MorphemeBundle_Network::GenerateBundle(ofstream* out)
     MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->network_node_def.field36_0x8C);
 
     MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_numNodes);
-    MemHelper::WriteByteArray(out, (LPVOID*)&this->m_data->field2_0x94, 4);
+    MemHelper::WriteByteArray(out, (LPVOID*)&this->m_data->field2_0x94, 4); 
 }
 
 int MorphemeBundle_Network::CalculateBundleSize()

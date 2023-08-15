@@ -19,10 +19,12 @@ public:
 	std::vector<MorphemeBundle> m_skeletonMap;
 	std::vector<MorphemeBundle> m_messageIndices;
 	std::vector<MorphemeBundle_EventTrack> m_eventTracks;
-	std::vector<MorphemeBundle> m_unkParameters;
+	std::vector<MorphemeBundle> m_characterControllerDef;
 	MorphemeBundle_Network m_network;
 	MorphemeBundle_Header m_header;
 	MorphemeBundle_FileNameLookupTable m_fileNameLookupTable;
+
+	MorphemeBundle m_networkRaw;
 
 	NMBReader() {}
 	NMBReader(PWSTR pszFilePath);

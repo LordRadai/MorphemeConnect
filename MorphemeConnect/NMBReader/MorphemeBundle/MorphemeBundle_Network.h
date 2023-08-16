@@ -207,7 +207,7 @@ struct EventTrackList {
     int m_trackCount;
     int padding;
     UINT64* m_trackSignatures;
-    UINT64 m_tracksEndAddr;
+    int* m_trackSize;
 };
 
 struct NodeDataAttrib_EventTrack 

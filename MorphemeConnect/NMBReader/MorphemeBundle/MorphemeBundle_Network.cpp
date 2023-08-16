@@ -49,11 +49,15 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
         UINT64 offset = *(UINT64*)(data + 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        for (size_t i = 0; i < this->m_eventTracks[0].m_trackCount; i++)
-            this->m_eventTracks[0].m_trackSignatures[i] = track_list_signatures[i];
-    }
+        this->m_eventTracks[0].m_trackSize = new int[this->m_eventTracks[0].m_trackCount];
+        int* size_list = (int*)(*(UINT64*)(data + 0x20) + data);
 
-    this->m_eventTracks[0].m_tracksEndAddr = *(UINT64*)(*(UINT64*)(data + 0x20) + data);
+        for (size_t i = 0; i < this->m_eventTracks[0].m_trackCount; i++)
+        {
+            this->m_eventTracks[0].m_trackSignatures[i] = track_list_signatures[i];
+            this->m_eventTracks[0].m_trackSize[i] = size_list[i];
+        }
+    }
 
     this->m_eventTracks[1].m_trackCount = *(int*)(data + 0x10 + 0x18);
     this->m_eventTracks[1].padding = *(int*)(data + 0x14 + 0x18);
@@ -64,11 +68,15 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
         UINT64 offset = *(UINT64*)(data + 0x18 + 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        for (size_t i = 0; i < this->m_eventTracks[1].m_trackCount; i++)
-            this->m_eventTracks[1].m_trackSignatures[i] = track_list_signatures[i];
-    }
+        this->m_eventTracks[1].m_trackSize = new int[this->m_eventTracks[1].m_trackCount];
+        int* size_list = (int*)(*(UINT64*)(data + 0x20 + 0x18) + data);
 
-    this->m_eventTracks[1].m_tracksEndAddr = *(UINT64*)(*(UINT64*)(data + 0x20 + 0x18) + data);
+        for (size_t i = 0; i < this->m_eventTracks[1].m_trackCount; i++)
+        {
+            this->m_eventTracks[1].m_trackSignatures[i] = track_list_signatures[i];
+            this->m_eventTracks[1].m_trackSize[i] = size_list[i];
+        }
+    }
 
     this->m_eventTracks[2].m_trackCount = *(int*)(data + 0x10 + 2 * 0x18);
     this->m_eventTracks[2].padding = *(int*)(data + 0x14 + 2 * 0x18);
@@ -79,11 +87,15 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
         UINT64 offset = *(UINT64*)(data + 0x18 + 2 * 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        for (size_t i = 0; i < this->m_eventTracks[2].m_trackCount; i++)
-            this->m_eventTracks[2].m_trackSignatures[i] = track_list_signatures[i];
-    }
+        this->m_eventTracks[2].m_trackSize = new int[this->m_eventTracks[2].m_trackCount];
+        int* size_list = (int*)(*(UINT64*)(data + 0x20 + 2 * 0x18) + data);
 
-    this->m_eventTracks[2].m_tracksEndAddr = *(UINT64*)(*(UINT64*)(data + 0x20 + 2 * 0x18) + data);
+        for (size_t i = 0; i < this->m_eventTracks[2].m_trackCount; i++)
+        {
+            this->m_eventTracks[2].m_trackSignatures[i] = track_list_signatures[i];
+            this->m_eventTracks[2].m_trackSize[i] = size_list[i];
+        }
+    }
 }
 
 NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(byte* data)
@@ -279,17 +291,22 @@ void NodeDef::SaveToFile(ofstream* out)
     MemHelper::WriteWordArray(out, (LPVOID*)this->m_childNodeIDs, this->m_numChildNodeIDs);
     MemHelper::WriteDWordArray(out, (LPVOID*)this->m_controlParamAndOpNodeIDs, this->m_numControlParamAndOpNodeIDs);
 
-    int size = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+    int size = 0x90 + 2 * this->m_numChildNodeIDs;
 
     remainder = size % 4;
 
     int padding = 0xCDCDCDCD;
     if (remainder != 0)
+    {
+        size += 0x1;
         MemHelper::WriteByteArray(out, (LPVOID*)&padding, 4 - remainder);
+    }
+
+    size += 4 * this->m_numControlParamAndOpNodeIDs;
 
     for (size_t i = 0; i < this->m_numDataSet; i++)
     {
-        UINT64 offset = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+        UINT64 offset = size;
 
         int remainder = offset % 4;
 
@@ -308,12 +325,14 @@ void NodeDef::SaveToFile(ofstream* out)
 
 int NodeDef::CalculateNodeSize()
 {
-    int size = 0x90 + 2 * this->m_numChildNodeIDs + 4 * this->m_numControlParamAndOpNodeIDs;
+    int size = 0x90 + 2 * this->m_numChildNodeIDs;
 
     int remainder = size % 4;
 
     if (remainder != 0)
         size += (4 - remainder);
+
+    size += 4 * this->m_numControlParamAndOpNodeIDs;
 
     for (size_t i = 0; i < this->m_numDataSet; i++)
     {
@@ -453,6 +472,60 @@ void MorphemeBundle_Network::GenerateBundle(ofstream* out)
 
     MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->m_numNodes);
     MemHelper::WriteByteArray(out, (LPVOID*)&this->m_data->field2_0x94, 4); 
+
+    UINT64 node_offset = 0;
+    //Write Node offset
+
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->field4_0xa0);
+    MemHelper::WriteWord(out, (LPVOID*)&this->m_data->field5_0xa2);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field6_0xa4);
+
+    UINT64 unkGroupOffset_1 = 0;
+    //Write group offset
+    UINT64 unkGroupOffset_2 = 0;
+    //Write group offset 2
+    UINT64 unkGroupOffset_3 = 0;
+    //Write group offset 3
+    UINT64 unkGroupOffset_4 = 0;
+    //Write group offset 4
+    UINT64 nodeNamesOffset = 0;
+    //Write node names offset
+    UINT64 messageNamesOffset = 0;
+    //Write message names offset
+    UINT64 eventTrackNamesOffset = 0;
+    //Write event track names offset
+    UINT64 pVar68 = 0;
+    //Write pvar68
+    UINT64 pVar70 = 0;
+    //Write pvar70
+    UINT64 pVar78 = 0;
+    //Write pvar78
+
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->message_count);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field18_0xfc);
+
+    UINT64 messageDefOffset;
+    //Write offset
+
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->node_type_count);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field21_0x10c);
+
+    UINT64 nodeDefOffset;
+    //Write offset
+
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field23_0x118);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field24_0x11c);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field25_0x120);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field26_0x124);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field27_0x128);
+    MemHelper::WriteDWord(out, (LPVOID*)&this->m_data->field28_0x12c);
+
+    UINT64 pVarB8 = 0;
+    //Write offset
+    UINT64 pVarC0 = 0;
+    //Write offset
+
+    MemHelper::WriteWordArray(out, (LPVOID*)&this->m_data->network_node_def.m_childNodeIDs, this->m_data->network_node_def.m_numChildNodeIDs);
 }
 
 int MorphemeBundle_Network::CalculateBundleSize()

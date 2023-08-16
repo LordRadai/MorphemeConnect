@@ -208,7 +208,7 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 
 		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)node->m_nodeData[1].m_attrib;
+			NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)node->m_nodeData[1].m_attrib->m_content;
 
 			if (source_anim->m_animIdx == anim_idx)
 				nodes.push_back(node);

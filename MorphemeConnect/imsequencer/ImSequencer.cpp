@@ -320,7 +320,7 @@ namespace ImSequencer
                 }
 
                 ImGui::PopStyleColor();
-                if (ImGui::BeginPopup("addTrack"))
+                if (ImGui::BeginPopup("addTrack") && popupOpened)
                 {
                     ImGui::Text("Add Track");
                     ImGui::Separator();
@@ -501,8 +501,11 @@ namespace ImSequencer
                     {
                         for (size_t j = 0; j < eventTrackEditor->m_eventTracks[i].m_numEvents; j++)
                         {
-                            if (GetAsyncKeyState(VK_DELETE) & 1)
-                                delEvent = true;
+                            if (*selectedTrack == i && *selectedEvent == j)
+                            {
+                                if (GetAsyncKeyState(VK_DELETE) & 1)
+                                    delEvent = true;
+                            }
                         }
                     }
                 }
@@ -515,7 +518,7 @@ namespace ImSequencer
                 ImGui::OpenPopup("deleteTrack");
             }
 
-            if (ImGui::BeginPopup("deleteTrack"))
+            if (ImGui::BeginPopup("deleteTrack") && popupOpened && *selectedTrack > -1)
             {
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
 
@@ -542,7 +545,7 @@ namespace ImSequencer
                 ImGui::OpenPopup("renameTrack");
             }
 
-            if (ImGui::BeginPopup("renameTrack"))
+            if (ImGui::BeginPopup("renameTrack") && popupOpened && *selectedTrack > -1)
             {
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
 
@@ -563,7 +566,7 @@ namespace ImSequencer
                 ImGui::OpenPopup("deleteEvent");
             }
 
-            if (ImGui::BeginPopup("deleteEvent"))
+            if (ImGui::BeginPopup("deleteEvent") && popupOpened && *selectedTrack > -1 && *selectedEvent > -1)
             {
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name) + " [" + std::to_string(*selectedEvent) + "]";
 
@@ -591,7 +594,7 @@ namespace ImSequencer
                 ImGui::OpenPopup("addEvent");
             }
 
-            if (ImGui::BeginPopup("addEvent"))
+            if (ImGui::BeginPopup("addEvent") && popupOpened && *selectedTrack > -1)
             {
                 ImGui::Text(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
                 ImGui::Separator();

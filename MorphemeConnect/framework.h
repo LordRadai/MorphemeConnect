@@ -31,3 +31,5 @@
 #include "imnodes/imnodes_internal.h"
 
 #include "Debug/Debug.h"
+#include "inih/ini.h"
+#include "inih/INIReader.h"

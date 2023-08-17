@@ -73,6 +73,24 @@
     <Filter Include="File di origine\EventTrackEditor">
       <UniqueIdentifier>{4d357545-7b52-4654-9a1e-2e5da3e498f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\TimeActReader">
+      <UniqueIdentifier>{00579137-9011-4d3c-8596-6516da068eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\TimeActReader">
+      <UniqueIdentifier>{a9d8a4d9-3f61-4f3e-8c6b-1a3a4c422a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\TimeActEditor">
+      <UniqueIdentifier>{3b285086-53ea-4e31-82fd-4df753941346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\TimeActEditor">
+      <UniqueIdentifier>{8daa5715-faa2-490f-b81b-5bacf113d8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\inih">
+      <UniqueIdentifier>{da674370-d7b6-4062-9484-19dab54cf5b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\inih">
+      <UniqueIdentifier>{406c2570-61f9-4b83-b07d-9c190f7038c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -153,6 +171,21 @@
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
       <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
     </ClInclude>
+    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Base.h">
+      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeActReader\TimeActReader.h">
+      <Filter>File di intestazione\TimeActReader</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeActEditor\TimeActEditor.h">
+      <Filter>File di intestazione\TimeActEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="inih\INIReader.h">
+      <Filter>File di intestazione\inih</Filter>
+    </ClInclude>
+    <ClInclude Include="inih\ini.h">
+      <Filter>File di intestazione\inih</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -220,6 +253,18 @@
     </ClCompile>
     <ClCompile Include="MorphemeConnect.cpp">
       <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeActReader\TimeActReader.cpp">
+      <Filter>File di origine\TimeActReader</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeActEditor\TimeActEditor.cpp">
+      <Filter>File di origine\TimeActEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="inih\ini.c">
+      <Filter>File di origine\inih</Filter>
+    </ClCompile>
+    <ClCompile Include="inih\INIReader.cpp">
+      <Filter>File di origine\inih</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

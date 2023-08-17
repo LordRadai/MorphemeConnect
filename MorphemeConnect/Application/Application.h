@@ -17,6 +17,7 @@
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
 #include "../NMBReader/NMBReader.h"
+#include "../TimeActReader/TimeActReader.h"
 
 class Application
 {
@@ -37,8 +38,19 @@ public:
 
 	} m_eventTrackEditorFlags;
 
+	struct TimeActEditorFlags
+	{
+		bool m_load = false;
+		bool m_save = false;
+		int m_taeId = -1;
+		float m_lenght = 0.f;
+
+	} m_timeActEditorFlags;
+
 	NMBReader nmb;
+	TimeActReader tae;
 	EventTrackEditor m_eventTrackEditor;
+	TimeActEditor m_timeActEditor;
 
 	Application();
 	~Application();

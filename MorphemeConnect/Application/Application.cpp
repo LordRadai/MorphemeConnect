@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "../extern.h"
 #include "../MathHelper/MathHelper.h"
+#include <Shlwapi.h>
 
 Application::Application()
 {
@@ -185,78 +186,182 @@ void Application::RenderGUI(const char* title)
 			ImGui::EndTabItem();
 		}
 
+		if (ImGui::BeginTabItem("TimeAct"))
+		{
+			static ImGuiTextFilter filter;
+			ImGui::Text("Filter:");
+			filter.Draw("##asset searchbar", 340.f);
+
+			if (tae.m_init)
+			{
+				ImGui::BeginChild("TAE");
+				{
+					for (int i = 0; i < tae.m_header.m_taeCount; i++)
+					{
+						std::string anim_name = std::to_string(tae.m_tae[i].m_id);
+
+						if (filter.PassFilter(anim_name.c_str()))
+						{
+							ImGui::PushID(i);
+
+							if (ImGui::Selectable(anim_name.c_str()))
+								this->m_timeActEditorFlags.m_taeId = tae.m_tae[i].m_id;
+
+							ImGui::PopID();
+						}
+					}
+				}
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+
 		ImGui::EndTabItem();
 	}
 	ImGui::End();
 
+	static char categoryInfo[100], valueInfo[255];
+	static int selectedTrack = -1;
+	static int selectedEvent = -1;
+	static int firstFrame = 0;
+	static bool expanded = true;
+	static int currentFrame = 0;
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("EventTrack");
 	{
-		static char categoryInfo[100], valueInfo[255];
-		static int selectedTrack = -1;
-		static int selectedEvent = -1;
-		static int firstFrame = 0;
-		static bool expanded = true;
-		static int currentFrame = 0;
-
-		ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
-		ImGui::Begin("EventTrack");
-		{
-			if (ImGui::Button("Load")) 
-			{ 
-				if (this->nmb.m_init)
-				{
-					this->m_eventTrackEditorFlags.m_load = true;
-					selectedTrack = -1;
-					selectedEvent = -1;
-				}
-				else
-					Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
-			}
-
-			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
-			else
-				ImGui::Text("");
-
-			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
-			ImGui::EndChild();
-		}
-		ImGui::End();
-
-		ImGui::Begin("Event Data");
-		{
-			if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (selectedTrack != -1) && (selectedEvent != -1))
+		if (ImGui::Button("Load")) 
+		{ 
+			if (this->nmb.m_init)
 			{
-				EventTrackEditor::EventTrack track = this->m_eventTrackEditor.m_eventTracks[selectedTrack];
-				float startTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_frameStart);
-				float endTime = MathHelper::FrameToTime(track.m_event[selectedEvent].m_duration + track.m_event[selectedEvent].m_frameStart);
-
-				ImGui::Text(track.m_name);
-				ImGui::PushItemWidth(100);
-				ImGui::InputInt("Event ID", &track.m_eventId, 1, 0);
-				if (ImGui::IsItemHovered())
-				{
-					ImGui::Text(categoryInfo);
-				}
-
-				ImGui::InputInt("Event Value", &track.m_event[selectedEvent].m_value, 1, 0);
-				if (ImGui::IsItemHovered())
-				{
-					ImGui::Text("Info");
-					ImGui::Separator();
-
-					ImGui::Text(valueInfo);
-				}
-
-				ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
-				ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
-				ImGui::PopItemWidth();
-
-				track.SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
+				this->m_eventTrackEditorFlags.m_load = true;
+				selectedTrack = -1;
+				selectedEvent = -1;
 			}
+			else
+				Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
 		}
-		ImGui::End();
+
+		if (this->m_eventTrackEditor.m_animIdx > -1)
+			ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
+		else
+			ImGui::Text("");
+
+		ImGui::BeginChild("sequencer");
+		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_EVENT_LOOP);
+		ImGui::EndChild();
 	}
+	ImGui::End();
+
+	ImGui::Begin("Event Data");
+	{
+		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (selectedTrack != -1) && (selectedEvent != -1))
+		{
+			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[selectedTrack];
+			float startTime = MathHelper::FrameToTime(track->m_event[selectedEvent].m_frameStart);
+			float endTime = MathHelper::FrameToTime(track->m_event[selectedEvent].m_duration + track->m_event[selectedEvent].m_frameStart);
+
+			ImGui::Text(track->m_name);
+			ImGui::PushItemWidth(100);
+			ImGui::InputInt("Event ID", &track->m_eventId, 1, 0);
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::Text(categoryInfo);
+			}
+
+			ImGui::InputInt("Event Value", &track->m_event[selectedEvent].m_value, 1, 0);
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::Text("Info");
+				ImGui::Separator();
+
+				ImGui::Text(valueInfo);
+			}
+
+			ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::PopItemWidth();
+
+			track->m_event[selectedEvent].m_frameStart = MathHelper::TimeToFrame(startTime);
+			track->m_event[selectedEvent].m_duration = MathHelper::TimeToFrame(endTime - startTime);
+
+			track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
+		}
+	}
+	ImGui::End();
+
+	static char valueInfoTae[255], eventInfoTae[255];
+	static int selectedTrackTae = -1;
+	static int firstFrameTae = 0;
+	static bool expandedTae = true;
+	static int currentFrameTae = 0;
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("TimeAct");
+	{
+		if (ImGui::Button("Load"))
+		{
+			if (this->tae.m_init)
+			{
+				this->m_timeActEditorFlags.m_load = true;
+				selectedTrackTae = -1;
+			}
+			else
+				Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
+		}
+
+		if (this->m_timeActEditorFlags.m_taeId > -1)
+			ImGui::Text(std::to_string(this->m_timeActEditorFlags.m_taeId).c_str());
+		else
+			ImGui::Text("");
+
+		int max = 0;
+
+		for (int j = 0; j < m_timeActEditor.m_tracks.size(); j++)
+		{
+			if (m_timeActEditor.m_tracks[j].m_event.m_frameStart + m_timeActEditor.m_tracks[j].m_event.m_duration > max)
+				max = m_timeActEditor.m_tracks[j].m_event.m_frameStart + m_timeActEditor.m_tracks[j].m_event.m_duration;
+		}
+
+		if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
+			this->m_timeActEditor.m_frameMax = max;
+
+		ImGui::BeginChild("sequencer");
+		ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+		ImGui::EndChild();
+	}
+	ImGui::End();
+
+	ImGui::Begin("TimeAct Data");
+	{
+		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1))
+		{
+			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[selectedTrackTae];
+			float startTime = MathHelper::FrameToTime(track->m_event.m_frameStart);
+			float endTime = MathHelper::FrameToTime(track->m_event.m_duration + track->m_event.m_frameStart);
+
+			ImGui::Text(m_timeActEditor.GetTrackName(selectedTrackTae).c_str());
+			ImGui::PushItemWidth(100);
+			ImGui::InputInt("Event Group", &track->m_eventGroup, 1, 0);
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::Text(valueInfoTae);
+			}
+
+			ImGui::InputInt("Event ID", &track->m_event.m_value, 1, 0);
+
+			ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_timeActEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_timeActEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::PopItemWidth();
+
+			track->m_event.m_frameStart = MathHelper::TimeToFrame(startTime);
+			track->m_event.m_duration = MathHelper::TimeToFrame(endTime - startTime);
+
+			track->SaveTimeActTrack();
+		}
+	}
+	ImGui::End();
 
 	ImGui::End();
 }
@@ -279,11 +384,17 @@ void Application::ProcessVariables()
 		this->LoadFile();
 	}
 
-	if (this->m_flags.save_file && this->nmb.m_init)
+	if (this->m_flags.save_file)
 	{
 		this->m_flags.save_file = false;
 
-		this->SaveFile();
+		if (this->nmb.m_init)
+			this->SaveFile();
+		else
+		{
+			Debug::DebuggerMessage(Debug::LVL_ERROR, "No file is loaded\n");
+			Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is loaded\n");
+		}
 	}
 
 	if (this->nmb.m_init == false)
@@ -353,6 +464,18 @@ void Application::ProcessVariables()
 							if (track_count > 0)
 								found = true;
 
+							for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
+							{
+								if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+								{
+									this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+									break;
+								}
+							}
+
+							this->m_timeActEditorFlags.m_load = true;
+							this->m_timeActEditorFlags.m_lenght = source_anim->m_animLen;
+
 							if (found)
 								break;
 						}
@@ -367,6 +490,65 @@ void Application::ProcessVariables()
 			}
 		}
 	}
+
+	if (this->tae.m_init == false)
+	{
+		this->m_timeActEditor.Clear();
+
+		m_timeActEditorFlags.m_load = false;
+	}
+
+	if (this->m_timeActEditorFlags.m_load)
+	{
+		this->m_timeActEditorFlags.m_load = false;
+		this->m_timeActEditor.Clear();
+
+		if (this->tae.m_init && this->m_timeActEditorFlags.m_taeId > -1)
+		{
+			if (tae.m_tae.size() > 0)
+			{
+				for (int i = 0; i < tae.m_tae.size(); i++)
+				{
+					TimeAct* event = &tae.m_tae[i];
+					if (event->m_id == this->m_timeActEditorFlags.m_taeId)
+					{
+						if (tae.m_tae[i].m_taeData->m_eventGroupCount > 0)
+						{
+							float max = 0;
+
+							for (int j = 0; j < tae.m_tae[i].m_taeData->m_eventGroupCount; j++)
+							{
+								if (tae.m_tae[i].m_taeData->m_groups[j].m_event[0].m_end > max)
+									max = tae.m_tae[i].m_taeData->m_groups[j].m_event[0].m_end;
+
+								this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
+							}
+
+							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max);
+
+							if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
+								this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght);
+
+							this->m_timeActEditor.m_frameMin = 0;
+						}
+						else
+						{
+							Debug::DebuggerMessage(Debug::LVL_INFO, "This TimeAct track has no events associated to it\n");
+							Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "This TimeAct track has no events associated to it\n");
+						}
+
+						break;
+					}
+				}
+			}
+			else
+			{
+				Debug::DebuggerMessage(Debug::LVL_INFO, "No TimeAct is loaded\n");
+				Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "No TimeAct is loaded\n");
+			}
+			
+		}
+	}
 }
 
 void Application::NetworkCleanup()
@@ -375,7 +557,7 @@ void Application::NetworkCleanup()
 
 void Application::LoadFile()
 {
-	COMDLG_FILTERSPEC ComDlgFS[3] = { {L"Morpheme Network Binary", L"*.nmb"},{L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -390,7 +572,7 @@ void Application::LoadFile()
 
 		if (SUCCEEDED(hr))
 		{
-			pFileOpen->SetFileTypes(3, ComDlgFS);
+			pFileOpen->SetFileTypes(4, ComDlgFS);
 
 			// Show the Open dialog box.
 			hr = pFileOpen->Show(NULL);
@@ -409,9 +591,22 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						nmb.m_init = false;
-						nmb = NMBReader(pszFilePath);
-						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);
+						PWSTR format = PathFindExtensionW(pszFilePath);
+						std::wstring extension = std::wstring(format);
+
+						if (extension.compare(L".nmb") == 0)
+						{
+							nmb.m_init = false;
+							nmb = NMBReader(pszFilePath);
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);							
+						}
+
+						if (extension.compare(L".tae") == 0)
+						{
+							tae.m_init = false;
+							tae = TimeActReader(pszFilePath);
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", tae.m_filePath, tae.m_fileSize);
+						}
 					}
 					pItem->Release();
 				}

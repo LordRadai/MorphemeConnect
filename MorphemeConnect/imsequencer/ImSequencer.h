@@ -31,6 +31,7 @@
 #include "../imgui/imgui_internal.h"
 #include "../extern.h"
 #include "../EventTrackEditor/EventTrackEditor.h"
+#include "../TimeActEditor/TimeActEditor.h"
 
 struct ImDrawList;
 struct ImRect;
@@ -49,9 +50,11 @@ namespace ImSequencer
         EDITOR_EVENT_LOOP = 1 << 7,
         EDITOR_COLLAPSE = 1 << 8,
         EDITOR_MARK_ACTIVE_EVENTS = 1 << 9,
+        EDITOR_TRACK_RENAME = 1 << 10,
         EDITOR_EDIT_ALL = EDITOR_EVENT_EDIT_STARTEND | EDITOR_CHANGE_FRAME
     };
 
     // return true if selection is made
     bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions);
+    bool Sequencer(TimeActEditor* timeActEditor, int* currentFrame, int* selectedTrack, bool* expanded, int* firstFrame, int sequenceOptions);
 }

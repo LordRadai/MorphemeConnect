@@ -1882,27 +1882,15 @@ namespace ImSequencer
 
                                 movingPos += int(diffFrame * framePixelWidth);
                             }
-                            else if (track->m_event.m_frameStart + diffFrame >= -timeActEditor->GetFrameMax() && (track->m_event.m_frameStart + track->m_event.m_duration) + diffFrame <= 2 * timeActEditor->GetFrameMax())
+                            else if (movingPart == MovingPart_Start)
                             {
-                                if (movingPart == MovingPart_Start)
-                                {
-                                    track->m_event.m_frameStart += diffFrame;
-                                    track->m_event.m_duration -= diffFrame;
-                                }
-                                else if (movingPart == MovingPart_All)
-                                    track->m_event.m_frameStart += diffFrame;
-
-                                movingPos += int(diffFrame * framePixelWidth);
+                                track->m_event.m_frameStart += diffFrame;
+                                track->m_event.m_duration -= diffFrame;
                             }
-                            else
-                            {
-                                if (track->m_event.m_frameStart < -timeActEditor->GetFrameMax())
-                                    track->m_event.m_frameStart = -timeActEditor->GetFrameMax();
+                            else if (movingPart == MovingPart_All)
+                                track->m_event.m_frameStart += diffFrame;
 
-                                if ((track->m_event.m_frameStart + track->m_event.m_duration) > 2 * timeActEditor->GetFrameMax())
-                                    track->m_event.m_frameStart = (2 * timeActEditor->GetFrameMax() - track->m_event.m_duration);
-                            }
-
+                            movingPos += int(diffFrame * framePixelWidth);
                         }
                         if (!io.MouseDown[0] && !popupOpened)
                         {

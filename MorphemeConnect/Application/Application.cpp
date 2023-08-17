@@ -249,7 +249,7 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("");
 
 		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_EVENT_LOOP);
+		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_EVENT_LOOP | ImSequencer::EDITOR_TRACK_RENAME);
 		ImGui::EndChild();
 	}
 	ImGui::End();
@@ -279,12 +279,9 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text(valueInfo);
 			}
 
-			ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
-			ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_eventTrackEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::InputFloat("Start Time", &startTime, 0, 0);
+			ImGui::InputFloat("End Time", &endTime, 0, 0);
 			ImGui::PopItemWidth();
-
-			track->m_event[selectedEvent].m_frameStart = MathHelper::TimeToFrame(startTime);
-			track->m_event[selectedEvent].m_duration = MathHelper::TimeToFrame(endTime - startTime);
 
 			track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
 		}
@@ -351,12 +348,9 @@ void Application::RenderGUI(const char* title)
 
 			ImGui::InputInt("Event ID", &track->m_event.m_value, 1, 0);
 
-			ImGui::DragFloat("Start Time", &startTime, 1 / 60, 0, MathHelper::FrameToTime(m_timeActEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
-			ImGui::DragFloat("End Time", &endTime, 1 / 60, 0, MathHelper::FrameToTime(m_timeActEditor.m_frameMax), "%.3f", ImGuiSliderFlags_ReadOnly);
+			ImGui::InputFloat("Start Time", &startTime);
+			ImGui::InputFloat("End Time", &endTime);
 			ImGui::PopItemWidth();
-
-			track->m_event.m_frameStart = MathHelper::TimeToFrame(startTime);
-			track->m_event.m_duration = MathHelper::TimeToFrame(endTime - startTime);
 
 			track->SaveTimeActTrack();
 		}

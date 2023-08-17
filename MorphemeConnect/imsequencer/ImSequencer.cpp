@@ -476,7 +476,7 @@ namespace ImSequencer
                             if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                                 ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
-                            if (io.MouseReleased[0])
+                            if (io.MouseReleased[0] && eventTrackEditor->focused)
                             {
                                 *selectedTrack = i;
                                 *selectedEvent = -1;

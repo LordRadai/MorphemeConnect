@@ -450,7 +450,16 @@ namespace ImSequencer
             for (int i = 0; i < eventTrackEditor->GetTrackCount(); i++)
             {
                 ImVec2 tpos(contentMin.x + 3, contentMin.y + i * ItemHeight + 2 + customHeight);
-                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), ImVec2(legendWidth - ItemHeight - ItemHeight - 15, ItemHeight * 0.9f), eventTrackEditor->GetTrackName(i));
+
+                ImVec2 labelEndPos = ImVec2(legendWidth - 15, ItemHeight * 0.9f);
+
+                if (sequenceOptions & EDITOR_TRACK_ADD)
+                    labelEndPos.x -= ItemHeight;
+
+                if (sequenceOptions & EDITOR_EVENT_ADD)
+                    labelEndPos.x -= ItemHeight;
+
+                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), labelEndPos, eventTrackEditor->GetTrackName(i));
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {                    
@@ -1579,7 +1588,16 @@ namespace ImSequencer
             for (int i = 0; i < timeActEditor->GetTrackCount(); i++)
             {
                 ImVec2 tpos(contentMin.x + 3, contentMin.y + i * ItemHeight + 2 + customHeight);
-                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), ImVec2(legendWidth - ItemHeight - ItemHeight - 15, ItemHeight * 0.9f), (char*)timeActEditor->GetTrackName(i).c_str());
+
+                ImVec2 labelEndPos = ImVec2(legendWidth - 15, ItemHeight * 0.9f);
+
+                if (sequenceOptions & EDITOR_TRACK_ADD)
+                    labelEndPos.x -= ItemHeight;
+
+                if (sequenceOptions & EDITOR_EVENT_ADD)
+                    labelEndPos.x -= ItemHeight;
+
+                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), labelEndPos, (char*)timeActEditor->GetTrackName(i).c_str());
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {

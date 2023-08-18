@@ -124,11 +124,11 @@ std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
 		return "";
 	}
 
-	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[0].m_value);
+	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 	std::string tae_group_str = std::to_string(this->m_tracks[idx].m_eventGroup);
-	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[0].m_value);
+	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 
-	return reader.GetString(tae_group_str, tae_id_str, default_str);
+	return reader.GetString(tae_group_str, tae_id_str, default_str) + "[" + tae_id_str + "]";
 }
 
 TimeActEditor::TimeActEditor() {}

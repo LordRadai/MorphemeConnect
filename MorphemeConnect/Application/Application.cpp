@@ -336,7 +336,7 @@ void Application::RenderGUI(const char* title)
 
 	ImGui::Begin("TimeAct Data");
 	{
-		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1))
+		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1) && (selectedEventTae != -1))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[selectedTrackTae];
 			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart);

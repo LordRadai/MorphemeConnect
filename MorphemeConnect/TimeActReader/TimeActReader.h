@@ -7,7 +7,7 @@ public:
 	struct EventData
 	{
 		UINT64 m_id;
-		UINT64 m_unk;
+		byte m_args[8];
 
 		EventData() {}
 
@@ -19,7 +19,7 @@ public:
 			MemHelper::ReadQWord(tae, (LPVOID*)&unk_data_offset);
 
 			tae->seekg(unk_data_offset);
-			MemHelper::ReadDWord(tae, (LPVOID*)&this->m_unk);
+			MemHelper::ReadByteArray(tae, (LPVOID*)&this->m_args, 8);
 		}
 	};
 
@@ -119,16 +119,18 @@ public:
 		{
 			if (offsetsOffset)
 			{
-				tae->seekg(offsetsOffset);
-
-				UINT64 event_offset;
-				MemHelper::ReadQWord(tae, (LPVOID*)&event_offset);
-
 				for (size_t i = 0; i < this->m_count; i++)
 				{
-					tae->seekg(event_offset + (byte)i * 0x18);
+					tae->seekg(offsetsOffset);
+
+					UINT64 event_offset;
+					MemHelper::ReadQWord(tae, (LPVOID*)&event_offset);
+
+					tae->seekg(event_offset);
 
 					this->m_event.push_back(tae);
+
+					offsetsOffset += 0x8;
 				}
 			}
 

@@ -240,7 +240,7 @@ void Application::RenderGUI(const char* title)
 				selectedEvent = -1;
 			}
 			else
-				Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
+				Debug::Alert(MB_ICONERROR, "Application.cpp", "No NMB file is currently loaded");
 		}
 
 		if (this->m_eventTrackEditor.m_animIdx > -1)
@@ -290,6 +290,7 @@ void Application::RenderGUI(const char* title)
 
 	static char valueInfoTae[255], eventInfoTae[255];
 	static int selectedTrackTae = -1;
+	static int selectedEventTae = -1;
 	static int firstFrameTae = 0;
 	static bool expandedTae = true;
 	static int currentFrameTae = 0;
@@ -305,7 +306,7 @@ void Application::RenderGUI(const char* title)
 				selectedTrackTae = -1;
 			}
 			else
-				Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is currently loaded");
+				Debug::Alert(MB_ICONERROR, "Application.cpp", "No TimeAct file is currently loaded");
 		}
 
 		if (this->m_timeActEditorFlags.m_taeId > -1)
@@ -315,17 +316,21 @@ void Application::RenderGUI(const char* title)
 
 		int max = 0;
 
-		for (int j = 0; j < m_timeActEditor.m_tracks.size(); j++)
+		for (size_t i = 0; i < m_timeActEditor.m_tracks.size(); i++)
 		{
-			if (m_timeActEditor.m_tracks[j].m_event.m_frameStart + m_timeActEditor.m_tracks[j].m_event.m_duration > max)
-				max = m_timeActEditor.m_tracks[j].m_event.m_frameStart + m_timeActEditor.m_tracks[j].m_event.m_duration;
+			for (int j = 0; j < m_timeActEditor.m_tracks[j].m_count; j++)
+			{
+				if (m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration > max)
+					max = m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration;
+			}
 		}
+
 
 		if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
 			this->m_timeActEditor.m_frameMax = max;
 
 		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+		ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
 		ImGui::EndChild();
 	}
 	ImGui::End();
@@ -335,8 +340,8 @@ void Application::RenderGUI(const char* title)
 		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[selectedTrackTae];
-			float startTime = MathHelper::FrameToTime(track->m_event.m_frameStart);
-			float endTime = MathHelper::FrameToTime(track->m_event.m_duration + track->m_event.m_frameStart);
+			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart);
+			float endTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_duration + track->m_event[selectedEventTae].m_frameStart);
 
 			ImGui::Text(m_timeActEditor.GetTrackName(selectedTrackTae).c_str());
 			ImGui::PushItemWidth(100);
@@ -346,7 +351,7 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text(valueInfoTae);
 			}
 
-			ImGui::InputInt("Event ID", &track->m_event.m_value, 1, 0);
+			ImGui::InputInt("Event ID", &track->m_event[selectedEventTae].m_value, 1, 0);
 
 			ImGui::InputFloat("Start Time", &startTime);
 			ImGui::InputFloat("End Time", &endTime);
@@ -512,11 +517,15 @@ void Application::ProcessVariables()
 
 							for (int j = 0; j < tae.m_tae[i].m_taeData->m_eventGroupCount; j++)
 							{
-								if (tae.m_tae[i].m_taeData->m_groups[j].m_event[0].m_end > max)
-									max = tae.m_tae[i].m_taeData->m_groups[j].m_event[0].m_end;
+								for (int k = 0; k < tae.m_tae[i].m_taeData->m_groups[j].m_count; k++)
+								{
+									if (tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end > max)
+										max = tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end;
 
-								this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
+									this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
+								}
 							}
+
 
 							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max);
 

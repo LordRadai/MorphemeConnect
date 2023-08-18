@@ -19,15 +19,16 @@ struct TimeActEditor
         };
 
         EventGroup* m_source;
+        int m_count;
         int m_eventGroup;
-        Event m_event;
+        std::vector<Event> m_event;
         char m_name[50];
 
         TimeActTrack(int eventId, float start, float end);
         TimeActTrack(EventGroup* src);
 
         void SaveTimeActTrack();
-        bool IsEventActive(int frame);
+        bool IsEventActive(int idx, int frame);
     };
 
     TimeAct* m_source;
@@ -54,7 +55,7 @@ struct TimeActEditor
     int GetTrackCount() const;
 
     std::string GetTrackName(int idx);
-    std::string GetEventLabel(int event_idx) const;
+    std::string GetEventLabel(int idx, int event_idx) const;
 
     //void AddTrack(int event_id, char* name, bool duration);
     //void DeleteTrack(int idx);

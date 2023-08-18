@@ -5,31 +5,37 @@ TimeActEditor::TimeActTrack::TimeActTrack(int eventId, float start, float end)
 {
 	this->m_source = NULL;
 	this->m_eventGroup = eventId;
-	this->m_event.m_frameStart = MathHelper::TimeToFrame(start);
-	this->m_event.m_duration = MathHelper::TimeToFrame(end - start);
+	//this->m_event.m_frameStart = MathHelper::TimeToFrame(start);
+	//this->m_event.m_duration = MathHelper::TimeToFrame(end - start);
 }
 
 TimeActEditor::TimeActTrack::TimeActTrack(EventGroup* src)
 {
 	this->m_source = src;
 
-	this->m_event.m_frameStart = MathHelper::TimeToFrame(src->m_event[0].m_start);
-	this->m_event.m_duration = MathHelper::TimeToFrame(src->m_event[0].m_end - src->m_event[0].m_start);
 	this->m_eventGroup = src->m_groupData->m_eventType;
-	this->m_event.m_value = src->m_event[0].m_eventData->m_id;
+	this->m_count = src->m_count;
+
+	for (size_t i = 0; i < src->m_count; i++)
+		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i].m_start), MathHelper::TimeToFrame(src->m_event[i].m_end - src->m_event[i].m_start), (int)src->m_event[i].m_eventData->m_id });	
 }
 
 void TimeActEditor::TimeActTrack::SaveTimeActTrack()
 {
+	this->m_source->m_count = this->m_count;
 	this->m_source->m_groupData->m_eventType = this->m_eventGroup;
-	this->m_source->m_event[0].m_start = MathHelper::FrameToTime(this->m_event.m_frameStart);
-	this->m_source->m_event[0].m_end = MathHelper::FrameToTime(this->m_event.m_frameStart + this->m_event.m_duration);
-	this->m_source->m_event[0].m_eventData->m_id = this->m_event.m_value;
+
+	for (size_t i = 0; i < this->m_count; i++)
+	{
+		this->m_source->m_event[i].m_start = MathHelper::FrameToTime(this->m_event[i].m_frameStart);
+		this->m_source->m_event[i].m_end = MathHelper::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration);
+		this->m_source->m_event[i].m_eventData->m_id = this->m_event[i].m_value;
+	}
 }
 
-bool TimeActEditor::TimeActTrack::IsEventActive(int frame)
+bool TimeActEditor::TimeActTrack::IsEventActive(int idx, int frame)
 {
-	if ((frame >= this->m_event.m_frameStart) && frame <= (this->m_event.m_duration + this->m_event.m_frameStart))
+	if ((frame >= this->m_event[idx].m_frameStart) && frame <= (this->m_event[idx].m_duration + this->m_event[idx].m_frameStart))
 		return true;
 
 	return false;
@@ -106,6 +112,11 @@ const char* getGroupName(int group_id)
 
 std::string TimeActEditor::GetTrackName(int idx) 
 { 
+	return getGroupName(this->m_tracks[idx].m_eventGroup);
+}
+
+std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
+{
 	INIReader reader(".//MorphemeConnect//res//tae.ini");
 
 	if (reader.ParseError() < 0) {
@@ -113,16 +124,11 @@ std::string TimeActEditor::GetTrackName(int idx)
 		return "";
 	}
 
-	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event.m_value);
+	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[0].m_value);
 	std::string tae_group_str = std::to_string(this->m_tracks[idx].m_eventGroup);
-	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event.m_value);
+	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[0].m_value);
 
 	return reader.GetString(tae_group_str, tae_id_str, default_str);
-}
-
-std::string TimeActEditor::GetEventLabel(int event_idx) const
-{
-	return std::to_string(this->m_tracks[event_idx].m_event.m_value);
 }
 
 TimeActEditor::TimeActEditor() {}

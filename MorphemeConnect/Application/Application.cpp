@@ -249,7 +249,7 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("");
 
 		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_EVENT_LOOP | ImSequencer::EDITOR_TRACK_RENAME);
+		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME);
 		ImGui::EndChild();
 	}
 	ImGui::End();
@@ -431,51 +431,55 @@ void Application::ProcessVariables()
 
 							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / source_anim->m_trackLen;
 
-							for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
-							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
-								
-								if (event_tracks)
-									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
-							}
-
-							for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
-							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
-								
-								if (event_tracks)
-									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
-							}
-
-							for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
-							{
-								MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
-								
-								if (event_tracks)
-									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
-							}
-
 							int track_count = 0;
 							for (size_t i = 0; i < 3; i++)
 								track_count += event_track->m_eventTracks[i].m_trackCount;
 
+							this->m_eventTrackEditor.m_eventTracks.reserve(track_count);
+
 							if (track_count > 0)
+							{
 								found = true;
 
-							for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
-							{
-								if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+								for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 								{
-									this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-									break;
+									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+
+									if (event_tracks)
+										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
 								}
-							}
 
-							this->m_timeActEditorFlags.m_load = true;
-							this->m_timeActEditorFlags.m_lenght = source_anim->m_animLen;
+								for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
+								{
+									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
 
-							if (found)
+									if (event_tracks)
+										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
+								}
+
+								for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
+								{
+									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+
+									if (event_tracks)
+										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
+								}
+
+								if (this->tae.m_init)
+								{
+									for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
+									{
+										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+										{
+											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+											this->m_timeActEditorFlags.m_lenght = source_anim->m_animLen;
+											this->m_timeActEditorFlags.m_load = true;
+										}
+									}
+								}
+
 								break;
+							}
 						}
 					}
 				}

@@ -53,7 +53,7 @@ int TimeActEditor::GetFrameMax() const
 
 int TimeActEditor::GetTrackCount() const { return (int)m_tracks.size(); }
 
-const char* getGroupName(int group_id)
+std::string getGroupName(int group_id)
 {
 	switch (group_id)
 	{
@@ -106,7 +106,7 @@ const char* getGroupName(int group_id)
 	case 310000:
 		return "SpEffectCtrl";
 	default:
-		return "";
+		return std::to_string(group_id);
 	}
 }
 

@@ -198,7 +198,7 @@ namespace ImSequencer
 
         int controlHeight = eventTrackEditor->GetTrackCount() * ItemHeight;
 
-        int frameCount = ImMax(eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin(), 1);
+        int frameCount = ImMax(eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin() + 10, 1);
 
         canvas_size.y = controlHeight + 2.5 * ItemHeight;
 
@@ -244,7 +244,7 @@ namespace ImSequencer
 
         framePixelWidth = ImLerp(framePixelWidth, framePixelWidthTarget, 0.33f);
 
-        frameCount = eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin();
+        frameCount = eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin() + 10;
         if (visibleFrameCount >= frameCount && firstFrame)
             *firstFrame = eventTrackEditor->GetFrameMin();
 
@@ -1084,13 +1084,16 @@ namespace ImSequencer
                     float cursorOffset = contentMin.x + legendWidth + (*currentFrame - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
                     draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), 0xFF0000FF, cursorWidth);
 
+                    draw_list->PopClipRect();
+                    draw_list->PopClipRect();
                     char tmps[512];
-                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%d", *currentFrame);
-                    draw_list->AddText(ImVec2(cursorOffset + 10, canvas_pos.y + 2), 0xFF2A2AFF, tmps);
-                }
 
-                draw_list->PopClipRect();
-                draw_list->PopClipRect();
+                    if (*currentFrame != 0 && *currentFrame != eventTrackEditor->GetFrameMax())
+                    {
+                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(*currentFrame));
+                        draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
+                    }
+                }
 
                 // copy paste
                 if (sequenceOptions & EDITOR_COPYPASTE)
@@ -1216,7 +1219,7 @@ namespace ImSequencer
                         {
                             float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
                             *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
-                            *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount, eventTrackEditor->GetFrameMin()));
+                            *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount + 10, eventTrackEditor->GetFrameMin()));
                         }
                     }
                     else
@@ -1357,7 +1360,7 @@ namespace ImSequencer
 
         int controlHeight = timeActEditor->GetTrackCount() * ItemHeight;
 
-        int frameCount = ImMax(timeActEditor->GetFrameMax() - timeActEditor->GetFrameMin(), 1);
+        int frameCount = ImMax(timeActEditor->GetFrameMax() - timeActEditor->GetFrameMin() + 10, 1);
 
         canvas_size.y = controlHeight + 2.5 * ItemHeight;
 
@@ -1403,7 +1406,7 @@ namespace ImSequencer
 
         framePixelWidth = ImLerp(framePixelWidth, framePixelWidthTarget, 0.33f);
 
-        frameCount = timeActEditor->GetFrameMax() - timeActEditor->GetFrameMin();
+        frameCount = timeActEditor->GetFrameMax() - timeActEditor->GetFrameMin() + 10;
         if (visibleFrameCount >= frameCount && firstFrame)
             *firstFrame = timeActEditor->GetFrameMin();
 
@@ -2049,13 +2052,16 @@ namespace ImSequencer
                     float cursorOffset = contentMin.x + legendWidth + (*currentFrame - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
                     draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), 0xFF0000FF, cursorWidth);
 
+                    draw_list->PopClipRect();
+                    draw_list->PopClipRect();
                     char tmps[512];
-                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%d", *currentFrame);
-                    draw_list->AddText(ImVec2(cursorOffset + 10, canvas_pos.y + 2), 0xFF2A2AFF, tmps);
-                }
 
-                draw_list->PopClipRect();
-                draw_list->PopClipRect();
+                    if (*currentFrame != 0 && *currentFrame != timeActEditor->GetFrameMax())
+                    {
+                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(*currentFrame));
+                        draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
+                    }
+                }
 
                 // copy paste
                 if (sequenceOptions & EDITOR_COPYPASTE)
@@ -2181,7 +2187,7 @@ namespace ImSequencer
                         {
                             float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
                             *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
-                            *firstFrame = ImClamp(*firstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount, timeActEditor->GetFrameMin()));
+                            *firstFrame = ImClamp(*firstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount + 10, timeActEditor->GetFrameMin()));
                         }
                     }
                     else

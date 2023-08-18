@@ -315,9 +315,9 @@ void Application::RenderGUI(const char* title)
 
 		int max = 0;
 
-		for (size_t i = 0; i < m_timeActEditor.m_tracks.size(); i++)
+		for (int i = 0; i < m_timeActEditor.m_tracks.size(); i++)
 		{
-			for (int j = 0; j < m_timeActEditor.m_tracks[j].m_count; j++)
+			for (int j = 0; j < m_timeActEditor.m_tracks[i].m_count; j++)
 			{
 				if (m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration > max)
 					max = m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration;

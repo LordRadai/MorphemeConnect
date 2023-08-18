@@ -520,9 +520,9 @@ void Application::ProcessVariables()
 								{
 									if (tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end > max)
 										max = tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end;
-
-									this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
 								}
+
+								this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
 							}
 
 

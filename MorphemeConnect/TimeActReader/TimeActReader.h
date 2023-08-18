@@ -142,7 +142,8 @@ public:
 			}
 		}
 
-		tae->seekg(bak + (std::streampos)0x20);
+		bak += 0x20;
+		tae->seekg(bak);
 	}
 };
 

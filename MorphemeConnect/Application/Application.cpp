@@ -293,7 +293,6 @@ void Application::RenderGUI(const char* title)
 	static int selectedEventTae = -1;
 	static int firstFrameTae = 0;
 	static bool expandedTae = true;
-	static int currentFrameTae = 0;
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct");
@@ -330,7 +329,7 @@ void Application::RenderGUI(const char* title)
 			this->m_timeActEditor.m_frameMax = max;
 
 		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+		ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
 		ImGui::EndChild();
 	}
 	ImGui::End();
@@ -558,6 +557,26 @@ void Application::NetworkCleanup()
 {
 }
 
+int Application::GetChrIdFromNmbFileName(std::string name)
+{
+	std::string chr_id;
+
+	int lastCPos = name.find_last_of("\\c");
+
+	chr_id = name.substr(lastCPos + 1, 4);
+
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %s\n", chr_id);
+
+	return stoi(chr_id);
+}
+
+std::string getTaeFileListFromChrId(std::string tae_path, int chr_id)
+{
+	std::string chr_id_str = std::to_string(chr_id);
+
+	return "";
+}
+
 void Application::LoadFile()
 {
 	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
@@ -624,7 +643,7 @@ void Application::LoadFile()
 
 void Application::SaveFile()
 {
-	COMDLG_FILTERSPEC ComDlgFS[3] = { {L"Morpheme Network Binary", L"*.nmb"},{L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -639,7 +658,7 @@ void Application::SaveFile()
 
 		if (SUCCEEDED(hr))
 		{
-			pFileSave->SetFileTypes(3, ComDlgFS);
+			pFileSave->SetFileTypes(4, ComDlgFS);
 
 			// Show the Open dialog box.
 			hr = pFileSave->Show(NULL);
@@ -660,14 +679,24 @@ void Application::SaveFile()
 					{
 						if (nmb.m_init)
 						{
-							bool status = nmb.SaveToFile(pszOutFilePath);
+							PWSTR format = PathFindExtensionW(pszOutFilePath);
+							std::wstring extension = std::wstring(format);
 
-							if (status)
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);							
+							if (extension.compare(L".nmb") == 0)
+							{
+								bool status = nmb.SaveToFile(pszOutFilePath);
+
+								if (status)
+									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);
+								else
+								{
+									Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to generate NMB file\n");
+									Debug::Alert(MB_ICONERROR, "Failed to generate file\n", "NMBReader.cpp");
+								}
+							}
 							else
 							{
-								Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to generate NMB file\n");
-								Debug::Alert(MB_ICONERROR, "Failed to generate file\n", "NMBReader.cpp");
+								Debug::Alert(MB_ICONERROR, "Application.cpp", "Saving TimeAct files is not supported yet\n");
 							}
 						}
 					}

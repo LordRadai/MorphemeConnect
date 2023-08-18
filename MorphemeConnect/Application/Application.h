@@ -61,4 +61,5 @@ public:
 	void LoadFile();
 	void SaveFile();
 	void NetworkCleanup();
+	int GetChrIdFromNmbFileName(std::string name);
 };

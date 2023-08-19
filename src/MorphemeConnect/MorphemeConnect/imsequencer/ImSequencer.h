@@ -55,6 +55,6 @@ namespace ImSequencer
     };
 
     // return true if selection is made
-    bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions);
-    bool Sequencer(TimeActEditor* timeActEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, int* firstFrame, int sequenceOptions);
+    bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, int sequenceOptions);
+    bool Sequencer(TimeActEditor* timeActEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, int sequenceOptions);
 }

@@ -24,7 +24,7 @@ class Application
 public:
 	struct Flags
 	{
-		bool style_editor = false;
+		bool settings_window = false;
 		bool load_file = false;
 		bool save_file = false;
 	} m_flags;
@@ -60,6 +60,7 @@ public:
 	void GUIStyle();
 	void Update();
 	void RenderGUI(const char* title);
+	void SettingsWindow();
 	void ProcessVariables();
 	void LoadFile();
 	void SaveFile();

@@ -42,13 +42,14 @@ struct EventTrackEditor
 
     struct EventTrackColor
     {
-        UINT m_trackColor = 0xFFEB5050;
-        UINT m_trackColorInactive = 0xFF464646;
-        UINT m_trackColorInvert = 0xFF633132;
-        UINT m_trackColorActive = 0xFF633132;
-        UINT m_trackBoundingBox = 0xFF000000;
-        UINT m_trackBoundingBoxActive = 0xFF0000FF;
-        UINT m_trackTextColor = 0xFFFFFFFF;
+        ImVec4 m_trackColor = { 0.31f, 0.31f, 0.91f, 1.f };
+        ImVec4 m_trackColorInactive = { 0.22f, 0.22f, 0.44f, 1.f };
+        ImVec4 m_trackColorInvert = { 0.51f, 0.49f, 0.95f, 1.f };
+        ImVec4 m_trackColorActive = { 0.28f, 0.28f, 0.48f, 1.f };
+        ImVec4 m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
+        ImVec4 m_trackBoundingBoxActive = { 1.f, 0.f, 0.f, 1.f };
+        ImVec4 m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };
+        ImVec4 m_cursorColor = { 1.f, 0.f, 0.f, 1.f };
     } m_colors;
 
     EventTrackEditor();

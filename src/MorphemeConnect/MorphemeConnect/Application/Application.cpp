@@ -7,12 +7,12 @@
 
 Application::Application()
 {
-	this->m_flags.style_editor = false;
+	this->m_flags.settings_window = false;
 }
 
 Application::~Application()
 {
-	this->m_flags.style_editor = false;
+	this->m_flags.settings_window = false;
 }
 
 void Application::GUIStyle()
@@ -21,13 +21,14 @@ void Application::GUIStyle()
 	style->WindowBorderSize = 1;
 	style->FrameBorderSize = 0;
 	style->PopupBorderSize = 1;
+	style->FrameBorderSize = 0;
 	style->TabBorderSize = 0;
 
 	style->WindowRounding = 0;
 	style->ChildRounding = 0;
 	style->FrameRounding = 0;
 	style->PopupRounding = 0;
-	style->ScrollbarRounding = 9;
+	style->ScrollbarRounding = 12;
 	style->GrabRounding = 0;
 	style->TabRounding = 0;
 	style->WindowMenuButtonPosition = ImGuiDir_Left;
@@ -38,8 +39,8 @@ void Application::GUIStyle()
 	colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
 	colors[ImGuiCol_ChildBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
-	colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_Border] = ImVec4(0.51f, 0.51f, 0.59f, 0.50f);
+	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
@@ -100,7 +101,9 @@ void Application::RenderGUI(const char* title)
 {
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y));
 	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->Pos);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
 	ImGui::Begin(title, NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::PopStyleVar(1);
 
 	ImGuiID dockSpace = ImGui::GetID("MainWindowDockspace");
 	ImGui::DockSpace(dockSpace, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
@@ -117,7 +120,7 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Style Editor", NULL, &this->m_flags.style_editor)) { this->m_flags.style_editor != this->m_flags.style_editor; }
+			if (ImGui::MenuItem("Settings", NULL, &this->m_flags.settings_window)) { this->m_flags.settings_window != this->m_flags.settings_window; }
 
 			ImGui::EndMenu();
 		}
@@ -128,6 +131,7 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Assets");
 	{
+		static int selected_tae_file_idx = -1;
 		char chr_id_str[50];
 		sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
 
@@ -142,10 +146,9 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginPopupModal(tae_popup.c_str()))
 		{
-			static int selected_idx = -1;
 			static std::wstring filepath;
 
-			if (ImGui::Button("Load") && selected_idx != -1)
+			if (ImGui::Button("Load") && selected_tae_file_idx != -1)
 			{
 				tae.m_init = false;
 				tae = TimeActReader(PWSTR(filepath.c_str()));
@@ -170,7 +173,7 @@ void Application::RenderGUI(const char* title)
 
 				if (ImGui::Selectable(tae_file.c_str()))
 				{
-					selected_idx = i;
+					selected_tae_file_idx = i;
 					filepath = path.c_str();
 				}
 			}
@@ -178,6 +181,8 @@ void Application::RenderGUI(const char* title)
 
 			ImGui::EndPopup();
 		}
+		else
+			selected_tae_file_idx = -1;
 
 		ImGui::BeginTabBar("assets tab bar");
 		if (ImGui::BeginTabItem("NSA"))
@@ -284,6 +289,8 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("EventTrack");
 	{
+		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
+
 		if (this->nmb.m_init)
 		{
 			if (ImGui::Button("Load"))
@@ -314,12 +321,13 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME);
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, focused, & firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME);
 			ImGui::EndChild();
 		}
 	}
 	ImGui::End();
 
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Event Data");
 	{
 		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (selectedTrack != -1 && selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[selectedTrack].m_numEvents))
@@ -367,6 +375,8 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct");
 	{
+		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
+
 		if (this->tae.m_init)
 		{
 			if (ImGui::Button("Load"))
@@ -405,17 +415,17 @@ void Application::RenderGUI(const char* title)
 				}
 			}
 
-
 			if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
 				this->m_timeActEditor.m_frameMax = max;
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
 			ImGui::EndChild();
 		}
 	}
 	ImGui::End();
 
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct Data");
 	{
 		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1 && selectedTrackTae < this->m_timeActEditor.m_tracks.size()) && (selectedEventTae != -1 && this->m_timeActEditor.m_tracks[selectedTrackTae].m_count))
@@ -447,13 +457,55 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 }
 
+void Application::SettingsWindow()
+{
+	ImGui::Begin("Settings", &this->m_flags.settings_window);
+
+	ImGui::BeginTabBar("settings");
+
+	if (ImGui::BeginTabItem("GUI"))
+	{
+		ImGui::ShowStyleEditor();
+
+		ImGui::EndTabItem();
+	}
+
+	if (ImGui::BeginTabItem("EventTrack Editor"))
+	{
+		ImGui::ColorEdit4("Track", (float*)&this->m_eventTrackEditor.m_colors.m_trackColor);
+		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorInactive);
+		ImGui::ColorEdit4("Track Active", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorActive);
+		ImGui::ColorEdit4("Track Inverted", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorInvert);
+		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBox);
+		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBoxActive);
+		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_eventTrackEditor.m_colors.m_trackTextColor);
+
+		ImGui::EndTabItem();
+	}
+
+	if (ImGui::BeginTabItem("TimeAct Editor"))
+	{
+		ImGui::ColorEdit4("Track", (float*)&this->m_timeActEditor.m_colors.m_trackColor);
+		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_timeActEditor.m_colors.m_trackColorInactive);
+		ImGui::ColorEdit4("Track Active", (float*)&this->m_timeActEditor.m_colors.m_trackColorActive);
+		ImGui::ColorEdit4("Track Inverted", (float*)&this->m_timeActEditor.m_colors.m_trackColorInvert);
+		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBox);
+		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBoxActive);
+		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_timeActEditor.m_colors.m_trackTextColor);
+
+		ImGui::EndTabItem();
+	}
+
+	ImGui::EndTabBar();
+
+	ImGui::End();
+}
+
 void Application::ProcessVariables()
 {
-	if (this->m_flags.style_editor)
+	if (this->m_flags.settings_window)
 	{
-		ImGui::Begin("Style Editor", &this->m_flags.style_editor);
-		ImGui::ShowStyleEditor();
-		ImGui::End();
+		this->SettingsWindow();
 	}
 
 	if (this->m_flags.load_file)

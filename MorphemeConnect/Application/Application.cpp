@@ -128,19 +128,18 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Assets");
 	{
+		std::string tae_popup = "Load TimeAct (c" + std::to_string(this->m_eventTrackEditorFlags.chr_id) + ")";
+
 		if (this->m_eventTrackEditorFlags.load_tae && this->m_eventTrackEditorFlags.tae_list.size() > 0)
 		{
-			ImGui::SetNextWindowSize(ImVec2(300, 400));
+			ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_Appearing);
 
-			ImGui::OpenPopup("tae_selection");
+			ImGui::OpenPopup(tae_popup.c_str());
 		}
 
-		if (ImGui::BeginPopupModal("tae_selection"))
+		if (ImGui::BeginPopupModal(tae_popup.c_str()))
 		{
 			static std::wstring filepath;
-			std::string header = "TimeAct files belonging to c" + std::to_string(this->m_eventTrackEditorFlags.chr_id);
-			ImGui::Text(header.c_str());
-			ImGui::Separator();
 
 			if (ImGui::Button("Load"))
 			{

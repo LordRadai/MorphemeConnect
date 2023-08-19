@@ -41,7 +41,7 @@ struct TimeActEditor
     {
         ImVec4 m_trackColor = { 0.33f, 0.33f, 0.33f, 1.f };
         ImVec4 m_trackColorInactive = { 0.33f, 0.33f, 0.33f, 1.f };
-        ImVec4 m_trackColorInvert = { 0.f, 0.21f, 0.6f, 1.f };
+        ImVec4 m_trackColorInvert = { 0.33f, 0.33f, 0.33f, 1.f };
         ImVec4 m_trackColorActive = { 0.f, 0.4f, 0.8f, 1.f };
         ImVec4 m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
         ImVec4 m_trackBoundingBoxActive = { 1.f, 1.f, 0.f, 1.f };

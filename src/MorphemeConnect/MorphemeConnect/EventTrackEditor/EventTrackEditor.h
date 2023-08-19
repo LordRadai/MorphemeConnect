@@ -44,8 +44,8 @@ struct EventTrackEditor
     {
         ImVec4 m_trackColor = { 0.31f, 0.31f, 0.91f, 1.f };
         ImVec4 m_trackColorInactive = { 0.22f, 0.22f, 0.44f, 1.f };
-        ImVec4 m_trackColorInvert = { 0.51f, 0.49f, 0.95f, 1.f };
-        ImVec4 m_trackColorActive = { 0.31f, 0.31f, 1.f, 1.f };
+        ImVec4 m_trackColorInvert = { 0.31f, 0.31f, 0.91f, 1.f };
+        ImVec4 m_trackColorActive = { 0.39f, 0.39f, 1.f, 1.f };
         ImVec4 m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
         ImVec4 m_trackBoundingBoxActive = { 0.f, 0.f, 0.f, 1.f };
         ImVec4 m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };

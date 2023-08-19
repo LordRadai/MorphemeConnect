@@ -1046,7 +1046,10 @@ namespace ImSequencer
 
                             if (movingPart == MovingPart_End)
                             {
-                                track->m_event[movingEvent].m_duration += diffFrame;
+                                if (track->m_event[movingEvent].m_duration + diffFrame > 0)
+                                    track->m_event[movingEvent].m_duration += diffFrame;
+                                else
+                                    track->m_event[movingEvent].m_duration = 0;
 
                                 movingPos += int(diffFrame * framePixelWidth);
                             }
@@ -2041,7 +2044,10 @@ namespace ImSequencer
 
                             if (movingPart == MovingPart_End)
                             {
-                                track->m_event[movingEvent].m_duration += diffFrame;
+                                if (track->m_event[movingEvent].m_duration + diffFrame > 0)
+                                    track->m_event[movingEvent].m_duration += diffFrame;
+                                else
+                                    track->m_event[movingEvent].m_duration = 0;
 
                                 movingPos += int(diffFrame * framePixelWidth);
                             }

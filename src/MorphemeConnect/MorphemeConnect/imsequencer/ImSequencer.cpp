@@ -705,6 +705,11 @@ namespace ImSequencer
                                 slotColor = ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackColorActive);
                                 boundColor = ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackBoundingBoxActive);
                             }
+                            else
+                            {
+                                slotColor = ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackColor);
+                                boundColor = ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackBoundingBox);
+                            }
                         }
 
                         ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * trackIndex + 1 + customHeight);
@@ -1856,6 +1861,11 @@ namespace ImSequencer
                                 slotColor = ImGui::ColorConvertFloat4ToU32(timeActEditor->m_colors.m_trackColorActive);
                                 boundColor = ImGui::ColorConvertFloat4ToU32(timeActEditor->m_colors.m_trackBoundingBoxActive);
                             }
+                            else
+                            {
+                                slotColor = ImGui::ColorConvertFloat4ToU32(timeActEditor->m_colors.m_trackColor);
+                                boundColor = ImGui::ColorConvertFloat4ToU32(timeActEditor->m_colors.m_trackBoundingBox);
+                            }
                         }
 
                         ImVec2 pos = ImVec2(contentMin.x + legendWidth - firstFrameUsed * framePixelWidth, contentMin.y + ItemHeight * trackIndex + 1 + customHeight);
@@ -1941,7 +1951,7 @@ namespace ImSequencer
                             const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
 
                             //Tracks
-                            if (focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                            if (focused && timeActEditor->focused && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                             {
                                 for (int j = 0; j < 3; j++)
                                 {

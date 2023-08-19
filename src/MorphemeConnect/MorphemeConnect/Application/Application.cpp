@@ -142,9 +142,10 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginPopupModal(tae_popup.c_str()))
 		{
+			static int selected_idx = -1;
 			static std::wstring filepath;
 
-			if (ImGui::Button("Load"))
+			if (ImGui::Button("Load") && selected_idx != -1)
 			{
 				tae.m_init = false;
 				tae = TimeActReader(PWSTR(filepath.c_str()));
@@ -168,7 +169,10 @@ void Application::RenderGUI(const char* title)
 				std::string tae_file = StringHelper::ToNarrow(path.filename().c_str());
 
 				if (ImGui::Selectable(tae_file.c_str()))
+				{
+					selected_idx = i;
 					filepath = path.c_str();
+				}
 			}
 			ImGui::EndChild();
 

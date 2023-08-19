@@ -720,8 +720,8 @@ namespace ImSequencer
 
                         ImVec2 textSize = ImGui::CalcTextSize(event_value.c_str());
                         ImVec2 textSizeIdx = ImGui::CalcTextSize(std::to_string(eventIdx).c_str());
-                        ImVec2 textP(slotP1.x + (slotP2.x - slotP1.x - textSize.x) / 2, slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
-                        ImVec2 textD(slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2, slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
+                        ImVec2 textP(ImMax(frameMin.x, (slotP1.x + 4)), slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
+                        ImVec2 textD(ImMax(frameMin.x, slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2), slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
                         ImVec2 textDIdx(slotD1.x + framePixelWidth / 2 + textSize.x / 3, slotT3.y - textSizeIdx.y);
                         ImVec2 textPLoop;
                         ImVec2 textDLoop;
@@ -1859,7 +1859,7 @@ namespace ImSequencer
 
                         ImVec2 textSize = ImGui::CalcTextSize(event_value.c_str());
                         ImVec2 textSizeIdx = ImGui::CalcTextSize(std::to_string(eventIdx).c_str());
-                        ImVec2 textP(slotP1.x + 4, slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
+                        ImVec2 textP(ImMax(frameMin.x, (slotP1.x + 4)), slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
                         ImVec2 textPLoop;
 
                         if ((slotP1.x <= (canvas_size.x + contentMin.x) || slotP1.x >= (contentMin.x + legendWidth)) && (slotP2.x >= (contentMin.x + legendWidth) || slotP2.x <= (canvas_size.x + contentMin.x)))

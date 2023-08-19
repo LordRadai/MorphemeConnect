@@ -46,7 +46,7 @@ struct TimeActEditor
         ImVec4 m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
         ImVec4 m_trackBoundingBoxActive = { 1.f, 1.f, 0.f, 1.f };
         ImVec4 m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };
-        ImVec4 m_cursorColor = { 1.f, 0.f, 0.f, 1.f };
+        ImVec4 m_cursorColor = { 0.f, 0.f, 0.f, 1.f };
     } m_colors;
 
     TimeActEditor();

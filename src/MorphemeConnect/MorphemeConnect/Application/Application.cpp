@@ -451,7 +451,10 @@ void Application::RenderGUI(const char* title)
 			ImGui::PopItemWidth();
 
 			if (this->m_timeActEditorFlags.m_save)
+			{
+				this->m_timeActEditorFlags.m_save = false;
 				track->SaveTimeActTrack();
+			}
 		}
 	}
 	ImGui::End();

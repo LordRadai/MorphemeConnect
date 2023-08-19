@@ -419,7 +419,7 @@ void Application::RenderGUI(const char* title)
 				this->m_timeActEditor.m_frameMax = max;
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
@@ -479,6 +479,7 @@ void Application::SettingsWindow()
 		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBox);
 		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBoxActive);
 		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_eventTrackEditor.m_colors.m_trackTextColor);
+		ImGui::ColorEdit4("Cursor Color", (float*)&this->m_eventTrackEditor.m_colors.m_cursorColor);
 
 		ImGui::EndTabItem();
 	}
@@ -492,6 +493,7 @@ void Application::SettingsWindow()
 		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBox);
 		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBoxActive);
 		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_timeActEditor.m_colors.m_trackTextColor);
+		ImGui::ColorEdit4("Cursor Color", (float*)&this->m_timeActEditor.m_colors.m_cursorColor);
 
 		ImGui::EndTabItem();
 	}

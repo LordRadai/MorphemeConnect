@@ -144,6 +144,8 @@ void Application::RenderGUI(const char* title)
 			ImGui::OpenPopup(tae_popup.c_str());
 		}
 
+		ImGui::SetNextWindowPos(ImGui::GetCurrentWindow()->Pos, ImGuiCond_Appearing);
+		ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Appearing);
 		if (ImGui::BeginPopupModal(tae_popup.c_str()))
 		{
 			static std::wstring filepath;

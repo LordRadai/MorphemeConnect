@@ -142,6 +142,8 @@ namespace ImSequencer
 
     bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, int sequenceOptions)
     {
+        static bool hovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+
         bool ret = false;
         ImGuiIO& io = ImGui::GetIO();
         int cx = (int)(io.MousePos.x);
@@ -272,7 +274,7 @@ namespace ImSequencer
             ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
 
             ImGui::BeginChildFrame(889, childFrameSize);
-            eventTrackEditor->focused = ImGui::IsWindowFocused();
+            eventTrackEditor->focused = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
             ImGui::InvisibleButton("contentBar", ImVec2(canvas_size.x, float(controlHeight)));
             const ImVec2 contentMin = ImGui::GetItemRectMin();
             const ImVec2 contentMax = ImGui::GetItemRectMax();
@@ -286,7 +288,7 @@ namespace ImSequencer
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
             ImRect legendResizeRect(ImVec2(canvas_pos.x + legendWidth - 2, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 2, canvas_pos.y + ItemHeight));
 
-            if (ImGui::IsWindowHovered() && focused && (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos)) || resizeLegend)
+            if (hovered && focused && (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos)) || resizeLegend)
             {
                 if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
@@ -307,7 +309,7 @@ namespace ImSequencer
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
             if (sequenceOptions & EDITOR_TRACK_ADD)
             {
-                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
+                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {
                     if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -465,7 +467,7 @@ namespace ImSequencer
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {                    
-                    if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -481,7 +483,7 @@ namespace ImSequencer
 
                 if (sequenceOptions & EDITOR_TRACK_RENAME)
                 {
-                    if (overLabel && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (overLabel && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -499,7 +501,7 @@ namespace ImSequencer
                 {
                     bool addButton = SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true);
                     
-                    if (addButton && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (addButton && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -515,7 +517,7 @@ namespace ImSequencer
                     {
                         for (size_t j = 0; j < eventTrackEditor->m_eventTracks[i].m_numEvents; j++)
                         {
-                            if (*selectedTrack == i && *selectedEvent == j && focused && ImGui::IsWindowHovered())
+                            if (*selectedTrack == i && *selectedEvent == j && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows))
                             {
                                 if (GetAsyncKeyState(VK_DELETE) & 1)
                                     delEvent = true;
@@ -891,7 +893,7 @@ namespace ImSequencer
                             const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
 
                             //Tracks
-                            if (ImGui::IsWindowHovered() && focused && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                            if (eventTrackEditor->focused && focused && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                             {
                                 if (!isDiscrete)
                                 {
@@ -955,7 +957,7 @@ namespace ImSequencer
                             //Looped entries
                             if (sequenceOptions & EDITOR_EVENT_LOOP)
                             {
-                                if (ImGui::IsWindowHovered() && focused && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                                if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && focused && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                                 {
                                     if (!isDiscrete)
                                     {
@@ -1234,7 +1236,7 @@ namespace ImSequencer
                             *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount + 10, eventTrackEditor->GetFrameMin()));
                         }
                     }
-                    else
+                    else if (focused && eventTrackEditor->focused)
                     {
                         if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
                         {
@@ -1446,7 +1448,7 @@ namespace ImSequencer
             ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
 
             ImGui::BeginChildFrame(889, childFrameSize);
-            timeActEditor->focused = ImGui::IsWindowFocused();
+            timeActEditor->focused = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
             ImGui::InvisibleButton("contentBar", ImVec2(canvas_size.x, float(controlHeight)));
             const ImVec2 contentMin = ImGui::GetItemRectMin();
             const ImVec2 contentMax = ImGui::GetItemRectMax();
@@ -1460,7 +1462,7 @@ namespace ImSequencer
             ImRect topRect(ImVec2(canvas_pos.x + legendWidth, canvas_pos.y), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + ItemHeight));
             ImRect legendResizeRect(ImVec2(canvas_pos.x + legendWidth - 2, canvas_pos.y), ImVec2(canvas_pos.x + legendWidth + 2, canvas_pos.y + ItemHeight));
 
-            if (focused && ImGui::IsWindowHovered() && (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos)) || resizeLegend)
+            if (focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && (!popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && legendResizeRect.Contains(io.MousePos)) || resizeLegend)
             {
                 if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                     ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
@@ -1481,7 +1483,7 @@ namespace ImSequencer
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
             if (sequenceOptions & EDITOR_TRACK_ADD)
             {
-                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered() && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
+                if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {
                     if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -1623,7 +1625,7 @@ namespace ImSequencer
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {
-                    if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (SequencerAddRemoveButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -1639,7 +1641,7 @@ namespace ImSequencer
 
                 if (sequenceOptions & EDITOR_TRACK_RENAME)
                 {
-                    if (focused && ImGui::IsWindowHovered() && overLabel && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && overLabel && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -1655,7 +1657,7 @@ namespace ImSequencer
 
                 if (sequenceOptions & EDITOR_EVENT_ADD)
                 {
-                    if (SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true) && focused && ImGui::IsWindowHovered() && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
+                    if (SequencerAddDelButton(draw_list, ImVec2(contentMin.x + legendWidth - ItemHeight + 2 - 10, tpos.y + 2), ImVec2(ItemHeight * 0.8f, ItemHeight * 0.8f), true) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1)
                     {
                         if (ImGui::GetMouseCursor() == ImGuiMouseCursor_Arrow)
                             ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -1939,7 +1941,7 @@ namespace ImSequencer
                             const unsigned int quadColor[] = { 0x20FFFFFF, 0x20FFFFFF, 0x20FFFFFF };
 
                             //Tracks
-                            if (focused && ImGui::IsWindowHovered() && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                            if (focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                             {
                                 for (int j = 0; j < 3; j++)
                                 {
@@ -1974,7 +1976,7 @@ namespace ImSequencer
                             //Looped entries
                             if (sequenceOptions & EDITOR_EVENT_LOOP)
                             {
-                                if (focused && ImGui::IsWindowHovered() && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
+                                if (focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && movingTrack == -1 && (sequenceOptions & EDITOR_EVENT_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                                 {
                                     for (int j = 0; j < 3; j++)
                                     {
@@ -2212,7 +2214,7 @@ namespace ImSequencer
                             *firstFrame = ImClamp(*firstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount + 10, timeActEditor->GetFrameMin()));
                         }
                     }
-                    else
+                    else if (focused && timeActEditor->focused)
                     {
                         if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
                         {

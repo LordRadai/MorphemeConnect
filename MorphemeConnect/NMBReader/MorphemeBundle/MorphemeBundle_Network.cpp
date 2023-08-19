@@ -1,6 +1,6 @@
 #include "MorphemeBundle_Network.h"
 
-NodeDataAttribBase::NodeDataAttribBase(byte* data)
+NodeDataAttribBase::NodeDataAttribBase(BYTE* data)
 {
     this->field0_0x0 = *(int*)(data);
     this->field1_0x4 = *(int*)(data + 0x4);
@@ -9,7 +9,7 @@ NodeDataAttribBase::NodeDataAttribBase(byte* data)
     this->padding = *(int*)(data + 0xC);
 }
 
-NodeDataAttrib_Unk::NodeDataAttrib_Unk(byte* data, int size)
+NodeDataAttrib_Unk::NodeDataAttrib_Unk(BYTE* data, int size)
 {
     this->m_attribBase = NodeDataAttribBase(data);
 
@@ -17,10 +17,10 @@ NodeDataAttrib_Unk::NodeDataAttrib_Unk(byte* data, int size)
 
     if (data_size > -1)
     {
-        this->m_content = new byte[data_size];
+        this->m_content = new BYTE[data_size];
 
         for (size_t i = 0; i < data_size; i++)
-            this->m_content[i] = *(data + 0x10 + (byte)i);
+            this->m_content[i] = *(data + 0x10 + (BYTE)i);
     }  
 }
 
@@ -33,12 +33,12 @@ void NodeDataAttrib_Unk::SaveToFile(ofstream* out)
     MemHelper::WriteWord(out, (LPVOID*)&this->m_attribBase.padding);
 }
 
-NodeDataAttrib_Bool::NodeDataAttrib_Bool(byte* data)
+NodeDataAttrib_Bool::NodeDataAttrib_Bool(BYTE* data)
 {
     this->m_bool = *(bool*)(data + 0x10);
 }
 
-NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
+NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(BYTE* data)
 {
     this->m_eventTracks[0].m_trackCount = *(int*)(data + 0x10);
     this->m_eventTracks[0].padding = *(int*)(data + 0x14);
@@ -98,7 +98,7 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(byte* data)
     }
 }
 
-NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(byte* data)
+NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(BYTE* data)
 {
     this->m_pVar0 = *(UINT64*)(data + 0x10);
     this->m_pVar8 = *(UINT64*)(data + 0x18);
@@ -120,18 +120,18 @@ NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(byte* data)
     this->m_pad1 = *(int*)(data + 0x70);
     this->m_animIdx = *(int*)(data + 0x74);
     this->m_iVar68 = *(int*)(data + 0x78);
-    this->m_bVar6C = *(byte*)(data + 0x7C);
-    this->m_bVar6D = *(byte*)(data + 0x7D);
-    this->m_bVar6E = *(byte*)(data + 0x7E);
-    this->m_pad2 = *(byte*)(data + 0x7F);
+    this->m_bVar6C = *(BYTE*)(data + 0x7C);
+    this->m_bVar6D = *(BYTE*)(data + 0x7D);
+    this->m_bVar6E = *(BYTE*)(data + 0x7E);
+    this->m_pad2 = *(BYTE*)(data + 0x7F);
     this->m_fVar70 = *(float*)(data + 0x80);
     this->m_trackLen = *(float*)(data + 0x84);
     this->m_animLen = *(float*)(data + 0x88);
     this->m_fVar7C = *(float*)(data + 0x8C);
-    this->m_bVar80 = *(byte*)(data + 0x90);
+    this->m_bVar80 = *(BYTE*)(data + 0x90);
 
     for (size_t i = 0; i < 15; i++)
-        this->m_pad3[i] = *(byte*)(data + 0x91 + (byte)i);
+        this->m_pad3[i] = *(BYTE*)(data + 0x91 + (BYTE)i);
 }
 
 void NodeDataSet::SaveToFile(ofstream* out)
@@ -145,17 +145,17 @@ void NodeDataSet::SaveToFile(ofstream* out)
     MemHelper::WriteByteArray(out, (LPVOID*)this->m_attrib->m_content, this->m_size);
 }
 
-NodeDef::NodeDef(byte* data)
+NodeDef::NodeDef(BYTE* data)
 {
     this->m_nodeTypeID = *(NodeType*)(data);
-    this->m_flags1 = *(byte*)(data + 0x4);
-    this->m_flags2 = *(byte*)(data + 0x5);
+    this->m_flags1 = *(BYTE*)(data + 0x4);
+    this->m_flags2 = *(BYTE*)(data + 0x5);
     this->m_nodeID = *(short*)(data + 0x6);
     this->m_parentNodeID = *(short*)(data + 0x8);
     this->m_numChildNodeIDs = *(short*)(data + 0xA);
     this->field7_0xc = *(short*)(data + 0xC);
-    this->m_numControlParamAndOpNodeIDs = *(byte*)(data + 0xE);
-    this->field8_0xf = *(byte*)(data + 0xF);
+    this->m_numControlParamAndOpNodeIDs = *(BYTE*)(data + 0xE);
+    this->field8_0xf = *(BYTE*)(data + 0xF);
     this->m_numDataSet = *(short*)(data + 0x10);
     this->field10_0x12 = *(short*)(data + 0x12);
     this->padding = *(int*)(data + 0x14);
@@ -167,7 +167,7 @@ NodeDef::NodeDef(byte* data)
 
         UINT64 offset = *(UINT64*)(data + 0x20);
         for (size_t i = 0; i < this->m_numChildNodeIDs; i++)
-            this->m_childNodeIDs[i] = *(short*)(data + offset + (byte)i * 0x2);
+            this->m_childNodeIDs[i] = *(short*)(data + offset + (BYTE)i * 0x2);
     }
 
     if (this->m_numControlParamAndOpNodeIDs > 0)
@@ -176,7 +176,7 @@ NodeDef::NodeDef(byte* data)
 
         UINT64 offset = *(UINT64*)(data + 0x28);
         for (size_t i = 0; i < this->m_numChildNodeIDs; i++)
-            this->m_controlParamAndOpNodeIDs[i] = *(int*)(data + offset + (byte)i * 0x2);
+            this->m_controlParamAndOpNodeIDs[i] = *(int*)(data + offset + (BYTE)i * 0x2);
     }
 
     if (m_numDataSet > 0)
@@ -198,7 +198,7 @@ NodeDef::NodeDef(byte* data)
     this->node_def = *(sMorphemeNodeDef**)(data + 0x70);
 }
 
-bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, int setCount)
+bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, BYTE* srcNodeData, int setCount)
 {
     uint64_t offset = *(uint64_t*)(srcNodeData + 0x30);
     uint64_t attrib_data_offset = *(uint64_t*)(srcNodeData + offset);
@@ -207,11 +207,11 @@ bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, i
     {
         for (size_t i = 0; i < setCount; i++)
         {
-            attrib_data_offset = *(uint64_t*)(srcNodeData + offset + (byte)i * 0x18);
+            attrib_data_offset = *(uint64_t*)(srcNodeData + offset + (BYTE)i * 0x18);
 
-            dst[i].m_size = *(uint64_t*)(srcNodeData + offset + 0x8 + (byte)i * 0x18);
-            dst[i].m_alignment = *(int*)(srcNodeData + offset + 0x10 + (byte)i * 0x18);
-            dst[i].m_iVar0 = *(int*)(srcNodeData + offset + 0x14 + (byte)i * 0x18);
+            dst[i].m_size = *(uint64_t*)(srcNodeData + offset + 0x8 + (BYTE)i * 0x18);
+            dst[i].m_alignment = *(int*)(srcNodeData + offset + 0x10 + (BYTE)i * 0x18);
+            dst[i].m_iVar0 = *(int*)(srcNodeData + offset + 0x14 + (BYTE)i * 0x18);
 
             if (attrib_data_offset != 0)
             {
@@ -221,11 +221,11 @@ bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, i
                 {
                 case ATTRIB_TYPE_SOURCE_ANIM:
                     delete[] dst[i].m_attrib->m_content;
-                    dst[i].m_attrib->m_content = (byte*)new NodeDataAttrib_SourceAnim((srcNodeData + attrib_data_offset));
+                    dst[i].m_attrib->m_content = (BYTE*)new NodeDataAttrib_SourceAnim((srcNodeData + attrib_data_offset));
                     break;
                 case ATTRIB_TYPE_SOURCE_EVENT_TRACKS:
                     delete[] dst[i].m_attrib->m_content;
-                    dst[i].m_attrib->m_content = (byte*)new NodeDataAttrib_EventTrack((srcNodeData + attrib_data_offset));
+                    dst[i].m_attrib->m_content = (BYTE*)new NodeDataAttrib_EventTrack((srcNodeData + attrib_data_offset));
                     break;
                 default:
                     break;
@@ -349,7 +349,7 @@ int NodeDef::CalculateNodeSize()
     return size;
 }
 
-MorphemeBundle_Network::BundleData_Network::BundleData_Network(byte* data)
+MorphemeBundle_Network::BundleData_Network::BundleData_Network(BYTE* data)
 {
     this->network_node_def = NodeDef(data);
 
@@ -361,7 +361,7 @@ MorphemeBundle_Network::BundleData_Network::BundleData_Network(byte* data)
 
     for (size_t i = 0; i < this->m_numNodes; i++)
     {
-        byte* node_ptr = data + node_list_ptr[i];
+        BYTE* node_ptr = data + node_list_ptr[i];
         this->m_nodes[i] = new NodeDef(node_ptr);
     }
 

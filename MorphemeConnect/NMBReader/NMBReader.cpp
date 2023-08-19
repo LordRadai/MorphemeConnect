@@ -81,7 +81,7 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 
 				this->m_skeletonMap[i].GenerateBundle(&nmb_out);
 
-				byte pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
+				BYTE pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
 				MemHelper::WriteByteArray(&nmb_out, (LPVOID*)pad_array, 4);
 			}
 		}

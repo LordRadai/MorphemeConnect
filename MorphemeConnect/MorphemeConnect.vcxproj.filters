@@ -91,6 +91,12 @@
     <Filter Include="File di origine\inih">
       <UniqueIdentifier>{406c2570-61f9-4b83-b07d-9c190f7038c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\StringHelper">
+      <UniqueIdentifier>{7b90644c-11ff-416d-be79-72acd5d32f08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\StringHelper">
+      <UniqueIdentifier>{949787a2-5778-427f-80cd-64c861caf40a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -186,6 +192,9 @@
     <ClInclude Include="inih\ini.h">
       <Filter>File di intestazione\inih</Filter>
     </ClInclude>
+    <ClInclude Include="StringHelper\StringHelper.h">
+      <Filter>File di intestazione\StringHelper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -265,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="inih\INIReader.cpp">
       <Filter>File di origine\inih</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper\StringHelper.cpp">
+      <Filter>File di origine\StringHelper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

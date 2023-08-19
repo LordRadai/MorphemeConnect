@@ -61,14 +61,36 @@ void Debug::Panic(const char* src_module, const char* fmt, ...)
 	abort();
 }
 
-void Debug::Alert(UINT type, const char* src_module, const char* fmt, ...)
+void Debug::Alert(MsgLevel level, const char* src_module, const char* fmt, ...)
 {
 	va_list args;
 	__va_start(&args, fmt);
 
 	char msg[256];
+	UINT type = MB_ICONASTERISK;
 
 	vsprintf_s(msg, fmt, args);
+
+	Debug::DebuggerMessage(level, fmt, args);
+
+	switch (level)
+	{
+	case Debug::LVL_DEBUG:
+		type = MB_ICONINFORMATION;
+		break;
+	case Debug::LVL_INFO:
+		type = MB_ICONINFORMATION;
+		break;
+	case Debug::LVL_WARN:
+		type = MB_ICONEXCLAMATION;
+		break;
+	case Debug::LVL_ERROR:
+		type = MB_ICONERROR;
+		break;
+	default:
+		Panic("Debug.cpp", "Invalid debug level\n");
+		return;
+	}
 
 	ShowCursor(true);
 	MessageBoxA(NULL, msg, src_module, type);

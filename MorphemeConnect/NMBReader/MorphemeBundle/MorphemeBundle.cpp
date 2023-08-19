@@ -37,7 +37,7 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 
 	if (this->m_dataSize > 0)
 	{
-		this->m_data = new byte[this->m_dataSize];
+		this->m_data = new BYTE[this->m_dataSize];
 		MemHelper::ReadByteArray(pFile, (LPVOID*)this->m_data, this->m_dataSize);
 	}
 	else

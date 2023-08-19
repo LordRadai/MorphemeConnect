@@ -4,7 +4,7 @@
 class MorphemeBundle : public MorphemeBundle_Base
 {
 public:
-	byte* m_data;				//Pointer in which memory will be allocated
+	BYTE* m_data;				//Pointer in which memory will be allocated
 
 	MorphemeBundle();
 	MorphemeBundle(ifstream* pFile);

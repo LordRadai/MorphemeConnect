@@ -149,10 +149,10 @@ struct StringTable {
 
 struct sMorphemeNodeDef {
     int node_type;
-    byte field1_0x4;
-    byte field2_0x5;
+    BYTE field1_0x4;
+    BYTE field2_0x5;
     short field3_0x6;
-    byte* array;
+    BYTE* array;
 };
 
 struct sMessageDef {
@@ -172,16 +172,16 @@ struct NodeDataAttribBase
     int padding;
 
     NodeDataAttribBase() {}
-    NodeDataAttribBase(byte* data);
+    NodeDataAttribBase(BYTE* data);
 };
 
 struct NodeDataAttrib_Unk
 {
     NodeDataAttribBase m_attribBase;
-    byte* m_content;
+    BYTE* m_content;
 
     NodeDataAttrib_Unk() {}
-    NodeDataAttrib_Unk(byte* data, int size);
+    NodeDataAttrib_Unk(BYTE* data, int size);
     void SaveToFile(ofstream* out);
 };
 
@@ -200,7 +200,7 @@ struct NodeDataAttrib_Bool
     bool m_bool;
 
     NodeDataAttrib_Bool() {}
-    NodeDataAttrib_Bool(byte* data);
+    NodeDataAttrib_Bool(BYTE* data);
 };
 
 struct EventTrackList {
@@ -215,7 +215,7 @@ struct NodeDataAttrib_EventTrack
     EventTrackList m_eventTracks[3];
 
     NodeDataAttrib_EventTrack() {}
-    NodeDataAttrib_EventTrack(byte* data);
+    NodeDataAttrib_EventTrack(BYTE* data);
 };
 
 struct NodeDataAttrib_SourceAnim
@@ -252,19 +252,19 @@ struct NodeDataAttrib_SourceAnim
     BYTE m_pad3[15];
 
     NodeDataAttrib_SourceAnim() {}
-    NodeDataAttrib_SourceAnim(byte* data);
+    NodeDataAttrib_SourceAnim(BYTE* data);
 };
 
 struct NodeDef {
     NodeType m_nodeTypeID = NodeType_NetworkInstance;
-    byte m_flags1 = 0;
-    byte m_flags2 = 0;
+    BYTE m_flags1 = 0;
+    BYTE m_flags2 = 0;
     short m_nodeID = 0;
     short m_parentNodeID = 0;
     uint16_t m_numChildNodeIDs = 0;
     uint16_t field7_0xc = 0;
-    byte m_numControlParamAndOpNodeIDs = 0;
-    byte field8_0xf = 0;
+    BYTE m_numControlParamAndOpNodeIDs = 0;
+    BYTE field8_0xf = 0;
     uint16_t m_numDataSet = 0;
     uint16_t field10_0x12 = 0;
     int padding = 0;
@@ -283,15 +283,15 @@ struct NodeDef {
     UINT64 initFn = NULL;
     UINT64 transitFn = NULL;
     sMorphemeNodeDef* node_def = NULL;
-    byte field27_0x80 = 0;
-    byte padding1[7];
+    BYTE field27_0x80 = 0;
+    BYTE padding1[7];
     uint64_t field35_0x88 = 0;
     uint64_t field36_0x8C = 0;
 
     NodeDef() {}
-    NodeDef(byte* data);
+    NodeDef(BYTE* data);
 
-    bool LoadNodeData(NodeType type, NodeDataSet* dst, byte* srcNodeData, int setCount);
+    bool LoadNodeData(NodeType type, NodeDataSet* dst, BYTE* srcNodeData, int setCount);
     void SaveToFile(ofstream* out);
     int CalculateNodeSize();
 };
@@ -333,7 +333,7 @@ public:
         uint64_t field29_0x130;
         uint64_t field30_0x138;
 
-        BundleData_Network(byte* data);
+        BundleData_Network(BYTE* data);
 	};
 
 	BundleData_Network* m_data;

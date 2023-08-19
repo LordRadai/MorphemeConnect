@@ -1,7 +1,9 @@
 #include "Application.h"
 #include "../extern.h"
 #include "../MathHelper/MathHelper.h"
+#include "../StringHelper/StringHelper.h"
 #include <Shlwapi.h>
+#include <filesystem>
 
 Application::Application()
 {
@@ -126,6 +128,51 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Assets");
 	{
+		if (this->m_eventTrackEditorFlags.load_tae && this->m_eventTrackEditorFlags.tae_list.size() > 0)
+		{
+			ImGui::SetNextWindowSize(ImVec2(300, 400));
+
+			ImGui::OpenPopup("tae_selection");
+		}
+
+		if (ImGui::BeginPopupModal("tae_selection"))
+		{
+			static std::wstring filepath;
+			std::string header = "TimeAct files belonging to c" + std::to_string(this->m_eventTrackEditorFlags.chr_id);
+			ImGui::Text(header.c_str());
+			ImGui::Separator();
+
+			if (ImGui::Button("Load"))
+			{
+				tae.m_init = false;
+				tae = TimeActReader(PWSTR(filepath.c_str()));
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", tae.m_filePath, tae.m_fileSize);
+
+				this->m_eventTrackEditorFlags.load_tae = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel"))
+			{
+				this->m_eventTrackEditorFlags.load_tae = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::BeginChild("file_list");
+			for (int i = 0; i < this->m_eventTrackEditorFlags.tae_list.size(); i++)
+			{
+				std::filesystem::path path = this->m_eventTrackEditorFlags.tae_list[i];
+				std::string tae_file = StringHelper::ToNarrow(path.filename().c_str());
+
+				if (ImGui::Selectable(tae_file.c_str()))
+					filepath = path.c_str();
+			}
+			ImGui::EndChild();
+
+			ImGui::EndPopup();
+		}
+
 		ImGui::BeginTabBar("assets tab bar");
 		if (ImGui::BeginTabItem("NSA"))
 		{
@@ -231,26 +278,39 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("EventTrack");
 	{
-		if (ImGui::Button("Load")) 
-		{ 
-			if (this->nmb.m_init)
+		if (this->nmb.m_init)
+		{
+			if (ImGui::Button("Load"))
 			{
-				this->m_eventTrackEditorFlags.m_load = true;
-				selectedTrack = -1;
-				selectedEvent = -1;
+				if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
+				{
+					this->m_eventTrackEditorFlags.m_load = true;
+					selectedTrack = -1;
+					selectedEvent = -1;
+				}
+				else
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No animation is selected\n");
 			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Save"))
+			{
+				if (this->m_eventTrackEditor.GetTrackCount() > 0)
+					this->m_eventTrackEditorFlags.m_save = true;
+				else
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No Event Tracks are loaded\n");
+			}
+
+
+			if (this->m_eventTrackEditor.m_animIdx > -1)
+				ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
 			else
-				Debug::Alert(MB_ICONERROR, "Application.cpp", "No NMB file is currently loaded");
+				ImGui::Text("");
+
+			ImGui::BeginChild("sequencer");
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME);
+			ImGui::EndChild();
 		}
-
-		if (this->m_eventTrackEditor.m_animIdx > -1)
-			ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
-		else
-			ImGui::Text("");
-
-		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, &firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME);
-		ImGui::EndChild();
 	}
 	ImGui::End();
 
@@ -283,7 +343,11 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputFloat("End Time", &endTime, 0, 0);
 			ImGui::PopItemWidth();
 
-			track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
+			if (this->m_eventTrackEditorFlags.m_save)
+			{
+				this->m_eventTrackEditorFlags.m_save = false;
+				track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
+			}
 		}
 	}
 	ImGui::End();
@@ -297,40 +361,52 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct");
 	{
-		if (ImGui::Button("Load"))
+		if (this->tae.m_init)
 		{
-			if (this->tae.m_init)
+			if (ImGui::Button("Load"))
 			{
-				this->m_timeActEditorFlags.m_load = true;
-				selectedTrackTae = -1;
+				if (this->tae.m_init)
+				{
+					this->m_timeActEditorFlags.m_load = true;
+					selectedTrackTae = -1;
+				}
+				else
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct file is currently loaded\n");
 			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Save"))
+			{
+				if (this->tae.m_init)
+					this->m_timeActEditorFlags.m_save = true;
+				else
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct track is currently loaded\n");
+			}
+
+			if (this->m_timeActEditorFlags.m_taeId > -1)
+				ImGui::Text(std::to_string(this->m_timeActEditorFlags.m_taeId).c_str());
 			else
-				Debug::Alert(MB_ICONERROR, "Application.cpp", "No TimeAct file is currently loaded");
-		}
+				ImGui::Text("");
 
-		if (this->m_timeActEditorFlags.m_taeId > -1)
-			ImGui::Text(std::to_string(this->m_timeActEditorFlags.m_taeId).c_str());
-		else
-			ImGui::Text("");
+			int max = 0;
 
-		int max = 0;
-
-		for (int i = 0; i < m_timeActEditor.m_tracks.size(); i++)
-		{
-			for (int j = 0; j < m_timeActEditor.m_tracks[i].m_count; j++)
+			for (int i = 0; i < m_timeActEditor.m_tracks.size(); i++)
 			{
-				if (m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration > max)
-					max = m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration;
+				for (int j = 0; j < m_timeActEditor.m_tracks[i].m_count; j++)
+				{
+					if (m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration > max)
+						max = m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration;
+				}
 			}
+
+
+			if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
+				this->m_timeActEditor.m_frameMax = max;
+
+			ImGui::BeginChild("sequencer");
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
+			ImGui::EndChild();
 		}
-
-
-		if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
-			this->m_timeActEditor.m_frameMax = max;
-
-		ImGui::BeginChild("sequencer");
-		ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD);
-		ImGui::EndChild();
 	}
 	ImGui::End();
 
@@ -356,7 +432,8 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputFloat("End Time", &endTime);
 			ImGui::PopItemWidth();
 
-			track->SaveTimeActTrack();
+			if (this->m_timeActEditorFlags.m_save)
+				track->SaveTimeActTrack();
 		}
 	}
 	ImGui::End();
@@ -389,10 +466,7 @@ void Application::ProcessVariables()
 		if (this->nmb.m_init)
 			this->SaveFile();
 		else
-		{
-			Debug::DebuggerMessage(Debug::LVL_ERROR, "No file is loaded\n");
-			Debug::Alert(MB_ICONERROR, "Application.cpp", "No file is loaded\n");
-		}
+			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No file is loaded\n");
 	}
 
 	if (this->nmb.m_init == false)
@@ -486,10 +560,7 @@ void Application::ProcessVariables()
 			}
 
 			if (found == false)
-			{
-				Debug::DebuggerMessage(Debug::LVL_INFO, "This animation does not have any event tracks associated to it\n");
-				Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "This animation does not have any event tracks associated to it\n");
-			}
+				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This animation does not have any event tracks associated to it\n");
 		}
 	}
 
@@ -538,21 +609,14 @@ void Application::ProcessVariables()
 							this->m_timeActEditor.m_frameMin = 0;
 						}
 						else
-						{
-							Debug::DebuggerMessage(Debug::LVL_INFO, "This TimeAct track has no events associated to it\n");
-							Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "This TimeAct track has no events associated to it\n");
-						}
+							Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 
 						break;
 					}
 				}
 			}
 			else
-			{
-				Debug::DebuggerMessage(Debug::LVL_INFO, "No TimeAct is loaded\n");
-				Debug::Alert(MB_ICONINFORMATION, "Application.cpp", "No TimeAct is loaded\n");
-			}
-			
+				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct is loaded\n");			
 		}
 	}
 }
@@ -561,24 +625,46 @@ void Application::NetworkCleanup()
 {
 }
 
-int Application::GetChrIdFromNmbFileName(std::string name)
+int Application::GetChrIdFromNmbFileName(std::wstring name)
 {
-	std::string chr_id;
+	std::wstring chr_id_str;
+	int chr_id;
 
-	int lastCPos = name.find_last_of("\\c");
+	int lastCPos = name.find_last_of(L"\\c");
 
-	chr_id = name.substr(lastCPos + 1, 4);
+	chr_id_str = name.substr(lastCPos + 1, 4);
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %s\n", chr_id);
+	chr_id = stoi(chr_id_str);
 
-	return stoi(chr_id);
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %d\n", chr_id);
+
+	return chr_id;
 }
 
-std::string getTaeFileListFromChrId(std::string tae_path, int chr_id)
+std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, int chr_id)
 {
-	std::string chr_id_str = std::to_string(chr_id);
+	std::vector<std::wstring> files;
 
-	return "";
+	std::wstring chr_id_str = std::to_wstring(chr_id);
+	
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "TimeAct belonging to c%d:\n", chr_id);
+	for (const auto& entry : std::filesystem::directory_iterator(tae_path))
+	{
+		std::wstring filename = entry.path().filename();
+		std::wstring file_chr_id_str = filename.substr(1, 4);
+		int file_chr_id = stoi(file_chr_id_str);
+
+		if (file_chr_id == chr_id)
+		{
+			Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
+			files.push_back(entry.path());
+		}
+	}
+
+	if (files.size() == 0)
+		Debug::Alert(Debug::LVL_DEBUG, "Application.cpp", "Found 0 TimeAct files that belong to c%d in %ws\n", chr_id, tae_path);
+
+	return files;
 }
 
 void Application::LoadFile()
@@ -617,17 +703,47 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						PWSTR format = PathFindExtensionW(pszFilePath);
-						std::wstring extension = std::wstring(format);
+						std::filesystem::path filepath = std::wstring(pszFilePath);
 
-						if (extension.compare(L".nmb") == 0)
+						if (filepath.extension() == ".nmb")
 						{
 							nmb.m_init = false;
 							nmb = NMBReader(pszFilePath);
 							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);							
+							
+							this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(nmb.m_filePath);
+
+							bool found = false;
+
+							std::filesystem::path filepath = pszFilePath;
+							do
+							{
+								std::wstring parent_path = filepath.parent_path();
+								filepath = parent_path;
+
+								int lastDirPos = parent_path.find_last_of(L"\\");
+
+								std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
+
+								if (folder.compare(L"\\") == 0)
+									break;
+
+								if (folder.compare(L"\\Game") == 0)
+								{	
+									found = true;
+									break;
+								}
+							} while (true);
+
+							if (found)
+							{
+								filepath += "\\timeact\\chr";
+								this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath, this->m_eventTrackEditorFlags.chr_id);
+								this->m_eventTrackEditorFlags.load_tae = true;
+							}
 						}
 
-						if (extension.compare(L".tae") == 0)
+						if (filepath.extension() == ".tae")
 						{
 							tae.m_init = false;
 							tae = TimeActReader(pszFilePath);
@@ -683,25 +799,19 @@ void Application::SaveFile()
 					{
 						if (nmb.m_init)
 						{
-							PWSTR format = PathFindExtensionW(pszOutFilePath);
-							std::wstring extension = std::wstring(format);
+							std::filesystem::path filepath = std::wstring(pszOutFilePath);
 
-							if (extension.compare(L".nmb") == 0)
+							if (filepath.extension() == ".nmb")
 							{
 								bool status = nmb.SaveToFile(pszOutFilePath);
 
 								if (status)
 									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);
 								else
-								{
-									Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to generate NMB file\n");
-									Debug::Alert(MB_ICONERROR, "Failed to generate file\n", "NMBReader.cpp");
-								}
+									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
 							}
 							else
-							{
-								Debug::Alert(MB_ICONERROR, "Application.cpp", "Saving TimeAct files is not supported yet\n");
-							}
+								Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Saving TimeAct files is not supported yet\n");
 						}
 					}
 					pItem->Release();

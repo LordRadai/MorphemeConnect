@@ -13,7 +13,7 @@ struct FileNameLookupTable
 	char* m_strings;
 
 	FileNameLookupTable() {}
-	FileNameLookupTable(byte* data)
+	FileNameLookupTable(BYTE* data)
 	{	
 		this->m_elemCount = *(int*)(data);
 		this->m_stringSize = *(int*)(data + 0x4);
@@ -69,7 +69,7 @@ struct FileNameLookupTable
 		{
 			int pad_count = 4 - remainder;
 
-			byte* pad = new byte[pad_count];
+			BYTE* pad = new BYTE[pad_count];
 
 			for (size_t i = 0; i < pad_count; i++)
 				pad[i] = 0xCD;
@@ -96,7 +96,7 @@ public:
 		int* m_hash;
 
 		BundleData_FileNameLookupTable() {}
-		BundleData_FileNameLookupTable(byte* data);
+		BundleData_FileNameLookupTable(BYTE* data);
 	};
 
 	BundleData_FileNameLookupTable* m_data;

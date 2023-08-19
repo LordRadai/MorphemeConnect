@@ -35,6 +35,9 @@ public:
 		bool m_save = false;
 		int m_targetAnimIdx = -1;
 		float m_lenMult = 1.f;
+		bool load_tae = false;
+		std::vector<std::wstring> tae_list;
+		int chr_id;
 
 	} m_eventTrackEditorFlags;
 
@@ -61,5 +64,5 @@ public:
 	void LoadFile();
 	void SaveFile();
 	void NetworkCleanup();
-	int GetChrIdFromNmbFileName(std::string name);
+	int GetChrIdFromNmbFileName(std::wstring name);
 };

@@ -143,10 +143,7 @@ void TimeActEditor::ReloadTracks()
 			this->m_tracks.push_back(&this->m_source->m_taeData->m_groups[j]);
 	}
 	else
-	{
-		Debug::DebuggerMessage(Debug::LVL_INFO, "This TimeAct track has no events associated to it\n");
-		Debug::Alert(MB_ICONINFORMATION, "TimeActEditor.cpp", "This TimeAct track has no events associated to it\n");
-	}
+		Debug::Alert(Debug::LVL_INFO, "TimeActEditor.cpp", "This TimeAct track has no events associated to it\n");
 }
 
 void TimeActEditor::Clear()

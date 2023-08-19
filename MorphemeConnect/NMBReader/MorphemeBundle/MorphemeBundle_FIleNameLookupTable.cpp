@@ -1,6 +1,6 @@
 #include "MorphemeBundle_FileNameLookupTable.h"
 
-MorphemeBundle_FileNameLookupTable::BundleData_FileNameLookupTable::BundleData_FileNameLookupTable(byte* data)
+MorphemeBundle_FileNameLookupTable::BundleData_FileNameLookupTable::BundleData_FileNameLookupTable(BYTE* data)
 {
 	this->m_animTableOffset = *(UINT64*)(data);
 	this->m_formatTableOffset = *(UINT64*)(data + 0x8);
@@ -86,7 +86,7 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 	{
 		int pad_count = 4 - remainder;
 
-		byte* pad = new byte[pad_count];
+		BYTE* pad = new BYTE[pad_count];
 
 		for (size_t i = 0; i < pad_count; i++)
 			pad[i] = 0;

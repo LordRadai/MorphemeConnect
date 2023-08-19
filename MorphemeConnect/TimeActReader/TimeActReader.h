@@ -7,7 +7,7 @@ public:
 	struct EventData
 	{
 		UINT64 m_id;
-		byte m_args[8];
+		BYTE m_args[8];
 
 		EventData() {}
 
@@ -153,7 +153,7 @@ public:
 	std::vector<TimeActEvent> m_events;
 	std::vector<EventGroup> m_groups;
 	std::vector<float> m_times;
-	byte m_unkData[32];
+	BYTE m_unkData[32];
 	int m_eventCount;
 	int m_eventGroupCount;
 	int m_timeCount;
@@ -255,10 +255,10 @@ class Header
 {
 public:
 	char m_magic[4];
-	byte m_bigEndian;
-	byte m_bVar5;
-	byte m_bVar6;
-	byte m_is64Bit;
+	BYTE m_bigEndian;
+	BYTE m_bVar5;
+	BYTE m_bVar6;
+	BYTE m_is64Bit;
 	int m_version;
 	int m_fileSize;
 	UINT64 m_flagsOffset;
@@ -267,7 +267,7 @@ public:
 	UINT64 m_unkFileDataOffset;
 	UINT64 m_iVar30;
 	UINT64 m_iVar38;
-	byte m_flags[16];
+	BYTE m_flags[16];
 	int m_fileID;
 	int m_taeCount;
 	UINT64 m_taeOffset;
@@ -275,7 +275,7 @@ public:
 	UINT64 m_iVar68;
 	UINT64 m_taeCount2;
 	UINT64 m_taeDataOffset;
-	byte m_unkData[56];
+	BYTE m_unkData[56];
 
 	Header() {}
 	Header(ifstream* tae)

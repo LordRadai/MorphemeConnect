@@ -1084,15 +1084,22 @@ namespace ImSequencer
                     float cursorOffset = contentMin.x + legendWidth + (*currentFrame - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
                     draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), 0xFF0000FF, cursorWidth);
 
-                    draw_list->PopClipRect();
-                    draw_list->PopClipRect();
                     char tmps[512];
 
-                    if (*currentFrame != 0 && *currentFrame != eventTrackEditor->GetFrameMax())
+                    if (*currentFrame != eventTrackEditor->GetFrameMin() && *currentFrame != eventTrackEditor->GetFrameMax())
                     {
+                        draw_list->PopClipRect();
+                        draw_list->PopClipRect();
+
                         ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(*currentFrame));
                         draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
                     }
+                }
+
+                if (*currentFrame == eventTrackEditor->GetFrameMin() || *currentFrame == eventTrackEditor->GetFrameMax())
+                {
+                    draw_list->PopClipRect();
+                    draw_list->PopClipRect();
                 }
 
                 // copy paste
@@ -2052,15 +2059,22 @@ namespace ImSequencer
                     float cursorOffset = contentMin.x + legendWidth + (*currentFrame - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
                     draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), 0xFF0000FF, cursorWidth);
 
-                    draw_list->PopClipRect();
-                    draw_list->PopClipRect();
                     char tmps[512];
 
-                    if (*currentFrame != 0 && *currentFrame != timeActEditor->GetFrameMax())
+                    if (*currentFrame != timeActEditor->GetFrameMin() && *currentFrame != timeActEditor->GetFrameMax())
                     {
+                        draw_list->PopClipRect();
+                        draw_list->PopClipRect();
+
                         ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", MathHelper::FrameToTime(*currentFrame));
                         draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
                     }
+                }
+
+                if (*currentFrame == timeActEditor->GetFrameMin() || *currentFrame == timeActEditor->GetFrameMax())
+                {
+                    draw_list->PopClipRect();
+                    draw_list->PopClipRect();
                 }
 
                 // copy paste

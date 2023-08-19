@@ -92,7 +92,7 @@ void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 
 	if (pad_count > 0)
 	{
-		byte* pad_bytes = new byte[pad_count];
+		BYTE* pad_bytes = new BYTE[pad_count];
 
 		for (int i = 0; i < pad_count; i++)
 			pad_bytes[i] = 0xCD;

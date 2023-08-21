@@ -55,12 +55,6 @@
     <Filter Include="File di origine\NMBReader">
       <UniqueIdentifier>{5f8d3b4c-bd92-4e7b-a326-5138a470c716}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\NMBReader\MemHelper">
-      <UniqueIdentifier>{3008dc94-58e1-4bd9-90c1-50beb21f817f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\NMBReader\MemHelper">
-      <UniqueIdentifier>{264f60e0-b213-4a59-8ec4-b48118a276f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="File di origine\NMBReader\MorphemeBundle">
       <UniqueIdentifier>{b0b47202-ad2e-4c3c-b805-1aaab93d6cf5}</UniqueIdentifier>
     </Filter>
@@ -96,6 +90,12 @@
     </Filter>
     <Filter Include="File di origine\StringHelper">
       <UniqueIdentifier>{949787a2-5778-427f-80cd-64c861caf40a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\MemReader">
+      <UniqueIdentifier>{f6a96f01-f4d6-47f3-adf3-b6bc5f01b661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\MemReader">
+      <UniqueIdentifier>{527b39cc-846b-4e1c-9eac-a7584b6a7bb6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +159,6 @@
     <ClInclude Include="NMBReader\NMBReader.h">
       <Filter>File di intestazione\NMBReader</Filter>
     </ClInclude>
-    <ClInclude Include="NMBReader\MemHelper\MemHelper.h">
-      <Filter>File di intestazione\NMBReader\MemHelper</Filter>
-    </ClInclude>
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h">
       <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="StringHelper\StringHelper.h">
       <Filter>File di intestazione\StringHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="MemReader\MemReader.h">
+      <Filter>File di intestazione\MemReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +236,6 @@
     <ClCompile Include="NMBReader\NMBReader.cpp">
       <Filter>File di origine\NMBReader</Filter>
     </ClCompile>
-    <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp">
-      <Filter>File di origine\NMBReader\MemHelper</Filter>
-    </ClCompile>
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp">
       <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
     </ClCompile>
@@ -277,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="StringHelper\StringHelper.cpp">
       <Filter>File di origine\StringHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="MemReader\MemReader.cpp">
+      <Filter>File di origine\MemReader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

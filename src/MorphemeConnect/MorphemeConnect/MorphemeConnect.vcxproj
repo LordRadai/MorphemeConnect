@@ -149,8 +149,8 @@
     <ClInclude Include="inih\ini.h" />
     <ClInclude Include="inih\INIReader.h" />
     <ClInclude Include="MathHelper\MathHelper.h" />
+    <ClInclude Include="MemReader\MemReader.h" />
     <ClInclude Include="MorphemeConnect.h" />
-    <ClInclude Include="NMBReader\MemHelper\MemHelper.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
@@ -181,8 +181,8 @@
     <ClCompile Include="inih\ini.c" />
     <ClCompile Include="inih\INIReader.cpp" />
     <ClCompile Include="MathHelper\MathHelper.cpp" />
+    <ClCompile Include="MemReader\MemReader.cpp" />
     <ClCompile Include="MorphemeConnect.cpp" />
-    <ClCompile Include="NMBReader\MemHelper\MemHelper.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_FIleNameLookupTable.cpp" />

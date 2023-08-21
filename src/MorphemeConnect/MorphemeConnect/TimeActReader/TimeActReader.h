@@ -136,4 +136,6 @@ public:
 	TimeActReader();
 	TimeActReader(PWSTR filePath);
 	~TimeActReader();
+
+	TimeAct* TimeActLookup(int id);
 };

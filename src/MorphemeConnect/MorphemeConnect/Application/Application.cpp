@@ -645,40 +645,37 @@ void Application::ProcessVariables()
 		{
 			if (tae.m_tae.size() > 0)
 			{
-				for (int i = 0; i < tae.m_tae.size(); i++)
+				TimeAct* timeact = this->tae.TimeActLookup(this->m_timeActEditorFlags.m_taeId);
+
+				if (timeact)
 				{
-					TimeAct* event = &tae.m_tae[i];
-					if (event->m_id == this->m_timeActEditorFlags.m_taeId)
+					if (timeact->m_taeData->m_eventGroupCount > 0)
 					{
-						if (tae.m_tae[i].m_taeData->m_eventGroupCount > 0)
+						float max = 0;
+
+						for (int j = 0; j < timeact->m_taeData->m_eventGroupCount; j++)
 						{
-							float max = 0;
-
-							for (int j = 0; j < tae.m_tae[i].m_taeData->m_eventGroupCount; j++)
+							for (int k = 0; k < timeact->m_taeData->m_groups[j].m_count; k++)
 							{
-								for (int k = 0; k < tae.m_tae[i].m_taeData->m_groups[j].m_count; k++)
-								{
-									if (tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end > max)
-										max = tae.m_tae[i].m_taeData->m_groups[j].m_event[k].m_end;
-								}
-
-								this->m_timeActEditor.m_tracks.push_back(&tae.m_tae[i].m_taeData->m_groups[j]);
+								if (timeact->m_taeData->m_groups[j].m_event[k].m_end > max)
+									max = timeact->m_taeData->m_groups[j].m_event[k].m_end;
 							}
 
-
-							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max);
-
-							if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
-								this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght);
-
-							this->m_timeActEditor.m_frameMin = 0;
+							this->m_timeActEditor.m_tracks.push_back(&timeact->m_taeData->m_groups[j]);
 						}
-						else
-							Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 
-						break;
+						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max);
+
+						if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
+							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght);
+
+						this->m_timeActEditor.m_frameMin = 0;
 					}
+					else
+						Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 				}
+				else
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found in %s\n", this->m_timeActEditorFlags.m_taeId, this->tae.m_filePath);
 			}
 			else
 				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct is loaded\n");			

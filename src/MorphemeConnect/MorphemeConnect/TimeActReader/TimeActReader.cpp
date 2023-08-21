@@ -255,3 +255,14 @@ TimeActReader::TimeActReader(PWSTR filePath)
 TimeActReader::~TimeActReader()
 {
 }
+
+TimeAct* TimeActReader::TimeActLookup(int id)
+{
+	for (size_t i = 0; i < this->m_tae.size(); i++)
+	{
+		if (this->m_tae[i].m_id == id)
+			return &this->m_tae[i];
+	}
+
+	return NULL;
+}

@@ -97,6 +97,12 @@
     <Filter Include="File di origine\MemReader">
       <UniqueIdentifier>{527b39cc-846b-4e1c-9eac-a7584b6a7bb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\TimeActReader\TimeActEvent">
+      <UniqueIdentifier>{799ec0f4-7374-4164-bd3a-cae1ea2a3ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\TimeActReader\TimeActEvent">
+      <UniqueIdentifier>{d46dd91b-a07c-4e2e-b9ab-61ec112f6112}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -195,6 +201,9 @@
     <ClInclude Include="MemReader\MemReader.h">
       <Filter>File di intestazione\MemReader</Filter>
     </ClInclude>
+    <ClInclude Include="TimeActReader\TimeActEvent\TimeActEvent.h">
+      <Filter>File di intestazione\TimeActReader\TimeActEvent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -277,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="MemReader\MemReader.cpp">
       <Filter>File di origine\MemReader</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeActReader\TimeActEvent\TimeActEvent.cpp">
+      <Filter>File di origine\TimeActReader\TimeActEvent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

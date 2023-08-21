@@ -1,45 +1,5 @@
 #pragma once
-#include "../MemReader/MemReader.h"
-class TimeActEvent
-{
-public:
-	struct EventData
-	{
-		UINT64 m_id;
-		BYTE m_args[8];
-
-		EventData();
-		EventData(ifstream* tae);
-	};
-
-	float m_start;
-	float m_end;
-	EventData* m_eventData;
-
-	TimeActEvent();
-	TimeActEvent(ifstream* tae);
-};
-
-class EventGroup
-{
-public:
-	struct EventGroupData
-	{
-		UINT64 m_eventType;
-		std::vector<int> m_eventOffsets;
-
-		EventGroupData();
-		EventGroupData(ifstream* tae, int count);
-	};
-
-	UINT64 m_count;
-	std::vector<TimeActEvent> m_event;
-	EventGroupData* m_groupData;
-	UINT64 m_pad;
-
-	EventGroup();
-	EventGroup(ifstream* tae);
-};
+#include "TimeActEvent/TimeActEvent.h"
 
 class TimeActData
 {

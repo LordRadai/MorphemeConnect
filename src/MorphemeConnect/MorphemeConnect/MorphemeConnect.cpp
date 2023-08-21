@@ -83,6 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
     ::UpdateWindow(hwnd);
 
+    morpheme_connect.m_renderer.Initialise(g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext);
     initImGui(hwnd);
 
     // Our state
@@ -118,6 +119,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
+
+        morpheme_connect.m_renderer.m_deviceContext = g_pd3dDeviceContext;
+        morpheme_connect.m_renderer.m_device = g_pd3dDevice;
+        morpheme_connect.m_renderer.m_swapChain = g_pSwapChain;
 
         morpheme_connect.Update();
 

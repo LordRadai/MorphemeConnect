@@ -93,6 +93,7 @@ void Application::GUIStyle()
 
 void Application::Update()
 {
+	this->m_renderer.Render();
 	ProcessVariables();
 	RenderGUI(APPNAME_A);
 }
@@ -127,6 +128,20 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::EndMenuBar();
 	}
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Viewport");
+	{
+		ImVec2 pos = ImGui::GetWindowPos();
+		this->m_renderer.m_width = ImGui::GetWindowSize().x;
+		this->m_renderer.m_height = ImGui::GetWindowSize().y;
+
+		this->m_renderer.HandleResize(this->m_renderer.m_width, this->m_renderer.m_height);
+		this->m_renderer.m_swapChain->ResizeBuffers(0, this->m_renderer.m_width, this->m_renderer.m_height, DXGI_FORMAT_UNKNOWN, 0);
+
+		ImGui::GetWindowDrawList()->AddImage(this->m_renderer.m_shaderResourceViewViewport, pos, ImVec2(pos.x + this->m_renderer.m_width, pos.y + this->m_renderer.m_height));
+	}
+	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Assets");
@@ -460,6 +475,12 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 
 	ImGui::End();
+}
+
+void Application::RenderViewport()
+{
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Viewport");
 }
 
 void Application::SettingsWindow()

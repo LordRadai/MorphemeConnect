@@ -103,6 +103,12 @@
     <Filter Include="File di origine\TimeActReader\TimeActEvent">
       <UniqueIdentifier>{d46dd91b-a07c-4e2e-b9ab-61ec112f6112}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\Renderer">
+      <UniqueIdentifier>{56ee5d77-b6d4-425e-aad7-c166044902a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Renderer">
+      <UniqueIdentifier>{12bdd37e-a4c3-4cb4-a2c3-a9dc14b36623}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -204,6 +210,15 @@
     <ClInclude Include="TimeActReader\TimeActEvent\TimeActEvent.h">
       <Filter>File di intestazione\TimeActReader\TimeActEvent</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Renderer.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\StepTimer.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\DebugDraw.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -289,6 +304,12 @@
     </ClCompile>
     <ClCompile Include="TimeActReader\TimeActEvent\TimeActEvent.cpp">
       <Filter>File di origine\TimeActReader\TimeActEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp">
+      <Filter>File di origine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\DebugDraw.cpp">
+      <Filter>File di origine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

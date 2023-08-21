@@ -18,6 +18,7 @@
 #include "../imsequencer/ImSequencer.h"
 #include "../NMBReader/NMBReader.h"
 #include "../TimeActReader/TimeActReader.h"
+#include "../Renderer/Renderer.h"
 
 class Application
 {
@@ -54,12 +55,14 @@ public:
 	TimeActReader tae;
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;
+	Renderer m_renderer;
 
 	Application();
 	~Application();
 	void GUIStyle();
 	void Update();
 	void RenderGUI(const char* title);
+	void RenderViewport();
 	void SettingsWindow();
 	void ProcessVariables();
 	void LoadFile();

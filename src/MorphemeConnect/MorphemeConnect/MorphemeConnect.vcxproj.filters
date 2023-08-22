@@ -109,6 +109,12 @@
     <Filter Include="File di origine\Renderer">
       <UniqueIdentifier>{12bdd37e-a4c3-4cb4-a2c3-a9dc14b36623}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\Renderer\Camera">
+      <UniqueIdentifier>{4a9a33e4-4f12-4d76-b923-2a85e524cbad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Renderer\Camera">
+      <UniqueIdentifier>{d7a4a0ee-233a-41e6-b460-70e8bff20ab3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -219,6 +225,9 @@
     <ClInclude Include="Renderer\DebugDraw.h">
       <Filter>File di intestazione\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Camera\Camera.h">
+      <Filter>File di intestazione\Renderer\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -310,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\DebugDraw.cpp">
       <Filter>File di origine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Camera\Camera.cpp">
+      <Filter>File di origine\Renderer\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

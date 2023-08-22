@@ -1,8 +1,15 @@
 #include "Renderer.h"
+#include "StepTimer.h"
 
 using namespace DirectX;
 using namespace SimpleMath;
 using Microsoft::WRL::ComPtr;
+
+namespace
+{
+    constexpr UINT MSAA_COUNT = 4;
+    constexpr UINT MSAA_QUALITY = 0;
+}
 
 Renderer::Renderer()
 {
@@ -12,14 +19,15 @@ Renderer::~Renderer()
 {
 }
 
-void Renderer::Initialise(IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+void Renderer::Initialise(HWND hwnd, IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, ID3D11RenderTargetView* pRenderTargetView)
 {
-    this->hwnd = hwnd;
+    this->m_window = hwnd;
     this->m_swapChain = pSwapChain;
     this->m_device = pDevice;
     this->m_deviceContext = pDeviceContext;
-    this->m_height = 1080;
-    this->m_width = 1920;
+    this->m_renderTargetViewViewport = pRenderTargetView;
+    this->m_height = 1280;
+    this->m_width = 800;
 
     this->CreateResources();
 }
@@ -27,23 +35,13 @@ void Renderer::Initialise(IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3
 void Renderer::CreateResources()
 {
     // Clear the previous window size specific context.
-    this->m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
-    m_deviceContext->Flush();
-
     const UINT backBufferWidth = static_cast<UINT>(this->m_width);
     const UINT backBufferHeight = static_cast<UINT>(this->m_height);
-    const DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+    const DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
     const DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    constexpr UINT backBufferCount = 2;
-
-    HRESULT hr = m_swapChain->ResizeBuffers(backBufferCount, backBufferWidth, backBufferHeight, backBufferFormat, 0);
+    constexpr UINT backBufferCount = 0;
 
     // Obtain the backbuffer for this window which will be the final 3D rendertarget.
-    ComPtr<ID3D11Texture2D> backBuffer;
-    DX::ThrowIfFailed(m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
-
-    // Create a view interface on the rendertarget to use on bind.
-    DX::ThrowIfFailed(this->m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &this->m_renderTargetViewViewport));
 
     // Allocate a 2-D surface as the depth/stencil buffer and
     // create a DepthStencil view on this surface to use on bind.
@@ -109,50 +107,121 @@ void Renderer::CreateResources()
     );
 
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
+
+    m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+        Vector3::Zero, Vector3::UnitY);
+    m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+        float(this->m_width) / float(this->m_height), 0.1f, 10.f);
+
+    m_effect->SetView(m_view);
+    m_effect->SetProjection(m_proj);
+
+    CD3D11_RASTERIZER_DESC rastDesc(D3D11_FILL_SOLID, D3D11_CULL_NONE, FALSE,
+        D3D11_DEFAULT_DEPTH_BIAS, D3D11_DEFAULT_DEPTH_BIAS_CLAMP,
+        D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS, TRUE, FALSE, TRUE, FALSE);
+
+    auto device = this->m_device;
+    auto width = this->m_width;
+    auto height = this->m_height;
+
+    CD3D11_TEXTURE2D_DESC rtDesc(DXGI_FORMAT_B8G8R8A8_UNORM,
+        width, height, 1, 1,
+        D3D11_BIND_RENDER_TARGET, D3D11_USAGE_DEFAULT, 0,
+        MSAA_COUNT, MSAA_QUALITY);
+
+    DX::ThrowIfFailed(
+        device->CreateTexture2D(&rtDesc, nullptr,
+            m_offscreenRenderTarget.ReleaseAndGetAddressOf()));
+
+    CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(D3D11_RTV_DIMENSION_TEXTURE2DMS);
+
+    DX::ThrowIfFailed(
+        device->CreateRenderTargetView(m_offscreenRenderTarget.Get(),
+            &rtvDesc,
+            m_offscreenRenderTargetSRV.ReleaseAndGetAddressOf()));
+
+    CD3D11_TEXTURE2D_DESC dsDesc(DXGI_FORMAT_D32_FLOAT,
+        width, height, 1, 1,
+        D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT, 0,
+        MSAA_COUNT, MSAA_QUALITY);
+
+    ComPtr<ID3D11Texture2D> depthBuffer;
+    DX::ThrowIfFailed(
+        device->CreateTexture2D(&dsDesc, nullptr, depthBuffer.GetAddressOf()));
+
+    CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2DMS);
+
+    DX::ThrowIfFailed(
+        device->CreateDepthStencilView(depthBuffer.Get(),
+            &dsvDesc,
+            m_depthStencilSRV.ReleaseAndGetAddressOf()));
+}
+
+void Renderer::Update()
+{
+    m_timer.Tick([&]()
+    {
+        float delta_time = float(m_timer.GetElapsedSeconds());
+
+        this->m_camera.Update(this->m_width, this->m_height, delta_time);
+    });
+
+    this->m_world = this->m_camera.m_world;
+    this->m_view = this->m_camera.m_view;
+    this->m_proj = this->m_camera.m_proj;
+
+    this->Render();
+}
+
+void Renderer::Clear()
+{
+    // Clear the views.
+    this->m_deviceContext->ClearRenderTargetView(this->m_renderTargetViewViewport, Colors::Gray);
+    this->m_deviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    this->m_deviceContext->OMSetRenderTargets(1, &this->m_renderTargetViewViewport, this->m_depthStencilView);
+
+    // Set the viewport.
+    D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(this->m_width), static_cast<float>(this->m_height), 0.f, 1.f };
+    this->m_deviceContext->RSSetViewports(1, &viewport);
 }
 
 void Renderer::Render()
 {
-    this->m_deviceContext->ClearRenderTargetView(m_renderTargetViewViewport, Colors::CornflowerBlue);
-    this->m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.f);
+    if (this->m_timer.GetFrameCount() == 0)
+        return;
 
-    this->m_deviceContext->OMSetRenderTargets(1, &m_renderTargetViewViewport, m_depthStencilView);
+    this->Clear();
 
     if (m_renderTargetViewViewport)
     {
-        this->m_deviceContext->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-        this->m_deviceContext->OMSetDepthStencilState(m_states->DepthNone(), 0);
-        this->m_deviceContext->RSSetState(m_states->CullNone());
+        ID3D11DeviceContext* context = this->m_deviceContext;
 
-        m_effect->Apply(this->m_deviceContext);
+        context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
+        context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+        context->RSSetState(m_states->CullNone());
 
-        this->m_deviceContext->IASetInputLayout(m_inputLayout.Get());
+        m_effect->SetWorld(m_world);
+        m_effect->SetView(m_view);
+        m_effect->SetProjection(m_proj);
+        m_effect->Apply(context);
+
+        context->IASetInputLayout(m_inputLayout.Get());
 
         m_batch->Begin();
 
-        VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);
-        VertexPositionColor v2(Vector3(0.5f, -0.5f, 0.5f), Colors::Yellow);
-        VertexPositionColor v3(Vector3(-0.5f, -0.5f, 0.5f), Colors::Yellow);
-
-        m_batch->DrawTriangle(v1, v2, v3);
-
+        DX::DrawGrid(this->m_batch.get(), 3 * DirectX::SimpleMath::Vector3::UnitX, 3 * DirectX::SimpleMath::Vector3::UnitZ, DirectX::SimpleMath::Vector3::Zero, 20, 20, DirectX::Colors::White);
+        
         m_batch->End();
+
+        context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,
+            m_offscreenRenderTarget.Get(), 0,
+            DXGI_FORMAT_B8G8R8A8_UNORM);
     }
 }
 
-void Renderer::HandleResize(int width, int height)
+void Renderer::SetViewportSize(int width, int height)
 {
-    this->m_renderTargetTextureViewport->Release();
-    this->m_renderTargetTextureViewport = nullptr;
-
-    this->m_renderTargetViewViewport->Release();
-    this->m_renderTargetViewViewport = nullptr;
-
-    this->m_shaderResourceViewViewport->Release();
-    this->m_shaderResourceViewViewport = nullptr;
-
     this->m_height = (std::max)(height, 1);
     this->m_width = (std::max)(width, 1);
-
-    this->CreateResources();
 }

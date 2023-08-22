@@ -22,11 +22,16 @@
 class Application
 {
 public:
+	struct WindowStates
+	{
+		bool m_settingWindow = false;
+		bool m_previewDebugManager = false;
+	} m_windowStates;
+
 	struct Flags
 	{
-		bool settings_window = false;
-		bool load_file = false;
-		bool save_file = false;
+		bool m_loadFile = false;
+		bool m_saveFile = false;
 	} m_flags;
 
 	struct EventTrackEditorFlags
@@ -60,8 +65,8 @@ public:
 	void GUIStyle();
 	void Update();
 	void RenderGUI(const char* title);
-	void RenderViewport();
 	void SettingsWindow();
+	void PreviewDebugManagerWindow();
 	void ProcessVariables();
 	void LoadFile();
 	void SaveFile();

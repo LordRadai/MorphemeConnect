@@ -8,12 +8,14 @@
 
 Application::Application()
 {
-	this->m_flags.settings_window = false;
+	this->m_windowStates.m_settingWindow = false;
+	this->m_windowStates.m_previewDebugManager = false;
 }
 
 Application::~Application()
 {
-	this->m_flags.settings_window = false;
+	this->m_windowStates.m_settingWindow = false;
+	this->m_windowStates.m_previewDebugManager = false;
 }
 
 void Application::GUIStyle()
@@ -113,15 +115,15 @@ void Application::RenderGUI(const char* title)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open", NULL, &this->m_flags.load_file)) { this->m_flags.load_file = true; }
-			if (ImGui::MenuItem("Save", NULL, &this->m_flags.save_file)) { this->m_flags.save_file = true; }
+			if (ImGui::MenuItem("Open", NULL, &this->m_flags.m_loadFile)) { this->m_flags.m_loadFile = true; }
+			if (ImGui::MenuItem("Save", NULL, &this->m_flags.m_saveFile)) { this->m_flags.m_saveFile = true; }
 
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Settings", NULL, &this->m_flags.settings_window)) { this->m_flags.settings_window != this->m_flags.settings_window; }
+			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_settingWindow)) { this->m_windowStates.m_settingWindow != this->m_windowStates.m_settingWindow; }
 
 			ImGui::EndMenu();
 		}
@@ -130,11 +132,27 @@ void Application::RenderGUI(const char* title)
 	}
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Preview");
+	ImGui::Begin("Preview", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar);
 	{
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Settings"))
+			{	
+				if (ImGui::MenuItem("Camera Settings", NULL, &this->m_windowStates.m_previewDebugManager)) { this->m_windowStates.m_previewDebugManager != this->m_windowStates.m_previewDebugManager; }
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
+
 		ImVec2 pos = ImGui::GetWindowPos();
 		int width = ImGui::GetWindowSize().x;
 		int height = ImGui::GetWindowSize().y;
+
+		ImGui::InvisibleButton("viewport_preview", ImVec2(width, height));
+
+		if (ImGui::IsItemHovered())
+			g_preview.m_camera.m_registerInput = true;
 
 		ImGui::GetWindowDrawList()->AddImage(g_preview.m_shaderResourceViewViewport, pos, ImVec2(pos.x + width, pos.y + height));
 	}
@@ -474,15 +492,10 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 }
 
-void Application::RenderViewport()
-{
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Viewport");
-}
-
 void Application::SettingsWindow()
 {
-	ImGui::Begin("Settings", &this->m_flags.settings_window);
+	ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Settings", &this->m_windowStates.m_settingWindow);
 
 	ImGui::BeginTabBar("settings");
 
@@ -526,25 +539,61 @@ void Application::SettingsWindow()
 	ImGui::End();
 }
 
+void Application::PreviewDebugManagerWindow()
+{
+	ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Camera", &this->m_windowStates.m_previewDebugManager);
+
+	ImGui::Text("Parameters");
+	ImGui::Separator();
+
+	ImGui::DragFloat("Offset", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
+	ImGui::InputFloat3("Camera Position", &g_preview.m_camera.m_position.x);
+	ImGui::InputFloat3("Camera Angles", &g_preview.m_camera.m_angles.x);
+	ImGui::DragFloat("FOV", &g_preview.m_camera.m_fov, 0.1f, 0.1f, DirectX::XM_PI);
+	ImGui::InputFloat("Near Plane", &g_preview.m_camera.m_nearZ);
+	ImGui::InputFloat("Far Plane", &g_preview.m_camera.m_farZ);
+
+	ImGui::Text("Input");
+	ImGui::Separator();
+
+	ImGui::InputFloat("Width", &g_preview.m_camera.m_width, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputFloat("Height", &g_preview.m_camera.m_height, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputFloat("Aspect Ratio", &g_preview.m_camera.m_aspectRatio, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+
+	ImGui::Text("SpeedParam");
+	ImGui::Separator();
+
+	ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
+	ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
+
+	ImGui::End();
+}
+
 void Application::ProcessVariables()
 {
-	if (this->m_flags.settings_window)
+	if (this->m_windowStates.m_settingWindow)
 	{
 		this->SettingsWindow();
 	}
 
-	if (this->m_flags.load_file)
+	if (this->m_windowStates.m_previewDebugManager)
 	{
-		this->m_flags.load_file = false;
+		this->PreviewDebugManagerWindow();
+	}
+
+	if (this->m_flags.m_loadFile)
+	{
+		this->m_flags.m_loadFile = false;
 
 		m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 		this->LoadFile();
 	}
 
-	if (this->m_flags.save_file)
+	if (this->m_flags.m_saveFile)
 	{
-		this->m_flags.save_file = false;
+		this->m_flags.m_saveFile = false;
 
 		if (this->nmb.m_init)
 			this->SaveFile();

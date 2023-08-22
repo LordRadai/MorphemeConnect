@@ -158,6 +158,7 @@
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
     <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
     <ClInclude Include="NMBReader\NMBReader.h" />
+    <ClInclude Include="Renderer\Camera\Camera.h" />
     <ClInclude Include="Renderer\DebugDraw.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Renderer\StepTimer.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
     <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
     <ClCompile Include="NMBReader\NMBReader.cpp" />
+    <ClCompile Include="Renderer\Camera\Camera.cpp" />
     <ClCompile Include="Renderer\DebugDraw.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="StringHelper\StringHelper.cpp" />

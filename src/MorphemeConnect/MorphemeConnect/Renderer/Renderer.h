@@ -9,6 +9,8 @@
 #include <GeometricPrimitive.h>
 #include <VertexTypes.h>
 #include "DebugDraw.h"
+#include "StepTimer.h"
+#include "Camera/Camera.h"
 
 namespace DX
 {
@@ -25,8 +27,11 @@ namespace DX
 class Renderer
 {
 public:
-	HWND hwnd;
+	Camera m_camera;
+
+	HWND m_window;
 	int m_width, m_height;
+	DX::StepTimer m_timer;
 
 	IDXGISwapChain* m_swapChain;
 	ID3D11Device* m_device;
@@ -46,11 +51,17 @@ public:
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
 
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_offscreenRenderTarget;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_offscreenRenderTargetSRV;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilSRV;
+
 	Renderer();
 	~Renderer();
 
-	void Initialise(IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	void Initialise(HWND hwnd, IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, ID3D11RenderTargetView* pRenderTargetView);
 	void CreateResources();
+	void Update();
+	void Clear();
 	void Render();
-	void HandleResize(int width, int height);
+	void SetViewportSize(int width, int height);
 };

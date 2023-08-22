@@ -27,8 +27,7 @@ Camera::Camera()
 	this->m_aspectRatio = this->m_width / this->m_height;
 
 	this->m_view = Matrix::CreateLookAt(this->m_position, this->m_targetPos, this->m_lookAt);
-	this->m_proj = Matrix::CreatePerspectiveFieldOfView(this->m_fov, this->m_width / this->m_height, this->m_nearZ, this->m_farZ);
-	this->m_world = Matrix::Identity;
+	this->m_proj = Matrix::CreatePerspectiveFieldOfView(this->m_fov, this->m_aspectRatio, this->m_nearZ, this->m_farZ);
 }
 
 Camera::~Camera()
@@ -51,6 +50,7 @@ void Camera::Update(float width, float height, float delta_time)
 
 void Camera::CameraInput(float delta_time)
 {
+	bool register_input = false;
 	static ImVec2 old_mouse_pos;
 
 	if (this->m_registerInput == false)
@@ -67,6 +67,8 @@ void Camera::CameraInput(float delta_time)
 
 		this->UpdateTargetAngleXZ(this->m_speedParams.m_dragSpeed * drag_delta.y, delta_time);
 		this->UpdateTargetAngleY(this->m_speedParams.m_dragSpeed * drag_delta.x, delta_time);
+
+		register_input = true;
 	}
 
 	if (io.MouseWheel > FLT_EPSILON || io.MouseWheel < -FLT_EPSILON)
@@ -74,7 +76,7 @@ void Camera::CameraInput(float delta_time)
 
 	old_mouse_pos = ImGui::GetMousePos();
 
-	this->m_registerInput = false;
+	this->m_registerInput = register_input;
 }
 
 void Camera::UpdateRadius(float speed, float delta_time)

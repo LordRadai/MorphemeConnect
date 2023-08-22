@@ -11,7 +11,6 @@ public:
 
 	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Vector3 m_position;
 	DirectX::SimpleMath::Vector3 m_angles;
 	DirectX::SimpleMath::Vector3 m_lookAt;

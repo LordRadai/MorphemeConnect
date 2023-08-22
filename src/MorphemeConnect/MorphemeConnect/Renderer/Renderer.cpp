@@ -112,9 +112,11 @@ void Renderer::CreateResources()
         Vector3::Zero, Vector3::UnitY);
     m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
         float(this->m_width) / float(this->m_height), 0.1f, 10.f);
+    m_world = Matrix::Identity;
 
     m_effect->SetView(m_view);
     m_effect->SetProjection(m_proj);
+    m_effect->SetWorld(m_world);
 
     CD3D11_RASTERIZER_DESC rastDesc(D3D11_FILL_SOLID, D3D11_CULL_NONE, FALSE,
         D3D11_DEFAULT_DEPTH_BIAS, D3D11_DEFAULT_DEPTH_BIAS_CLAMP,
@@ -166,7 +168,7 @@ void Renderer::Update()
         this->m_camera.Update(this->m_width, this->m_height, delta_time);
     });
 
-    this->m_world = this->m_camera.m_world;
+    this->m_world = Matrix::Identity;
     this->m_view = this->m_camera.m_view;
     this->m_proj = this->m_camera.m_proj;
 

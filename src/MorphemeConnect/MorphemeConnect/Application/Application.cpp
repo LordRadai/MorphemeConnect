@@ -131,7 +131,7 @@ void Application::RenderGUI(const char* title)
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(800, 800), ImGuiCond_Appearing);
 	ImGui::Begin("Preview", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar);
 	{
 		if (ImGui::BeginMenuBar())

@@ -3,5 +3,7 @@
 #define APPNAME_A "MorphemeConnect b1.0.0"
 
 class Application;
+class Renderer;
 
-extern Application morpheme_connect;
+extern Application g_morphemeConnect;
+extern Renderer g_preview;

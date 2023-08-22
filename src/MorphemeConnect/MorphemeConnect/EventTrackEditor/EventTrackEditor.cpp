@@ -109,9 +109,9 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
     {
         signature = rand();
 
-        for (int i = 0; i < morpheme_connect.nmb.m_bundles.size(); i++)
+        for (int i = 0; i < g_morphemeConnect.nmb.m_bundles.size(); i++)
         {
-            if (morpheme_connect.nmb.m_bundles[i].m_signature == signature)
+            if (g_morphemeConnect.nmb.m_bundles[i].m_signature == signature)
             {
                 valid = false;
             }
@@ -152,7 +152,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 
     new_bundle.CalculateBundleSize();
 
-    morpheme_connect.nmb.m_eventTracks.push_back(new_bundle);
+    g_morphemeConnect.nmb.m_eventTracks.push_back(new_bundle);
 
     NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
     NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
@@ -188,7 +188,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
         event_tracks->m_eventTracks[2].m_trackSignatures = new_signatures;
     }
 
-    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
+    std::vector<NodeDef*> nodes = g_morphemeConnect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
 
     for (int i = 0; i < nodes.size(); i++)
     {
@@ -261,7 +261,7 @@ void EventTrackEditor::DeleteTrack(int idx)
         event_tracks->m_eventTracks[2].m_trackSignatures = new_signatures;
     }
 
-    std::vector<NodeDef*> nodes = morpheme_connect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
+    std::vector<NodeDef*> nodes = g_morphemeConnect.nmb.GetNodesByAnimReference(source_anim->m_animIdx);
 
     for (int i = 0; i < nodes.size(); i++)
     {
@@ -356,7 +356,7 @@ void EventTrackEditor::ReloadTracks()
 {
     this->Clear();
 
-    if ((morpheme_connect.nmb.m_init == true) && (morpheme_connect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+    if ((g_morphemeConnect.nmb.m_init == true) && (g_morphemeConnect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
     {
         bool found = false;
 
@@ -367,7 +367,7 @@ void EventTrackEditor::ReloadTracks()
         {
             for (int i = 0; i < event_track_source->m_eventTracks[0].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[0].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = g_morphemeConnect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[0].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), true));
@@ -375,7 +375,7 @@ void EventTrackEditor::ReloadTracks()
 
             for (int i = 0; i < event_track_source->m_eventTracks[1].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[1].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = g_morphemeConnect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[1].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));
@@ -383,7 +383,7 @@ void EventTrackEditor::ReloadTracks()
 
             for (int i = 0; i < event_track_source->m_eventTracks[2].m_trackCount; i++)
             {
-                MorphemeBundle_EventTrack* event_tracks = morpheme_connect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[2].m_trackSignatures[i]);
+                MorphemeBundle_EventTrack* event_tracks = g_morphemeConnect.nmb.GetEventTrackBundle(event_track_source->m_eventTracks[2].m_trackSignatures[i]);
 
                 if (event_tracks)
                     this->m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, MathHelper::FrameToTime(this->m_frameMax), false));

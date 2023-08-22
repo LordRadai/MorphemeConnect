@@ -6,6 +6,7 @@
 #include "MorphemeConnect.h"
 #include "extern.h"
 #include "Application/Application.h"
+#include "Renderer/Renderer.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -21,7 +22,8 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Application morpheme_connect;
+Application g_morphemeConnect;
+Renderer g_preview;
 
 void initImGui(HWND hwnd)
 {
@@ -42,7 +44,7 @@ void initImGui(HWND hwnd)
 
     io.Fonts->AddFontDefault();
 
-    morpheme_connect.GUIStyle();
+    g_morphemeConnect.GUIStyle();
 }
 
 // Main code
@@ -83,8 +85,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
     ::UpdateWindow(hwnd);
 
-    morpheme_connect.m_renderer.Initialise(g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext);
     initImGui(hwnd);
+    g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, g_mainRenderTargetView);
+    g_preview.m_renderTargetViewViewport = g_mainRenderTargetView;
 
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -110,9 +113,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
         {
             CleanupRenderTarget();
+
+            g_preview.HandleResize(g_ResizeWidth, g_ResizeHeight);
             g_pSwapChain->ResizeBuffers(0, g_ResizeWidth, g_ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
             g_ResizeWidth = g_ResizeHeight = 0;
             CreateRenderTarget();
+
+            g_preview.m_renderTargetViewViewport = g_mainRenderTargetView;
+            g_preview.CreateResources();
         }
 
         // Start the Dear ImGui frame
@@ -120,11 +128,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        morpheme_connect.m_renderer.m_deviceContext = g_pd3dDeviceContext;
-        morpheme_connect.m_renderer.m_device = g_pd3dDevice;
-        morpheme_connect.m_renderer.m_swapChain = g_pSwapChain;
-
-        morpheme_connect.Update();
+        g_preview.Update();
+        g_morphemeConnect.Update();
 
         // Rendering
         ImGui::Render();

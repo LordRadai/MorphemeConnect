@@ -2,6 +2,7 @@
 #include "../extern.h"
 #include "../MathHelper/MathHelper.h"
 #include "../StringHelper/StringHelper.h"
+#include "../Renderer/Renderer.h"
 #include <Shlwapi.h>
 #include <filesystem>
 
@@ -93,7 +94,6 @@ void Application::GUIStyle()
 
 void Application::Update()
 {
-	this->m_renderer.Render();
 	ProcessVariables();
 	RenderGUI(APPNAME_A);
 }
@@ -130,16 +130,13 @@ void Application::RenderGUI(const char* title)
 	}
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Viewport");
+	ImGui::Begin("Preview");
 	{
 		ImVec2 pos = ImGui::GetWindowPos();
-		this->m_renderer.m_width = ImGui::GetWindowSize().x;
-		this->m_renderer.m_height = ImGui::GetWindowSize().y;
+		int width = ImGui::GetWindowSize().x;
+		int height = ImGui::GetWindowSize().y;
 
-		this->m_renderer.HandleResize(this->m_renderer.m_width, this->m_renderer.m_height);
-		this->m_renderer.m_swapChain->ResizeBuffers(0, this->m_renderer.m_width, this->m_renderer.m_height, DXGI_FORMAT_UNKNOWN, 0);
-
-		ImGui::GetWindowDrawList()->AddImage(this->m_renderer.m_shaderResourceViewViewport, pos, ImVec2(pos.x + this->m_renderer.m_width, pos.y + this->m_renderer.m_height));
+		ImGui::GetWindowDrawList()->AddImage(g_preview.m_shaderResourceViewViewport, pos, ImVec2(pos.x + width, pos.y + height));
 	}
 	ImGui::End();
 

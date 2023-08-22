@@ -212,7 +212,7 @@ void Renderer::Render()
 
         m_batch->Begin();
 
-        DX::DrawGrid(this->m_batch.get(), 3 * DirectX::SimpleMath::Vector3::UnitX, 3 * DirectX::SimpleMath::Vector3::UnitZ, DirectX::SimpleMath::Vector3::Zero, 20, 20, DirectX::Colors::White);
+        DX::DrawGrid(this->m_batch.get(), 3 * DirectX::SimpleMath::Vector3::UnitX, 3 * DirectX::SimpleMath::Vector3::UnitZ, this->m_camera.m_targetPos, 20, 20, DirectX::Colors::White);
         
         m_batch->End();
 

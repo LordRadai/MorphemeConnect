@@ -9,13 +9,13 @@
 Application::Application()
 {
 	this->m_windowStates.m_settingWindow = false;
-	this->m_windowStates.m_previewDebugManager = false;
+	this->m_windowStates.m_previewSettings = false;
 }
 
 Application::~Application()
 {
 	this->m_windowStates.m_settingWindow = false;
-	this->m_windowStates.m_previewDebugManager = false;
+	this->m_windowStates.m_previewSettings = false;
 }
 
 void Application::GUIStyle()
@@ -136,7 +136,7 @@ void Application::RenderGUI(const char* title)
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_previewDebugManager)) { this->m_windowStates.m_previewDebugManager != this->m_windowStates.m_previewDebugManager; }
+			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_previewSettings)) { this->m_windowStates.m_previewSettings != this->m_windowStates.m_previewSettings; }
 
 			ImGui::EndMenuBar();
 		}
@@ -546,7 +546,7 @@ void Application::SettingsWindow()
 void Application::PreviewDebugManagerWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(400, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Settings##preview", &this->m_windowStates.m_previewDebugManager);
+	ImGui::Begin("Settings##preview", &this->m_windowStates.m_previewSettings);
 
 	ImGui::DragFloat("Grid Scale", &g_preview.m_settings.m_gridScale, 0.1f, 0.f, FLT_MAX);
 
@@ -597,7 +597,7 @@ void Application::ProcessVariables()
 		this->SettingsWindow();
 	}
 
-	if (this->m_windowStates.m_previewDebugManager)
+	if (this->m_windowStates.m_previewSettings)
 	{
 		this->PreviewDebugManagerWindow();
 	}

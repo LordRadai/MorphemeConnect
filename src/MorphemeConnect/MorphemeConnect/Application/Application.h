@@ -25,7 +25,7 @@ public:
 	struct WindowStates
 	{
 		bool m_settingWindow = false;
-		bool m_previewDebugManager = false;
+		bool m_previewSettings = false;
 	} m_windowStates;
 
 	struct Flags

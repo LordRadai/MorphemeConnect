@@ -65,6 +65,7 @@ public:
 	void GUIStyle();
 	void Update();
 	void RenderGUI(const char* title);
+	void RenderPopups();
 	void SettingsWindow();
 	void PreviewDebugManagerWindow();
 	void ProcessVariables();

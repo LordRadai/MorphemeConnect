@@ -114,7 +114,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             CleanupRenderTarget();
 
-            g_preview.HandleResize(g_ResizeWidth, g_ResizeHeight);
+            g_preview.SetRenderResolution(g_ResizeWidth, g_ResizeHeight);
             g_pSwapChain->ResizeBuffers(0, g_ResizeWidth, g_ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
             g_ResizeWidth = g_ResizeHeight = 0;
             CreateRenderTarget();

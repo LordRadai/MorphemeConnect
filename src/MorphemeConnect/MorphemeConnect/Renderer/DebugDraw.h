@@ -36,6 +36,7 @@
 #include "../Debug/Debug.h"
 #include "../MathHelper/MathHelper.h"
 
+#define CIRCLE_RESOLUTION 1000
 #define SPHERE_STACKS 4
 #define SPHERE_SLICES 12
 #define CYLINDER_SLICES 12
@@ -89,24 +90,36 @@ namespace DX
         DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB,
         DirectX::GXMVECTOR color = DirectX::Colors::White);
 
+    void XM_CALLCONV DrawXMarker(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+        DirectX::XMMATRIX world, float size,
+        DirectX::GXMVECTOR color = DirectX::Colors::White);
+
+    void XM_CALLCONV DrawCircle(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+        DirectX::XMMATRIX world, float radius,
+        DirectX::GXMVECTOR color = DirectX::Colors::White);
+
+    void XM_CALLCONV DrawOriginMarker(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+        DirectX::XMMATRIX world, float size,
+        DirectX::GXMVECTOR color = DirectX::Colors::White);
+
     void XM_CALLCONV DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
+        DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow);
 
     void XM_CALLCONV DrawSphere(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX* world, float radius,
+        DirectX::XMMATRIX world, float radius,
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow);
 
     void XM_CALLCONV DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
+        DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow, bool fill = false);
 
     void XM_CALLCONV DrawBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
+        DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow, bool fill = false);
 
     void XM_CALLCONV DrawBoundingBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
+        DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
         DirectX::GXMVECTOR color = DirectX::Colors::Red);
 
     void XM_CALLCONV Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,

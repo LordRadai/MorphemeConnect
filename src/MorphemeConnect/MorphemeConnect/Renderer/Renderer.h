@@ -27,10 +27,17 @@ namespace DX
 class Renderer
 {
 public:
+	struct Settings
+	{
+		DirectX::SimpleMath::Vector4 m_backgroundColor = DirectX::SimpleMath::Vector4(0.06f, 0.06f, 0.06f, 1.f);
+		float m_gridScale = 100.f;
+	} m_settings;
+
 	Camera m_camera;
 
 	HWND m_window;
 	int m_width, m_height;
+	int m_viewportWidth, m_viewportHeight;
 	DX::StepTimer m_timer;
 
 	IDXGISwapChain* m_swapChain;
@@ -44,6 +51,8 @@ public:
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_batch;
+	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
+	std::unique_ptr<DirectX::Model> m_model;
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
@@ -63,5 +72,6 @@ public:
 	void Update();
 	void Clear();
 	void Render();
+	void SetRenderResolution(int width, int height);
 	void SetViewportSize(int width, int height);
 };

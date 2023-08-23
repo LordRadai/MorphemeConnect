@@ -19,7 +19,7 @@ Camera::Camera()
 	this->m_nearZ = 0.1f;
 	this->m_farZ = 5000.f;
 
-	this->m_fov = XM_PIDIV4;
+	this->m_fov = XM_PI / 3;
 
 	this->m_width = 1280;
 	this->m_height = 820;
@@ -92,11 +92,11 @@ void Camera::UpdateTargetAngleXZ(float omega, float delta_time)
 {
 	this->m_angles.y += omega * delta_time;
 
-	if (this->m_angles.y > XM_2PI)
-		this->m_angles.y -= XM_2PI;
+	if (this->m_angles.y > XM_PIDIV2)
+		this->m_angles.y = XM_PIDIV2 - FLT_EPSILON;
 
-	if (this->m_angles.y < 0)
-		this->m_angles.y += XM_2PI;
+	if (this->m_angles.y < -XM_PIDIV2)
+		this->m_angles.y = -XM_PIDIV2 + FLT_EPSILON;
 }
 
 void Camera::UpdateTargetAngleY(float omega, float delta_time)

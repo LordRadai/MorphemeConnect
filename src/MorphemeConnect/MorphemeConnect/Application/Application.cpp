@@ -136,23 +136,22 @@ void Application::RenderGUI(const char* title)
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("Settings"))
-			{	
-				if (ImGui::MenuItem("Camera Settings", NULL, &this->m_windowStates.m_previewDebugManager)) { this->m_windowStates.m_previewDebugManager != this->m_windowStates.m_previewDebugManager; }
-				ImGui::EndMenu();
-			}
+			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_previewDebugManager)) { this->m_windowStates.m_previewDebugManager != this->m_windowStates.m_previewDebugManager; }
 
 			ImGui::EndMenuBar();
 		}
 
 		ImVec2 pos = ImGui::GetWindowPos();
-		int width = ImGui::GetWindowSize().x;
-		int height = ImGui::GetWindowSize().y;
 
+		int	width = ImGui::GetWindowSize().x;
+		int	height = ImGui::GetWindowSize().y;
+	
 		ImGui::InvisibleButton("viewport_preview", ImVec2(width, height));
 
 		if (ImGui::IsItemHovered())
 			g_preview.m_camera.m_registerInput = true;
+
+		g_preview.SetViewportSize(width, height);
 
 		ImGui::GetWindowDrawList()->AddImage(g_preview.m_shaderResourceViewViewport, pos, ImVec2(pos.x + width, pos.y + height));
 	}
@@ -492,10 +491,15 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 }
 
+void Application::RenderPopups()
+{
+
+}
+
 void Application::SettingsWindow()
 {
-	ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Settings", &this->m_windowStates.m_settingWindow);
+	ImGui::SetNextWindowSize(ImVec2(400, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Settings##gui", &this->m_windowStates.m_settingWindow);
 
 	ImGui::BeginTabBar("settings");
 
@@ -541,32 +545,48 @@ void Application::SettingsWindow()
 
 void Application::PreviewDebugManagerWindow()
 {
-	ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_Appearing);
-	ImGui::Begin("Camera", &this->m_windowStates.m_previewDebugManager);
+	ImGui::SetNextWindowSize(ImVec2(400, 500), ImGuiCond_Appearing);
+	ImGui::Begin("Settings##preview", &this->m_windowStates.m_previewDebugManager);
 
-	ImGui::Text("Parameters");
-	ImGui::Separator();
+	ImGui::DragFloat("Grid Scale", &g_preview.m_settings.m_gridScale, 0.1f, 0.f, FLT_MAX);
 
-	ImGui::DragFloat("Offset", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
-	ImGui::InputFloat3("Camera Position", &g_preview.m_camera.m_position.x);
-	ImGui::InputFloat3("Camera Angles", &g_preview.m_camera.m_angles.x);
-	ImGui::DragFloat("FOV", &g_preview.m_camera.m_fov, 0.1f, 0.1f, DirectX::XM_PI);
-	ImGui::InputFloat("Near Plane", &g_preview.m_camera.m_nearZ);
-	ImGui::InputFloat("Far Plane", &g_preview.m_camera.m_farZ);
+	ImGui::BeginTabBar("preview_settings");
+	if (ImGui::BeginTabItem("Camera"))
+	{
+		ImGui::Text("Parameters");
+		ImGui::Separator();
 
-	ImGui::Text("Input");
-	ImGui::Separator();
+		ImGui::DragFloat("Offset", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
+		ImGui::InputFloat3("Camera Position", &g_preview.m_camera.m_position.x);
+		ImGui::InputFloat3("Camera Angles", &g_preview.m_camera.m_angles.x);
+		ImGui::DragFloat("FOV", &g_preview.m_camera.m_fov, 0.1f, 0.1f, DirectX::XM_PI);
+		ImGui::InputFloat("Near Plane", &g_preview.m_camera.m_nearZ);
+		ImGui::InputFloat("Far Plane", &g_preview.m_camera.m_farZ);
 
-	ImGui::InputFloat("Width", &g_preview.m_camera.m_width, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-	ImGui::InputFloat("Height", &g_preview.m_camera.m_height, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-	ImGui::InputFloat("Aspect Ratio", &g_preview.m_camera.m_aspectRatio, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::Text("Input");
+		ImGui::Separator();
 
-	ImGui::Text("SpeedParam");
-	ImGui::Separator();
+		ImGui::InputFloat("Width", &g_preview.m_camera.m_width, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat("Height", &g_preview.m_camera.m_height, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat("Aspect Ratio", &g_preview.m_camera.m_aspectRatio, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 
-	ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
-	ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
+		ImGui::Text("Speed Settings");
+		ImGui::Separator();
 
+		ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
+		ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
+	
+		ImGui::EndTabItem();
+	}
+
+	if (ImGui::BeginTabItem("Background"))
+	{
+		ImGui::ColorEdit4("Background Color", &g_preview.m_settings.m_backgroundColor.x);
+
+		ImGui::EndTabItem();
+	}
+	ImGui::EndTabBar();
+	
 	ImGui::End();
 }
 

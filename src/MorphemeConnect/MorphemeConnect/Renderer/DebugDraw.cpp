@@ -309,8 +309,124 @@ void XM_CALLCONV DX::DrawLine(PrimitiveBatch<VertexPositionColor>* batch,
     batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, verts, 2);
 }
 
+void XM_CALLCONV DX::DrawXMarker(PrimitiveBatch<VertexPositionColor>* batch,
+    DirectX::XMMATRIX world, float size,
+    GXMVECTOR color)
+{
+    VertexPositionColor verts[4];
+
+    Vector3 pointA = Vector3::UnitX * size;
+    Vector3 pointB = -Vector3::UnitX * size;
+
+    Vector3 pointC = Vector3::UnitZ * size;
+    Vector3 pointD = -Vector3::UnitZ * size;
+
+    pointA = Vector3::Transform(pointA, Matrix::CreateRotationY(XM_PIDIV4) * world);
+    pointB = Vector3::Transform(pointB, Matrix::CreateRotationY(XM_PIDIV4) * world);
+    pointC = Vector3::Transform(pointC, Matrix::CreateRotationY(XM_PIDIV4) * world);
+    pointD = Vector3::Transform(pointD, Matrix::CreateRotationY(XM_PIDIV4) * world);
+
+    XMStoreFloat3(&verts[0].position, pointA);
+    XMStoreFloat3(&verts[1].position, pointB);
+
+    XMStoreFloat4(&verts[0].color, color);
+    XMStoreFloat4(&verts[1].color, color);
+
+    XMStoreFloat3(&verts[2].position, pointC);
+    XMStoreFloat3(&verts[3].position, pointD);
+
+    XMStoreFloat4(&verts[2].color, color);
+    XMStoreFloat4(&verts[3].color, color);
+
+    batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINELIST, verts, 4);
+}
+
+void XM_CALLCONV DX::DrawCircle(PrimitiveBatch<VertexPositionColor>* batch,
+    DirectX::XMMATRIX world, float radius,
+    GXMVECTOR color)
+{
+    constexpr float theta_step = XM_2PI / CIRCLE_RESOLUTION;
+
+    VertexPositionColor vertices[CIRCLE_RESOLUTION];
+
+    float theta = 0;
+    for (size_t i = 0; i < CIRCLE_RESOLUTION; i++)
+    {
+        vertices[i].position = Vector3(radius * cosf(theta), 0, radius * sinf(theta));
+        vertices[i].color = Vector4(color);
+        vertices[i].position = Vector3::Transform(vertices[i].position, world);
+
+        theta += theta_step;
+    }
+
+    batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, vertices, CIRCLE_RESOLUTION);
+}
+
+void XM_CALLCONV DX::DrawOriginMarker(PrimitiveBatch<VertexPositionColor>* batch,
+    DirectX::XMMATRIX world, float size,
+    GXMVECTOR color)
+{
+    DrawXMarker(batch, world, size, color);
+    DrawCircle(batch, world, size, color);
+
+    VertexPositionColor vertices[7];
+
+    vertices[0].position = Vector3(-1.f, 0, -3.f) * size;
+    vertices[0].color = Vector4(color);
+    vertices[0].position = Vector3::Transform(vertices[0].position, world);
+
+    vertices[1].position = Vector3(1.f, 0, -3.f) * size;
+    vertices[1].color = Vector4(color);
+    vertices[1].position = Vector3::Transform(vertices[1].position, world);
+
+    vertices[2].position = Vector3(-1.f, 0, 2.f) * size;
+    vertices[2].color = Vector4(color);
+    vertices[2].position = Vector3::Transform(vertices[2].position, world);
+
+    vertices[3].position = Vector3(1.f, 0, 2.f) * size;
+    vertices[3].color = Vector4(color);
+    vertices[3].position = Vector3::Transform(vertices[3].position, world);
+
+    vertices[4].position = vertices[2].position + Vector3(-1.f, 0, 0) * size;
+    vertices[4].color = Vector4(color);
+    vertices[4].position = Vector3::Transform(vertices[4].position, world);
+
+    vertices[5].position = vertices[3].position + Vector3(1.f, 0, 0) * size;
+    vertices[5].color = Vector4(color);
+    vertices[5].position = Vector3::Transform(vertices[5].position, world);
+
+    vertices[6].position = Vector3(0, 0, vertices[5].position.z + 3.f) * size;
+    vertices[6].color = Vector4(color);
+    vertices[6].position = Vector3::Transform(vertices[6].position, world);
+
+    std::vector<uint16_t> indices;
+
+    indices.push_back(0);
+    indices.push_back(1);
+
+    indices.push_back(1);
+    indices.push_back(3);
+
+    indices.push_back(3);
+    indices.push_back(5);
+
+    indices.push_back(5);
+    indices.push_back(6);
+
+    indices.push_back(6);
+    indices.push_back(4);
+
+    indices.push_back(4);
+    indices.push_back(2);
+
+    indices.push_back(2);
+    indices.push_back(0);
+
+    batch->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_LINELIST, indices.data(), indices.size(), vertices, 7);
+}
+
 void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
+    DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
     DirectX::GXMVECTOR color)
 {
     XMFLOAT4 dst;
@@ -361,7 +477,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 
     transformed_pos = XMLoadFloat3(&bot_vertex.position);
     transformed_pos = XMVector3Transform(transformed_pos, rotation);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&bot_vertex.position, transformed_pos);
 
@@ -370,7 +486,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 
     transformed_pos = XMLoadFloat3(&top_vertex.position);
     transformed_pos = XMVector3Transform(transformed_pos, rotation);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&top_vertex.position, transformed_pos);
 
@@ -397,7 +513,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 
             transformed_pos = XMLoadFloat3(&top_vertices[i][j].position);
             transformed_pos = XMVector3Transform(transformed_pos, rotation);
-            transformed_pos = XMVector3Transform(transformed_pos, *world);
+            transformed_pos = XMVector3Transform(transformed_pos, world);
 
             XMStoreFloat3(&top_vertices[i][j].position, transformed_pos);
 
@@ -419,7 +535,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 
         transformed_pos = XMLoadFloat3(&mid_vertices[j].position);
         transformed_pos = XMVector3Transform(transformed_pos, rotation);
-        transformed_pos = XMVector3Transform(transformed_pos, *world);
+        transformed_pos = XMVector3Transform(transformed_pos, world);
 
         XMStoreFloat3(&mid_vertices[j].position, transformed_pos);
 
@@ -444,7 +560,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 
             transformed_pos = XMLoadFloat3(&bot_vertices[i][j].position);
             transformed_pos = XMVector3Transform(transformed_pos, rotation);
-            transformed_pos = XMVector3Transform(transformed_pos, *world);
+            transformed_pos = XMVector3Transform(transformed_pos, world);
 
             XMStoreFloat3(&bot_vertices[i][j].position, transformed_pos);
 
@@ -540,14 +656,14 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
 }
 
 void XM_CALLCONV DX::DrawSphere(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX* world, float radius,
+    DirectX::XMMATRIX world, float radius,
     DirectX::GXMVECTOR color)
 {
     DX::DrawCapsule(batch, world, Vector3(0, 0, 0), Vector3(0, 0, 0), radius, color);
 }
 
 void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
+    DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB, float radius,
     DirectX::GXMVECTOR color, bool fill)
 {
     XMFLOAT4 dst;
@@ -601,7 +717,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
 
     transformed_pos = XMLoadFloat3(&bot_vertex.position);
     transformed_pos = XMVector3Transform(transformed_pos, rotation);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&bot_vertex.position, transformed_pos);
 
@@ -610,7 +726,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
 
     transformed_pos = XMLoadFloat3(&top_vertex.position);
     transformed_pos = XMVector3Transform(transformed_pos, rotation);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&top_vertex.position, transformed_pos);
 
@@ -633,7 +749,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
 
         transformed_pos = XMLoadFloat3(&top_vertices[j].position);
         transformed_pos = XMVector3Transform(transformed_pos, rotation);
-        transformed_pos = XMVector3Transform(transformed_pos, *world);
+        transformed_pos = XMVector3Transform(transformed_pos, world);
 
         XMStoreFloat3(&top_vertices[j].position, transformed_pos);
 
@@ -654,7 +770,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
 
         transformed_pos = XMLoadFloat3(&bot_vertices[j].position);
         transformed_pos = XMVector3Transform(transformed_pos, rotation);
-        transformed_pos = XMVector3Transform(transformed_pos, *world);
+        transformed_pos = XMVector3Transform(transformed_pos, world);
 
         XMStoreFloat3(&bot_vertices[j].position, transformed_pos);
 
@@ -751,7 +867,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
 }
 
 void XM_CALLCONV DX::DrawBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
+    DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
     DirectX::GXMVECTOR color, bool fill)
 {
     VertexPositionColor b1, b2, b3, b4;
@@ -794,42 +910,42 @@ void XM_CALLCONV DX::DrawBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColo
     t4.position.z = b4.position.z;
 
     transformed_pos = XMLoadFloat3(&b1.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b1.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b2.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b2.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b3.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b3.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b4.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b4.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t1.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t1.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t2.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t2.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t3.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t3.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t4.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t4.position, transformed_pos);
 
@@ -1002,7 +1118,7 @@ void XM_CALLCONV DX::DrawBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColo
 }
 
 void XM_CALLCONV DX::DrawBoundingBox(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX* world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
+    DirectX::XMMATRIX world, DirectX::SimpleMath::Vector3 center, DirectX::SimpleMath::Vector3 half_extents,
     DirectX::GXMVECTOR color)
 {
     VertexPositionColor b1, b2, b3, b4;
@@ -1045,42 +1161,42 @@ void XM_CALLCONV DX::DrawBoundingBox(DirectX::PrimitiveBatch<DirectX::VertexPosi
     t4.position.z = b4.position.z;
 
     transformed_pos = XMLoadFloat3(&b1.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b1.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b2.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b2.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b3.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b3.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&b4.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&b4.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t1.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t1.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t2.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t2.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t3.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t3.position, transformed_pos);
 
     transformed_pos = XMLoadFloat3(&t4.position);
-    transformed_pos = XMVector3Transform(transformed_pos, *world);
+    transformed_pos = XMVector3Transform(transformed_pos, world);
 
     XMStoreFloat3(&t4.position, transformed_pos);
 

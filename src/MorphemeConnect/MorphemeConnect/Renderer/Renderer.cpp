@@ -28,6 +28,8 @@ void Renderer::Initialise(HWND hwnd, IDXGISwapChain* pSwapChain, ID3D11Device* p
     this->m_renderTargetViewViewport = pRenderTargetView;
     this->m_height = 1280;
     this->m_width = 800;
+    this->m_viewportWidth = 1200;
+    this->m_viewportHeight = 800;
 
     this->CreateResources();
 }
@@ -106,6 +108,10 @@ void Renderer::CreateResources()
             m_inputLayout.ReleaseAndGetAddressOf())
     );
 
+    m_fxFactory = std::make_unique<EffectFactory>(this->m_device);
+
+    //m_model = Model::CreateFromCMO(this->m_device, L"cup.cmo", *m_fxFactory);
+
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
 
     m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
@@ -165,7 +171,7 @@ void Renderer::Update()
     {
         float delta_time = float(m_timer.GetElapsedSeconds());
 
-        this->m_camera.Update(this->m_width, this->m_height, delta_time);
+        this->m_camera.Update(this->m_viewportWidth, this->m_viewportHeight, delta_time);
     });
 
     this->m_world = Matrix::Identity;
@@ -178,7 +184,8 @@ void Renderer::Update()
 void Renderer::Clear()
 {
     // Clear the views.
-    this->m_deviceContext->ClearRenderTargetView(this->m_renderTargetViewViewport, Colors::Gray);
+    float color[4] = { this->m_settings.m_backgroundColor.x, this->m_settings.m_backgroundColor.y, this->m_settings.m_backgroundColor.z, this->m_settings.m_backgroundColor.w };
+    this->m_deviceContext->ClearRenderTargetView(this->m_renderTargetViewViewport, color);
     this->m_deviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     this->m_deviceContext->OMSetRenderTargets(1, &this->m_renderTargetViewViewport, this->m_depthStencilView);
@@ -212,8 +219,10 @@ void Renderer::Render()
 
         m_batch->Begin();
 
-        DX::DrawGrid(this->m_batch.get(), 3 * DirectX::SimpleMath::Vector3::UnitX, 3 * DirectX::SimpleMath::Vector3::UnitZ, this->m_camera.m_targetPos, 20, 20, DirectX::Colors::White);
+        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, this->m_camera.m_targetPos, 100, 100, Colors::White);
         
+        DX::DrawOriginMarker(this->m_batch.get(), XMMatrixTranslationFromVector(Vector3::Zero), 0.5f, Colors::DarkCyan);
+              
         m_batch->End();
 
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,
@@ -222,8 +231,14 @@ void Renderer::Render()
     }
 }
 
-void Renderer::SetViewportSize(int width, int height)
+void Renderer::SetRenderResolution(int width, int height)
 {
     this->m_height = (std::max)(height, 1);
     this->m_width = (std::max)(width, 1);
+}
+
+void Renderer::SetViewportSize(int width, int height)
+{
+    this->m_viewportWidth = (std::max)(height, 1);
+    this->m_viewportHeight = (std::max)(width, 1);
 }

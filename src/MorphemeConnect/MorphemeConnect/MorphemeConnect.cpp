@@ -6,7 +6,7 @@
 #include "MorphemeConnect.h"
 #include "extern.h"
 #include "Application/Application.h"
-#include "Renderer/Renderer.h"
+#include "Scene/Scene.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -23,7 +23,7 @@ void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Application g_morphemeConnect;
-Renderer g_preview;
+Scene g_preview;
 
 void initImGui(HWND hwnd)
 {
@@ -38,7 +38,7 @@ void initImGui(HWND hwnd)
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    // Setup Platform/Renderer backends
+    // Setup Platform/Scene backends
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
@@ -87,7 +87,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     initImGui(hwnd);
     g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, g_mainRenderTargetView);
-    g_preview.m_renderTargetViewViewport = g_mainRenderTargetView;
+    g_preview.m_renderTargetView = g_mainRenderTargetView;
 
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -119,7 +119,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             g_ResizeWidth = g_ResizeHeight = 0;
             CreateRenderTarget();
 
-            g_preview.m_renderTargetViewViewport = g_mainRenderTargetView;
+            g_preview.m_renderTargetView = g_mainRenderTargetView;
             g_preview.CreateResources();
         }
 

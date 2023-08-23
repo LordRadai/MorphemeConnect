@@ -103,17 +103,17 @@
     <Filter Include="File di origine\TimeActReader\TimeActEvent">
       <UniqueIdentifier>{d46dd91b-a07c-4e2e-b9ab-61ec112f6112}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\Renderer">
-      <UniqueIdentifier>{56ee5d77-b6d4-425e-aad7-c166044902a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\Renderer">
+    <Filter Include="File di origine\Scene">
       <UniqueIdentifier>{12bdd37e-a4c3-4cb4-a2c3-a9dc14b36623}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\Renderer\Camera">
-      <UniqueIdentifier>{4a9a33e4-4f12-4d76-b923-2a85e524cbad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\Renderer\Camera">
+    <Filter Include="File di origine\Scene\Camera">
       <UniqueIdentifier>{d7a4a0ee-233a-41e6-b460-70e8bff20ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Scene">
+      <UniqueIdentifier>{56ee5d77-b6d4-425e-aad7-c166044902a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Scene\Camera">
+      <UniqueIdentifier>{4a9a33e4-4f12-4d76-b923-2a85e524cbad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -216,17 +216,17 @@
     <ClInclude Include="TimeActReader\TimeActEvent\TimeActEvent.h">
       <Filter>File di intestazione\TimeActReader\TimeActEvent</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Renderer.h">
-      <Filter>File di intestazione\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\StepTimer.h">
-      <Filter>File di intestazione\Renderer</Filter>
+      <Filter>File di intestazione\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\DebugDraw.h">
-      <Filter>File di intestazione\Renderer</Filter>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>File di intestazione\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Camera\Camera.h">
-      <Filter>File di intestazione\Renderer\Camera</Filter>
+    <ClInclude Include="Scene\DebugDraw.h">
+      <Filter>File di intestazione\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Camera\Camera.h">
+      <Filter>File di intestazione\Scene\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,14 +314,14 @@
     <ClCompile Include="TimeActReader\TimeActEvent\TimeActEvent.cpp">
       <Filter>File di origine\TimeActReader\TimeActEvent</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Renderer.cpp">
-      <Filter>File di origine\Renderer</Filter>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>File di origine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\DebugDraw.cpp">
-      <Filter>File di origine\Renderer</Filter>
+    <ClCompile Include="Scene\DebugDraw.cpp">
+      <Filter>File di origine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Camera\Camera.cpp">
-      <Filter>File di origine\Renderer\Camera</Filter>
+    <ClCompile Include="Scene\Camera\Camera.cpp">
+      <Filter>File di origine\Scene\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

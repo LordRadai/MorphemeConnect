@@ -2,7 +2,7 @@
 #include "../extern.h"
 #include "../MathHelper/MathHelper.h"
 #include "../StringHelper/StringHelper.h"
-#include "../Renderer/Renderer.h"
+#include "../Scene/Scene.h"
 #include <Shlwapi.h>
 #include <filesystem>
 

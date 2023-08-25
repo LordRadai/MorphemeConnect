@@ -49,29 +49,11 @@
     <Filter Include="File di origine\Application">
       <UniqueIdentifier>{eff5ee9a-c225-4365-a997-19d31edadea1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\NMBReader">
-      <UniqueIdentifier>{d134a0cb-1967-4f5c-b501-19d34a8f70ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\NMBReader">
-      <UniqueIdentifier>{5f8d3b4c-bd92-4e7b-a326-5138a470c716}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\NMBReader\MorphemeBundle">
-      <UniqueIdentifier>{b0b47202-ad2e-4c3c-b805-1aaab93d6cf5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di intestazione\NMBReader\MorphemeBundle">
-      <UniqueIdentifier>{5259aba0-165e-4a24-babb-275199c63f53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="File di intestazione\EventTrackEditor">
       <UniqueIdentifier>{9475d9c6-e5e4-41c3-9c5a-155a5b1802a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="File di origine\EventTrackEditor">
       <UniqueIdentifier>{4d357545-7b52-4654-9a1e-2e5da3e498f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di intestazione\TimeActReader">
-      <UniqueIdentifier>{00579137-9011-4d3c-8596-6516da068eb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\TimeActReader">
-      <UniqueIdentifier>{a9d8a4d9-3f61-4f3e-8c6b-1a3a4c422a1a}</UniqueIdentifier>
     </Filter>
     <Filter Include="File di intestazione\TimeActEditor">
       <UniqueIdentifier>{3b285086-53ea-4e31-82fd-4df753941346}</UniqueIdentifier>
@@ -91,18 +73,6 @@
     <Filter Include="File di origine\StringHelper">
       <UniqueIdentifier>{949787a2-5778-427f-80cd-64c861caf40a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\MemReader">
-      <UniqueIdentifier>{f6a96f01-f4d6-47f3-adf3-b6bc5f01b661}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\MemReader">
-      <UniqueIdentifier>{527b39cc-846b-4e1c-9eac-a7584b6a7bb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di intestazione\TimeActReader\TimeActEvent">
-      <UniqueIdentifier>{799ec0f4-7374-4164-bd3a-cae1ea2a3ff3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File di origine\TimeActReader\TimeActEvent">
-      <UniqueIdentifier>{d46dd91b-a07c-4e2e-b9ab-61ec112f6112}</UniqueIdentifier>
-    </Filter>
     <Filter Include="File di origine\Scene">
       <UniqueIdentifier>{12bdd37e-a4c3-4cb4-a2c3-a9dc14b36623}</UniqueIdentifier>
     </Filter>
@@ -114,6 +84,54 @@
     </Filter>
     <Filter Include="File di intestazione\Scene\Camera">
       <UniqueIdentifier>{4a9a33e4-4f12-4d76-b923-2a85e524cbad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader">
+      <UniqueIdentifier>{75f7f5fb-3e57-44c8-9ec7-af16f02e1b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader">
+      <UniqueIdentifier>{107f3891-3e35-4ec0-b932-665c703c75e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\MemReader">
+      <UniqueIdentifier>{8e241234-f55c-4bfd-828f-d70f85031697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\MemReader">
+      <UniqueIdentifier>{2fabe43a-2e26-4e4d-99ff-c550e61c91ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\NMBReader">
+      <UniqueIdentifier>{b0d517cf-166c-4c80-8e2f-119bce451c51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\NMBReader">
+      <UniqueIdentifier>{03e18612-7541-4a4d-9619-46f8d61b3598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\NMBReader\MorphemeBundle">
+      <UniqueIdentifier>{8b932c9a-7868-46c0-8d5e-97d1538a6e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\NMBReader\MorphmeBundle">
+      <UniqueIdentifier>{9e33efa0-ad35-43bf-a83d-5a05d22036ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\TimeActReader">
+      <UniqueIdentifier>{05f37cfa-4e2b-47dd-a0c0-9760d4227fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\TimeActReader\TimeActEvent">
+      <UniqueIdentifier>{620c0830-a448-436f-88d1-abeac5994e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\TimeActReader">
+      <UniqueIdentifier>{c1e5ac86-1039-41c0-89c0-6b11ae7d1865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\TimeActReader\TimeActEvent">
+      <UniqueIdentifier>{4811d7db-cefa-4610-a6a0-a22bbba43c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\FlverReader">
+      <UniqueIdentifier>{65fb1575-1bd7-4dfa-88b4-e21542632223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\FlverReader">
+      <UniqueIdentifier>{d9b67510-066a-4878-a148-5f64199dc8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\FromsoftReader\BNDReader">
+      <UniqueIdentifier>{355a53d6-57bf-49c1-88a0-88f7854c2d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\FromsoftReader\BNDReader">
+      <UniqueIdentifier>{29745510-793c-4bc2-bc29-ef8acda7b3e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,30 +192,6 @@
     <ClInclude Include="Application\Application.h">
       <Filter>File di intestazione\Application</Filter>
     </ClInclude>
-    <ClInclude Include="NMBReader\NMBReader.h">
-      <Filter>File di intestazione\NMBReader</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Base.h">
-      <Filter>File di intestazione\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeActReader\TimeActReader.h">
-      <Filter>File di intestazione\TimeActReader</Filter>
-    </ClInclude>
     <ClInclude Include="TimeActEditor\TimeActEditor.h">
       <Filter>File di intestazione\TimeActEditor</Filter>
     </ClInclude>
@@ -210,12 +204,6 @@
     <ClInclude Include="StringHelper\StringHelper.h">
       <Filter>File di intestazione\StringHelper</Filter>
     </ClInclude>
-    <ClInclude Include="MemReader\MemReader.h">
-      <Filter>File di intestazione\MemReader</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeActReader\TimeActEvent\TimeActEvent.h">
-      <Filter>File di intestazione\TimeActReader\TimeActEvent</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\StepTimer.h">
       <Filter>File di intestazione\Scene</Filter>
     </ClInclude>
@@ -227,6 +215,42 @@
     </ClInclude>
     <ClInclude Include="Scene\Camera\Camera.h">
       <Filter>File di intestazione\Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\MemReader\MemReader.h">
+      <Filter>File di intestazione\FromsoftReader\MemReader</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Base.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.h">
+      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h">
+      <Filter>File di intestazione\FromsoftReader\TimeActReader</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h">
+      <Filter>File di intestazione\FromsoftReader\TimeActReader\TimeActEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h">
+      <Filter>File di intestazione\FromsoftReader\FlverReader</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h">
+      <Filter>File di intestazione\FromsoftReader\BNDReader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,24 +290,6 @@
     <ClCompile Include="Application\Application.cpp">
       <Filter>File di origine\Application</Filter>
     </ClCompile>
-    <ClCompile Include="NMBReader\NMBReader.cpp">
-      <Filter>File di origine\NMBReader</Filter>
-    </ClCompile>
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp">
-      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp">
-      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
-      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp">
-      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_FIleNameLookupTable.cpp">
-      <Filter>File di origine\NMBReader\MorphemeBundle</Filter>
-    </ClCompile>
     <ClCompile Include="EventTrackEditor\EventTrackEditor.h">
       <Filter>File di intestazione\EventTrackEditor</Filter>
     </ClCompile>
@@ -292,9 +298,6 @@
     </ClCompile>
     <ClCompile Include="MorphemeConnect.cpp">
       <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeActReader\TimeActReader.cpp">
-      <Filter>File di origine\TimeActReader</Filter>
     </ClCompile>
     <ClCompile Include="TimeActEditor\TimeActEditor.cpp">
       <Filter>File di origine\TimeActEditor</Filter>
@@ -308,12 +311,6 @@
     <ClCompile Include="StringHelper\StringHelper.cpp">
       <Filter>File di origine\StringHelper</Filter>
     </ClCompile>
-    <ClCompile Include="MemReader\MemReader.cpp">
-      <Filter>File di origine\MemReader</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeActReader\TimeActEvent\TimeActEvent.cpp">
-      <Filter>File di origine\TimeActReader\TimeActEvent</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Scene.cpp">
       <Filter>File di origine\Scene</Filter>
     </ClCompile>
@@ -322,6 +319,39 @@
     </ClCompile>
     <ClCompile Include="Scene\Camera\Camera.cpp">
       <Filter>File di origine\Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\MemReader\MemReader.cpp">
+      <Filter>File di origine\FromsoftReader\MemReader</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp">
+      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp">
+      <Filter>File di origine\FromsoftReader\TimeActReader</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp">
+      <Filter>File di origine\FromsoftReader\TimeActReader\TimeActEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp">
+      <Filter>File di origine\FromsoftReader\FlverReader</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp">
+      <Filter>File di origine\FromsoftReader\BNDReader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

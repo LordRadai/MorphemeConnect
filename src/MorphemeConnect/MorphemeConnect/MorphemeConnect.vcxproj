@@ -137,6 +137,18 @@
     <ClInclude Include="Debug\Debug.h" />
     <ClInclude Include="extern.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h" />
+    <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h" />
+    <ClInclude Include="FromsoftFormat\MemReader\MemReader.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h" />
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -151,15 +163,7 @@
     <ClInclude Include="inih\ini.h" />
     <ClInclude Include="inih\INIReader.h" />
     <ClInclude Include="MathHelper\MathHelper.h" />
-    <ClInclude Include="MemReader\MemReader.h" />
     <ClInclude Include="MorphemeConnect.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
-    <ClInclude Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
-    <ClInclude Include="NMBReader\NMBReader.h" />
     <ClInclude Include="Renderer\StepTimer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\Camera\Camera.h" />
@@ -168,14 +172,23 @@
     <ClInclude Include="StringHelper\StringHelper.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimeActEditor\TimeActEditor.h" />
-    <ClInclude Include="TimeActReader\TimeActEvent\TimeActEvent.h" />
-    <ClInclude Include="TimeActReader\TimeActReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Debug\Debug.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.h" />
+    <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp" />
+    <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp" />
+    <ClCompile Include="FromsoftFormat\MemReader\MemReader.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp" />
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -188,21 +201,12 @@
     <ClCompile Include="inih\ini.c" />
     <ClCompile Include="inih\INIReader.cpp" />
     <ClCompile Include="MathHelper\MathHelper.cpp" />
-    <ClCompile Include="MemReader\MemReader.cpp" />
     <ClCompile Include="MorphemeConnect.cpp" />
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_FIleNameLookupTable.cpp" />
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
-    <ClCompile Include="NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
-    <ClCompile Include="NMBReader\NMBReader.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />
     <ClCompile Include="Scene\DebugDraw.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="StringHelper\StringHelper.cpp" />
     <ClCompile Include="TimeActEditor\TimeActEditor.cpp" />
-    <ClCompile Include="TimeActReader\TimeActEvent\TimeActEvent.cpp" />
-    <ClCompile Include="TimeActReader\TimeActReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MorphemeConnect.rc" />

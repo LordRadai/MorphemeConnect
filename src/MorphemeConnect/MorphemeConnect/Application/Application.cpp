@@ -3,6 +3,7 @@
 #include "../MathHelper/MathHelper.h"
 #include "../StringHelper/StringHelper.h"
 #include "../Scene/Scene.h"
+
 #include <Shlwapi.h>
 #include <filesystem>
 
@@ -816,6 +817,25 @@ std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, int chr
 	return files;
 }
 
+std::wstring getModelNameFromChrId(std::wstring model_path, int chr_id)
+{
+	std::wstring chr_id_str = std::to_wstring(chr_id);
+
+	for (const auto& entry : std::filesystem::directory_iterator(model_path))
+	{
+		std::wstring filename = entry.path().filename();
+		std::wstring file_chr_id_str = filename.substr(1, 4);
+
+		int file_chr_id = stoi(file_chr_id_str);
+
+		if (file_chr_id == chr_id && entry.path().extension() == ".bnd")
+		{
+			Debug::DebuggerMessage(Debug::LVL_DEBUG, "%ws\n", filename.c_str());
+			return entry.path();
+		}
+	}
+}
+
 void Application::LoadFile()
 {
 	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
@@ -852,9 +872,9 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						std::filesystem::path filepath = std::wstring(pszFilePath);
+						std::filesystem::path filepath_tae = std::wstring(pszFilePath);
 
-						if (filepath.extension() == ".nmb")
+						if (filepath_tae.extension() == ".nmb")
 						{
 							nmb.m_init = false;
 							nmb = NMBReader(pszFilePath);
@@ -864,11 +884,13 @@ void Application::LoadFile()
 
 							bool found = false;
 
-							std::filesystem::path filepath = pszFilePath;
+							std::filesystem::path gamepath = pszFilePath;
+							std::filesystem::path filepath_tae;
+							std::filesystem::path filepath_dcx;
 							do
 							{
-								std::wstring parent_path = filepath.parent_path();
-								filepath = parent_path;
+								std::wstring parent_path = gamepath.parent_path();
+								gamepath = parent_path;
 
 								int lastDirPos = parent_path.find_last_of(L"\\");
 
@@ -886,13 +908,24 @@ void Application::LoadFile()
 
 							if (found)
 							{
-								filepath += "\\timeact\\chr";
-								this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath, this->m_eventTrackEditorFlags.chr_id);
+								filepath_tae = gamepath;
+								filepath_dcx = gamepath;
+
+								filepath_tae += "\\timeact\\chr";
+								filepath_dcx += "\\model\\chr";
+
+								this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath_tae, this->m_eventTrackEditorFlags.chr_id);
 								this->m_eventTrackEditorFlags.load_tae = true;
+
+								dcx.m_init = false;
+								std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, this->m_eventTrackEditorFlags.chr_id);
+								PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
+
+								dcx = BNDReader(dcx_path);
 							}
 						}
 
-						if (filepath.extension() == ".tae")
+						if (filepath_tae.extension() == ".tae")
 						{
 							tae.m_init = false;
 							tae = TimeActReader(pszFilePath);

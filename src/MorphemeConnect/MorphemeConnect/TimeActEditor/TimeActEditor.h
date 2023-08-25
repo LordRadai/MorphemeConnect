@@ -4,7 +4,8 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-#include "../TimeActReader/TimeActReader.h"
+
+#include "../FromsoftFormat/TimeActReader/TimeActReader.h"
 #include "../MathHelper/MathHelper.h"
 
 struct TimeActEditor
@@ -58,7 +59,7 @@ struct TimeActEditor
     std::string GetTrackName(int idx);
     std::string GetEventLabel(int idx, int event_idx) const;
 
-    //void AddTrack(int event_id, char* name, bool duration);
+    //void AddTrack(int event_id);
     //void DeleteTrack(int idx);
 
     //void AddEvent(int track_idx, EventTrack::Event event);

@@ -16,8 +16,10 @@
 
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
-#include "../NMBReader/NMBReader.h"
-#include "../TimeActReader/TimeActReader.h"
+#include "../FromsoftFormat/NMBReader/NMBReader.h"
+#include "../FromsoftFormat/TimeActReader/TimeActReader.h"
+#include "../FromsoftFormat/BNDReader/BNDReader.h"
+#include "../FromsoftFormat/FlverReader/FlverReader.h"
 
 class Application
 {
@@ -57,6 +59,9 @@ public:
 
 	NMBReader nmb;
 	TimeActReader tae;
+	BNDReader dcx;
+	FlverReader flver;
+
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;
 

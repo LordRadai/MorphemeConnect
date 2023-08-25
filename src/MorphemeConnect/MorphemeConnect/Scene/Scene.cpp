@@ -121,8 +121,6 @@ void Scene::CreateResources()
 
     m_fxFactory = std::make_unique<EffectFactory>(this->m_device);
 
-    //m_model = Model::CreateFromCMO(this->m_device, L"cup.cmo", *m_fxFactory);
-
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
 
     m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
@@ -233,7 +231,7 @@ void Scene::Render()
         DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, this->m_camera.m_targetPos, 100, 100, Colors::White);
         
         DX::DrawOriginMarker(this->m_batch.get(), XMMatrixTranslationFromVector(Vector3::Zero), 0.5f, Colors::DarkCyan);
-              
+        
         m_batch->End();
 
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,

@@ -4,7 +4,8 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-#include "../NMBReader/NMBReader.h"
+
+#include "../FromsoftFormat/NMBReader/NMBReader.h"
 #include "../MathHelper/MathHelper.h"
 
 struct EventTrackEditor

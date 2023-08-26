@@ -1326,3 +1326,49 @@ void XM_CALLCONV DX::Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionCo
         DrawLine(batch, center_bot_vertex, center_top_vertex, color);
     }
 }
+
+Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
+{
+    Vector3 position = Vector3(flver->bones[bone_id].translation_x, flver->bones[bone_id].translation_y, flver->bones[bone_id].translation_z);
+    XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(Vector3(flver->bones[bone_id].rot_x, flver->bones[bone_id].rot_y, flver->bones[bone_id].rot_z));
+    XMMATRIX scale = XMMatrixScaling(flver->bones[bone_id].scale_x, flver->bones[bone_id].scale_y, flver->bones[bone_id].scale_z);
+
+    position = Vector3::Transform(position, rot);
+    position = Vector3::Transform(position, scale);
+
+    cfr::FLVER2::Bone bone = flver->bones[bone_id];
+
+    while (bone.parentIndex != -1)
+    {
+        position += Vector3(flver->bones[bone.parentIndex].translation_x, flver->bones[bone.parentIndex].translation_y, flver->bones[bone.parentIndex].translation_z);
+        rot = XMMatrixRotationRollPitchYawFromVector(Vector3(flver->bones[bone.parentIndex].rot_x, flver->bones[bone.parentIndex].rot_y, flver->bones[bone.parentIndex].rot_z));
+        scale = XMMatrixScaling(flver->bones[bone.parentIndex].scale_x, flver->bones[bone.parentIndex].scale_y, flver->bones[bone.parentIndex].scale_z);
+
+        position = Vector3::Transform(position, rot);
+        position = Vector3::Transform(position, scale);
+
+        bone = flver->bones[bone.parentIndex];
+    }
+
+    return position;
+}
+
+void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+    DirectX::XMMATRIX world, cfr::FLVER2* flver)
+{
+    DirectX::XMMATRIX world_transf = XMMatrixRotationZ(XM_PIDIV2) * world * XMMatrixScaling(2.f, 2.f, 2.f);
+
+    for (size_t i = 0; i < flver->header->boneCount; i++)
+    {
+        if (flver->bones[i].parentIndex != -1)
+        {
+            Vector3 boneA = calculateBonePosition(flver, i);
+            boneA = Vector3::Transform(boneA, world_transf);
+            
+            Vector3 boneB = calculateBonePosition(flver, flver->bones[i].parentIndex);
+            boneB = Vector3::Transform(boneB, world_transf);
+
+            DX::DrawLine(batch, boneA, boneB, Colors::Yellow);
+        }
+    }
+}

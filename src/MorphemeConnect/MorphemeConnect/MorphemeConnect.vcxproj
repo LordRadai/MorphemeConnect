@@ -24,6 +24,7 @@
     <ProjectGuid>{b82e634c-37db-41f9-879a-decbe47dd8d1}</ProjectGuid>
     <RootNamespace>MorphemeConnect</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>7.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -44,6 +45,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -51,6 +53,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,6 +73,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,15 +111,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); d3d11.lib;shlwapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -122,7 +132,8 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);IM_VEC2_CLASS_EXTRA</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +145,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="cfromreader\binders\bdf\bdf3.hpp" />
+    <ClInclude Include="cfromreader\binders\bhd\bhd5_1.hpp" />
+    <ClInclude Include="cfromreader\binders\binder.h" />
+    <ClInclude Include="cfromreader\binders\binders.hpp" />
+    <ClInclude Include="cfromreader\binders\bnd\bnd3.hpp" />
+    <ClInclude Include="cfromreader\binders\dcx\dcx.hpp" />
+    <ClInclude Include="cfromreader\binders\stdafx.hpp" />
+    <ClInclude Include="cfromreader\cfr.hpp" />
+    <ClInclude Include="cfromreader\cmem.h" />
+    <ClInclude Include="cfromreader\common\stdafx.hpp" />
+    <ClInclude Include="cfromreader\formats\flver\flver2.hpp" />
+    <ClInclude Include="cfromreader\formats\formats.hpp" />
+    <ClInclude Include="cfromreader\formats\havok\havok.hpp" />
+    <ClInclude Include="cfromreader\formats\havok\hkx\hkx.hpp" />
+    <ClInclude Include="cfromreader\formats\havok\stdafx.hpp" />
+    <ClInclude Include="cfromreader\formats\msb\msb.hpp" />
+    <ClInclude Include="cfromreader\formats\msb\msb1\msb1.hpp" />
+    <ClInclude Include="cfromreader\formats\msb\msb3\msb3.hpp" />
+    <ClInclude Include="cfromreader\formats\msb\msb_com.hpp" />
+    <ClInclude Include="cfromreader\formats\msb\stdafx.hpp" />
+    <ClInclude Include="cfromreader\formats\paramdef\paramdef.h" />
+    <ClInclude Include="cfromreader\formats\stdafx.hpp" />
+    <ClInclude Include="cfromreader\util\compat\compat.hpp" />
+    <ClInclude Include="cfromreader\util\compression\zlib_inf.hpp" />
+    <ClInclude Include="cfromreader\util\files\files.hpp" />
+    <ClInclude Include="cfromreader\util\filetypes.hpp" />
+    <ClInclude Include="cfromreader\util\hashing\hash_util.hpp" />
+    <ClInclude Include="cfromreader\util\stdafx.hpp" />
+    <ClInclude Include="cfromreader\util\strings\strings.h" />
+    <ClInclude Include="cfromreader\util\util.hpp" />
     <ClInclude Include="Debug\Debug.h" />
     <ClInclude Include="extern.h" />
     <ClInclude Include="framework.h" />
@@ -175,6 +216,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="cfromreader\binders\bdf\bdf3.cpp" />
+    <ClCompile Include="cfromreader\binders\bhd\bhd5_1.cpp" />
+    <ClCompile Include="cfromreader\binders\bnd\bnd3.cpp" />
+    <ClCompile Include="cfromreader\binders\dcx\dcx.cpp" />
+    <ClCompile Include="cfromreader\cmem.c" />
+    <ClCompile Include="cfromreader\formats\flver\flver2.cpp" />
+    <ClCompile Include="cfromreader\formats\havok\hkx\hkx.cpp" />
+    <ClCompile Include="cfromreader\formats\paramdef\paramdef.cpp" />
+    <ClCompile Include="cfromreader\util\compat\compat.cpp" />
+    <ClCompile Include="cfromreader\util\compression\zlib_inf.cpp" />
+    <ClCompile Include="cfromreader\util\files\files.cpp" />
+    <ClCompile Include="cfromreader\util\filetypes.cpp" />
+    <ClCompile Include="cfromreader\util\hashing\hash_util.cpp" />
+    <ClCompile Include="cfromreader\util\strings\strings.cpp" />
     <ClCompile Include="Debug\Debug.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.h" />

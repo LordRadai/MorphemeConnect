@@ -1,0 +1,16 @@
+{
+	"configurations": [
+		{
+			"name": "x64-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${projectDir}\\bin",
+			"installRoot": "${projectDir}\\bin",
+			"cmakeCommandArgs": "",
+			"buildCommandArgs": "/F ",
+			"ctestCommandArgs": "",
+			"inheritEnvironments": [ "msvc_x64_x64" ],
+			"cmakeToolchain": "${env.VCPKGROOT}/scripts/buildsystems/vcpkg.cmake"
+		}
+	]
+}

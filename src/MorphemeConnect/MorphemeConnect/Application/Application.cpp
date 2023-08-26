@@ -182,9 +182,9 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::Button("Load") && selected_tae_file_idx != -1)
 			{
-				tae.m_init = false;
-				tae = TimeActReader(PWSTR(filepath.c_str()));
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", tae.m_filePath, tae.m_fileSize);
+				m_tae.m_init = false;
+				m_tae = TimeActReader(PWSTR(filepath.c_str()));
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
 				this->m_eventTrackEditorFlags.load_tae = false;
 				ImGui::CloseCurrentPopup();
@@ -223,13 +223,13 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (nmb.m_init)
+			if (m_nmb.m_init)
 			{
 				ImGui::BeginChild("NSA");
 				{
-					for (int i = 0; i < nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
 					{
-						std::string anim_name = nmb.GetAnimFileName(i);
+						std::string anim_name = m_nmb.GetAnimFileName(i);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -254,13 +254,13 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (nmb.m_init)
+			if (m_nmb.m_init)
 			{
 				ImGui::BeginChild("XMD");
 				{
-					for (int i = 0; i < nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
 					{
-						std::string anim_name = nmb.GetXmdSourceAnimFileName(i);
+						std::string anim_name = m_nmb.GetXmdSourceAnimFileName(i);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -282,20 +282,20 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (tae.m_init)
+			if (m_tae.m_init)
 			{
 				ImGui::BeginChild("TAE");
 				{
-					for (int i = 0; i < tae.m_header.m_taeCount; i++)
+					for (int i = 0; i < m_tae.m_header.m_taeCount; i++)
 					{
-						std::string anim_name = std::to_string(tae.m_tae[i].m_id);
+						std::string anim_name = std::to_string(m_tae.m_tae[i].m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
 
 							if (ImGui::Selectable(anim_name.c_str()))
-								this->m_timeActEditorFlags.m_taeId = tae.m_tae[i].m_id;
+								this->m_timeActEditorFlags.m_taeId = m_tae.m_tae[i].m_id;
 
 							ImGui::PopID();
 						}
@@ -323,7 +323,7 @@ void Application::RenderGUI(const char* title)
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
-		if (this->nmb.m_init)
+		if (this->m_nmb.m_init)
 		{
 			if (ImGui::Button("Load"))
 			{
@@ -348,7 +348,7 @@ void Application::RenderGUI(const char* title)
 
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
+				ImGui::Text(m_nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
 			else
 				ImGui::Text("");
 
@@ -409,11 +409,11 @@ void Application::RenderGUI(const char* title)
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
-		if (this->tae.m_init)
+		if (this->m_tae.m_init)
 		{
 			if (ImGui::Button("Load"))
 			{
-				if (this->tae.m_init)
+				if (this->m_tae.m_init)
 				{
 					this->m_timeActEditorFlags.m_load = true;
 					selectedTrackTae = -1;
@@ -425,7 +425,7 @@ void Application::RenderGUI(const char* title)
 			ImGui::SameLine();
 			if (ImGui::Button("Save"))
 			{
-				if (this->tae.m_init)
+				if (this->m_tae.m_init)
 					this->m_timeActEditorFlags.m_save = true;
 				else
 					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct track is currently loaded\n");
@@ -616,13 +616,13 @@ void Application::ProcessVariables()
 	{
 		this->m_flags.m_saveFile = false;
 
-		if (this->nmb.m_init)
+		if (this->m_nmb.m_init)
 			this->SaveFile();
 		else
 			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No file is loaded\n");
 	}
 
-	if (this->nmb.m_init == false)
+	if (this->m_nmb.m_init == false)
 	{
 		this->m_eventTrackEditor.Clear();
 
@@ -634,20 +634,20 @@ void Application::ProcessVariables()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
-		if ((this->nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+		if ((this->m_nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found = false;
 
-			for (int idx = 0; idx < this->nmb.m_network.m_data->m_numNodes; idx++)
+			for (int idx = 0; idx < this->m_nmb.m_network.m_data->m_numNodes; idx++)
 			{
-				NodeDef* node = this->nmb.m_network.m_data->m_nodes[idx];
+				NodeDef* node = this->m_nmb.m_network.m_data->m_nodes[idx];
 
 				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 				{
-					if (this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
+					if (this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
 					{
-						NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib->m_content;
-						NodeDataAttrib_EventTrack* event_track = (NodeDataAttrib_EventTrack*)this->nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib->m_content;
+						NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib->m_content;
+						NodeDataAttrib_EventTrack* event_track = (NodeDataAttrib_EventTrack*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib->m_content;
 
 						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
@@ -670,7 +670,7 @@ void Application::ProcessVariables()
 
 								for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
@@ -678,7 +678,7 @@ void Application::ProcessVariables()
 
 								for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
@@ -686,13 +686,13 @@ void Application::ProcessVariables()
 
 								for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 								}
 
-								if (this->tae.m_init)
+								if (this->m_tae.m_init)
 								{
 									for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
 									{
@@ -717,7 +717,7 @@ void Application::ProcessVariables()
 		}
 	}
 
-	if (this->tae.m_init == false)
+	if (this->m_tae.m_init == false)
 	{
 		this->m_timeActEditor.Clear();
 
@@ -729,11 +729,11 @@ void Application::ProcessVariables()
 		this->m_timeActEditorFlags.m_load = false;
 		this->m_timeActEditor.Clear();
 
-		if (this->tae.m_init && this->m_timeActEditorFlags.m_taeId > -1)
+		if (this->m_tae.m_init && this->m_timeActEditorFlags.m_taeId > -1)
 		{
-			if (tae.m_tae.size() > 0)
+			if (m_tae.m_tae.size() > 0)
 			{
-				TimeAct* timeact = this->tae.TimeActLookup(this->m_timeActEditorFlags.m_taeId);
+				TimeAct* timeact = this->m_tae.TimeActLookup(this->m_timeActEditorFlags.m_taeId);
 
 				if (timeact)
 				{
@@ -763,7 +763,7 @@ void Application::ProcessVariables()
 						Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 				}
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found in %s\n", this->m_timeActEditorFlags.m_taeId, this->tae.m_filePath);
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found in %s\n", this->m_timeActEditorFlags.m_taeId, this->m_tae.m_filePath);
 			}
 			else
 				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct is loaded\n");			
@@ -876,11 +876,11 @@ void Application::LoadFile()
 
 						if (filepath_tae.extension() == ".nmb")
 						{
-							nmb.m_init = false;
-							nmb = NMBReader(pszFilePath);
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", nmb.m_filePath, nmb.m_bundles.size(), nmb.m_fileSize);							
+							m_nmb.m_init = false;
+							m_nmb = NMBReader(pszFilePath);
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.m_filePath, m_nmb.m_bundles.size(), m_nmb.m_fileSize);							
 							
-							this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(nmb.m_filePath);
+							this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
 
 							bool found = false;
 
@@ -917,19 +917,31 @@ void Application::LoadFile()
 								this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath_tae, this->m_eventTrackEditorFlags.chr_id);
 								this->m_eventTrackEditorFlags.load_tae = true;
 
-								dcx.m_init = false;
+								m_bnd.m_init = false;
 								std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, this->m_eventTrackEditorFlags.chr_id);
 								PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
 
-								dcx = BNDReader(dcx_path);
+								m_bnd = BNDReader(dcx_path);
+
+								std::string filename = "c" + std::to_string(this->m_eventTrackEditorFlags.chr_id) + ".flv";
+
+								for (size_t i = 0; i < m_bnd.m_fileCount; i++)
+								{
+									if (m_bnd.m_files[i].m_name == filename)
+									{
+										this->m_model = FlverModel(openFLVER2(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize));
+										this->m_flverModelFlags.m_loaded = true;
+										break;
+									}
+								}
 							}
 						}
 
 						if (filepath_tae.extension() == ".tae")
 						{
-							tae.m_init = false;
-							tae = TimeActReader(pszFilePath);
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", tae.m_filePath, tae.m_fileSize);
+							m_tae.m_init = false;
+							m_tae = TimeActReader(pszFilePath);
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 						}
 					}
 					pItem->Release();
@@ -979,16 +991,16 @@ void Application::SaveFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						if (nmb.m_init)
+						if (m_nmb.m_init)
 						{
 							std::filesystem::path filepath = std::wstring(pszOutFilePath);
 
-							if (filepath.extension() == ".nmb")
+							if (filepath.extension() == ".m_nmb")
 							{
-								bool status = nmb.SaveToFile(pszOutFilePath);
+								bool status = m_nmb.SaveToFile(pszOutFilePath);
 
 								if (status)
-									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", nmb.m_outFilePath, nmb.m_bundles.size(), nmb.m_outFileSize);
+									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
 								else
 									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
 							}

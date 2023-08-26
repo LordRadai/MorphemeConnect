@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "StepTimer.h"
+#include "../Application/Application.h"
 
 using namespace DirectX;
 using namespace SimpleMath;
@@ -119,8 +120,6 @@ void Scene::CreateResources()
             m_inputLayout.ReleaseAndGetAddressOf())
     );
 
-    m_fxFactory = std::make_unique<EffectFactory>(this->m_device);
-
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
 
     m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
@@ -172,6 +171,10 @@ void Scene::CreateResources()
         device->CreateDepthStencilView(depthBuffer.Get(),
             &dsvDesc,
             m_depthStencilSRV.ReleaseAndGetAddressOf()));
+
+    this->m_font = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font.spritefont");
+    this->m_fontBold = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_bold.spritefont");
+    this->m_fontItalic = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_italic.spritefont");
 }
 
 void Scene::Update()
@@ -232,6 +235,9 @@ void Scene::Render()
         
         DX::DrawOriginMarker(this->m_batch.get(), XMMatrixTranslationFromVector(Vector3::Zero), 0.5f, Colors::DarkCyan);
         
+        if (g_morphemeConnect.m_flverModelFlags.m_loaded)
+            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model.m_flver);
+
         m_batch->End();
 
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,
@@ -250,4 +256,73 @@ void Scene::SetViewportSize(int width, int height)
 {
     this->m_viewportWidth = (std::max)(height, 1);
     this->m_viewportHeight = (std::max)(width, 1);
+}
+
+void Scene::AddOverlayText(std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)
+{
+    DirectX::SpriteBatch sprite(this->m_deviceContext);
+
+    sprite.Begin(DirectX::DX11::SpriteSortMode_Deferred, nullptr, nullptr, m_states->DepthDefault());
+
+    DirectX::SimpleMath::Vector2 pos = position;
+    DirectX::SimpleMath::Vector2 text_size = m_font->MeasureString(text.c_str());
+    DirectX::SimpleMath::Vector2 origin(0, 0);
+    DirectX::SimpleMath::Vector2 shadow_origin;
+
+    if (flags & TextFlags_Shadow)
+    {
+        shadow_origin = DirectX::SimpleMath::Vector2(m_font->MeasureString(text.c_str())) / 2.f;
+
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+    }
+
+    if (flags & TextFlags_Outline)
+    {
+        shadow_origin = DirectX::SimpleMath::Vector2(m_font->MeasureString(text.c_str())) / 2.f;
+
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        m_font->DrawString(&sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+    }
+
+    m_font->DrawString(&sprite, text.c_str(), position, color, 0, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+
+    sprite.End();
+}
+
+void Scene::AddWorldSpaceText(std::string text, DirectX::SimpleMath::Vector3 position, DirectX::XMMATRIX* m_world, DirectX::XMVECTORF32 color)
+{
+    if (m_world == NULL)
+        return;
+
+    m_effect->Apply(this->m_deviceContext);
+
+    this->m_deviceContext->IASetInputLayout(m_inputLayout.Get());
+    this->m_deviceContext->OMSetBlendState(m_states->AlphaBlend(), nullptr, 0xFFFFFFFF);
+    this->m_deviceContext->RSSetState(m_states->CullNone());
+    this->m_deviceContext->OMSetRenderTargets(1, &this->m_renderTargetView, this->m_depthStencilView);
+
+    DirectX::BoundingFrustum camera_frustum{ DirectX::XMMatrixPerspectiveFovLH(this->m_camera.m_fov, this->m_camera.m_aspectRatio, this->m_camera.m_nearZ, this->m_camera.m_farZ) };
+    camera_frustum.Transform(camera_frustum, this->m_view);
+
+    DirectX::XMMATRIX translation_matrix = DirectX::XMMatrixTranslationFromVector(position);
+    DirectX::SimpleMath::Vector3 text_world(position);
+
+    DirectX::XMVECTOR transformed_pos = DirectX::XMVector3Transform(text_world, *m_world);
+    DirectX::XMStoreFloat3(&text_world, transformed_pos);
+
+    if (camera_frustum.Contains(text_world) != DirectX::DISJOINT)
+    {
+        auto clip = DirectX::XMVector3Project(text_world, 0, 0, this->m_width, this->m_height, this->m_camera.m_nearZ, this->m_camera.m_farZ, DirectX::XMMatrixPerspectiveFovLH(this->m_camera.m_fov, this->m_camera.m_aspectRatio, this->m_camera.m_nearZ, this->m_camera.m_farZ), DirectX::XMMatrixInverse(nullptr, this->m_view), DirectX::XMMatrixIdentity());
+
+        this->AddOverlayText(text, clip, 0.01f, color, TextFlags_Shadow);
+    }
 }

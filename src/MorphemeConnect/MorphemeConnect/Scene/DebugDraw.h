@@ -35,6 +35,7 @@
 
 #include "../Debug/Debug.h"
 #include "../MathHelper/MathHelper.h"
+#include "../cfromreader/formats/flver/flver2.hpp"
 
 #define CIRCLE_RESOLUTION 1000
 #define SPHERE_STACKS 4
@@ -125,4 +126,7 @@ namespace DX
     void XM_CALLCONV Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
         DirectX::SimpleMath::Vector3 rotation, DirectX::SimpleMath::Vector3 center, float radius, float angle, float height, bool is_front,
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow);
+
+    void XM_CALLCONV DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+        DirectX::XMMATRIX world, cfr::FLVER2* flver);
 }

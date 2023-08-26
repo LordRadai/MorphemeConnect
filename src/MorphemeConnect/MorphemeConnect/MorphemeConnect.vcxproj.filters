@@ -133,6 +133,9 @@
     <Filter Include="File di origine\FromsoftReader\BNDReader">
       <UniqueIdentifier>{29745510-793c-4bc2-bc29-ef8acda7b3e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di origine\cfromloader">
+      <UniqueIdentifier>{887c4b3a-b260-44ec-8703-4dd884105a9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -252,6 +255,96 @@
     <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h">
       <Filter>File di intestazione\FromsoftReader\BNDReader</Filter>
     </ClInclude>
+    <ClInclude Include="cfromreader\cfr.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\bdf\bdf3.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\bhd\bhd5_1.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\binder.h">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\binders.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\bnd\bnd3.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\dcx\dcx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\binders\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\common\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\flver\flver2.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\formats.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\havok\havok.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\havok\hkx\hkx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\havok\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\msb\msb.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\msb\msb1\msb1.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\msb\msb3\msb3.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\msb\msb_com.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\msb\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\paramdef\paramdef.h">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\formats\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\compat\compat.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\compression\zlib_inf.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\files\files.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\filetypes.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\hashing\hash_util.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\stdafx.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\strings\strings.h">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\util\util.hpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="cfromreader\cmem.h">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -352,6 +445,48 @@
     </ClCompile>
     <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp">
       <Filter>File di origine\FromsoftReader\BNDReader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\binders\bdf\bdf3.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\binders\bhd\bhd5_1.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\binders\bnd\bnd3.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\binders\dcx\dcx.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\formats\flver\flver2.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\formats\havok\hkx\hkx.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\formats\paramdef\paramdef.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\compat\compat.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\compression\zlib_inf.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\files\files.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\filetypes.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\hashing\hash_util.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\util\strings\strings.cpp">
+      <Filter>File di origine\cfromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="cfromreader\cmem.c">
+      <Filter>File di origine\cfromloader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

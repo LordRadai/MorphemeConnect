@@ -20,6 +20,28 @@
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
 #include "../FromsoftFormat/BNDReader/BNDReader.h"
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
+#include "../cfromreader/formats/flver/flver2.hpp"
+#include "../cfromreader/binders/bnd/bnd3.hpp"
+
+using namespace cfr;
+
+struct FlverModel
+{
+	DirectX::SimpleMath::Vector3 m_position;
+	cfr::FLVER2* m_flver;
+
+	FlverModel()
+	{
+		this->m_position = DirectX::SimpleMath::Vector3::Zero;
+		this->m_flver = nullptr;
+	}
+
+	FlverModel(cfr::FLVER2* flver)
+	{
+		this->m_position = DirectX::SimpleMath::Vector3::Zero;
+		this->m_flver = flver;
+	}
+};
 
 class Application
 {
@@ -57,10 +79,15 @@ public:
 
 	} m_timeActEditorFlags;
 
-	NMBReader nmb;
-	TimeActReader tae;
-	BNDReader dcx;
-	FlverReader flver;
+	struct ModelFlags
+	{
+		bool m_loaded = false;
+	} m_flverModelFlags;
+
+	NMBReader m_nmb;
+	TimeActReader m_tae;
+	BNDReader m_bnd;
+	FlverModel m_model;
 
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;

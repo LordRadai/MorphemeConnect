@@ -6,6 +6,7 @@
 //-------------------------------------------------------------------------------------
 #include "DebugDraw.h"
 #include "Scene.h"
+#include "../StringHelper/StringHelper.h"
 
 #include <algorithm>
 
@@ -1329,24 +1330,17 @@ void XM_CALLCONV DX::Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionCo
 
 Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 {
-    Vector3 position = Vector3(flver->bones[bone_id].translation_x, flver->bones[bone_id].translation_y, flver->bones[bone_id].translation_z);
-    XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(Vector3(flver->bones[bone_id].rot_x, flver->bones[bone_id].rot_y, flver->bones[bone_id].rot_z));
-    XMMATRIX scale = XMMatrixScaling(flver->bones[bone_id].scale_x, flver->bones[bone_id].scale_y, flver->bones[bone_id].scale_z);
-
-    position = Vector3::Transform(position, rot);
-    position = Vector3::Transform(position, scale);
+    Vector3 position = Vector3(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
+    position = Vector3::Transform(position, XMMatrixRotationRollPitchYaw(flver->bones[bone_id].rot.x, flver->bones[bone_id].rot.y, flver->bones[bone_id].rot.z));
+    position = Vector3::Transform(position, XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z));
 
     cfr::FLVER2::Bone bone = flver->bones[bone_id];
-
     while (bone.parentIndex != -1)
     {
-        position += Vector3(flver->bones[bone.parentIndex].translation_x, flver->bones[bone.parentIndex].translation_y, flver->bones[bone.parentIndex].translation_z);
-        rot = XMMatrixRotationRollPitchYawFromVector(Vector3(flver->bones[bone.parentIndex].rot_x, flver->bones[bone.parentIndex].rot_y, flver->bones[bone.parentIndex].rot_z));
-        scale = XMMatrixScaling(flver->bones[bone.parentIndex].scale_x, flver->bones[bone.parentIndex].scale_y, flver->bones[bone.parentIndex].scale_z);
-
-        position = Vector3::Transform(position, rot);
-        position = Vector3::Transform(position, scale);
-
+        position += Vector3(flver->bones[bone.parentIndex].translation.x, flver->bones[bone.parentIndex].translation.y, flver->bones[bone.parentIndex].translation.z);
+        position = Vector3::Transform(position, XMMatrixRotationRollPitchYaw(flver->bones[bone.parentIndex].rot.x, flver->bones[bone.parentIndex].rot.y, flver->bones[bone.parentIndex].rot.z));
+        position = Vector3::Transform(position, XMMatrixScaling(flver->bones[bone.parentIndex].scale.x, flver->bones[bone.parentIndex].scale.y, flver->bones[bone.parentIndex].scale.z));
+        
         bone = flver->bones[bone.parentIndex];
     }
 
@@ -1356,19 +1350,114 @@ Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
     DirectX::XMMATRIX world, cfr::FLVER2* flver)
 {
-    DirectX::XMMATRIX world_transf = XMMatrixRotationZ(XM_PIDIV2) * world * XMMatrixScaling(2.f, 2.f, 2.f);
+    constexpr float scale = 1.f;
+    XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
 
-    for (size_t i = 0; i < flver->header->boneCount; i++)
+    for (size_t i = 0; i < flver->header.boneCount; i++)
     {
         if (flver->bones[i].parentIndex != -1)
         {
             Vector3 boneA = calculateBonePosition(flver, i);
-            boneA = Vector3::Transform(boneA, world_transf);
-            
-            Vector3 boneB = calculateBonePosition(flver, flver->bones[i].parentIndex);
-            boneB = Vector3::Transform(boneB, world_transf);
+            boneA = Vector3::Transform(boneA, transf);
 
-            DX::DrawLine(batch, boneA, boneB, Colors::Yellow);
+            Vector3 boneB = calculateBonePosition(flver, flver->bones[i].parentIndex);
+            boneB = Vector3::Transform(boneB, transf);
+
+            DX::DrawLine(batch, boneA, boneB, Colors::Orange);
+
+            std::string boneB_name = StringHelper::ToNarrow(flver->bones[flver->bones[i].parentIndex].name);
+        }
+
+        //std::string bone_name = StringHelper::ToNarrow(flver->bones[i].name);
+
+        //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(flver, i)), g_preview.m_camera, Colors::White);
+    }
+
+    for (size_t i = 0; i < flver->header.meshCount; i++)
+    {
+        int uvData[100];
+        int colorData[100];
+        int tanData[100];
+
+        flver->getVertexData(i, uvData, colorData, tanData);
+
+        for (size_t j = 0; j < flver->meshes[i].header.facesetCount; j++)
+        {
+            flver->facesets[j].triangulate();
+
+            for (size_t k = 0; k < flver->facesets[j].triCount; k += 3)
+            {
+                int tri = flver->facesets[j].triList[k];
+
+                float* vpos = &flver->meshes[i].vertexData->positions[tri];
+
+                Vector3 v1_pos = Vector3(vpos[0], vpos[1], vpos[2]);
+                v1_pos = Vector3::Transform(v1_pos, transf);
+
+                VertexPositionColor v1 = VertexPositionColor(v1_pos, Vector4(Colors::LightGray));
+
+                vpos = &flver->meshes[i].vertexData->positions[tri + 1];
+
+                Vector3 v2_pos = Vector3(vpos[0], vpos[1], vpos[2]);
+                v2_pos = Vector3::Transform(v2_pos, transf);
+
+                VertexPositionColor v2 = VertexPositionColor(v2_pos, Vector4(Colors::LightGray));
+
+                vpos = &flver->meshes[i].vertexData->positions[tri + 2];
+
+                Vector3 v3_pos = Vector3(vpos[0], vpos[1], vpos[2]);
+                v3_pos = Vector3::Transform(v3_pos, transf);
+
+                VertexPositionColor v3 = VertexPositionColor(v3_pos, Vector4(Colors::LightGray));
+
+                batch->DrawTriangle(v1, v2, v3);
+            }
         }
     }
+}
+
+void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)
+{
+    DirectX::SimpleMath::Vector2 pos = position;
+    DirectX::SimpleMath::Vector2 text_size = font->MeasureString(text.c_str());
+    DirectX::SimpleMath::Vector2 origin(0, 0);
+    DirectX::SimpleMath::Vector2 shadow_origin;
+
+    if (flags & TextFlags_Shadow)
+    {
+        shadow_origin = DirectX::SimpleMath::Vector2(font->MeasureString(text.c_str())) / 2.f;
+
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+    }
+
+    if (flags & TextFlags_Outline)
+    {
+        shadow_origin = DirectX::SimpleMath::Vector2(font->MeasureString(text.c_str())) / 2.f;
+
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(-1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+        font->DrawString(sprite, text.c_str(),
+            position + DirectX::SimpleMath::Vector2(1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+    }
+
+    font->DrawString(sprite, text.c_str(), position, color, 0, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+}
+
+void XM_CALLCONV DX::AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector3 position, DirectX::XMMATRIX world, Camera cam, DirectX::XMVECTORF32 color)
+{
+    DirectX::SimpleMath::Vector3 text_world(position);
+
+    DirectX::XMVECTOR transformed_pos = DirectX::XMVector3Transform(text_world, world);
+    DirectX::XMStoreFloat3(&text_world, transformed_pos);
+
+    auto clip = DirectX::XMVector3Project(text_world, 0, 0, cam.m_width, cam.m_height, cam.m_nearZ, cam.m_farZ, cam.m_proj, cam.m_view, Matrix::Identity);
+
+    AddOverlayText(sprite, font, text, clip, 0.01f, color, TextFlags_Shadow);
 }

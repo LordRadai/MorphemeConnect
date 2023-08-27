@@ -133,8 +133,8 @@
     <Filter Include="File di origine\FromsoftReader\BNDReader">
       <UniqueIdentifier>{29745510-793c-4bc2-bc29-ef8acda7b3e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di origine\cfromloader">
-      <UniqueIdentifier>{887c4b3a-b260-44ec-8703-4dd884105a9c}</UniqueIdentifier>
+    <Filter Include="File di intestazione\fromloader">
+      <UniqueIdentifier>{cc8e895c-9433-4c28-a60a-e8858c5095de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,95 +255,98 @@
     <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h">
       <Filter>File di intestazione\FromsoftReader\BNDReader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\cfr.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\common\common.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\bdf\bdf3.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf3.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\bhd\bhd5_1.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf4.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\binder.h">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_0.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\binders.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_1.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\bnd\bnd3.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\binder.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\dcx\dcx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd3.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\binders\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd4.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\common\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\binder\include.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\flver\flver2.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\dcx\dcx.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\formats.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\flver\flver.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\havok\havok.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\flver\flver0\flver0.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\havok\hkx\hkx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\flver\flver2\flver2.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\havok\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\flver\include.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\msb\msb.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\include.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\msb\msb1\msb1.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\mtd\mtd.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\msb\msb3\msb3.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\paramdef\paramdef.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\msb\msb_com.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\formats\stdafx.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\msb\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\open.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\paramdef\paramdef.h">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\endian\endian.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\formats\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\file\file.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\compat\compat.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\fileio\fileio.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\compression\zlib_inf.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\include.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\files\files.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\inflate\inflate.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\filetypes.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\math\math.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\hashing\hash_util.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\stringio\stringio.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\stdafx.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\types\types.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\strings\strings.h">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\src\util\validate\validate.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\util\util.hpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\fromloader.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
-    <ClInclude Include="cfromreader\cmem.h">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClInclude Include="fromloader\cmem.h">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\umem.h">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -446,47 +449,65 @@
     <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp">
       <Filter>File di origine\FromsoftReader\BNDReader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\binders\bdf\bdf3.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\binder\binder.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\binders\bhd\bhd5_1.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd3.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\binders\bnd\bnd3.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd4.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\binders\dcx\dcx.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\dcx\dcx.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\formats\flver\flver2.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\flver\flver.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\formats\havok\hkx\hkx.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\flver\flver0\flver0.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\formats\paramdef\paramdef.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\compat\compat.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2_helpers.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\compression\zlib_inf.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\mtd\mtd.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\files\files.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\formats\paramdef\paramdef.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\filetypes.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\open.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\hashing\hash_util.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\util\endian\endian.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\util\strings\strings.cpp">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\util\file\file.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
-    <ClCompile Include="cfromreader\cmem.c">
-      <Filter>File di origine\cfromloader</Filter>
+    <ClCompile Include="fromloader\src\util\fileio\fileio.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\inflate\inflate.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\stringio\stringio.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\types\types.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\validate\validate.cpp">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\cmem.c">
+      <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\umem.c">
+      <Filter>File di intestazione\fromloader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -504,5 +525,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="fromloader\src\util\stringio\simple_sjis_table.bin">
+      <Filter>File di intestazione\fromloader</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -35,7 +35,9 @@
 
 #include "../Debug/Debug.h"
 #include "../MathHelper/MathHelper.h"
-#include "../cfromreader/formats/flver/flver2.hpp"
+#include "../fromloader/fromloader.h"
+
+class Camera;
 
 #define CIRCLE_RESOLUTION 1000
 #define SPHERE_STACKS 4
@@ -47,6 +49,13 @@
 #define VERTEX_BUF_SIZE 50000
 #define LINE_INDEX_BUF_SIZE 300000
 #define INDEX_BUF_SIZE 100000
+
+enum TextFlags : BYTE
+{
+    TextFlags_None = 0,
+    TextFlags_Shadow = 1 << 0,
+    TextFlags_Outline = 1 << 1
+};
 
 namespace DX
 {
@@ -129,4 +138,9 @@ namespace DX
 
     void XM_CALLCONV DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
         DirectX::XMMATRIX world, cfr::FLVER2* flver);
+
+    void XM_CALLCONV AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags);
+    
+    void XM_CALLCONV AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector3 position, DirectX::XMMATRIX world, Camera cam, DirectX::XMVECTORF32 color);
+
 }

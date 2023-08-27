@@ -114,7 +114,7 @@
       <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Env\icu-windows\include\unicode;C:\Env\icu-windows\include;C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -145,39 +145,40 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
-    <ClInclude Include="cfromreader\binders\bdf\bdf3.hpp" />
-    <ClInclude Include="cfromreader\binders\bhd\bhd5_1.hpp" />
-    <ClInclude Include="cfromreader\binders\binder.h" />
-    <ClInclude Include="cfromreader\binders\binders.hpp" />
-    <ClInclude Include="cfromreader\binders\bnd\bnd3.hpp" />
-    <ClInclude Include="cfromreader\binders\dcx\dcx.hpp" />
-    <ClInclude Include="cfromreader\binders\stdafx.hpp" />
-    <ClInclude Include="cfromreader\cfr.hpp" />
-    <ClInclude Include="cfromreader\cmem.h" />
-    <ClInclude Include="cfromreader\common\stdafx.hpp" />
-    <ClInclude Include="cfromreader\formats\flver\flver2.hpp" />
-    <ClInclude Include="cfromreader\formats\formats.hpp" />
-    <ClInclude Include="cfromreader\formats\havok\havok.hpp" />
-    <ClInclude Include="cfromreader\formats\havok\hkx\hkx.hpp" />
-    <ClInclude Include="cfromreader\formats\havok\stdafx.hpp" />
-    <ClInclude Include="cfromreader\formats\msb\msb.hpp" />
-    <ClInclude Include="cfromreader\formats\msb\msb1\msb1.hpp" />
-    <ClInclude Include="cfromreader\formats\msb\msb3\msb3.hpp" />
-    <ClInclude Include="cfromreader\formats\msb\msb_com.hpp" />
-    <ClInclude Include="cfromreader\formats\msb\stdafx.hpp" />
-    <ClInclude Include="cfromreader\formats\paramdef\paramdef.h" />
-    <ClInclude Include="cfromreader\formats\stdafx.hpp" />
-    <ClInclude Include="cfromreader\util\compat\compat.hpp" />
-    <ClInclude Include="cfromreader\util\compression\zlib_inf.hpp" />
-    <ClInclude Include="cfromreader\util\files\files.hpp" />
-    <ClInclude Include="cfromreader\util\filetypes.hpp" />
-    <ClInclude Include="cfromreader\util\hashing\hash_util.hpp" />
-    <ClInclude Include="cfromreader\util\stdafx.hpp" />
-    <ClInclude Include="cfromreader\util\strings\strings.h" />
-    <ClInclude Include="cfromreader\util\util.hpp" />
     <ClInclude Include="Debug\Debug.h" />
     <ClInclude Include="extern.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="fromloader\cmem.h" />
+    <ClInclude Include="fromloader\fromloader.h" />
+    <ClInclude Include="fromloader\src\common\common.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf3.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf4.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_0.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_1.h" />
+    <ClInclude Include="fromloader\src\formats\binder\binder.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd3.h" />
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd4.h" />
+    <ClInclude Include="fromloader\src\formats\binder\include.h" />
+    <ClInclude Include="fromloader\src\formats\dcx\dcx.h" />
+    <ClInclude Include="fromloader\src\formats\flver\flver.h" />
+    <ClInclude Include="fromloader\src\formats\flver\flver0\flver0.h" />
+    <ClInclude Include="fromloader\src\formats\flver\flver2\flver2.h" />
+    <ClInclude Include="fromloader\src\formats\flver\include.h" />
+    <ClInclude Include="fromloader\src\formats\include.h" />
+    <ClInclude Include="fromloader\src\formats\mtd\mtd.h" />
+    <ClInclude Include="fromloader\src\formats\paramdef\paramdef.h" />
+    <ClInclude Include="fromloader\src\formats\stdafx.h" />
+    <ClInclude Include="fromloader\src\open.h" />
+    <ClInclude Include="fromloader\src\util\endian\endian.h" />
+    <ClInclude Include="fromloader\src\util\fileio\fileio.h" />
+    <ClInclude Include="fromloader\src\util\file\file.h" />
+    <ClInclude Include="fromloader\src\util\include.h" />
+    <ClInclude Include="fromloader\src\util\inflate\inflate.h" />
+    <ClInclude Include="fromloader\src\util\math\math.h" />
+    <ClInclude Include="fromloader\src\util\stringio\stringio.h" />
+    <ClInclude Include="fromloader\src\util\types\types.h" />
+    <ClInclude Include="fromloader\src\util\validate\validate.h" />
+    <ClInclude Include="fromloader\umem.h" />
     <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h" />
     <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h" />
     <ClInclude Include="FromsoftFormat\MemReader\MemReader.h" />
@@ -216,23 +217,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="cfromreader\binders\bdf\bdf3.cpp" />
-    <ClCompile Include="cfromreader\binders\bhd\bhd5_1.cpp" />
-    <ClCompile Include="cfromreader\binders\bnd\bnd3.cpp" />
-    <ClCompile Include="cfromreader\binders\dcx\dcx.cpp" />
-    <ClCompile Include="cfromreader\cmem.c" />
-    <ClCompile Include="cfromreader\formats\flver\flver2.cpp" />
-    <ClCompile Include="cfromreader\formats\havok\hkx\hkx.cpp" />
-    <ClCompile Include="cfromreader\formats\paramdef\paramdef.cpp" />
-    <ClCompile Include="cfromreader\util\compat\compat.cpp" />
-    <ClCompile Include="cfromreader\util\compression\zlib_inf.cpp" />
-    <ClCompile Include="cfromreader\util\files\files.cpp" />
-    <ClCompile Include="cfromreader\util\filetypes.cpp" />
-    <ClCompile Include="cfromreader\util\hashing\hash_util.cpp" />
-    <ClCompile Include="cfromreader\util\strings\strings.cpp" />
     <ClCompile Include="Debug\Debug.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.h" />
+    <ClCompile Include="fromloader\cmem.c" />
+    <ClCompile Include="fromloader\src\formats\binder\binder.cpp" />
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd3.cpp" />
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd4.cpp" />
+    <ClCompile Include="fromloader\src\formats\dcx\dcx.cpp" />
+    <ClCompile Include="fromloader\src\formats\flver\flver.cpp" />
+    <ClCompile Include="fromloader\src\formats\flver\flver0\flver0.cpp" />
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2.cpp" />
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2_helpers.cpp" />
+    <ClCompile Include="fromloader\src\formats\mtd\mtd.cpp" />
+    <ClCompile Include="fromloader\src\formats\paramdef\paramdef.cpp" />
+    <ClCompile Include="fromloader\src\open.cpp" />
+    <ClCompile Include="fromloader\src\util\endian\endian.cpp" />
+    <ClCompile Include="fromloader\src\util\fileio\fileio.cpp" />
+    <ClCompile Include="fromloader\src\util\file\file.cpp" />
+    <ClCompile Include="fromloader\src\util\inflate\inflate.cpp" />
+    <ClCompile Include="fromloader\src\util\stringio\stringio.cpp" />
+    <ClCompile Include="fromloader\src\util\types\types.cpp" />
+    <ClCompile Include="fromloader\src\util\validate\validate.cpp" />
+    <ClCompile Include="fromloader\umem.c" />
     <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp" />
     <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp" />
     <ClCompile Include="FromsoftFormat\MemReader\MemReader.cpp" />
@@ -271,6 +278,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fromloader\src\util\stringio\simple_sjis_table.bin" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

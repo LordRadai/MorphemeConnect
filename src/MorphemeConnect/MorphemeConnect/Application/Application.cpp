@@ -929,7 +929,10 @@ void Application::LoadFile()
 								{
 									if (m_bnd.m_files[i].m_name == filename)
 									{
-										this->m_model = FlverModel(openFLVER2(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize));
+										UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
+										FLVER2 flver_model = FLVER2(umem);
+
+										this->m_model = FlverModel(umem);
 										this->m_flverModelFlags.m_loaded = true;
 										break;
 									}

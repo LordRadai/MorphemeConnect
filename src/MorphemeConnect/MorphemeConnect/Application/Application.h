@@ -20,26 +20,27 @@
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
 #include "../FromsoftFormat/BNDReader/BNDReader.h"
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
-#include "../cfromreader/formats/flver/flver2.hpp"
-#include "../cfromreader/binders/bnd/bnd3.hpp"
+#include "../fromloader/fromloader.h"
 
 using namespace cfr;
 
 struct FlverModel
 {
 	DirectX::SimpleMath::Vector3 m_position;
-	cfr::FLVER2* m_flver;
+	FLVER2* m_flver = nullptr;
 
 	FlverModel()
 	{
 		this->m_position = DirectX::SimpleMath::Vector3::Zero;
-		this->m_flver = nullptr;
 	}
 
-	FlverModel(cfr::FLVER2* flver)
+	FlverModel(UMEM* umem)
 	{
+		if (this->m_flver != nullptr)
+			delete this->m_flver;
+
 		this->m_position = DirectX::SimpleMath::Vector3::Zero;
-		this->m_flver = flver;
+		this->m_flver = new FLVER2(umem);
 	}
 };
 

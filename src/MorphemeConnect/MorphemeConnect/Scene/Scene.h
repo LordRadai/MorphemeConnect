@@ -13,14 +13,7 @@
 #include "DebugDraw.h"
 #include "StepTimer.h"
 #include "Camera/Camera.h"
-#include "../cfromreader/formats/flver/flver2.hpp"
-
-enum TextFlags : BYTE
-{
-	TextFlags_None = 0,
-	TextFlags_Shadow = 1 << 0,
-	TextFlags_Outline = 1 << 1
-};
+#include "../fromloader/fromloader.h"
 
 namespace DX
 {
@@ -61,6 +54,7 @@ public:
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_batch;
+	std::unique_ptr<DirectX::SpriteBatch> m_sprite;
 	std::unique_ptr<DirectX::SpriteFont> m_font;
 	std::unique_ptr<DirectX::SpriteFont> m_fontBold;
 	std::unique_ptr<DirectX::SpriteFont> m_fontItalic;
@@ -85,7 +79,4 @@ public:
 	void Render();
 	void SetRenderResolution(int width, int height);
 	void SetViewportSize(int width, int height);
-
-	void AddOverlayText(std::string text, DirectX::SimpleMath::Vector2 position, float depth = 0.f, DirectX::XMVECTORF32 color = DirectX::Colors::White, TextFlags flags = TextFlags_None);
-	void AddWorldSpaceText(std::string text, DirectX::SimpleMath::Vector3 position, DirectX::XMMATRIX* m_world, DirectX::XMVECTORF32 color = DirectX::Colors::White);
 };

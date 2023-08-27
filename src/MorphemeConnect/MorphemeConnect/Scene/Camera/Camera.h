@@ -31,5 +31,6 @@ public:
 	void UpdateTargetAngleXZ(float omega, float delta_time);
 	void UpdateTargetAngleY(float omega, float delta_time);
 	void UpdatePosition(DirectX::SimpleMath::Vector3 speed, float delta_time);
+	void UpdateTargetPosition(DirectX::SimpleMath::Vector3 speed, float delta_time);
 	void SetTarget(DirectX::SimpleMath::Vector3 target_pos);
 };

@@ -400,30 +400,13 @@ void XM_CALLCONV DX::DrawOriginMarker(PrimitiveBatch<VertexPositionColor>* batch
     vertices[6].color = Vector4(color);
     vertices[6].position = Vector3::Transform(vertices[6].position, world);
 
-    std::vector<uint16_t> indices;
-
-    indices.push_back(0);
-    indices.push_back(1);
-
-    indices.push_back(1);
-    indices.push_back(3);
-
-    indices.push_back(3);
-    indices.push_back(5);
-
-    indices.push_back(5);
-    indices.push_back(6);
-
-    indices.push_back(6);
-    indices.push_back(4);
-
-    indices.push_back(4);
-    indices.push_back(2);
-
-    indices.push_back(2);
-    indices.push_back(0);
-
-    batch->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_LINELIST, indices.data(), indices.size(), vertices, 7);
+    DX::DrawLine(batch, Vector3(vertices[0].position), Vector3(vertices[1].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[1].position), Vector3(vertices[3].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[3].position), Vector3(vertices[5].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[5].position), Vector3(vertices[6].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[6].position), Vector3(vertices[4].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[4].position), Vector3(vertices[2].position), Vector4(color));
+    DX::DrawLine(batch, Vector3(vertices[2].position), Vector3(vertices[0].position), Vector4(color));
 }
 
 void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
@@ -1348,71 +1331,37 @@ Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, cfr::FLVER2* flver)
+    DirectX::XMMATRIX world, FlverModel* flver)
 {
-    constexpr float scale = 1.f;
+    constexpr float scale = 2.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
 
-    for (size_t i = 0; i < flver->header.boneCount; i++)
+    /*
+    for (size_t i = 0; i < flver->m_flver->header.boneCount; i++)
     {
-        if (flver->bones[i].parentIndex != -1)
+        if (flver->m_flver->bones[i].parentIndex != -1)
         {
-            Vector3 boneA = calculateBonePosition(flver, i);
+            Vector3 boneA = calculateBonePosition(flver->m_flver, i);
             boneA = Vector3::Transform(boneA, transf);
 
-            Vector3 boneB = calculateBonePosition(flver, flver->bones[i].parentIndex);
+            Vector3 boneB = calculateBonePosition(flver->m_flver, flver->m_flver->bones[i].parentIndex);
             boneB = Vector3::Transform(boneB, transf);
 
             DX::DrawLine(batch, boneA, boneB, Colors::Orange);
 
-            std::string boneB_name = StringHelper::ToNarrow(flver->bones[flver->bones[i].parentIndex].name);
+            std::string boneB_name = StringHelper::ToNarrow(flver->m_flver->bones[flver->m_flver->bones[i].parentIndex].name);
         }
 
         //std::string bone_name = StringHelper::ToNarrow(flver->bones[i].name);
 
         //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(flver, i)), g_preview.m_camera, Colors::White);
     }
+    */
 
-    for (size_t i = 0; i < flver->header.meshCount; i++)
+    for (int i = 0; i < flver->verts.size(); i += 3)
     {
-        int uvData[100];
-        int colorData[100];
-        int tanData[100];
-
-        flver->getVertexData(i, uvData, colorData, tanData);
-
-        for (size_t j = 0; j < flver->meshes[i].header.facesetCount; j++)
-        {
-            flver->facesets[j].triangulate();
-
-            for (size_t k = 0; k < flver->facesets[j].triCount; k += 3)
-            {
-                int tri = flver->facesets[j].triList[k];
-
-                float* vpos = &flver->meshes[i].vertexData->positions[tri];
-
-                Vector3 v1_pos = Vector3(vpos[0], vpos[1], vpos[2]);
-                v1_pos = Vector3::Transform(v1_pos, transf);
-
-                VertexPositionColor v1 = VertexPositionColor(v1_pos, Vector4(Colors::LightGray));
-
-                vpos = &flver->meshes[i].vertexData->positions[tri + 1];
-
-                Vector3 v2_pos = Vector3(vpos[0], vpos[1], vpos[2]);
-                v2_pos = Vector3::Transform(v2_pos, transf);
-
-                VertexPositionColor v2 = VertexPositionColor(v2_pos, Vector4(Colors::LightGray));
-
-                vpos = &flver->meshes[i].vertexData->positions[tri + 2];
-
-                Vector3 v3_pos = Vector3(vpos[0], vpos[1], vpos[2]);
-                v3_pos = Vector3::Transform(v3_pos, transf);
-
-                VertexPositionColor v3 = VertexPositionColor(v3_pos, Vector4(Colors::LightGray));
-
-                batch->DrawTriangle(v1, v2, v3);
-            }
-        }
+        batch->DrawTriangle(flver->verts[i], flver->verts[i + 1], flver->verts[i + 2]);
+        DX::DrawTriangle(batch, Vector3(flver->verts[i].position), Vector3(flver->verts[i + 1].position), Vector3(flver->verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 1.f));
     }
 }
 

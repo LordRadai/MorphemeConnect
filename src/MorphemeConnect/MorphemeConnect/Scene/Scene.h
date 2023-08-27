@@ -50,6 +50,7 @@ public:
 	ID3D11RenderTargetView* m_renderTargetView;
 	ID3D11ShaderResourceView* m_shaderResourceViewViewport;
 	ID3D11DepthStencilView* m_depthStencilView;
+	ID3D11DepthStencilState* m_depthStencilState;
 
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;

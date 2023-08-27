@@ -763,7 +763,7 @@ void Application::ProcessVariables()
 						Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 				}
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found in %s\n", this->m_timeActEditorFlags.m_taeId, this->m_tae.m_filePath);
+					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);
 			}
 			else
 				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct is loaded\n");			
@@ -829,10 +829,7 @@ std::wstring getModelNameFromChrId(std::wstring model_path, int chr_id)
 		int file_chr_id = stoi(file_chr_id_str);
 
 		if (file_chr_id == chr_id && entry.path().extension() == ".bnd")
-		{
-			Debug::DebuggerMessage(Debug::LVL_DEBUG, "%ws\n", filename.c_str());
 			return entry.path();
-		}
 	}
 }
 
@@ -923,7 +920,10 @@ void Application::LoadFile()
 
 								m_bnd = BNDReader(dcx_path);
 
-								std::string filename = "c" + std::to_string(this->m_eventTrackEditorFlags.chr_id) + ".flv";
+								char chr_id_str[50];
+								sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
+
+								std::string filename = "c" + std::string(chr_id_str) + ".flv";
 
 								for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 								{
@@ -933,7 +933,8 @@ void Application::LoadFile()
 										FLVER2 flver_model = FLVER2(umem);
 
 										this->m_model = FlverModel(umem);
-										this->m_flverModelFlags.m_loaded = true;
+
+										Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
 										break;
 									}
 								}

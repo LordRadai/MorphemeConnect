@@ -110,6 +110,24 @@ void Scene::CreateResources()
     // Create the shader resource view.
     m_device->CreateShaderResourceView(this->m_renderTargetTextureViewport, &shaderResourceViewDesc, &this->m_shaderResourceViewViewport);
 
+    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc;
+    depth_stencil_desc.DepthEnable = false;
+    depth_stencil_desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depth_stencil_desc.StencilEnable = true;
+    depth_stencil_desc.StencilReadMask = 0xFF;
+    depth_stencil_desc.StencilWriteMask = 0xFF;
+
+    D3D11_DEPTH_STENCILOP_DESC stencil_op_desc;
+    stencil_op_desc.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    stencil_op_desc.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;
+    stencil_op_desc.StencilFailOp = D3D11_STENCIL_OP_INCR_SAT;
+
+    depth_stencil_desc.FrontFace = stencil_op_desc;
+    depth_stencil_desc.BackFace = stencil_op_desc;
+
+    this->m_device->CreateDepthStencilState(&depth_stencil_desc, &this->m_depthStencilState);
+
     m_states = std::make_unique<CommonStates>(this->m_device);
 
     m_effect = std::make_unique<BasicEffect>(this->m_device);
@@ -187,6 +205,9 @@ void Scene::Update()
         this->m_camera.Update(this->m_viewportWidth, this->m_viewportHeight, delta_time);
     });
 
+    if (g_morphemeConnect.m_model.m_loaded)
+        this->m_camera.SetTarget(g_morphemeConnect.m_model.m_focusPoint);
+
     this->m_world = Matrix::Identity;
     this->m_view = this->m_camera.m_view;
     this->m_proj = this->m_camera.m_proj;
@@ -219,9 +240,10 @@ void Scene::Render()
     {
         ID3D11DeviceContext* context = this->m_deviceContext;
 
-        context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-        context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+        context->OMSetBlendState(m_states->AlphaBlend(), nullptr, 0xFFFFFFFF);
         context->RSSetState(m_states->CullNone());
+        context->OMSetDepthStencilState(this->m_depthStencilState, 0);
+        context->OMSetRenderTargets(1, &this->m_renderTargetView, this->m_depthStencilView);
 
         m_effect->SetWorld(m_world);
         m_effect->SetView(m_view);
@@ -233,12 +255,12 @@ void Scene::Render()
         m_batch->Begin();
         m_sprite->Begin();
 
-        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, this->m_camera.m_targetPos, 100, 100, Colors::White);
+        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::White);
         
-        DX::DrawOriginMarker(this->m_batch.get(), XMMatrixTranslationFromVector(Vector3::Zero), 0.5f, Colors::DarkCyan);
+        DX::DrawOriginMarker(this->m_batch.get(), Matrix::Identity, 0.5f, Colors::DarkCyan);
         
-        if (g_morphemeConnect.m_flverModelFlags.m_loaded)
-            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model.m_flver);
+        if (g_morphemeConnect.m_model.m_loaded)
+            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), &g_morphemeConnect.m_model);
 
         m_sprite->End();
         m_batch->End();

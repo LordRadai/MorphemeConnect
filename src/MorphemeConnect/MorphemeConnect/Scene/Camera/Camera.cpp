@@ -10,7 +10,7 @@ Camera::Camera()
 	this->m_registerInput = false;
 
 	this->m_targetPos = Vector3::Zero;
-	this->m_radius = 5.f;
+	this->m_radius = 10.f;
 
 	this->m_angles = Vector3(XM_PIDIV4, 0.285f, 0.f);
 	this->m_position = m_targetPos + Vector3(m_radius * cosf(m_angles.y) * cosf(m_angles.x), m_radius * sinf(m_angles.y), m_radius * cosf(m_angles.y) * sinf(m_angles.x));
@@ -92,6 +92,15 @@ void Camera::CameraInput(float delta_time)
 		register_input = true;
 	}
 
+	if (io.MouseDown[1])
+	{
+		Vector2 drag_delta(ImGui::GetMousePos().x - old_mouse_pos.x, ImGui::GetMousePos().y - old_mouse_pos.y);
+
+		this->UpdateTargetPosition(Vector3(this->m_speedParams.m_dragSpeed * drag_delta.x * sinf(this->m_angles.x), this->m_speedParams.m_dragSpeed * drag_delta.y, this->m_speedParams.m_dragSpeed * drag_delta.x * cosf(this->m_angles.x)), delta_time);
+
+		register_input = true;
+	}
+
 	if (io.MouseWheel > FLT_EPSILON || io.MouseWheel < -FLT_EPSILON)
 		this->UpdateRadius(-io.MouseWheel * this->m_speedParams.m_zoomSpeed, delta_time);
 
@@ -102,11 +111,13 @@ void Camera::CameraInput(float delta_time)
 
 void Camera::UpdateRadius(float speed, float delta_time)
 {
-	if (this->m_radius + speed * delta_time > 0.1f && this->m_radius + speed * delta_time < 10.f)
+	constexpr float maxRadius = 30.f;
+
+	if (this->m_radius + speed * delta_time > 0.1f && this->m_radius + speed * delta_time < maxRadius)
 		this->m_radius += speed * delta_time;
 
-	if (this->m_radius + speed * delta_time > 10.f)
-		this->m_radius = 10.f;
+	if (this->m_radius + speed * delta_time > maxRadius)
+		this->m_radius = maxRadius;
 }
 
 void Camera::UpdateTargetAngleXZ(float omega, float delta_time)
@@ -134,6 +145,11 @@ void Camera::UpdateTargetAngleY(float omega, float delta_time)
 void Camera::UpdatePosition(DirectX::SimpleMath::Vector3 speed, float delta_time)
 {
 	this->m_position += speed * delta_time;
+}
+
+void Camera::UpdateTargetPosition(DirectX::SimpleMath::Vector3 speed, float delta_time)
+{
+	this->m_targetPos += speed * delta_time;
 }
 
 void Camera::SetTarget(Vector3 target_pos)

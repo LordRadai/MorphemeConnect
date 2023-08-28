@@ -400,13 +400,30 @@ void XM_CALLCONV DX::DrawOriginMarker(PrimitiveBatch<VertexPositionColor>* batch
     vertices[6].color = Vector4(color);
     vertices[6].position = Vector3::Transform(vertices[6].position, world);
 
-    DX::DrawLine(batch, Vector3(vertices[0].position), Vector3(vertices[1].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[1].position), Vector3(vertices[3].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[3].position), Vector3(vertices[5].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[5].position), Vector3(vertices[6].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[6].position), Vector3(vertices[4].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[4].position), Vector3(vertices[2].position), Vector4(color));
-    DX::DrawLine(batch, Vector3(vertices[2].position), Vector3(vertices[0].position), Vector4(color));
+    std::vector<uint16_t> indices;
+
+    indices.push_back(0);
+    indices.push_back(1);
+
+    indices.push_back(1);
+    indices.push_back(3);
+
+    indices.push_back(3);
+    indices.push_back(5);
+
+    indices.push_back(5);
+    indices.push_back(6);
+
+    indices.push_back(6);
+    indices.push_back(4);
+
+    indices.push_back(4);
+    indices.push_back(2);
+
+    indices.push_back(2);
+    indices.push_back(0);
+
+    batch->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_LINELIST, indices.data(), indices.size(), vertices, 7);
 }
 
 void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
@@ -1361,7 +1378,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
     for (int i = 0; i < flver->verts.size(); i += 3)
     {
         batch->DrawTriangle(flver->verts[i], flver->verts[i + 1], flver->verts[i + 2]);
-        DX::DrawTriangle(batch, Vector3(flver->verts[i].position), Vector3(flver->verts[i + 1].position), Vector3(flver->verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 1.f));
+        DX::DrawTriangle(batch, Vector3(flver->verts[i].position), Vector3(flver->verts[i + 1].position), Vector3(flver->verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
     }
 }
 

@@ -47,6 +47,11 @@ using namespace cfr;
 
 struct FlverModel
 {
+	struct Settings
+	{
+		bool m_xray = false;
+	} m_settings;
+
 	bool m_loaded = false;
 
 	DirectX::SimpleMath::Vector3 m_position = DirectX::SimpleMath::Vector3::Zero;
@@ -115,56 +120,75 @@ struct FlverModel
 			uint64_t lowest_flags = LLONG_MAX;
 			cfr::FLVER2::Faceset* facesetp = nullptr;
 
-			for (size_t k = 0; k < mesh->header.facesetCount; k++)
+			for (int mfsi = 0; mfsi < mesh->header.facesetCount; mfsi++)
 			{
-				facesetp = &this->m_flver->facesets[mesh->facesetIndices[k]];
-
-				facesetp->triangulate();
-
-				if (facesetp != nullptr)
+				int fsindex = mesh->facesetIndices[mfsi];
+				if (this->m_flver->facesets[fsindex].header.flags < lowest_flags)
 				{
-					for (size_t j = 0; j < facesetp->triCount; j += 3)
-					{
-						int vertexIndex = facesetp->triList[j];
-
-						float x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
-						float y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
-						float z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
-
-						DirectX::SimpleMath::Vector3 pos = DirectX::SimpleMath::Vector3(x, y, z);
-						pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
-
-						DirectX::VertexPositionColor v1 = DirectX::VertexPositionColor(pos, color);
-
-						this->verts.push_back(v1);
-
-						vertexIndex = facesetp->triList[j + 1];
-
-						x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
-						y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
-						z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
-
-						pos = DirectX::SimpleMath::Vector3(x, y, z);
-						pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
-
-						DirectX::VertexPositionColor v2 = DirectX::VertexPositionColor(pos, color);
-						this->verts.push_back(v2);
-
-						vertexIndex = facesetp->triList[j + 2];
-
-						x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
-						y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
-						z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
-
-						pos = DirectX::SimpleMath::Vector3(x, y, z);
-						pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
-
-						DirectX::VertexPositionColor v3 = DirectX::VertexPositionColor(pos, color);
-						this->verts.push_back(v3);
-					}
+					facesetp = &this->m_flver->facesets[fsindex];
+					lowest_flags = facesetp->header.flags;
 				}
-			}			
+			}
+
+			facesetp->triangulate();
+
+			if (facesetp != nullptr)
+			{
+				for (size_t j = 0; j < facesetp->triCount; j += 3)
+				{
+					int vertexIndex = facesetp->triList[j];
+
+					float x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
+					float y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
+					float z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
+
+					DirectX::SimpleMath::Vector3 pos = DirectX::SimpleMath::Vector3(x, y, z);
+					pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
+
+					DirectX::VertexPositionColor v1 = DirectX::VertexPositionColor(pos, color);
+
+					this->verts.push_back(v1);
+
+					vertexIndex = facesetp->triList[j + 1];
+
+					x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
+					y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
+					z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
+
+					pos = DirectX::SimpleMath::Vector3(x, y, z);
+					pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
+
+					DirectX::VertexPositionColor v2 = DirectX::VertexPositionColor(pos, color);
+					this->verts.push_back(v2);
+
+					vertexIndex = facesetp->triList[j + 2];
+
+					x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
+					y = mesh->vertexData->positions[(vertexIndex * 3) + 1];
+					z = mesh->vertexData->positions[(vertexIndex * 3) + 2];
+
+					pos = DirectX::SimpleMath::Vector3(x, y, z);
+					pos = DirectX::SimpleMath::Vector3::Transform(pos, world);
+
+					DirectX::VertexPositionColor v3 = DirectX::VertexPositionColor(pos, color);
+					this->verts.push_back(v3);
+				}
+			}
 		}
+	}
+
+	void UpdateModel()
+	{
+		if (m_flver == nullptr)
+			return;
+
+		DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(0.7f, 0.7f, 0.7f, 1.f);
+
+		if (this->m_settings.m_xray)
+			color = DirectX::SimpleMath::Vector4(0.7f, 0.7f, 0.7f, 0.f);
+
+		for (int i = 0; i < this->verts.size(); i++)
+			verts[i].color = color;
 	}
 };
 
@@ -192,7 +216,6 @@ public:
 		bool load_tae = false;
 		std::vector<std::wstring> tae_list;
 		int chr_id;
-
 	} m_eventTrackEditorFlags;
 
 	struct TimeActEditorFlags
@@ -201,7 +224,6 @@ public:
 		bool m_save = false;
 		int m_taeId = -1;
 		float m_lenght = 0.f;
-
 	} m_timeActEditorFlags;
 
 	NMBReader m_nmb;

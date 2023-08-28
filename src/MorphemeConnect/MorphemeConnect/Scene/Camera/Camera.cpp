@@ -10,6 +10,8 @@ Camera::Camera()
 	this->m_registerInput = false;
 
 	this->m_targetPos = Vector3::Zero;
+	this->m_offsets = Vector3::Zero;
+
 	this->m_radius = 10.f;
 
 	this->m_angles = Vector3(XM_PIDIV4, 0.285f, 0.f);
@@ -63,9 +65,10 @@ void Camera::Update(float width, float height, float delta_time)
 
 	this->CameraInput(delta_time);
 
-	this->m_position = m_targetPos + Vector3(m_radius * cosf(m_angles.y) * cosf(m_angles.x), m_radius * sinf(m_angles.y), m_radius * cosf(m_angles.y) * sinf(m_angles.x));
+	this->m_focus = this->m_targetPos + this->m_offsets;
+	this->m_position = this->m_focus + Vector3(m_radius * cosf(m_angles.y) * cosf(m_angles.x), m_radius * sinf(m_angles.y), m_radius * cosf(m_angles.y) * sinf(m_angles.x));
 
-	this->m_view = Matrix::CreateLookAt(this->m_position, this->m_targetPos, this->m_lookAt);
+	this->m_view = Matrix::CreateLookAt(this->m_position, this->m_focus, this->m_lookAt);
 	this->m_proj = Matrix::CreatePerspectiveFieldOfView(this->m_fov, this->m_aspectRatio, this->m_nearZ, this->m_farZ);
 }
 
@@ -96,7 +99,7 @@ void Camera::CameraInput(float delta_time)
 	{
 		Vector2 drag_delta(ImGui::GetMousePos().x - old_mouse_pos.x, ImGui::GetMousePos().y - old_mouse_pos.y);
 
-		this->UpdateTargetPosition(Vector3(this->m_speedParams.m_dragSpeed * drag_delta.x * sinf(this->m_angles.x), this->m_speedParams.m_dragSpeed * drag_delta.y, this->m_speedParams.m_dragSpeed * drag_delta.x * cosf(this->m_angles.x)), delta_time);
+		this->UpdateTargetPosition(Vector3(this->m_speedParams.m_dragSpeed * drag_delta.x, this->m_speedParams.m_dragSpeed * drag_delta.y, this->m_speedParams.m_dragSpeed * drag_delta.x), delta_time);
 
 		register_input = true;
 	}
@@ -149,7 +152,10 @@ void Camera::UpdatePosition(DirectX::SimpleMath::Vector3 speed, float delta_time
 
 void Camera::UpdateTargetPosition(DirectX::SimpleMath::Vector3 speed, float delta_time)
 {
-	this->m_targetPos += speed * delta_time;
+	Vector3 deltaPos = Vector3(speed.x * delta_time * cosf(this->m_angles.y) * cosf(this->m_angles.x), speed.y * delta_time, speed.z * delta_time * cosf(this->m_angles.y) * sinf(this->m_angles.x));
+	deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(XM_PIDIV2));
+
+	this->m_offsets += deltaPos;
 }
 
 void Camera::SetTarget(Vector3 target_pos)

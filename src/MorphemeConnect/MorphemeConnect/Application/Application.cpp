@@ -97,6 +97,7 @@ void Application::GUIStyle()
 
 void Application::Update()
 {
+	this->m_model.UpdateModel();
 	ProcessVariables();
 	RenderGUI(APPNAME_A);
 }
@@ -139,6 +140,12 @@ void Application::RenderGUI(const char* title)
 		{
 			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_previewSettings)) { this->m_windowStates.m_previewSettings != this->m_windowStates.m_previewSettings; }
 
+			if (ImGui::BeginMenu("View"))
+			{
+				if (ImGui::MenuItem("Xray", NULL, &this->m_model.m_settings.m_xray)) { this->m_model.m_settings.m_xray != this->m_model.m_settings.m_xray; }
+				
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenuBar();
 		}
 
@@ -557,7 +564,8 @@ void Application::PreviewDebugManagerWindow()
 		ImGui::Text("Parameters");
 		ImGui::Separator();
 
-		ImGui::DragFloat("Offset", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
+		ImGui::DragFloat("Target Distance", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
+		ImGui::InputFloat3("Target Offset", &g_preview.m_camera.m_offsets.x);
 		ImGui::InputFloat3("Camera Position", &g_preview.m_camera.m_position.x);
 		ImGui::InputFloat3("Camera Angles", &g_preview.m_camera.m_angles.x);
 		ImGui::DragFloat("FOV", &g_preview.m_camera.m_fov, 0.1f, 0.1f, DirectX::XM_PI);

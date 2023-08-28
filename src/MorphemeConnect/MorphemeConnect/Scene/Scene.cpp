@@ -222,6 +222,7 @@ void Scene::Clear()
     this->m_deviceContext->ClearRenderTargetView(this->m_renderTargetView, color);
     this->m_deviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+    this->m_deviceContext->OMSetDepthStencilState(this->m_depthStencilState, 0);
     this->m_deviceContext->OMSetRenderTargets(1, &this->m_renderTargetView, this->m_depthStencilView);
 
     // Set the viewport.
@@ -242,8 +243,6 @@ void Scene::Render()
 
         context->OMSetBlendState(m_states->AlphaBlend(), nullptr, 0xFFFFFFFF);
         context->RSSetState(m_states->CullNone());
-        context->OMSetDepthStencilState(this->m_depthStencilState, 0);
-        context->OMSetRenderTargets(1, &this->m_renderTargetView, this->m_depthStencilView);
 
         m_effect->SetWorld(m_world);
         m_effect->SetView(m_view);
@@ -253,7 +252,6 @@ void Scene::Render()
         context->IASetInputLayout(m_inputLayout.Get());
 
         m_batch->Begin();
-        m_sprite->Begin();
 
         DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::White);
         
@@ -262,7 +260,6 @@ void Scene::Render()
         if (g_morphemeConnect.m_model.m_loaded)
             DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), &g_morphemeConnect.m_model);
 
-        m_sprite->End();
         m_batch->End();
 
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,

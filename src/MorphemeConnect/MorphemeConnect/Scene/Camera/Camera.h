@@ -15,6 +15,9 @@ public:
 	DirectX::SimpleMath::Vector3 m_angles;
 	DirectX::SimpleMath::Vector3 m_lookAt;
 	DirectX::SimpleMath::Vector3 m_targetPos;
+	DirectX::SimpleMath::Vector3 m_focus;
+	DirectX::SimpleMath::Vector3 m_offsets;
+
 	float m_width, m_height;
 	float m_fov;
 	float m_farZ, m_nearZ;

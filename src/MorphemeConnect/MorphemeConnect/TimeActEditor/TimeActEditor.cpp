@@ -29,7 +29,7 @@ void TimeActEditor::TimeActTrack::SaveTimeActTrack()
 	{
 		this->m_source->m_event[i].m_start = MathHelper::FrameToTime(this->m_event[i].m_frameStart);
 		this->m_source->m_event[i].m_end = MathHelper::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration);
-		this->m_source->m_event[i].m_eventData->m_id = (TimeActEventType)this->m_event[i].m_value;
+		this->m_source->m_event[i].m_eventData->m_id = this->m_event[i].m_value;
 	}
 }
 

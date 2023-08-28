@@ -17,7 +17,7 @@ TimeActEditor::TimeActTrack::TimeActTrack(EventGroup* src)
 	this->m_count = src->m_count;
 
 	for (size_t i = 0; i < src->m_count; i++)
-		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i].m_start), MathHelper::TimeToFrame(src->m_event[i].m_end - src->m_event[i].m_start), (int)src->m_event[i].m_eventData->m_id });	
+		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i].m_start), MathHelper::TimeToFrame(src->m_event[i].m_end - src->m_event[i].m_start), (int)src->m_event[i].m_eventData->m_id,  src->m_event[i].m_eventData->m_args });
 }
 
 void TimeActEditor::TimeActTrack::SaveTimeActTrack()
@@ -29,7 +29,7 @@ void TimeActEditor::TimeActTrack::SaveTimeActTrack()
 	{
 		this->m_source->m_event[i].m_start = MathHelper::FrameToTime(this->m_event[i].m_frameStart);
 		this->m_source->m_event[i].m_end = MathHelper::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration);
-		this->m_source->m_event[i].m_eventData->m_id = this->m_event[i].m_value;
+		this->m_source->m_event[i].m_eventData->m_id = (TimeActEventType)this->m_event[i].m_value;
 	}
 }
 
@@ -128,7 +128,7 @@ std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
 	std::string tae_group_str = std::to_string(this->m_tracks[idx].m_eventGroup);
 	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 
-	return reader.GetString(tae_group_str, tae_id_str, default_str) + "[" + tae_id_str + "]";
+	return reader.GetString(tae_group_str, tae_id_str, default_str) + "[" + tae_id_str + "]" + this->m_tracks[idx].m_event[event_idx].m_args->GetArgumentAsString();
 }
 
 TimeActEditor::TimeActEditor() {}

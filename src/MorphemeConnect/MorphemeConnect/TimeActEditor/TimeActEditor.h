@@ -17,6 +17,8 @@ struct TimeActEditor
             int m_frameStart = 0;
             int m_duration = 0;
             int m_value = 0;
+
+            TimeActEventData* m_args = nullptr;
         };
 
         EventGroup* m_source;

@@ -50,7 +50,7 @@ void Application::GUIStyle()
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
 	colors[ImGuiCol_TitleBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_TitleBgActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
@@ -485,13 +485,16 @@ void Application::RenderGUI(const char* title)
 
 			ImGui::InputFloat("Start Time", &startTime);
 			ImGui::InputFloat("End Time", &endTime);
-			ImGui::PopItemWidth();
+
+			track->m_event[selectedEventTae].m_args->ImGuiEditSection();
 
 			if (this->m_timeActEditorFlags.m_save)
 			{
 				this->m_timeActEditorFlags.m_save = false;
 				track->SaveTimeActTrack();
 			}
+
+			ImGui::PopItemWidth();
 		}
 	}
 	ImGui::End();
@@ -948,8 +951,7 @@ void Application::LoadFile()
 								}
 							}
 						}
-
-						if (filepath_tae.extension() == ".tae")
+						else if (filepath_tae.extension() == ".tae")
 						{
 							m_tae.m_init = false;
 							m_tae = TimeActReader(pszFilePath);
@@ -1016,8 +1018,15 @@ void Application::SaveFile()
 								else
 									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
 							}
-							else
-								Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Saving TimeAct files is not supported yet\n");
+							else if (filepath.extension() == ".tae")
+							{
+								bool status = m_tae.SaveFile(pszOutFilePath);
+
+								if (status)
+									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+								else
+									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "TimeActReader.cpp");
+							}
 						}
 					}
 					pItem->Release();

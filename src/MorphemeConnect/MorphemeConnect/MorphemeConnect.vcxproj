@@ -190,6 +190,7 @@
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />

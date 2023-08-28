@@ -348,6 +348,9 @@
     <ClInclude Include="fromloader\umem.h">
       <Filter>File di intestazione\fromloader</Filter>
     </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="fromloader\umem.c">
       <Filter>File di intestazione\fromloader</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp">
+      <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

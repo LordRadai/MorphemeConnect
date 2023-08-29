@@ -34,11 +34,11 @@ FileNameLookupTable::FileNameLookupTable(BYTE* data)
 
 void FileNameLookupTable::WriteToBinary(ofstream* out)
 {
-	MemReader::WriteDWord(out, this->m_elemCount);
-	MemReader::WriteDWord(out, this->m_stringSize);
-	MemReader::WriteQWord(out, this->m_idxOffset);
-	MemReader::WriteQWord(out, this->m_localOffsetsOffset);
-	MemReader::WriteQWord(out, this->m_stringsOffset);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_elemCount);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_stringSize);
+	MemReader::WriteQWord(out, &this->m_idxOffset);
+	MemReader::WriteQWord(out, &this->m_localOffsetsOffset);
+	MemReader::WriteQWord(out, &this->m_stringsOffset);
 
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_idx, this->m_elemCount);
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_localOffsets, this->m_elemCount);
@@ -122,21 +122,21 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, this->m_bundleType);
-	MemReader::WriteDWord(out, this->m_signature);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
 	MemReader::WriteByteArray(out, this->m_header, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
-	MemReader::WriteQWord(out, this->m_dataSize);
-	MemReader::WriteDWord(out, this->m_dataAlignment);
-	MemReader::WriteDWord(out, this->m_iVar2C);
+	MemReader::WriteQWord(out, &this->m_dataSize);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
 
-	MemReader::WriteQWord(out, this->m_data->m_animTableOffset);
-	MemReader::WriteQWord(out, this->m_data->m_formatTableOffset);
-	MemReader::WriteQWord(out, this->m_data->m_sourceTableOffset);
-	MemReader::WriteQWord(out, this->m_data->m_tagTableOffset);
-	MemReader::WriteQWord(out, this->m_data->m_hashOffset);
+	MemReader::WriteQWord(out, &this->m_data->m_animTableOffset);
+	MemReader::WriteQWord(out, &this->m_data->m_formatTableOffset);
+	MemReader::WriteQWord(out, &this->m_data->m_sourceTableOffset);
+	MemReader::WriteQWord(out, &this->m_data->m_tagTableOffset);
+	MemReader::WriteQWord(out, &this->m_data->m_hashOffset);
 
 	this->m_data->m_animList.WriteToBinary(out);
 	this->m_data->m_animFormat.WriteToBinary(out);

@@ -1,53 +1,86 @@
 #pragma once
 #include "TimeActEvent/TimeActEvent.h"
 
+class AnimData
+{
+public:
+	UINT64 m_reference;
+	UINT64 m_nextOffsetOffset;
+	UINT64 m_nextOffset;
+	int m_readable;
+	int m_iVar1C;
+	UINT64 m_pad[2];
+
+	AnimData();
+	AnimData(ifstream* tae);
+	~AnimData();
+
+	void GenerateBinary(ofstream* tae);
+};
+
 class TimeActData
 {
 public:
-	std::vector<TimeActEvent> m_events;
-	std::vector<EventGroup> m_groups;
-	std::vector<float> m_times;
-	BYTE m_unkData[32];
 	int m_eventCount;
 	int m_eventGroupCount;
 	int m_timeCount;
 
+	UINT64 m_eventOffset;
+	UINT64 m_eventGroupOffset;
+	UINT64 m_timesOffset;
+	UINT64 m_unkDataOffset;
+
+	std::vector<TimeActEvent> m_events;
+	std::vector<EventGroup> m_groups;
+	std::vector<float> m_times;
+	AnimData* m_unkData;
+
 	TimeActData();
-
 	TimeActData(ifstream* tae);
-
 	~TimeActData();
+
+	void GenerateBinary(ofstream* tae);
 };
 
 class TimeAct
 {
 public:
 	UINT64 m_id;
+	UINT64 m_taeOffset;
+
 	TimeActData* m_taeData;
 
 	TimeAct();
 	TimeAct(ifstream* tae);
+
+	void GenerateBinary(ofstream* tae);
 };
 
 class TimeActGroup
 {
 public:
-	int m_taeStart;
-	int m_taeEnd;
+	int m_taeStart = 0;
+	int m_taeEnd = 0;
 	std::vector< TimeAct> m_tae;
 
 	TimeActGroup();
+	TimeActGroup(int startTae, int endTae);
 	TimeActGroup(ifstream* tae);
 };
 
 class TimeActLookupTable
 {
 public:
-	int m_groupCount;
+	int m_groupCount = 0;
+	UINT64 m_groupOffset = 0;
+
 	std::vector<TimeActGroup> m_groups;
 
 	TimeActLookupTable();
 	TimeActLookupTable(ifstream* tae);
+
+	void AddGroup(int tae_id);
+	void GenerateBinary(ofstream* tae);
 };
 
 class Header
@@ -74,10 +107,12 @@ public:
 	UINT64 m_iVar68;
 	UINT64 m_taeCount2;
 	UINT64 m_taeDataOffset;
-	BYTE m_unkData[56];
+	BYTE m_unkData[64];
 
 	Header();
 	Header(ifstream* tae);
+
+	void GenerateBinary(ofstream* tae);
 };
 
 class TimeActReader
@@ -97,5 +132,8 @@ public:
 	TimeActReader(PWSTR filePath);
 	~TimeActReader();
 
+	void AdjustOffsets();
+	bool SaveFile(PWSTR pszOutFilePath);
+	void CreateTaeGroups();
 	TimeAct* TimeActLookup(int id);
 };

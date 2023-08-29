@@ -2,15 +2,208 @@
 
 TimeActEvent::EventData::EventData() {}
 
+TimeActEventData* getArguments(int id)
+{
+	switch (id)
+	{
+	case 100:
+		return new TimeActEventData_NoArgs;
+	case 201:
+		return new TimeActEventData_Sound201;
+	case 202:
+		return new TimeActEventData_Sound202;
+	case 300:
+		return new TimeActEventData_Ai300;
+	case 301:
+		return new TimeActEventData_Ai300;
+	case 1220:
+		return new TimeActEventData_NoArgs;
+	case 1230:
+		return new TimeActEventData_NoArgs;
+	case 1500:
+		return new TimeActEventData_Camera1500;
+	case 1501:
+		return new TimeActEventData_Camera1501;
+	case 1502:
+		return new TimeActEventData_Camera1502;
+	case 1503:
+		return new TimeActEventData_Camera1503;
+	case 1504:
+		return new TimeActEventData_Camera1504;
+	case 2100:
+		return new TimeActEventData_NoArgs;
+	case 2101:
+		return new TimeActEventData_NoArgs;
+	case 2102:
+		return new TimeActEventData_NoArgs;
+	case 2103:
+		return new TimeActEventData_Sfx2103;
+	case 2104:
+		return new TimeActEventData_Sfx2104;
+	case 2105:
+		return new TimeActEventData_NoArgs;
+	case 2106:
+		return new TimeActEventData_Sfx2106;
+	case 2200:
+		return new TimeActEventData_Damage2200;
+	case 2201:
+		return new TimeActEventData_Damage2201;
+	case 2202:
+		return new TimeActEventData_Damage2202;
+	case 2203:
+		return new TimeActEventData_Damage2203;
+	case 2300:
+		return new TimeActEventData_Bullet2300;
+	case 2301:
+		return new TimeActEventData_Bullet2301;
+	case 2400:
+		return new TimeActEventData_NoArgs;
+	case 2401:
+		return new TimeActEventData_NoArgs;
+	case 2402:
+		return new TimeActEventData_FootEffect2402;
+	case 2403:
+		return new TimeActEventData_NoArgs;
+	case 2500:
+		return new TimeActEventData_Weapon2500;
+	case 2501:
+		return new TimeActEventData_Weapon2501;
+	case 2502:
+		return new TimeActEventData_NoArgs;
+	case 2600:
+		return new TimeActEventData_NoArgs;
+	case 101100:
+		return new TimeActEventData_NoArgs;
+	case 110000:
+		return new TimeActEventData_NoArgs;
+	case 110100:
+		return new TimeActEventData_NoArgs;
+	case 110200:
+		return new TimeActEventData_NoArgs;
+	case 110210:
+		return new TimeActEventData_NoArgs;
+	case 110300:
+		return new TimeActEventData_NoArgs;
+	case 110400:
+		return new TimeActEventData_NoArgs;
+	case 110500:
+		return new TimeActEventData_NoArgs;
+	case 110600:
+		return new TimeActEventData_NoArgs;
+	case 110700:
+		return new TimeActEventData_NoArgs;
+	case 110800:
+		return new TimeActEventData_NoArgs;
+	case 110900:
+		return new TimeActEventData_NoArgs;
+	case 111000:
+		return new TimeActEventData_DamageAction111000;
+	case 111100:
+		return new TimeActEventData_NoArgs;
+	case 111200:
+		return new TimeActEventData_NoArgs;
+	case 111300:
+		return new TimeActEventData_NoArgs;
+	case 111400:
+		return new TimeActEventData_NoArgs;
+	case 111500:
+		return new TimeActEventData_NoArgs;
+	case 111600:
+		return new TimeActEventData_NoArgs;
+	case 111700:
+		return new TimeActEventData_NoArgs;
+	case 111800:
+		return new TimeActEventData_NoArgs;
+	case 111900:
+		return new TimeActEventData_NoArgs;
+	case 120100:
+		return new TimeActEventData_NoArgs;
+	case 120200:
+		return new TimeActEventData_NoArgs;
+	case 120300:
+		return new TimeActEventData_NoArgs;
+	case 210000:
+		return new TimeActEventData_NoArgs;
+	case 210099:
+		return new TimeActEventData_NoArgs;
+	case 210100:
+		return new TimeActEventData_NoArgs;
+	case 210200:
+		return new TimeActEventData_NoArgs;
+	case 220000:
+		return new TimeActEventData_NoArgs;
+	case 220100:
+		return new TimeActEventData_NoArgs;
+	case 220200:
+		return new TimeActEventData_Item220200;
+	case 220300:
+		return new TimeActEventData_NoArgs;
+	case 230000:
+		return new TimeActEventData_NoArgs;
+	case 230001:
+		return new TimeActEventData_NoArgs;
+	case 240000:
+		return new TimeActEventData_NoArgs;
+	case 250000:
+		return new TimeActEventData_NoArgs;
+	case 260000:
+		return new TimeActEventData_NoArgs;
+	case 260001:
+		return new TimeActEventData_Model260001;
+	case 260002:
+		return new TimeActEventData_Model260002;
+	case 260003:
+		return new TimeActEventData_NoArgs;
+	case 260004:
+		return new TimeActEventData_Model260004;
+	case 260005:
+		return new TimeActEventData_Model260005;
+	case 260006:
+		return new TimeActEventData_Model260006;
+	case 270000:
+		return new TimeActEventData_Model270000;
+	case 270001:
+		return new TimeActEventData_NoArgs;
+	case 270002:
+		return new TimeActEventData_NoArgs;
+	case 280000:
+		return new TimeActEventData_NoArgs;
+	case 280100:
+		return new TimeActEventData_Move280100;
+	case 290000:
+		return new TimeActEventData_NoArgs;
+	case 290001:
+		return new TimeActEventData_NoArgs;
+	case 290002:
+		return new TimeActEventData_NoArgs;
+	case 300000:
+		return new TimeActEventData_Event300000;
+	case 300100:
+		return new TimeActEventData_Event300100;
+	case 300200:
+		return new TimeActEventData_Event300200;
+	case 300300:
+		return new TimeActEventData_Event300300;
+	case 310000:
+		return new TimeActEventData_SpEffect310000;
+	default:
+		break;
+	}
+
+	return new TimeActEventData_NoArgs;
+}
+
 TimeActEvent::EventData::EventData(ifstream* tae)
 {
-	MemReader::ReadQWord(tae, &this->m_id);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_id);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_pad);
+	MemReader::ReadQWord(tae, &this->m_argsOffset);
 
-	UINT64 unk_data_offset;
-	MemReader::ReadQWord(tae, &unk_data_offset);
+	tae->seekg(m_argsOffset);
 
-	tae->seekg(unk_data_offset);
-	MemReader::ReadByteArray(tae, this->m_args, 8);
+	this->m_args = getArguments(this->m_id);
+
+	this->m_args->GetData(tae);
 }
 
 TimeActEvent::TimeActEvent() {}
@@ -19,32 +212,27 @@ TimeActEvent::TimeActEvent(ifstream* tae)
 {
 	streampos start = tae->tellg();
 
-	UINT64 start_offset;
-	MemReader::ReadQWord(tae, &start_offset);
+	MemReader::ReadQWord(tae, &this->m_startOffset);
+	MemReader::ReadQWord(tae, &this->m_endOffset);
+	MemReader::ReadQWord(tae, &this->m_eventDataOffset);
 
-	UINT64 end_offset;
-	MemReader::ReadQWord(tae, &end_offset);
-
-	UINT64 event_data_offset;
-	MemReader::ReadQWord(tae, &event_data_offset);
-
-	if (start_offset)
+	if (m_startOffset)
 	{
-		tae->seekg(start_offset);
+		tae->seekg(m_startOffset);
 
 		MemReader::ReadDWord(tae, (DWORD*)&this->m_start);
 	}
 
-	if (end_offset)
+	if (m_endOffset)
 	{
-		tae->seekg(end_offset);
+		tae->seekg(m_endOffset);
 
 		MemReader::ReadDWord(tae, (DWORD*)&this->m_end);
 	}
 
-	if (event_data_offset)
+	if (m_eventDataOffset)
 	{
-		tae->seekg(event_data_offset);
+		tae->seekg(m_eventDataOffset);
 
 		this->m_eventData = new EventData(tae);
 	}
@@ -52,27 +240,48 @@ TimeActEvent::TimeActEvent(ifstream* tae)
 	tae->seekg(start + (streampos)0x18);
 }
 
+void TimeActEvent::GenerateBinary(ofstream* tae)
+{
+	MemReader::WriteQWord(tae, &this->m_startOffset);
+	MemReader::WriteQWord(tae, &this->m_endOffset);
+	MemReader::WriteQWord(tae, &this->m_eventDataOffset);
+
+	UINT64 bak = tae->tellp();
+	tae->seekp(m_eventDataOffset);
+
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventData->m_id);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventData->m_pad);
+
+	MemReader::WriteQWord(tae, &this->m_eventData->m_argsOffset);
+
+	tae->seekp(this->m_eventData->m_argsOffset);
+
+	this->m_eventData->m_args = getArguments(this->m_eventData->m_id);
+	this->m_eventData->m_args->SaveData(tae);
+
+	tae->seekp(bak);
+}
+
+int TimeActEvent::GetArgumentsSize()
+{
+	int size = 32;
+
+	int remainder = size % 16;
+
+	if (remainder != 0)
+		size += 16 - remainder;
+
+	return size + 0x18;
+}
+
 EventGroup::EventGroupData::EventGroupData() {}
 
-EventGroup::EventGroupData::EventGroupData(ifstream* tae, int count)
+EventGroup::EventGroupData::EventGroupData(ifstream* tae)
 {
 	streampos bak = tae->tellg();
 
 	MemReader::ReadQWord(tae, &this->m_eventType);
-
-	UINT64 offset;
-	MemReader::ReadQWord(tae, &offset);
-
-	tae->seekg(offset);
-
-	for (size_t i = 0; i < count; i++)
-	{
-		UINT64 offset;
-		MemReader::ReadQWord(tae, &offset);
-
-		this->m_eventOffsets.push_back(offset);
-	}
-	tae->seekg(bak + (streampos)0x20);
+	MemReader::ReadQWord(tae, &this->m_offset);
 }
 
 EventGroup::EventGroup() {}
@@ -82,40 +291,81 @@ EventGroup::EventGroup(ifstream* tae)
 	streampos bak = tae->tellg();
 
 	MemReader::ReadQWord(tae, &this->m_count);
-
-	UINT64 offsetsOffset;
-	MemReader::ReadQWord(tae, &offsetsOffset);
-
-	UINT64 groupOffset;
-	MemReader::ReadQWord(tae, &groupOffset);
+	MemReader::ReadQWord(tae, &this->m_eventsOffset);
+	MemReader::ReadQWord(tae, &this->m_groupDataOffset);
+	MemReader::ReadQWord(tae, &this->m_pad);
 
 	if (this->m_count > 0)
 	{
-		if (offsetsOffset)
+		if (m_eventsOffset)
 		{
+			UINT64 offset = m_eventsOffset;
+
 			for (size_t i = 0; i < this->m_count; i++)
 			{
-				tae->seekg(offsetsOffset);
+				tae->seekg(offset);
 
 				UINT64 event_offset;
 				MemReader::ReadQWord(tae, &event_offset);
+				this->m_eventOffset.push_back(event_offset);
 
 				tae->seekg(event_offset);
 
 				this->m_event.push_back(tae);
 
-				offsetsOffset += 0x8;
+				offset += 0x8;
 			}
 		}
 
-		if (groupOffset)
+		if (m_groupDataOffset)
 		{
-			tae->seekg(groupOffset);
+			tae->seekg(m_groupDataOffset);
 
-			this->m_groupData = new EventGroupData(tae, this->m_count);
+			this->m_groupData = new EventGroupData(tae);
 		}
 	}
 
 	bak += 0x20;
 	tae->seekg(bak);
+}
+
+void EventGroup::GenerateBinary(ofstream* tae)
+{
+	UINT64 start = tae->tellp();
+
+	MemReader::WriteQWord(tae, &this->m_count);
+	MemReader::WriteQWord(tae, &this->m_eventsOffset);
+	MemReader::WriteQWord(tae, &this->m_groupDataOffset);
+
+	UINT64 pad0 = 0;
+	MemReader::WriteQWord(tae, &pad0);
+
+	if (this->m_count)
+	{
+		tae->seekp(m_groupDataOffset);
+
+		MemReader::WriteQWord(tae, &this->m_groupData->m_eventType);
+		MemReader::WriteQWord(tae, &this->m_groupData->m_offset);
+
+		UINT64 pad0[2] = { 0, 0 };
+		MemReader::WriteQWordArray(tae, pad0, 2);
+
+		tae->seekp(m_eventsOffset);
+
+		for (size_t i = 0; i < this->m_count; i++)
+			MemReader::WriteQWord(tae, &this->m_eventOffset[i]);
+
+		UINT64 pos = tae->tellp();
+		int remainder = pos % 16;
+
+		if (remainder != 0)
+		{
+			BYTE* pad1 = new BYTE[16 - remainder];
+			MemReader::WriteByteArray(tae, pad1, 16 - remainder);
+
+			delete[] pad1;
+		}
+	}
+
+	tae->seekp(start + 0x20);
 }

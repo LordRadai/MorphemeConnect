@@ -1,6 +1,6 @@
 #include "../MemReader/MemReader.h"
 
-class File
+class BndFile
 {
 public:
 	UINT64 m_compressedSize;
@@ -10,11 +10,11 @@ public:
 	int m_nameOffset;
 
 	std::string m_name;
-	BYTE* m_data;
+	char* m_data;
 
-	File();
-	File(ifstream* dcx);
-	~File();
+	BndFile();
+	BndFile(ifstream* dcx);
+	~BndFile();
 };
 
 class BNDReader 
@@ -27,7 +27,7 @@ public:
 	bool m_init = false;
 
 	int m_fileCount;
-	std::vector<File> m_files;
+	std::vector<BndFile> m_files;
 
 	BNDReader();
 	BNDReader(PWSTR pszFilePath);

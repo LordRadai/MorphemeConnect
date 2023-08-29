@@ -1,11 +1,11 @@
 #include <assert.h>
 #include "BNDReader.h"
 
-File::File()
+BndFile::BndFile()
 {
 }
 
-File::File(ifstream* dcx)
+BndFile::BndFile(ifstream* dcx)
 {
 	UINT64 start = dcx->tellg();
 
@@ -25,12 +25,12 @@ File::File(ifstream* dcx)
 
 	dcx->seekg(this->m_dataOffset);
 
-	this->m_data = new BYTE[this->m_compressedSize];
+	this->m_data = new char[this->m_compressedSize];
 
-	MemReader::ReadByteArray(dcx, this->m_data, this->m_compressedSize);
+	MemReader::ReadByteArray(dcx, (BYTE*)this->m_data, this->m_compressedSize);
 }
 
-File::~File()
+BndFile::~BndFile()
 {
 }
 
@@ -64,7 +64,7 @@ BNDReader::BNDReader(PWSTR pszFilePath)
 	for (size_t i = 0; i < this->m_fileCount; i++)
 	{	
 		dcx.seekg(header_size + (BYTE)i * 0x24);
-		this->m_files.push_back(File(&dcx));
+		this->m_files.push_back(BndFile(&dcx));
 	}
 }
 

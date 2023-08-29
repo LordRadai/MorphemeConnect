@@ -23,10 +23,10 @@ namespace MemReader
 	void ReadDWordArray(ifstream* pStream, DWORD* pDst, int iSize);
 	void ReadQWordArray(ifstream* pStream, UINT64* pDst, int iSize);
 
-	void WriteByte(ofstream* pStream, BYTE pSrc);
-	void WriteWord(ofstream* pStream, WORD pSrc);
-	void WriteDWord(ofstream* pStream, DWORD pSrc);
-	void WriteQWord(ofstream* pStream, UINT64 pSrc);
+	void WriteByte(ofstream* pStream, BYTE* pSrc);
+	void WriteWord(ofstream* pStream, WORD* pSrc);
+	void WriteDWord(ofstream* pStream, DWORD* pSrc);
+	void WriteQWord(ofstream* pStream, UINT64* pSrc);
 	void WriteByteArray(ofstream* pStream, BYTE* pSrc, int iSize);
 	void WriteWordArray(ofstream* pStream, WORD* pSrc, int iSize);
 	void WriteDWordArray(ofstream* pStream, DWORD* pSrc, int iSize);

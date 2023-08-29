@@ -1,3 +1,4 @@
+#include "../TimeActEvent/TimeActEventData/TimeActEventData.h"
 #include "../../MemReader/MemReader.h"
 
 enum TimeActGroupType
@@ -28,22 +29,23 @@ enum TimeActGroupType
 	SpEffectCtrl = 310000
 };
 
-enum TimeActEventType
-{
-
-};
-
 class TimeActEvent
 {
 public:
 	struct EventData
 	{
-		UINT64 m_id;
-		BYTE m_args[16];
+        int m_id;
+        int m_pad;
+		UINT64 m_argsOffset;
+        TimeActEventData* m_args;
 
 		EventData();
 		EventData(ifstream* tae);
 	};
+
+	UINT64 m_startOffset;
+	UINT64 m_endOffset;
+	UINT64 m_eventDataOffset;
 
 	float m_start;
 	float m_end;
@@ -51,6 +53,9 @@ public:
 
 	TimeActEvent();
 	TimeActEvent(ifstream* tae);
+
+	void GenerateBinary(ofstream* tae);
+	int GetArgumentsSize();
 };
 
 class EventGroup
@@ -59,17 +64,23 @@ public:
 	struct EventGroupData
 	{
 		UINT64 m_eventType;
-		std::vector<int> m_eventOffsets;
+		UINT64 m_offset;
 
 		EventGroupData();
-		EventGroupData(ifstream* tae, int count);
+		EventGroupData(ifstream* tae);
 	};
 
 	UINT64 m_count;
-	std::vector<TimeActEvent> m_event;
-	EventGroupData* m_groupData;
+	UINT64 m_eventsOffset;
+	UINT64 m_groupDataOffset;
 	UINT64 m_pad;
+
+	std::vector<TimeActEvent> m_event;
+	std::vector<UINT64> m_eventOffset;
+	EventGroupData* m_groupData;
 
 	EventGroup();
 	EventGroup(ifstream* tae);
+
+	void GenerateBinary(ofstream* tae);
 };

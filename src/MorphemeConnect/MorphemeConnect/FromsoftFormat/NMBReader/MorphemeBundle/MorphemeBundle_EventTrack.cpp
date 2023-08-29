@@ -57,26 +57,27 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, this->m_bundleType);
-	MemReader::WriteDWord(out, this->m_signature);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
 	MemReader::WriteByteArray(out, this->m_header, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
-	MemReader::WriteQWord(out, this->m_dataSize);
-	MemReader::WriteDWord(out, this->m_dataAlignment);
-	MemReader::WriteDWord(out, this->m_iVar2C);
+	MemReader::WriteQWord(out, &this->m_dataSize);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
 
-	MemReader::WriteDWord(out, this->m_data->m_numEvents);
-	MemReader::WriteDWord(out, this->m_data->m_iVar4);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_numEvents);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar4);
 
 	UINT64 name_offset = 32 + 12 * this->m_data->m_numEvents;
-	MemReader::WriteQWord(out, name_offset);
+	MemReader::WriteQWord(out, &name_offset);
 
-	MemReader::WriteDWord(out, this->m_data->m_eventId);
-	MemReader::WriteDWord(out, this->m_data->m_iVar14);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_eventId);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar14);
 
-	MemReader::WriteQWord(out, 32);
+	UINT64 offset = 32;
+	MemReader::WriteQWord(out, &offset);
 
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_events, 3 * this->m_data->m_numEvents);
 

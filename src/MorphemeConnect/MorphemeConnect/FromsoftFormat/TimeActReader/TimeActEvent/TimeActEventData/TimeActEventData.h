@@ -219,8 +219,11 @@ public:
 	int m_iVar0;
 	int m_sfxId;
 	int m_dmyPolyId;
-	short m_sVarC;
-	short m_sVarE;
+	BYTE m_bVarC;
+	BYTE m_bVarD;
+	BYTE m_bVarE;
+	BYTE m_bVarF;
+	int m_iVar10;
 
 	void GetData(ifstream* tae);
 	void SaveData(ofstream* tae);

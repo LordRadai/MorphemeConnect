@@ -256,7 +256,6 @@ void TimeActEvent::GenerateBinary(ofstream* tae)
 
 	tae->seekp(this->m_eventData->m_argsOffset);
 
-	this->m_eventData->m_args = getArguments(this->m_eventData->m_id);
 	this->m_eventData->m_args->SaveData(tae);
 
 	tae->seekp(bak);
@@ -286,7 +285,7 @@ EventGroup::EventGroupData::EventGroupData(ifstream* tae)
 
 EventGroup::EventGroup() {}
 
-EventGroup::EventGroup(ifstream* tae)
+EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 {
 	streampos bak = tae->tellg();
 
@@ -309,9 +308,11 @@ EventGroup::EventGroup(ifstream* tae)
 				MemReader::ReadQWord(tae, &event_offset);
 				this->m_eventOffset.push_back(event_offset);
 
-				tae->seekg(event_offset);
+				int idx = (event_offset - eventStartOffset) / 0x18;
 
-				this->m_event.push_back(tae);
+				this->m_eventIndex.push_back(idx);
+
+				tae->seekg(event_offset);
 
 				offset += 0x8;
 			}
@@ -331,14 +332,14 @@ EventGroup::EventGroup(ifstream* tae)
 
 void EventGroup::GenerateBinary(ofstream* tae)
 {
-	UINT64 start = tae->tellp();
-
 	MemReader::WriteQWord(tae, &this->m_count);
 	MemReader::WriteQWord(tae, &this->m_eventsOffset);
 	MemReader::WriteQWord(tae, &this->m_groupDataOffset);
 
 	UINT64 pad0 = 0;
 	MemReader::WriteQWord(tae, &pad0);
+
+	UINT64 bak = tae->tellp();
 
 	if (this->m_count)
 	{
@@ -354,18 +355,7 @@ void EventGroup::GenerateBinary(ofstream* tae)
 
 		for (size_t i = 0; i < this->m_count; i++)
 			MemReader::WriteQWord(tae, &this->m_eventOffset[i]);
-
-		UINT64 pos = tae->tellp();
-		int remainder = pos % 16;
-
-		if (remainder != 0)
-		{
-			BYTE* pad1 = new BYTE[16 - remainder];
-			MemReader::WriteByteArray(tae, pad1, 16 - remainder);
-
-			delete[] pad1;
-		}
 	}
 
-	tae->seekp(start + 0x20);
+	tae->seekp(bak);
 }

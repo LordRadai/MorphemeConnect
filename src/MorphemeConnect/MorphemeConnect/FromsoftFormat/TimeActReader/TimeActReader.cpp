@@ -56,7 +56,14 @@ TimeActData::TimeActData(ifstream* tae)
 		tae->seekg(m_eventGroupOffset);
 
 		for (size_t i = 0; i < this->m_eventGroupCount; i++)
-			this->m_groups.push_back(EventGroup(tae));
+		{
+			this->m_groups.push_back(EventGroup(tae, this->m_eventOffset));
+
+			this->m_groups[i].m_event = new TimeActEvent*[this->m_groups[i].m_count];
+
+			for (size_t j = 0; j < this->m_groups[i].m_count; j++)
+				this->m_groups[i].m_event[j] = &this->m_events[this->m_groups[i].m_eventIndex[j]];
+		}
 	}
 
 	if (m_unkDataOffset)
@@ -94,7 +101,7 @@ void TimeActData::GenerateBinary(ofstream* tae)
 
 	tae->seekp(m_timesOffset);
 
-	for (size_t i = 0; i < this->m_eventCount; i++)
+	for (int i = 0; i < this->m_eventCount; i++)
 	{
 		MemReader::WriteDWord(tae, (DWORD*)&this->m_events[i].m_start);
 		MemReader::WriteDWord(tae, (DWORD*)&this->m_events[i].m_end);
@@ -102,15 +109,20 @@ void TimeActData::GenerateBinary(ofstream* tae)
 
 	tae->seekp(m_eventOffset);
 
-	for (size_t i = 0; i < this->m_eventCount; i++)
+	for (int i = 0; i < this->m_eventCount; i++)
 		this->m_events[i].GenerateBinary(tae);
 
 	tae->seekp(m_eventGroupOffset);
 
-	for (size_t i = 0; i < this->m_eventGroupCount; i++)
+	for (int i = 0; i < this->m_eventGroupCount; i++)
 		this->m_groups[i].GenerateBinary(tae);
 
 	tae->seekp(bak);
+}
+
+UINT64 TimeActData::GetEventGroupPtr(int index)
+{
+	return this->m_eventOffset + index * 0x18;
 }
 
 TimeAct::TimeAct() {}
@@ -202,16 +214,11 @@ void TimeActLookupTable::GenerateBinary(ofstream* tae)
 
 	MemReader::WriteQWord(tae, &offset);
 
-	int group_count = 1;
 	for (int i = 0; i < this->m_groupCount; i++)
 	{
 		MemReader::WriteDWord(tae, (DWORD*)&this->m_groups[i].m_taeStart);
 		MemReader::WriteDWord(tae, (DWORD*)&this->m_groups[i].m_taeEnd);
-
-		UINT64 tae_offset = 0xC0 + (BYTE)group_count * 0x10;
-		MemReader::WriteQWord(tae, &tae_offset);
-
-		group_count = this->m_groups[i].m_taeEnd - this->m_groups[i].m_taeStart;
+		MemReader::WriteQWord(tae, &this->m_groups[i].m_offset);
 	}
 }
 
@@ -350,9 +357,7 @@ void TimeActReader::AdjustOffsets()
 		{
 			UINT64 totalEventsSize = 0;
 			for (int j = 0; j < this->m_tae[i].m_taeData->m_eventCount; j++)
-			{
 				totalEventsSize += this->m_tae[i].m_taeData->m_events[j].GetArgumentsSize();
-			}
 
 			this->m_tae[i].m_taeData->m_eventGroupOffset = this->m_tae[i].m_taeData->m_eventOffset + totalEventsSize;
 		}
@@ -366,32 +371,55 @@ void TimeActReader::AdjustOffsets()
 			this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset = this->m_tae[i].m_taeData->m_eventOffset + this->m_tae[i].m_taeData->m_eventCount * 0x18 + j * 0x20;
 		
 			this->m_tae[i].m_taeData->m_events[j].m_eventData->m_argsOffset = this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset + 0x10;
-
-			//TODO adjust pointers to events
 		}
 
 		UINT64 groupTotalSize = 0;
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventGroupCount; j++)
+		{
 			groupTotalSize += this->m_tae[i].m_taeData->m_groups[j].m_count * 0x8;
 
-		int remainder = groupTotalSize % 16;
-		if (remainder != 0)
-			groupTotalSize += 16 - remainder;
+			int remainder = groupTotalSize % 16;
+			if (remainder != 0)
+				groupTotalSize += 16 - remainder;
+		}
 
-		UINT64 groupDataBase = this->m_tae[i].m_taeData->m_eventGroupOffset + this->m_tae[i].m_taeData->m_eventGroupCount * 0x20 + 0x20;
+		UINT64 groupDataBase = this->m_tae[i].m_taeData->m_eventGroupOffset + this->m_tae[i].m_taeData->m_eventGroupCount * 0x20 + 0x40;
+		UINT64 oldGroupSize = groupDataBase;
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventGroupCount; j++)
 		{
-			this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset = groupDataBase + j * 0x20;
-			this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset = this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset + groupTotalSize;
+			this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset = oldGroupSize;
+			this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset = this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset + 0x20;
+
+			for (int k = 0; k < this->m_tae[i].m_taeData->m_groups[j].m_count; k++)
+				this->m_tae[i].m_taeData->m_groups[j].m_eventOffset[k] = this->m_tae[i].m_taeData->GetEventGroupPtr(this->m_tae[i].m_taeData->m_groups[j].m_eventIndex[k]);
 			
-			if (this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset > biggestOffset)
-			{
-				biggestOffset = this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset + groupTotalSize;
-			}
+			UINT64 size = this->m_tae[i].m_taeData->m_groups[j].m_count * 0x8;
+
+			int remainder = size % 16;
+			if (remainder != 0)
+				size += 16 - remainder;
+
+			oldGroupSize = size + this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset;
+
+			biggestOffset = oldGroupSize;
 		}
 
 		nextUnkDataOffset = biggestOffset;
 	}
+
+	for (int i = 0; i < this->m_lookupTable.m_groupCount; i++)
+	{
+		for (int j = 0; j < this->m_tae.size(); j++)
+		{
+			if (this->m_tae[j].m_id == this->m_lookupTable.m_groups[i].m_taeStart)
+			{
+				this->m_lookupTable.m_groups[i].m_offset = 0xC0 + j * 0x10;
+				break;
+			}
+		}
+	}
+
+	this->m_header.m_fileSize = this->m_tae.back().m_taeData->m_unkData->m_nextOffset;
 }
 
 bool TimeActReader::SaveFile(PWSTR pszOutFilePath)

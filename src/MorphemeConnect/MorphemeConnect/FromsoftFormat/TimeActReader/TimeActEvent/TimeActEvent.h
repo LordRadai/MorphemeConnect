@@ -75,12 +75,13 @@ public:
 	UINT64 m_groupDataOffset;
 	UINT64 m_pad;
 
-	std::vector<TimeActEvent> m_event;
+	TimeActEvent** m_event;
 	std::vector<UINT64> m_eventOffset;
+	std::vector<int> m_eventIndex;
 	EventGroupData* m_groupData;
 
 	EventGroup();
-	EventGroup(ifstream* tae);
+	EventGroup(ifstream* tae, UINT64 eventOffset);
 
 	void GenerateBinary(ofstream* tae);
 };

@@ -17,7 +17,7 @@ TimeActEditor::TimeActTrack::TimeActTrack(EventGroup* src)
 	this->m_count = src->m_count;
 
 	for (size_t i = 0; i < src->m_count; i++)
-		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i].m_start), MathHelper::TimeToFrame(src->m_event[i].m_end - src->m_event[i].m_start), (int)src->m_event[i].m_eventData->m_id,  src->m_event[i].m_eventData->m_args });
+		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i]->m_start), MathHelper::TimeToFrame(src->m_event[i]->m_end - src->m_event[i]->m_start), (int)src->m_event[i]->m_eventData->m_id,  src->m_event[i]->m_eventData->m_args });
 }
 
 void TimeActEditor::TimeActTrack::SaveTimeActTrack()
@@ -27,9 +27,9 @@ void TimeActEditor::TimeActTrack::SaveTimeActTrack()
 
 	for (size_t i = 0; i < this->m_count; i++)
 	{
-		this->m_source->m_event[i].m_start = MathHelper::FrameToTime(this->m_event[i].m_frameStart);
-		this->m_source->m_event[i].m_end = MathHelper::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration);
-		this->m_source->m_event[i].m_eventData->m_id = this->m_event[i].m_value;
+		this->m_source->m_event[i]->m_start = MathHelper::FrameToTime(this->m_event[i].m_frameStart);
+		this->m_source->m_event[i]->m_end = MathHelper::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration);
+		this->m_source->m_event[i]->m_eventData->m_id = this->m_event[i].m_value;
 	}
 }
 

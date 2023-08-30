@@ -645,6 +645,8 @@ void Application::ProcessVariables()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
+		this->m_timeActEditor.Clear();
+
 		if ((this->m_nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found = false;
@@ -756,8 +758,8 @@ void Application::ProcessVariables()
 						{
 							for (int k = 0; k < timeact->m_taeData->m_groups[j].m_count; k++)
 							{
-								if (timeact->m_taeData->m_groups[j].m_event[k].m_end > max)
-									max = timeact->m_taeData->m_groups[j].m_event[k].m_end;
+								if (timeact->m_taeData->m_groups[j].m_event[k]->m_end > max)
+									max = timeact->m_taeData->m_groups[j].m_event[k]->m_end;
 							}
 
 							this->m_timeActEditor.m_tracks.push_back(&timeact->m_taeData->m_groups[j]);

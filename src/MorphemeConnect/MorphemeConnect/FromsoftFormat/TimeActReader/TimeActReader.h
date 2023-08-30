@@ -40,6 +40,7 @@ public:
 	~TimeActData();
 
 	void GenerateBinary(ofstream* tae);
+	UINT64 GetEventGroupPtr(int index);
 };
 
 class TimeAct
@@ -61,7 +62,9 @@ class TimeActGroup
 public:
 	int m_taeStart = 0;
 	int m_taeEnd = 0;
-	std::vector< TimeAct> m_tae;
+	UINT64 m_offset = 0;
+
+	std::vector<TimeAct> m_tae;
 
 	TimeActGroup();
 	TimeActGroup(int startTae, int endTae);

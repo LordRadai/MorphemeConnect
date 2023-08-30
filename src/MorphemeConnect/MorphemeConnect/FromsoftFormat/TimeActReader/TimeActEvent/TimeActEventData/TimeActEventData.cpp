@@ -51,7 +51,7 @@ void TimeActEventData_Sound201::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -96,7 +96,7 @@ void TimeActEventData_Sound202::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -134,7 +134,7 @@ void TimeActEventData_Ai300::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -173,7 +173,7 @@ void TimeActEventData_Ai301::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -211,7 +211,7 @@ void TimeActEventData_Damage2200::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -248,7 +248,7 @@ void TimeActEventData_Damage2201::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -287,7 +287,7 @@ void TimeActEventData_Damage2202::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -325,7 +325,7 @@ void TimeActEventData_Damage2203::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -364,7 +364,7 @@ void TimeActEventData_Bullet2300::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -404,7 +404,7 @@ void TimeActEventData_Bullet2301::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -442,7 +442,7 @@ void TimeActEventData_Camera1500::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -479,7 +479,7 @@ void TimeActEventData_Camera1501::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -516,7 +516,7 @@ void TimeActEventData_Camera1502::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -553,7 +553,7 @@ void TimeActEventData_Camera1503::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -590,7 +590,7 @@ void TimeActEventData_Camera1504::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -627,7 +627,7 @@ void TimeActEventData_Sfx2103::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -672,7 +672,7 @@ void TimeActEventData_Sfx2104::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -721,7 +721,7 @@ void TimeActEventData_Sfx2106::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -762,7 +762,7 @@ void TimeActEventData_FootEffect2402::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -801,7 +801,7 @@ void TimeActEventData_Weapon2500::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -841,7 +841,7 @@ void TimeActEventData_Weapon2501::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -881,7 +881,7 @@ void TimeActEventData_DamageAction111000::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -927,7 +927,7 @@ void TimeActEventData_Item220200::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -970,7 +970,7 @@ void TimeActEventData_Model260001::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1012,7 +1012,7 @@ void TimeActEventData_Model260002::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1053,7 +1053,7 @@ void TimeActEventData_Model260004::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1093,7 +1093,7 @@ void TimeActEventData_Model260005::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1131,7 +1131,7 @@ void TimeActEventData_Model260006::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1168,7 +1168,7 @@ void TimeActEventData_Model270000::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1205,7 +1205,7 @@ void TimeActEventData_Move280100::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1242,7 +1242,7 @@ void TimeActEventData_Event300000::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1283,7 +1283,7 @@ void TimeActEventData_Event300100::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1322,7 +1322,7 @@ void TimeActEventData_Event300200::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1359,7 +1359,7 @@ void TimeActEventData_Event300300::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1400,7 +1400,7 @@ void TimeActEventData_SpEffect310000::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-		BYTE* padding = new BYTE[16 - remainder];
+				BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}

@@ -1,4 +1,5 @@
 #include "TimeActReader.h"
+#include "../../Debug/Debug.h"
 
 AnimData::AnimData()
 {
@@ -16,6 +17,11 @@ AnimData::AnimData(ifstream* tae)
 
 AnimData::~AnimData()
 {
+	this->m_reference = 0;
+	this->m_readable = 7680;
+	this->m_iVar1C = 0;
+	this->m_pad[0] = 0;
+	this->m_pad[1] = 0;
 }
 
 void AnimData::GenerateBinary(ofstream* tae)
@@ -28,7 +34,14 @@ void AnimData::GenerateBinary(ofstream* tae)
 	MemReader::WriteQWordArray(tae, this->m_pad, 2);
 }
 
-TimeActData::TimeActData() {}
+TimeActData::TimeActData() 
+{
+	this->m_eventCount = 0;
+	this->m_eventGroupCount = 0;
+	this->m_timeCount = 0;
+
+	this->m_unkData = new AnimData;
+}
 
 TimeActData::TimeActData(ifstream* tae)
 {
@@ -339,6 +352,9 @@ void TimeActReader::AdjustOffsets()
 
 	UINT64 dataBase = this->m_header.m_taeDataOffset + this->m_tae.size() * 0x30;
 
+	if ((this->m_header.m_taeCount != this->m_header.m_taeCount2) || this->m_header.m_taeCount != this->m_tae.size())
+		Debug::Panic("TimeActReader.cpp", "TimeAct count specified in the header does not match the actual amount (taeCount=%d, taeSize=%d)\n", this->m_header.m_taeCount, this->m_tae.size());
+
 	UINT64 nextUnkDataOffset = dataBase;
 	for (int i = 0; i < this->m_tae.size(); i++)
 	{
@@ -368,7 +384,7 @@ void TimeActReader::AdjustOffsets()
 			this->m_tae[i].m_taeData->m_eventOffset = 0;
 
 		UINT64 oldSize = 0;
-		UINT64 oldDataOffset = this->m_tae[i].m_taeData->m_eventOffset + this->m_tae[i].m_taeData->m_eventCount * 0x18;
+		UINT64 oldDataOffset = biggestOffset + this->m_tae[i].m_taeData->m_eventCount * 0x18;
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventCount; j++)
 		{
 			this->m_tae[i].m_taeData->m_events[j].m_startOffset = this->m_tae[i].m_taeData->m_timesOffset + j * 0x8;
@@ -401,6 +417,8 @@ void TimeActReader::AdjustOffsets()
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventGroupCount; j++)
 		{
 			this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset = oldGroupSize;
+			this->m_tae[i].m_taeData->m_groups[j].m_groupData->m_offset = this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset + 0x10;
+
 			this->m_tae[i].m_taeData->m_groups[j].m_eventsOffset = this->m_tae[i].m_taeData->m_groups[j].m_groupDataOffset + 0x20;
 
 			for (int k = 0; k < this->m_tae[i].m_taeData->m_groups[j].m_count; k++)
@@ -473,11 +491,89 @@ void TimeActReader::CreateTaeGroups()
 
 TimeAct* TimeActReader::TimeActLookup(int id)
 {
-	for (size_t i = 0; i < this->m_tae.size(); i++)
+	//TAE list **MUST** be ordered in crescent order for this to work
+
+	int startIdx = 0;
+	int endIdx = this->m_tae.size() - 1;
+
+	while (startIdx <= endIdx)
 	{
-		if (this->m_tae[i].m_id == id)
-			return &this->m_tae[i];
+		int midIdx = (startIdx + endIdx) / 2;
+
+		if (this->m_tae[midIdx].m_id == id)
+			return &this->m_tae[midIdx];
+
+		if (this->m_tae[midIdx].m_id > id)
+			endIdx = midIdx - 1;
+		else
+			startIdx = midIdx + 1;
 	}
 
 	return NULL;
+}
+
+bool TimeActReader::AddTimeAct(int id)
+{
+	int startIdx = 0;
+	int endIdx = this->m_tae.size() - 1;
+	int insertIdx = -1;
+
+	while (startIdx <= endIdx)
+	{
+		int midIdx = (startIdx + endIdx) / 2;
+
+		if (this->m_tae[midIdx].m_id == id)
+			return false; //Our TAE is already present. Don't add
+
+		if (this->m_tae[midIdx].m_id > id)
+			endIdx = midIdx - 1;
+		else
+		{
+			startIdx = midIdx + 1;
+			insertIdx = midIdx + 1;
+		}
+	}
+
+	if (insertIdx > -1)
+	{
+		this->m_header.m_taeCount++;
+		this->m_header.m_taeCount2++;
+
+		this->m_tae.insert(this->m_tae.begin() + insertIdx, TimeAct(id));
+	}
+}
+
+bool TimeActReader::DeleteTimeAct(int id)
+{
+	int startIdx = 0;
+	int endIdx = this->m_tae.size() - 1;
+	int deleteIdx = -1;
+
+	while (startIdx <= endIdx)
+	{
+		int midIdx = (startIdx + endIdx) / 2;
+
+		if (this->m_tae[midIdx].m_id == id)
+		{
+			deleteIdx = midIdx;
+			break;
+		}
+
+		if (this->m_tae[midIdx].m_id > id)
+			endIdx = midIdx - 1;
+		else
+			startIdx = midIdx + 1;
+	}
+
+	if (deleteIdx > -1)
+	{
+		this->m_header.m_taeCount--;
+		this->m_header.m_taeCount2--;
+
+		this->m_tae.erase(this->m_tae.begin() + deleteIdx);
+
+		return true;
+	}
+
+	return false;
 }

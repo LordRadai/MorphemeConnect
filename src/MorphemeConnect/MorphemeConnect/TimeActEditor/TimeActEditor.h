@@ -27,14 +27,14 @@ struct TimeActEditor
         std::vector<Event> m_event;
         char m_name[50];
 
-        TimeActTrack(int eventId, float start, float end);
+        TimeActTrack(int eventId);
         TimeActTrack(EventGroup* src);
 
         void SaveTimeActTrack();
         bool IsEventActive(int idx, int frame);
     };
 
-    TimeAct* m_source;
+    TimeAct* m_source = nullptr;
 
     std::vector<TimeActTrack> m_tracks;
     int m_frameMin, m_frameMax;

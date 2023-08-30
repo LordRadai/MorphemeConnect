@@ -140,4 +140,6 @@ public:
 	bool SaveFile(PWSTR pszOutFilePath);
 	void CreateTaeGroups();
 	TimeAct* TimeActLookup(int id);
+	bool AddTimeAct(int id);
+	bool DeleteTimeAct(int id);
 };

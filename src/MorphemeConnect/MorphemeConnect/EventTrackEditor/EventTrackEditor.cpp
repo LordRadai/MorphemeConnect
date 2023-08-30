@@ -396,5 +396,6 @@ EventTrackEditor::EventTrackEditor() {}
 
 void EventTrackEditor::Clear()
 {
+    this->m_nodeSource = nullptr;
     this->m_eventTracks.clear();
 }

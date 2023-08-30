@@ -186,9 +186,6 @@ namespace ImSequencer
 
         static bool popupOpened = false;
 
-        if (!eventTrackEditor->GetTrackCount())
-            return false;
-
         ImGui::BeginGroup();
 
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -198,7 +195,7 @@ namespace ImSequencer
 
         int firstFrameUsed = firstFrame ? *firstFrame : 0;
 
-        int controlHeight = eventTrackEditor->GetTrackCount() * ItemHeight;
+        int controlHeight = ImMax(eventTrackEditor->GetTrackCount() * ItemHeight, ItemHeight);
 
         int frameCount = ImMax(eventTrackEditor->GetFrameMax() - eventTrackEditor->GetFrameMin() + 10, 1);
 
@@ -307,7 +304,7 @@ namespace ImSequencer
 
             //header
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
-            if (sequenceOptions & EDITOR_TRACK_ADD)
+            if (sequenceOptions & EDITOR_TRACK_ADD && (eventTrackEditor->m_nodeSource != nullptr))
             {
                 if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {
@@ -1353,7 +1350,6 @@ namespace ImSequencer
         bool reload = false;
         bool removeTrack = false;
         bool renameTrack = false;
-        static char trackRename[50] = "";
 
         bool addTrack = false;
         static int addGroupId = 0;
@@ -1366,9 +1362,6 @@ namespace ImSequencer
 
         static bool popupOpened = false;
 
-        if (!timeActEditor->GetTrackCount())
-            return false;
-
         ImGui::BeginGroup();
 
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -1378,7 +1371,7 @@ namespace ImSequencer
 
         int firstFrameUsed = firstFrame ? *firstFrame : 0;
 
-        int controlHeight = timeActEditor->GetTrackCount() * ItemHeight;
+        int controlHeight = ImMax(timeActEditor->GetTrackCount() * ItemHeight, ItemHeight);
 
         int frameCount = ImMax(timeActEditor->GetFrameMax() - timeActEditor->GetFrameMin() + 10, 1);
 
@@ -1487,7 +1480,7 @@ namespace ImSequencer
 
             //header
             draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_size.x + canvas_pos.x, canvas_pos.y + ItemHeight), 0xFF404040, 0);
-            if (sequenceOptions & EDITOR_TRACK_ADD)
+            if (sequenceOptions & EDITOR_TRACK_ADD && (timeActEditor->m_source != nullptr))
             {
                 if (SequencerAddTrackButton(draw_list, ImVec2(canvas_pos.x + legendWidth - 8, canvas_pos.y + 2), ImVec2(4, ItemHeight * 0.8f)) && focused && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows) && !popupOpened && !MovingCurrentFrame && !MovingScrollBar && movingTrack == -1 && !legendResizeRect.Contains(io.MousePos))
                 {

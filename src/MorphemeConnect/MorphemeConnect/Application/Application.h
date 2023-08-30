@@ -208,6 +208,14 @@ public:
 		bool m_saveAll = false;
 	} m_flags;
 
+	struct TimeActFlags
+	{
+		bool m_addTimeAct = false;
+		bool m_deleteTimeAct = false;
+		int m_addTimeActId = 0;
+		int m_deleteTimeActId = -1;
+	} m_timeActFlags;
+
 	struct EventTrackEditorFlags
 	{
 		bool m_load = false;

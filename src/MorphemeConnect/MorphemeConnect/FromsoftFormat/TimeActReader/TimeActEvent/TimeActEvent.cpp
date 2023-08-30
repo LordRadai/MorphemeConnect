@@ -353,13 +353,13 @@ EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 				offset += 0x8;
 			}
 		}
+	}
 
-		if (m_groupDataOffset)
-		{
-			tae->seekg(m_groupDataOffset);
+	if (m_groupDataOffset)
+	{
+		tae->seekg(m_groupDataOffset);
 
-			this->m_groupData = new EventGroupData(tae);
-		}
+		this->m_groupData = new EventGroupData(tae);
 	}
 
 	bak += 0x20;

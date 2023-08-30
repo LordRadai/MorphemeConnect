@@ -286,6 +286,87 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginTabItem("TimeAct"))
 		{
+			if (this->m_timeActFlags.m_addTimeAct)
+			{
+				this->m_timeActFlags.m_addTimeAct = false;
+
+				ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_Appearing);
+
+				ImGui::OpenPopup("Add TimeAct");
+			}
+
+			if (this->m_timeActFlags.m_deleteTimeAct)
+			{
+				this->m_timeActFlags.m_deleteTimeAct = false;
+
+				ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_Appearing);
+
+				ImGui::OpenPopup("Delete TimeAct");
+			}
+
+			ImGui::SetNextWindowPos(ImGui::GetCurrentWindow()->Pos, ImGuiCond_Appearing);
+			ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Appearing);
+			if (ImGui::BeginPopup("Add TimeAct"))
+			{
+				ImGui::Text("Add TimeAct");
+				ImGui::Separator();
+
+				ImGui::InputInt("ID", &this->m_timeActFlags.m_addTimeActId, 0, 0);
+				
+				if (ImGui::Button("Add"))
+				{
+					if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId) == false)
+						Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "Failed to create TimeAct %d\n", this->m_timeActFlags.m_addTimeActId);
+
+					this->m_timeActFlags.m_addTimeAct = false;
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+			else
+				this->m_timeActFlags.m_addTimeAct = false;
+
+			ImGui::SetNextWindowPos(ImGui::GetCurrentWindow()->Pos, ImGuiCond_Appearing);
+			ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Appearing);
+			if (ImGui::BeginPopup("Delete TimeAct"))
+			{
+				std::string label = "Delete TimeAct (" + std::to_string(this->m_timeActFlags.m_deleteTimeActId) + ")";
+
+				ImGui::Text(label.c_str());
+				ImGui::Separator();
+
+				if (ImGui::Button("Delete"))
+				{
+					if (this->m_tae.DeleteTimeAct(this->m_timeActFlags.m_deleteTimeActId) == false)
+						Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "Failed to delete TimeAct %d\n", this->m_timeActFlags.m_deleteTimeActId);
+
+					this->m_timeActFlags.m_deleteTimeAct = false;
+
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+			else
+				this->m_timeActFlags.m_deleteTimeAct = false;
+
+			if (this->m_eventTrackEditorFlags.tae_list.size() > 0)
+			{
+				if (ImGui::Button("Add TimeAct"))
+					this->m_timeActFlags.m_addTimeAct = true;
+
+				if (this->m_timeActEditorFlags.m_taeId != -1)
+				{
+					ImGui::SameLine();
+
+					this->m_timeActFlags.m_deleteTimeActId = this->m_timeActEditorFlags.m_taeId;
+
+					if (ImGui::Button("Delete TimeAct"))
+						this->m_timeActFlags.m_deleteTimeAct = true;
+				}
+			}
+
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
@@ -620,7 +701,11 @@ void Application::ProcessVariables()
 		this->m_flags.m_loadFile = false;
 
 		m_eventTrackEditorFlags.m_load = false;
+		m_timeActEditorFlags.m_load = false;
+
 		this->m_eventTrackEditor.Clear();
+		this->m_timeActEditor.Clear();
+
 		this->LoadFile();
 	}
 
@@ -750,9 +835,6 @@ void Application::ProcessVariables()
 					}
 				}
 			}
-
-			if (found == false)
-				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This animation does not have any event tracks associated to it\n");
 		}
 	}
 
@@ -799,8 +881,6 @@ void Application::ProcessVariables()
 
 						this->m_timeActEditor.m_frameMin = 0;
 					}
-					else
-						Debug::Alert(Debug::LVL_INFO, "Application.cpp", "This TimeAct track has no events associated to it\n");
 				}
 				else
 					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);

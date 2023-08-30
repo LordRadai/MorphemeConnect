@@ -1,20 +1,18 @@
 #include "TimeActEditor.h"
 #include "../Application/Application.h"
 
-TimeActEditor::TimeActTrack::TimeActTrack(int eventId, float start, float end)
+TimeActEditor::TimeActTrack::TimeActTrack(int eventId)
 {
 	this->m_source = NULL;
 	this->m_eventGroup = eventId;
-	//this->m_event.m_frameStart = MathHelper::TimeToFrame(start);
-	//this->m_event.m_duration = MathHelper::TimeToFrame(end - start);
 }
 
 TimeActEditor::TimeActTrack::TimeActTrack(EventGroup* src)
 {
 	this->m_source = src;
+	this->m_count = src->m_count;
 
 	this->m_eventGroup = src->m_groupData->m_eventType;
-	this->m_count = src->m_count;
 
 	for (size_t i = 0; i < src->m_count; i++)
 		this->m_event.push_back(Event{ MathHelper::TimeToFrame(src->m_event[i]->m_start), MathHelper::TimeToFrame(src->m_event[i]->m_end - src->m_event[i]->m_start), (int)src->m_event[i]->m_eventData->m_id,  src->m_event[i]->m_eventData->m_args });
@@ -141,7 +139,19 @@ void TimeActEditor::DeleteEvent(int group_idx, int event_idx)
 
 	this->m_source->m_taeData->m_events.erase(this->m_source->m_taeData->m_events.begin() + delete_index);
 
+	for (size_t i = 0; i < this->m_source->m_taeData->m_groups.size(); i++)
+	{
+		for (size_t j = 0; j < this->m_source->m_taeData->m_groups[i].m_eventIndex.size(); j++)
+		{
+			if (this->m_source->m_taeData->m_groups[i].m_eventIndex[j] >= delete_index)
+				this->m_source->m_taeData->m_groups[i].m_eventIndex[j] -= 1;
+		}
+	}
+
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d (group=%d)\n", event_idx, group_idx);
+
+	if (this->m_source->m_taeData->m_groups[group_idx].m_count < 1)
+		this->DeleteGroup(group_idx);
 
 	this->ReloadTracks();
 }
@@ -163,11 +173,10 @@ void TimeActEditor::ReloadTracks()
 		for (int j = 0; j < this->m_source->m_taeData->m_eventGroupCount; j++)
 			this->m_tracks.push_back(&this->m_source->m_taeData->m_groups[j]);
 	}
-	else
-		Debug::Alert(Debug::LVL_INFO, "TimeActEditor.cpp", "This TimeAct track has no events associated to it\n");
 }
 
 void TimeActEditor::Clear()
 {
+	this->m_source = nullptr;
 	this->m_tracks.clear();
 }

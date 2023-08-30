@@ -45,6 +45,8 @@ TimeActData::TimeActData(ifstream* tae)
 	{
 		tae->seekg(m_eventOffset);
 
+		this->m_events.reserve(this->m_eventCount);
+
 		for (size_t i = 0; i < this->m_eventCount; i++)
 			this->m_events.push_back(TimeActEvent(tae));
 	}
@@ -55,14 +57,16 @@ TimeActData::TimeActData(ifstream* tae)
 
 		tae->seekg(m_eventGroupOffset);
 
+		this->m_groups.reserve(this->m_eventGroupCount);
+
 		for (size_t i = 0; i < this->m_eventGroupCount; i++)
 		{
 			this->m_groups.push_back(EventGroup(tae, this->m_eventOffset));
 
-			this->m_groups[i].m_event = new TimeActEvent*[this->m_groups[i].m_count];
+			this->m_groups[i].m_event.reserve(this->m_groups[i].m_count);
 
 			for (size_t j = 0; j < this->m_groups[i].m_count; j++)
-				this->m_groups[i].m_event[j] = &this->m_events[this->m_groups[i].m_eventIndex[j]];
+				this->m_groups[i].m_event.push_back(&this->m_events[this->m_groups[i].m_eventIndex[j]]);
 		}
 	}
 
@@ -126,6 +130,12 @@ UINT64 TimeActData::GetEventGroupPtr(int index)
 }
 
 TimeAct::TimeAct() {}
+
+TimeAct::TimeAct(int id)
+{
+	this->m_id = id;
+	this->m_taeData = new TimeActData;
+}
 
 TimeAct::TimeAct(ifstream* tae)
 {
@@ -344,6 +354,8 @@ void TimeActReader::AdjustOffsets()
 			this->m_tae[i].m_taeData->m_timesOffset = this->m_tae[i].m_taeData->m_unkDataOffset + 0x30;
 			biggestOffset = this->m_tae[i].m_taeData->m_timesOffset;
 		}
+		else
+			this->m_tae[i].m_taeData->m_timesOffset = 0;
 
 		if (this->m_tae[i].m_taeData->m_eventCount > 0)
 		{
@@ -352,6 +364,8 @@ void TimeActReader::AdjustOffsets()
 
 			biggestOffset = this->m_tae[i].m_taeData->m_eventOffset;
 		}
+		else
+			this->m_tae[i].m_taeData->m_eventOffset = 0;
 	
 		if (this->m_tae[i].m_taeData->m_eventGroupCount > 0)
 		{

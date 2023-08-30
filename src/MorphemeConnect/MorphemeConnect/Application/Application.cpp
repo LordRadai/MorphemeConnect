@@ -458,7 +458,7 @@ void Application::RenderGUI(const char* title)
 				this->m_timeActEditor.m_frameMax = max;
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
@@ -747,6 +747,7 @@ void Application::ProcessVariables()
 			if (m_tae.m_tae.size() > 0)
 			{
 				TimeAct* timeact = this->m_tae.TimeActLookup(this->m_timeActEditorFlags.m_taeId);
+				this->m_timeActEditor.m_source = timeact;
 
 				if (timeact)
 				{

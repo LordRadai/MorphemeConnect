@@ -61,11 +61,11 @@ struct TimeActEditor
     std::string GetTrackName(int idx);
     std::string GetEventLabel(int idx, int event_idx) const;
 
-    //void AddTrack(int event_id);
-    //void DeleteTrack(int idx);
+    void AddGroup(int id);
+    void DeleteGroup(int idx);
 
-    //void AddEvent(int track_idx, EventTrack::Event event);
-    //void DeleteEvent(int track_idx, int event_idx);
+    void AddEvent(int group_idx, TimeActEvent event);
+    void DeleteEvent(int group_idx, int event_idx);
 
     void ReloadTracks();
 

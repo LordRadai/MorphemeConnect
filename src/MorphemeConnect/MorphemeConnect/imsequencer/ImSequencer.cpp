@@ -1356,11 +1356,9 @@ namespace ImSequencer
         static char trackRename[50] = "";
 
         bool addTrack = false;
-        static int addTrackEventId = 0;
-        static char addTrackName[50] = "MyTrack";
-        static bool addTrackIsDuration = false;
+        static int addGroupId = 0;
 
-        static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
+        static TimeActEvent addEvent;
 
         bool delEvent = false;
 
@@ -1509,12 +1507,11 @@ namespace ImSequencer
                     ImGui::Text("Add Track");
                     ImGui::Separator();
 
-                    ImGui::InputText("Name", addTrackName, 50);
-                    ImGui::InputInt("Group ID", &addTrackEventId);                 
+                    ImGui::InputInt("Group ID", &addGroupId);
 
                     if (ImGui::Button("Add Track") || GetAsyncKeyState(VK_RETURN) & 1)
                     {
-                        //timeActEditor->AddTrack(addTrackEventId, addTrackName, addTrackIsDuration);
+                        timeActEditor->AddGroup(addGroupId);
                         ImGui::CloseCurrentPopup();
 
                         *selectedTrack = -1;
@@ -1700,7 +1697,7 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteTrack") && popupOpened)
             {
-                std::string header = std::string(timeActEditor->m_tracks[*selectedTrack].m_name);
+                std::string header = timeActEditor->GetTrackName(*selectedTrack);
 
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
@@ -1709,7 +1706,7 @@ namespace ImSequencer
                 {
                     reload = true;
 
-                    //timeActEditor->DeleteTrack(*selectedTrack);
+                    timeActEditor->DeleteGroup(*selectedTrack);
                     *selectedTrack = -1;
                     *selectedEvent = -1;
 
@@ -1727,12 +1724,12 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("renameTrack") && popupOpened)
             {
-                std::string header = std::string(timeActEditor->m_tracks[*selectedTrack].m_name);
+                std::string header = timeActEditor->GetTrackName(*selectedTrack);
 
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
-                ImGui::InputText("Name", timeActEditor->m_tracks[*selectedTrack].m_name, 50);
+                ImGui::InputInt("ID", &timeActEditor->m_tracks[*selectedTrack].m_eventGroup);
 
                 if (GetAsyncKeyState(VK_RETURN))
                     ImGui::CloseCurrentPopup();
@@ -1748,14 +1745,14 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteEvent") && popupOpened)
             {
-                std::string header = std::string(timeActEditor->m_tracks[*selectedTrack].m_name) + " [" + std::to_string(*selectedEvent) + "]";
+                std::string header = timeActEditor->GetTrackName(*selectedTrack) + " [" + std::to_string(*selectedEvent) + "]";
 
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
                 if (ImGui::Button("Delete Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
-                    //timeActEditor->DeleteEvent(*selectedTrack, *selectedEvent);
+                    timeActEditor->DeleteEvent(*selectedTrack, *selectedEvent);
 
                     *selectedTrack = -1;
                     *selectedEvent = -1;
@@ -1776,20 +1773,20 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("addEvent") && popupOpened)
             {
-                ImGui::Text(timeActEditor->m_tracks[*selectedTrack].m_name);
+                ImGui::Text(timeActEditor->GetTrackName(*selectedTrack).c_str());
                 ImGui::Separator();
 
                 ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
 
-                ImGui::InputFloat("Duration", &addEvent.m_duration, 1.f / 60.f);
+                ImGui::InputFloat("End", &addEvent.m_end, 1.f / 60.f);
 
                 *currentFrame = MathHelper::TimeToFrame(addEvent.m_start);
 
-                ImGui::InputInt("Event ID", &addEvent.m_value);
+                ImGui::InputInt("Event ID", &addEvent.m_eventData->m_id);
 
                 if (ImGui::Button("Add Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
-                    //timeActEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ MathHelper::TimeToFrame(addEvent.m_start), MathHelper::TimeToFrame(addEvent.m_duration), addEvent.m_value });
+                    timeActEditor->AddEvent(*selectedTrack, addEvent);
                     ImGui::CloseCurrentPopup();
 
                     reload = true;

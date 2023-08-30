@@ -1,7 +1,5 @@
 #include "TimeActEvent.h"
 
-TimeActEvent::EventData::EventData() {}
-
 TimeActEventData* getArguments(int id)
 {
 	switch (id)
@@ -187,10 +185,22 @@ TimeActEventData* getArguments(int id)
 	case 310000:
 		return new TimeActEventData_SpEffect310000;
 	default:
-		break;
+		return new TimeActEventData_NoArgs;
 	}
+}
 
-	return new TimeActEventData_NoArgs;
+TimeActEvent::EventData::EventData() 
+{
+	this->m_id = 0;
+	this->m_pad = 0;
+	this->m_args = getArguments(-1);
+}
+
+TimeActEvent::EventData::EventData(int id)
+{
+	this->m_id = id;
+
+	this->m_args = getArguments(id);
 }
 
 TimeActEvent::EventData::EventData(ifstream* tae)
@@ -206,7 +216,19 @@ TimeActEvent::EventData::EventData(ifstream* tae)
 	this->m_args->GetData(tae);
 }
 
-TimeActEvent::TimeActEvent() {}
+TimeActEvent::TimeActEvent()
+{
+	this->m_start = 0;
+	this->m_end = 0;
+	this->m_eventData = new EventData();
+}
+
+TimeActEvent::TimeActEvent(float start, float end, int id)
+{
+	this->m_start = start;
+	this->m_end = end;
+	this->m_eventData = new EventData(id);
+}
 
 TimeActEvent::TimeActEvent(ifstream* tae)
 {
@@ -283,7 +305,21 @@ EventGroup::EventGroupData::EventGroupData(ifstream* tae)
 	MemReader::ReadQWord(tae, &this->m_offset);
 }
 
-EventGroup::EventGroup() {}
+EventGroup::EventGroup() 
+{
+	this->m_count = 0;
+	this->m_pad = 0;
+}
+
+EventGroup::EventGroup(int id)
+{
+	this->m_count = 0;
+	this->m_pad = 0;
+
+	this->m_groupData = new EventGroupData;
+
+	this->m_groupData->m_eventType = id;
+}
 
 EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 {

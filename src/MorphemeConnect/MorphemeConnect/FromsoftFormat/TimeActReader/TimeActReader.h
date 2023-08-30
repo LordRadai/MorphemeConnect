@@ -52,6 +52,7 @@ public:
 	TimeActData* m_taeData;
 
 	TimeAct();
+	TimeAct(int id);
 	TimeAct(ifstream* tae);
 
 	void GenerateBinary(ofstream* tae);

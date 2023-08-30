@@ -40,6 +40,7 @@ public:
         TimeActEventData* m_args;
 
 		EventData();
+		EventData(int id);
 		EventData(ifstream* tae);
 	};
 
@@ -52,6 +53,7 @@ public:
 	EventData* m_eventData;
 
 	TimeActEvent();
+	TimeActEvent(float start, float end, int id);
 	TimeActEvent(ifstream* tae);
 
 	void GenerateBinary(ofstream* tae);
@@ -75,12 +77,13 @@ public:
 	UINT64 m_groupDataOffset;
 	UINT64 m_pad;
 
-	TimeActEvent** m_event;
+	std::vector<TimeActEvent*> m_event;
 	std::vector<UINT64> m_eventOffset;
 	std::vector<int> m_eventIndex;
 	EventGroupData* m_groupData;
 
 	EventGroup();
+	EventGroup(int id);
 	EventGroup(ifstream* tae, UINT64 eventOffset);
 
 	void GenerateBinary(ofstream* tae);

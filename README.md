@@ -7,7 +7,7 @@ It can be used in the following ways:
 # Preview Window
 When opening an NMB, the program will attempt to find the character model in the parent path. If it finds one and it has valid vertex data in it, it will show the model in the Preview window. Note that c0001 do not have a model, player equipments are not supported yet.
 
-![alt text](https://imgur.com/a/hWfdgmG)
+![Immagine 2023-08-30 195652](https://github.com/LordRadai/MorphemeConnect/assets/22768664/9a817015-9e15-4b84-ae6d-bd7d6c5dfadb)
 
 # Requirements
 * DirectXTK

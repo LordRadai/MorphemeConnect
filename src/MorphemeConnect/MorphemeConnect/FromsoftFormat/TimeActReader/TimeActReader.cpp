@@ -322,6 +322,8 @@ TimeActReader::TimeActReader(PWSTR filePath)
 
 	this->m_tae.reserve(this->m_header.m_taeCount);
 
+	tae.seekg(this->m_header.m_taeOffset);
+
 	for (int i = 0; i < this->m_header.m_taeCount; i++)
 		this->m_tae.push_back(TimeAct(&tae));
 

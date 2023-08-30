@@ -256,4 +256,5 @@ public:
 	void SaveFile();
 	void NetworkCleanup();
 	int GetChrIdFromNmbFileName(std::wstring name);
+	std::wstring GetObjIdFromTaeFileName(std::wstring name);
 };

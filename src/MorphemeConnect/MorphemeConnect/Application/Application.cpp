@@ -713,7 +713,7 @@ void Application::ProcessVariables()
 	{
 		this->m_flags.m_saveFile = false;
 
-		if (this->m_nmb.m_init)
+		if (this->m_nmb.m_init || this->m_tae.m_init)
 			this->SaveFile();
 		else
 			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No file is loaded\n");
@@ -900,15 +900,31 @@ int Application::GetChrIdFromNmbFileName(std::wstring name)
 	std::wstring chr_id_str;
 	int chr_id;
 
-	int lastCPos = name.find_last_of(L"\\c");
+	int lastCPos = name.find_last_of(L"\\");
 
-	chr_id_str = name.substr(lastCPos + 1, 4);
+	chr_id_str = name.substr(lastCPos + 2, 4);
 
 	chr_id = stoi(chr_id_str);
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %d\n", chr_id);
 
 	return chr_id;
+}
+
+std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
+{
+	std::wstring obj_id;
+
+	int lastCPos = name.find_last_of(L"\\");
+
+	obj_id = name.substr(lastCPos + 1, 8);
+
+	if (obj_id.substr(0, 1).compare(L"c") == 0)
+		return L"";
+
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Obj ID: %s\n", obj_id);
+
+	return obj_id;
 }
 
 std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, int chr_id)
@@ -949,6 +965,18 @@ std::wstring getModelNameFromChrId(std::wstring model_path, int chr_id)
 		int file_chr_id = stoi(file_chr_id_str);
 
 		if (file_chr_id == chr_id && entry.path().extension() == ".bnd")
+			return entry.path();
+	}
+}
+
+std::wstring getModelNameFromObjId(std::wstring model_path, std::wstring obj_id)
+{
+	for (const auto& entry : std::filesystem::directory_iterator(model_path))
+	{
+		std::wstring filename = entry.path().filename();
+		std::wstring file_chr_id_str = filename.substr(0, 8);
+
+		if ((file_chr_id_str.compare(obj_id) == 0) && (entry.path().extension() == ".bnd"))
 			return entry.path();
 	}
 }
@@ -1065,6 +1093,65 @@ void Application::LoadFile()
 							m_tae.m_init = false;
 							m_tae = TimeActReader(pszFilePath);
 							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+
+							bool found = false;
+
+							std::wstring obj_id = GetObjIdFromTaeFileName(pszFilePath);
+
+							if (obj_id.compare(L"") != 0)
+							{
+								std::filesystem::path gamepath = pszFilePath;
+								std::filesystem::path filepath_dcx;
+								do
+								{
+									std::wstring parent_path = gamepath.parent_path();
+									gamepath = parent_path;
+
+									int lastDirPos = parent_path.find_last_of(L"\\");
+
+									std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
+
+									if (folder.compare(L"\\") == 0)
+										break;
+
+									if (folder.compare(L"\\Game") == 0)
+									{
+										found = true;
+										break;
+									}
+								} while (true);
+
+								if (found)
+								{
+									filepath_dcx = gamepath;
+
+									filepath_dcx += "\\model\\obj";
+
+									m_bnd.m_init = false;
+									std::wstring obj_path = getModelNameFromObjId(filepath_dcx, obj_id);
+
+									PWSTR dcx_path = (wchar_t*)obj_path.c_str();
+
+									m_bnd = BNDReader(dcx_path);
+
+									std::string filename = StringHelper::ToNarrow(obj_id.c_str()) + ".flv";
+
+									for (size_t i = 0; i < m_bnd.m_fileCount; i++)
+									{
+										if (m_bnd.m_files[i].m_name == filename)
+										{
+											UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
+											FLVER2 flver_model = FLVER2(umem);
+
+											this->m_model = FlverModel(umem);
+
+											Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+											break;
+										}
+									}
+								}
+							}
+							
 						}
 					}
 					pItem->Release();

@@ -7,6 +7,8 @@ It can be used in the following ways:
 # Preview Window
 When opening an NMB, the program will attempt to find the character model in the parent path. If it finds one and it has valid vertex data in it, it will show the model in the Preview window. Note that c0001 do not have a model, player equipments are not supported yet.
 
+![alt text](https://imgur.com/a/hWfdgmG)
+
 # Requirements
 * DirectXTK
 * ICU in your System Path folder

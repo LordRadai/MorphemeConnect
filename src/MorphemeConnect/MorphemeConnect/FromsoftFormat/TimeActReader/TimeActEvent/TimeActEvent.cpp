@@ -285,7 +285,7 @@ void TimeActEvent::GenerateBinary(ofstream* tae)
 
 int TimeActEvent::GetArgumentsSize()
 {
-	int size = 32;
+	int size = 64;
 
 	int remainder = size % 16;
 

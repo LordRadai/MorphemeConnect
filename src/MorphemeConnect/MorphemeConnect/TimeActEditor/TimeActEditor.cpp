@@ -55,59 +55,16 @@ int TimeActEditor::GetTrackCount() const { return (int)m_tracks.size(); }
 
 std::string getGroupName(int group_id)
 {
-	switch (group_id)
-	{
-	case 200:
-		return "SoundCtrl";
-	case 300:
-		return "AiCtrl";
-	case 1100:
-		return "DamageCtrl";
-	case 1150:
-		return "BulletCtrl";
-	case 1220:
-		return "ParryCtrl";
-	case 1500:
-		return "CameraCtrl";
-	case 2100:
-		return "SfxCtrl";
-	case 2200:
-		return "FootEffectCtrl";
-	case 2300:
-		return "WeaponCtrl";
-	case 2400:
-		return "LockOnCtrl";
-	case 101000:
-		return "StaminaCtrl";
-	case 110000:
-		return "DamageActionCtrl";
-	case 120000:
-		return "AttackCtrl";
-	case 210000:
-		return "GimmickCtrl";
-	case 220000:
-		return "ItemCtrl";
-	case 230000:
-		return "ChrGenerateCtrl";
-	case 240000:
-		return "DeadCtrl";
-	case 250000:
-		return "ObjGenerateCtrl";
-	case 260000:
-		return "ModelCtrl";
-	case 270000:
-		return "ChrPartsCtrl";
-	case 280000:
-		return "ChrMoveCtrl";
-	case 290000:
-		return "ChrCollidCtrl";
-	case 300000:
-		return "EventCtrl";
-	case 310000:
-		return "SpEffectCtrl";
-	default:
-		return std::to_string(group_id);
+	INIReader reader(".//MorphemeConnect//res//tae//tae_group.ini");
+
+	if (reader.ParseError() < 0) {
+		printf_s("[ERROR] Failed to load tae_group.ini\n");
+		return "";
 	}
+
+	std::string tae_group_str = std::to_string(group_id);
+
+	return reader.GetString("Group", tae_group_str, tae_group_str);
 }
 
 TimeActEditor::TimeActEditor() {}
@@ -119,7 +76,7 @@ std::string TimeActEditor::GetTrackName(int idx)
 
 std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
 {
-	INIReader reader(".//MorphemeConnect//res//tae.ini");
+	INIReader reader(".//MorphemeConnect//res//tae//tae_event.ini");
 
 	if (reader.ParseError() < 0) {
 		printf_s("[ERROR] Failed to load tae.ini\n");

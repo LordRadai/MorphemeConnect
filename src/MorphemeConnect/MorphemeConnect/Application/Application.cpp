@@ -119,6 +119,7 @@ void Application::RenderGUI(const char* title)
 		{
 			if (ImGui::MenuItem("Open", NULL, &this->m_flags.m_loadFile)) { this->m_flags.m_loadFile = true; }
 			if (ImGui::MenuItem("Save", NULL, &this->m_flags.m_saveFile)) { this->m_flags.m_saveFile = true; }
+			if (ImGui::MenuItem("Save All", NULL, &this->m_flags.m_saveAll)) { this->m_flags.m_saveAll = true; }
 
 			ImGui::EndMenu();
 		}
@@ -631,6 +632,31 @@ void Application::ProcessVariables()
 			this->SaveFile();
 		else
 			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No file is loaded\n");
+	}
+
+	if (this->m_flags.m_saveAll)
+	{
+		this->m_flags.m_saveAll = false;
+
+		if (this->m_nmb.m_init)
+		{
+			bool status = m_nmb.SaveToFile(this->m_nmb.m_filePath);
+
+			if (status)
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
+			else
+				Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
+		}
+
+		if (this->m_tae.m_init)
+		{
+			bool status = m_tae.SaveFile(this->m_tae.m_filePath);
+
+			if (status)
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+			else
+				Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "TimeActReader.cpp");
+		}
 	}
 
 	if (this->m_nmb.m_init == false)

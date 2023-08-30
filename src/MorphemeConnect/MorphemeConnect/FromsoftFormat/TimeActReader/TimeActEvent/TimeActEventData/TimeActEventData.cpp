@@ -704,7 +704,10 @@ void TimeActEventData_Sfx2106::GetData(ifstream* tae)
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar0);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_sfxId);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_dmyPolyId);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVarC);
+	MemReader::ReadByte(tae, &this->m_bVarC);
+	MemReader::ReadByte(tae, &this->m_bVarD);
+	MemReader::ReadByte(tae, &this->m_bVarE);
+	MemReader::ReadByte(tae, &this->m_bVarF);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar10);
 }
 
@@ -713,7 +716,10 @@ void TimeActEventData_Sfx2106::SaveData(ofstream* tae)
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar0);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_sfxId);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_dmyPolyId);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVarC);
+	MemReader::WriteByte(tae, &this->m_bVarC);
+	MemReader::WriteByte(tae, &this->m_bVarD);
+	MemReader::WriteByte(tae, &this->m_bVarD);
+	MemReader::WriteByte(tae, &this->m_bVarF);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar10);
 
 	UINT64 pos = tae->tellp();
@@ -721,7 +727,7 @@ void TimeActEventData_Sfx2106::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-				BYTE* padding = new BYTE[16 - remainder](0);
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -731,7 +737,7 @@ std::string TimeActEventData_Sfx2106::GetArgumentAsString()
 {
 	char args[100];
 
-	sprintf_s(args, "(%d, %d, %d, %d, %d)\n", this->m_iVar0, this->m_sfxId, this->m_dmyPolyId, this->m_iVarC, this->m_iVar10);
+	sprintf_s(args, "(%d, %d, %d, %d, %d, %d, %d, %d)\n", this->m_iVar0, this->m_sfxId, this->m_dmyPolyId, this->m_bVarC, this->m_bVarD, this->m_bVarE, this->m_bVarF, this->m_iVar10);
 	return std::string(args);
 }
 
@@ -742,7 +748,10 @@ void TimeActEventData_Sfx2106::ImGuiEditSection()
 	ImGui::InputInt("Unk00", &this->m_iVar0, 0, 0, 0);
 	ImGui::InputInt("Sfx ID", &this->m_sfxId, 0, 0, 0);
 	ImGui::InputInt("DmyPoly ID", &this->m_dmyPolyId, 0, 0, 0);
-	ImGui::InputInt("Unk0C", &this->m_iVarC, 0, 0, 0);
+	ImGui::InputByte("Unk0C", (char*)&this->m_bVarC, 0, 0, 0);
+	ImGui::InputByte("Unk0D", (char*)&this->m_bVarD, 0, 0, 0);
+	ImGui::InputByte("Slot Type", (char*)&this->m_bVarE, 0, 0, 0);
+	ImGui::InputByte("Unk0F", (char*)&this->m_bVarF, 0, 0, 0);
 	ImGui::InputInt("Unk10", &this->m_iVar10, 0, 0, 0);
 }
 

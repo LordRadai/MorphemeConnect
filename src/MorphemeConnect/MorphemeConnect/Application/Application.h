@@ -205,6 +205,7 @@ public:
 	{
 		bool m_loadFile = false;
 		bool m_saveFile = false;
+		bool m_saveAll = false;
 	} m_flags;
 
 	struct EventTrackEditorFlags

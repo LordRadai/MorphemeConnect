@@ -366,26 +366,25 @@ void TimeActReader::AdjustOffsets()
 		}
 		else
 			this->m_tae[i].m_taeData->m_eventOffset = 0;
-	
-		if (this->m_tae[i].m_taeData->m_eventGroupCount > 0)
-		{
-			UINT64 totalEventsSize = 0;
-			for (int j = 0; j < this->m_tae[i].m_taeData->m_eventCount; j++)
-				totalEventsSize += this->m_tae[i].m_taeData->m_events[j].GetArgumentsSize();
 
-			this->m_tae[i].m_taeData->m_eventGroupOffset = this->m_tae[i].m_taeData->m_eventOffset + totalEventsSize;
-		}
-		else
-			this->m_tae[i].m_taeData->m_eventGroupOffset = 0;
-
+		UINT64 oldSize = 0;
+		UINT64 oldDataOffset = this->m_tae[i].m_taeData->m_eventOffset + this->m_tae[i].m_taeData->m_eventCount * 0x18;
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventCount; j++)
 		{
 			this->m_tae[i].m_taeData->m_events[j].m_startOffset = this->m_tae[i].m_taeData->m_timesOffset + j * 0x8;
 			this->m_tae[i].m_taeData->m_events[j].m_endOffset = this->m_tae[i].m_taeData->m_timesOffset + j * 0x8 + 0x4;
-			this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset = this->m_tae[i].m_taeData->m_eventOffset + this->m_tae[i].m_taeData->m_eventCount * 0x18 + j * 0x20;
+			this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset = oldDataOffset + oldSize;
 		
 			this->m_tae[i].m_taeData->m_events[j].m_eventData->m_argsOffset = this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset + 0x10;
+
+			oldDataOffset = this->m_tae[i].m_taeData->m_events[j].m_eventDataOffset;
+			oldSize = this->m_tae[i].m_taeData->m_events[j].GetArgumentsSize();
 		}
+
+		if (this->m_tae[i].m_taeData->m_eventGroupCount > 0)
+			this->m_tae[i].m_taeData->m_eventGroupOffset = oldDataOffset + oldSize;
+		else
+			this->m_tae[i].m_taeData->m_eventGroupOffset = 0;
 
 		UINT64 groupTotalSize = 0;
 		for (int j = 0; j < this->m_tae[i].m_taeData->m_eventGroupCount; j++)

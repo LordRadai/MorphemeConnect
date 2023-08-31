@@ -21,3 +21,6 @@ If you want to compile this project, you need the following things:
 * ICU
 * ZLIB
 Remember to adjust ZLIB and ICU path in the Project Settings
+
+# Bugs
+Report any bugs in my Discord DMs: lordradai

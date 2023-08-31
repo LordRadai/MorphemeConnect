@@ -451,3 +451,33 @@ public:
 	std::string GetArgumentAsString();
 	void ImGuiEditSection();
 };
+
+class TimeActEventData_MapGimmick500000 : public TimeActEventData
+{
+public:
+	int m_iVar0;
+	int m_iVar4;
+	int m_iVar8;
+	int m_iVarC;
+
+	void GetData(ifstream* tae);
+	void SaveData(ofstream* tae);
+	std::string GetArgumentAsString();
+	void ImGuiEditSection();
+};
+
+class TimeActEventData_MapSound502000 : public TimeActEventData
+{
+public:
+	int m_soundId;
+	BYTE m_bVar4;
+	BYTE m_bVar5;
+	short m_sVar6;
+	int m_iVar8;
+	int m_iVarC;
+
+	void GetData(ifstream* tae);
+	void SaveData(ofstream* tae);
+	std::string GetArgumentAsString();
+	void ImGuiEditSection();
+};

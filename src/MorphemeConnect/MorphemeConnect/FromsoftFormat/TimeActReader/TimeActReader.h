@@ -111,7 +111,16 @@ public:
 	UINT64 m_iVar68;
 	UINT64 m_taeCount2;
 	UINT64 m_taeDataOffset;
-	BYTE m_unkData[64];
+	UINT64 m_iVar80;
+	UINT64 m_pVar88;
+	int m_fileId2;
+	int m_fileId3;
+	UINT64 m_pVar98;
+	UINT64 m_pVarA0;
+	UINT64 m_pVarA8;
+	UINT64 m_skeletonNameOffset;
+	UINT64 m_sibNameOffset;
+	BYTE m_sibName[255];
 
 	Header();
 	Header(ifstream* tae);

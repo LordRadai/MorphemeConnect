@@ -184,6 +184,10 @@ TimeActEventData* getArguments(int id)
 		return new TimeActEventData_Event300300;
 	case 310000:
 		return new TimeActEventData_SpEffect310000;
+	case 500000:
+		return new TimeActEventData_MapGimmick500000;
+	case 502000:
+		return new TimeActEventData_MapSound502000;
 	default:
 		return new TimeActEventData_NoArgs;
 	}

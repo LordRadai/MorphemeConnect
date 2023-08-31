@@ -175,7 +175,7 @@ void Application::RenderGUI(const char* title)
 
 		std::string tae_popup = "Load TimeAct (c" + std::string(chr_id_str) + ")";
 
-		if (this->m_eventTrackEditorFlags.load_tae && this->m_eventTrackEditorFlags.tae_list.size() > 0)
+		if (this->m_eventTrackEditorFlags.m_loadTae && this->m_eventTrackEditorFlags.m_taeList.size() > 0)
 		{
 			ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_Appearing);
 
@@ -194,21 +194,21 @@ void Application::RenderGUI(const char* title)
 				m_tae = TimeActReader(PWSTR(filepath.c_str()));
 				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
-				this->m_eventTrackEditorFlags.load_tae = false;
+				this->m_eventTrackEditorFlags.m_loadTae = false;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 
 			if (ImGui::Button("Cancel"))
 			{
-				this->m_eventTrackEditorFlags.load_tae = false;
+				this->m_eventTrackEditorFlags.m_loadTae = false;
 				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::BeginChild("file_list");
-			for (int i = 0; i < this->m_eventTrackEditorFlags.tae_list.size(); i++)
+			for (int i = 0; i < this->m_eventTrackEditorFlags.m_taeList.size(); i++)
 			{
-				std::filesystem::path path = this->m_eventTrackEditorFlags.tae_list[i];
+				std::filesystem::path path = this->m_eventTrackEditorFlags.m_taeList[i];
 				std::string tae_file = StringHelper::ToNarrow(path.filename().c_str());
 
 				if (ImGui::Selectable(tae_file.c_str()))
@@ -242,9 +242,14 @@ void Application::RenderGUI(const char* title)
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
-							if (ImGui::Selectable(anim_name.c_str()))
+							ImGui::Selectable(anim_name.c_str());
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
+
+								if (ImGui::IsMouseDoubleClicked(0))
+									this->m_eventTrackEditorFlags.m_load = true;
 							}
 							ImGui::PopID();
 						}
@@ -351,7 +356,7 @@ void Application::RenderGUI(const char* title)
 			else
 				this->m_timeActFlags.m_deleteTimeAct = false;
 
-			if (this->m_eventTrackEditorFlags.tae_list.size() > 0)
+			if (this->m_eventTrackEditorFlags.m_taeList.size() > 0)
 			{
 				if (ImGui::Button("Add TimeAct"))
 					this->m_timeActFlags.m_addTimeAct = true;
@@ -936,24 +941,23 @@ std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
 	return obj_id;
 }
 
-std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, int chr_id)
+std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, std::wstring chr_id)
 {
 	std::vector<std::wstring> files;
-
-	std::wstring chr_id_str = std::to_wstring(chr_id);
 	
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "TimeAct belonging to c%d:\n", chr_id);
 	for (const auto& entry : std::filesystem::directory_iterator(tae_path))
 	{
-		std::wstring filename = entry.path().filename();
-		std::wstring file_chr_id_str = filename.substr(1, 4);
-		int file_chr_id = stoi(file_chr_id_str);
-
-		if (file_chr_id == chr_id)
+		if (entry.path().extension().compare(".tae") == 0)
 		{
-			Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
-			files.push_back(entry.path());
-		}
+			std::wstring filename = entry.path().filename();
+			std::wstring file_chr_id_str = filename.substr(1, 4);
+
+			if (file_chr_id_str.compare(chr_id) == 0)
+			{
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
+				files.push_back(entry.path());
+			}
+		}	
 	}
 
 	if (files.size() == 0)
@@ -962,19 +966,18 @@ std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, int chr
 	return files;
 }
 
-std::wstring getModelNameFromChrId(std::wstring model_path, int chr_id)
+std::wstring getModelNameFromChrId(std::wstring model_path, std::wstring chr_id)
 {
-	std::wstring chr_id_str = std::to_wstring(chr_id);
-
 	for (const auto& entry : std::filesystem::directory_iterator(model_path))
 	{
-		std::wstring filename = entry.path().filename();
-		std::wstring file_chr_id_str = filename.substr(1, 4);
+		if (entry.path().extension().compare(".bnd") == 0)
+		{
+			std::wstring filename = entry.path().filename();
+			std::wstring file_chr_id_str = filename.substr(1, 4);
 
-		int file_chr_id = stoi(file_chr_id_str);
-
-		if (file_chr_id == chr_id && entry.path().extension() == ".bnd")
-			return entry.path();
+			if (file_chr_id_str.compare(chr_id) == 0)
+				return entry.path();
+		}
 	}
 
 	return L"";
@@ -1074,11 +1077,16 @@ void Application::LoadFile()
 									filepath_tae += "\\timeact\\chr";
 									filepath_dcx += "\\model\\chr";
 
-									this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath_tae, this->m_eventTrackEditorFlags.chr_id);
-									this->m_eventTrackEditorFlags.load_tae = true;
+									wchar_t chr_id_str[50];
+									swprintf_s(chr_id_str, L"%04d", this->m_eventTrackEditorFlags.chr_id);
+
+									std::wstring string = std::wstring(chr_id_str);
+
+									this->m_eventTrackEditorFlags.m_taeList = getTaeFileListFromChrId(filepath_tae, chr_id_str);
+									this->m_eventTrackEditorFlags.m_loadTae = true;
 
 									m_bnd.m_init = false;
-									std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, this->m_eventTrackEditorFlags.chr_id);
+									std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, chr_id_str);
 
 									if (path_tmp.compare(L"") != 0)
 									{
@@ -1086,10 +1094,7 @@ void Application::LoadFile()
 
 										m_bnd = BNDReader(dcx_path);
 
-										char chr_id_str[50];
-										sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
-
-										std::string filename = "c" + std::string(chr_id_str) + ".flv";
+										std::string filename = "c" + StringHelper::ToNarrow(string.c_str()) + ".flv";
 
 										for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 										{
@@ -1224,28 +1229,25 @@ void Application::SaveFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						if (m_nmb.m_init)
+						std::filesystem::path filepath = std::wstring(pszOutFilePath);
+
+						if (filepath.extension() == ".nmb")
 						{
-							std::filesystem::path filepath = std::wstring(pszOutFilePath);
+							bool status = m_nmb.SaveToFile(pszOutFilePath);
 
-							if (filepath.extension() == ".m_nmb")
-							{
-								bool status = m_nmb.SaveToFile(pszOutFilePath);
+							if (status)
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
+							else
+								Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Failed to generate NMB file\n");
+						}
+						else if (filepath.extension() == ".tae")
+						{
+							bool status = m_tae.SaveFile(pszOutFilePath);
 
-								if (status)
-									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
-								else
-									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
-							}
-							else if (filepath.extension() == ".tae")
-							{
-								bool status = m_tae.SaveFile(pszOutFilePath);
-
-								if (status)
-									Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
-								else
-									Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "TimeActReader.cpp");
-							}
+							if (status)
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+							else
+								Debug::Alert(Debug::LVL_ERROR, "TimeActReader.cpp", "Failed to generate TAE file\n");
 						}
 					}
 					pItem->Release();

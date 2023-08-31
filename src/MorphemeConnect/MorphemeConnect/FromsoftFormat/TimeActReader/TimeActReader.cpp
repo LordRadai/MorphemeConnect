@@ -270,7 +270,18 @@ Header::Header(ifstream* tae)
 	MemReader::ReadQWord(tae, &this->m_iVar68);
 	MemReader::ReadQWord(tae, &this->m_taeCount2);
 	MemReader::ReadQWord(tae, &this->m_taeDataOffset);
-	MemReader::ReadByteArray(tae, this->m_unkData, 0x40);
+	MemReader::ReadQWord(tae, &this->m_iVar80);
+	MemReader::ReadQWord(tae, &this->m_pVar88);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileId2);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileId3);
+	MemReader::ReadQWord(tae, &this->m_pVar98);
+	MemReader::ReadQWord(tae, &this->m_pVarA0);
+	MemReader::ReadQWord(tae, &this->m_pVarA8);
+	MemReader::ReadQWord(tae, &this->m_skeletonNameOffset);
+	MemReader::ReadQWord(tae, &this->m_sibNameOffset);
+
+	if (this->m_sibNameOffset != this->m_taeOffset)
+		MemReader::ReadByteArray(tae, this->m_sibName, this->m_sibNameOffset - this->m_taeOffset);
 }
 
 void Header::GenerateBinary(ofstream* tae)
@@ -301,7 +312,18 @@ void Header::GenerateBinary(ofstream* tae)
 	MemReader::WriteQWord(tae, &this->m_taeCount2);
 	MemReader::WriteQWord(tae, &this->m_taeDataOffset);
 
-	MemReader::WriteByteArray(tae, this->m_unkData, 64);
+	MemReader::WriteQWord(tae, &this->m_iVar80);
+	MemReader::WriteQWord(tae, &this->m_pVar88);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileId2);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileId3);
+	MemReader::WriteQWord(tae, &this->m_pVar98);
+	MemReader::WriteQWord(tae, &this->m_pVarA0);
+	MemReader::WriteQWord(tae, &this->m_pVarA8);
+	MemReader::WriteQWord(tae, &this->m_skeletonNameOffset);
+	MemReader::WriteQWord(tae, &this->m_sibNameOffset);
+
+	if (this->m_sibNameOffset != this->m_taeOffset)
+		MemReader::WriteByteArray(tae, this->m_sibName, this->m_sibNameOffset - this->m_taeOffset);
 }
 
 TimeActReader::TimeActReader()
@@ -343,7 +365,7 @@ void TimeActReader::AdjustOffsets()
 {
 	this->CreateTaeGroups();
 
-	this->m_header.m_taeLookupTableOffset = 0xC0 + 0x10 * this->m_header.m_taeCount;
+	this->m_header.m_taeLookupTableOffset = this->m_header.m_taeOffset + 0x10 * this->m_header.m_taeCount;
 
 	this->m_lookupTable.m_groupOffset = this->m_header.m_taeLookupTableOffset + 0x10;
 
@@ -446,7 +468,7 @@ void TimeActReader::AdjustOffsets()
 		{
 			if (this->m_tae[j].m_id == this->m_lookupTable.m_groups[i].m_taeStart)
 			{
-				this->m_lookupTable.m_groups[i].m_offset = 0xC0 + j * 0x10;
+				this->m_lookupTable.m_groups[i].m_offset = this->m_header.m_taeOffset + j * 0x10;
 				break;
 			}
 		}
@@ -457,6 +479,9 @@ void TimeActReader::AdjustOffsets()
 
 bool TimeActReader::SaveFile(PWSTR pszOutFilePath)
 {
+	if (this->m_init == false)
+		return false;
+
 	this->m_outFilePath = pszOutFilePath;
 
 	ofstream out;

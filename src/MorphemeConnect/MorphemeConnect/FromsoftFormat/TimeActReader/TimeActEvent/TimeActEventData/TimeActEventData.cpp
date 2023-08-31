@@ -1377,7 +1377,7 @@ void TimeActEventData_Event300300::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-				BYTE* padding = new BYTE[16 - remainder](0);
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1418,7 +1418,7 @@ void TimeActEventData_SpEffect310000::SaveData(ofstream* tae)
 
 	if (remainder != 0)
 	{
-				BYTE* padding = new BYTE[16 - remainder](0);
+		BYTE* padding = new BYTE[16 - remainder](0);
 
 		MemReader::WriteByteArray(tae, padding, 16 - remainder);
 	}
@@ -1439,4 +1439,102 @@ void TimeActEventData_SpEffect310000::ImGuiEditSection()
 	ImGui::InputInt("SpEffect ID", &this->m_spEffectId, 0, 0, 0);
 	ImGui::InputShort("Type", &this->m_type, 0, 0, 0);
 	ImGui::InputShort("Mode", &this->m_mode, 0, 0, 0);
+}
+
+void TimeActEventData_MapGimmick500000::GetData(ifstream* tae)
+{
+	this->m_size = 16;
+
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar0);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar4);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar8);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVarC);
+}
+
+void TimeActEventData_MapGimmick500000::SaveData(ofstream* tae)
+{
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar0);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar4);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar8);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVarC);
+
+	UINT64 pos = tae->tellp();
+	int remainder = pos % 16;
+
+	if (remainder != 0)
+	{
+		BYTE* padding = new BYTE[16 - remainder](0);
+
+		MemReader::WriteByteArray(tae, padding, 16 - remainder);
+	}
+}
+
+std::string TimeActEventData_MapGimmick500000::GetArgumentAsString()
+{
+	char args[100];
+
+	sprintf_s(args, "(%d, %d, %d, %d)\n", this->m_iVar0, this->m_iVar4, this->m_iVar8, this->m_iVarC);
+	return std::string(args);
+}
+
+void TimeActEventData_MapGimmick500000::ImGuiEditSection()
+{
+	ImGui::Text("Arguments");
+
+	ImGui::InputInt("Unk00", &this->m_iVar0, 0, 0, 0);
+	ImGui::InputInt("Unk04", &this->m_iVar4, 0, 0, 0);
+	ImGui::InputInt("Unk08", &this->m_iVar8, 0, 0, 0);
+	ImGui::InputInt("Unk08", &this->m_iVarC, 0, 0, 0);
+}
+
+void TimeActEventData_MapSound502000::GetData(ifstream* tae)
+{
+	this->m_size = 18;
+
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_soundId);
+	MemReader::ReadByte(tae, &this->m_bVar4);
+	MemReader::ReadByte(tae, &this->m_bVar5);
+	MemReader::ReadWord(tae, (WORD*)&this->m_sVar6);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar8);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVarC);
+}
+
+void TimeActEventData_MapSound502000::SaveData(ofstream* tae)
+{
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_soundId);
+	MemReader::WriteByte(tae, &this->m_bVar4);
+	MemReader::WriteByte(tae, &this->m_bVar5);
+	MemReader::WriteWord(tae, (WORD*)&this->m_sVar6);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar8);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVarC);
+
+	UINT64 pos = tae->tellp();
+	int remainder = pos % 16;
+
+	if (remainder != 0)
+	{
+		BYTE* padding = new BYTE[16 - remainder](0);
+
+		MemReader::WriteByteArray(tae, padding, 16 - remainder);
+	}
+}
+
+std::string TimeActEventData_MapSound502000::GetArgumentAsString()
+{
+	char args[100];
+
+	sprintf_s(args, "(%d, %d, %d, %d, %d)\n", this->m_soundId, this->m_bVar4, this->m_bVar5, this->m_iVar8, this->m_iVarC);
+	return std::string(args);
+}
+
+void TimeActEventData_MapSound502000::ImGuiEditSection()
+{
+	ImGui::Text("Arguments");
+
+	ImGui::InputInt("Sound ID", &this->m_soundId, 0, 0, 0);
+	ImGui::InputByte("Unk04", (char*)&this->m_bVar4, 0, 0, 0);
+	ImGui::InputByte("Unk05", (char*)&this->m_bVar5, 0, 0, 0);
+	ImGui::InputShort("Unk06", &this->m_sVar6, 0, 0, 0);
+	ImGui::InputInt("Unk06", &this->m_iVar8, 0, 0, 0);
+	ImGui::InputInt("Unk06", &this->m_iVarC, 0, 0, 0);
 }

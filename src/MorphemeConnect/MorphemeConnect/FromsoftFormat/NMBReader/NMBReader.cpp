@@ -62,6 +62,9 @@ NMBReader::~NMBReader()
 
 bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 {
+	if (this->m_init == false)
+		return false;
+
 	bool state = true;
 	this->m_outFilePath = pszOutFilePath;
 

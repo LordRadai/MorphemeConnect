@@ -222,8 +222,8 @@ public:
 		bool m_save = false;
 		int m_targetAnimIdx = -1;
 		float m_lenMult = 1.f;
-		bool load_tae = false;
-		std::vector<std::wstring> tae_list;
+		bool m_loadTae = false;
+		std::vector<std::wstring> m_taeList;
 		int chr_id;
 	} m_eventTrackEditorFlags;
 

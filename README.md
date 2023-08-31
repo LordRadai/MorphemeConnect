@@ -9,6 +9,10 @@ When opening an NMB, the program will attempt to find the character model in the
 
 ![Immagine 2023-08-31 211346](https://github.com/LordRadai/MorphemeConnect/assets/22768664/9eac1a67-eb14-4d2b-a3b1-c18dcf99c0b0)
 
+# TimeAct Templates, Tooltips
+Templates are inside the `MorphemeConnect/res/def/timeact` folder. If you want to make changes to the templates, just edit `timeact_event.ini` and `timeact_group.ini`.
+Tooltips are inside the `MorphemeConnect/res/tooltip folder`. They are shown when you hover an event in the editor windows.
+
 # TODO
 * Implement project save as XML
 * Implement NMB Network generation logic to allow the creation of new EventTrack bundles.

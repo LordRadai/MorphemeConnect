@@ -39,19 +39,21 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)
 
 	if (this->m_data->m_numEvents > 0)
 	{
-		this->m_data->m_events = new BundleData_EventTrack::Event[this->m_data->m_numEvents];
+		this->m_data->m_events.reserve(this->m_data->m_numEvents);
 
 		UINT64 offset = *(UINT64*)(bundle->m_data + 0x18);
 
 		for (size_t i = 0; i < this->m_data->m_numEvents; i++)
 		{
-			this->m_data->m_events[i].m_start = *(float*)(bundle->m_data + offset);
-			this->m_data->m_events[i].m_duration = *(float*)(bundle->m_data + offset + 0x4);
-			this->m_data->m_events[i].m_value = *(int*)(bundle->m_data + offset + 0x8);
+			this->m_data->m_events.push_back({ *(float*)(bundle->m_data + offset), *(float*)(bundle->m_data + offset + 0x4), *(int*)(bundle->m_data + offset + 0x8) });
 
 			offset += 0xC;
 		}
 	}	
+}
+
+MorphemeBundle_EventTrack::~MorphemeBundle_EventTrack()
+{
 }
 
 void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
@@ -79,13 +81,14 @@ void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 	UINT64 offset = 32;
 	MemReader::WriteQWord(out, &offset);
 
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_events, 3 * this->m_data->m_numEvents);
+	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_events.data(), 3 * this->m_data->m_numEvents);
 
 	int str_len = strlen(this->m_data->m_trackName);
 
 	MemReader::WriteByteArray(out, (BYTE*)this->m_data->m_trackName, str_len);
 
-	MemReader::WriteByte(out, 0x0);
+	BYTE padByte = 0;
+	MemReader::WriteByte(out, &padByte);
 
 	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len); assert(pad_count > -1);
 
@@ -97,6 +100,8 @@ void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
 			pad_bytes[i] = 0xCD;
 
 		MemReader::WriteByteArray(out, pad_bytes, pad_count - 1);
+
+		delete[] pad_bytes;
 	}	
 }
 

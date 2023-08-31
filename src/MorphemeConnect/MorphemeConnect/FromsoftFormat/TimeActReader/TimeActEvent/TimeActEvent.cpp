@@ -220,6 +220,10 @@ TimeActEvent::EventData::EventData(ifstream* tae)
 	this->m_args->GetData(tae);
 }
 
+TimeActEvent::EventData::~EventData()
+{
+}
+
 TimeActEvent::TimeActEvent()
 {
 	this->m_start = 0;
@@ -264,6 +268,10 @@ TimeActEvent::TimeActEvent(ifstream* tae)
 	}
 
 	tae->seekg(start + (streampos)0x18);
+}
+
+TimeActEvent::~TimeActEvent()
+{
 }
 
 void TimeActEvent::GenerateBinary(ofstream* tae)
@@ -368,6 +376,10 @@ EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 
 	bak += 0x20;
 	tae->seekg(bak);
+}
+
+EventGroup::~EventGroup()
+{
 }
 
 void EventGroup::GenerateBinary(ofstream* tae)

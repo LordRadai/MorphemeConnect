@@ -12,23 +12,33 @@ FileNameLookupTable::FileNameLookupTable(BYTE* data)
 
 	if (this->m_elemCount > 0)
 	{
-		this->m_idx = new int[this->m_elemCount];
 		int* idx_list = (int*)(data + this->m_idxOffset);
 
+		this->m_idx.reserve(this->m_elemCount);
 		for (size_t i = 0; i < this->m_elemCount; i++)
-			this->m_idx[i] = idx_list[i];
+			this->m_idx.push_back(idx_list[i]);
 
-		this->m_localOffsets = new int[this->m_elemCount];
 		int* offset_list = (int*)(data + this->m_localOffsetsOffset);
 
+		this->m_localOffsets.reserve(this->m_elemCount);
 		for (size_t i = 0; i < this->m_elemCount; i++)
-			this->m_localOffsets[i] = offset_list[i];
+			this->m_localOffsets.push_back(offset_list[i]);
 
-		this->m_strings = new char[this->m_stringSize];
 		char* string_list = (char*)(data + this->m_stringsOffset);
 
+		this->m_strings.reserve(this->m_stringSize);
 		for (size_t i = 0; i < this->m_stringSize; i++)
-			this->m_strings[i] = string_list[i];
+			this->m_strings.push_back(string_list[i]);
+	}
+}
+
+FileNameLookupTable::~FileNameLookupTable()
+{
+	if (this->m_elemCount > 0)
+	{
+		this->m_idx.clear();
+		this->m_localOffsets.clear();
+		this->m_strings.clear();
 	}
 }
 
@@ -40,8 +50,8 @@ void FileNameLookupTable::WriteToBinary(ofstream* out)
 	MemReader::WriteQWord(out, &this->m_localOffsetsOffset);
 	MemReader::WriteQWord(out, &this->m_stringsOffset);
 
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_idx, this->m_elemCount);
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_localOffsets, this->m_elemCount);
+	MemReader::WriteDWordArray(out, (DWORD*)this->m_idx.data(), this->m_elemCount);
+	MemReader::WriteDWordArray(out, (DWORD*)this->m_localOffsets.data(), this->m_elemCount);
 
 	for (int i = 0; i < this->m_elemCount; i++)
 	{
@@ -64,6 +74,8 @@ void FileNameLookupTable::WriteToBinary(ofstream* out)
 			pad[i] = 0xCD;
 
 		MemReader::WriteByteArray(out, pad, pad_count);
+
+		delete[] pad;
 	}
 }
 
@@ -80,11 +92,11 @@ MorphemeBundle_FileNameLookupTable::BundleData_FileNameLookupTable::BundleData_F
 	this->m_sourceXmdList = FileNameLookupTable(data + this->m_sourceTableOffset);
 	this->m_tagList = FileNameLookupTable(data + this->m_tagTableOffset);
 
-	this->m_hash = new int[this->m_animList.m_elemCount];
 	int* hash_list = (int*)(data + this->m_hashOffset);
 
+	this->m_hash.reserve(this->m_animList.m_elemCount);
 	for (size_t i = 0; i < this->m_animList.m_elemCount; i++)
-		this->m_hash[i] = hash_list[i];
+		this->m_hash.push_back(hash_list[i]);
 }
 
 MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
@@ -119,6 +131,10 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 	this->m_data = new BundleData_FileNameLookupTable(bundle->m_data);
 }
 
+MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
+{
+}
+
 void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
@@ -143,7 +159,7 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 	this->m_data->m_sourceXmdList.WriteToBinary(out);
 	this->m_data->m_tagList.WriteToBinary(out);
 
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_hash, this->m_data->m_animFormat.m_elemCount);
+	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_hash.data(), this->m_data->m_animFormat.m_elemCount);
 
 	streampos pos = out->tellp();
 
@@ -159,6 +175,8 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 			pad[i] = 0;
 
 		MemReader::WriteByteArray(out, pad, pad_count);
+
+		delete[] pad;
 	}
 }
 

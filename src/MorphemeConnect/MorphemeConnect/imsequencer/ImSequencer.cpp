@@ -614,6 +614,9 @@ namespace ImSequencer
 
                 ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
 
+                if (addEvent.m_duration < 0.f)
+                    addEvent.m_duration = 0.f;
+
                 if (eventTrackEditor->m_eventTracks[*selectedTrack].m_discrete == false)
                     ImGui::InputFloat("Duration", &addEvent.m_duration, 1.f / 60.f);
                 else
@@ -1043,7 +1046,7 @@ namespace ImSequencer
 
                             if (movingPart == MovingPart_End)
                             {
-                                if (track->m_event[movingEvent].m_duration + diffFrame > 0)
+                                if (track->m_event[movingEvent].m_duration + diffFrame >= 0)
                                     track->m_event[movingEvent].m_duration += diffFrame;
                                 else
                                     track->m_event[movingEvent].m_duration = 0;
@@ -1054,8 +1057,11 @@ namespace ImSequencer
                             {
                                 if (movingPart == MovingPart_Start)
                                 {
-                                    track->m_event[movingEvent].m_frameStart += diffFrame;
-                                    track->m_event[movingEvent].m_duration -= diffFrame;
+                                    if (track->m_event[movingEvent].m_duration - diffFrame >= 0)
+                                    {
+                                        track->m_event[movingEvent].m_frameStart += diffFrame;
+                                        track->m_event[movingEvent].m_duration -= diffFrame;
+                                    }
                                 }
                                 else if (movingPart == MovingPart_All)
                                     track->m_event[movingEvent].m_frameStart += diffFrame;
@@ -2034,7 +2040,7 @@ namespace ImSequencer
 
                             if (movingPart == MovingPart_End)
                             {
-                                if (track->m_event[movingEvent].m_duration + diffFrame > 0)
+                                if (track->m_event[movingEvent].m_duration + diffFrame >= 0)
                                     track->m_event[movingEvent].m_duration += diffFrame;
                                 else
                                     track->m_event[movingEvent].m_duration = 0;
@@ -2043,8 +2049,11 @@ namespace ImSequencer
                             }
                             else if (movingPart == MovingPart_Start)
                             {
-                                track->m_event[movingEvent].m_frameStart += diffFrame;
-                                track->m_event[movingEvent].m_duration -= diffFrame;
+                                if (track->m_event[movingEvent].m_duration - diffFrame >= 0)
+                                {
+                                    track->m_event[movingEvent].m_frameStart += diffFrame;
+                                    track->m_event[movingEvent].m_duration -= diffFrame;
+                                }
                             }
                             else if (movingPart == MovingPart_All)
                                 track->m_event[movingEvent].m_frameStart += diffFrame;

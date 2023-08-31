@@ -42,6 +42,7 @@ public:
 		EventData();
 		EventData(int id);
 		EventData(ifstream* tae);
+		~EventData();
 	};
 
 	UINT64 m_startOffset;
@@ -55,6 +56,7 @@ public:
 	TimeActEvent();
 	TimeActEvent(float start, float end, int id);
 	TimeActEvent(ifstream* tae);
+	~TimeActEvent();
 
 	void GenerateBinary(ofstream* tae);
 	int GetArgumentsSize();
@@ -85,6 +87,7 @@ public:
 	EventGroup();
 	EventGroup(int id);
 	EventGroup(ifstream* tae, UINT64 eventOffset);
+	~EventGroup();
 
 	void GenerateBinary(ofstream* tae);
 };

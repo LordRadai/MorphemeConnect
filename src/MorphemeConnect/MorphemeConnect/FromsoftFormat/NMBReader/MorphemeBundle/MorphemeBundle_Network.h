@@ -206,8 +206,8 @@ struct NodeDataAttrib_Bool
 struct EventTrackList {
     int m_trackCount;
     int padding;
-    UINT64* m_trackSignatures;
-    int* m_trackSize;
+    std::vector<int> m_trackSignatures;
+    std::vector<int> m_trackSize;
 };
 
 struct NodeDataAttrib_EventTrack 
@@ -269,9 +269,9 @@ struct NodeDef {
     uint16_t field10_0x12 = 0;
     int padding = 0;
     UINT64 m_owningNetworkDef = 0; //Always 0
-    short* m_childNodeIDs = NULL;
-    int* m_controlParamAndOpNodeIDs = NULL;
-    NodeDataSet* m_nodeData = NULL;
+    std::vector<short> m_childNodeIDs;
+    std::vector<int> m_controlParamAndOpNodeIDs;
+    NodeDataSet* m_nodeData;
     short field16_0x38 = 0;
     short field17_0x3a = 0;
     int field18_0x3c = 0;
@@ -340,6 +340,7 @@ public:
 
 	MorphemeBundle_Network();
 	MorphemeBundle_Network(MorphemeBundle* bundle);
+    ~MorphemeBundle_Network();
 
     void GenerateBundle(ofstream* out);
     int CalculateBundleSize();

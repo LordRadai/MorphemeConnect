@@ -1013,10 +1013,7 @@ int Application::GetChrIdFromNmbFileName(std::wstring name)
 	int lastCPos = name.find_last_of(L"\\");
 
 	if (name.substr(lastCPos + 1, 1).compare(L"c") != 0)
-	{
-		Debug::Alert(Debug::LVL_INFO, "Application.cpp", "Could not find an associated model ID (%s)\n", name.c_str());
 		return -1;
-	}
 
 	chr_id_str = name.substr(lastCPos + 2, 4);
 
@@ -1036,10 +1033,7 @@ std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
 	obj_id = name.substr(lastCPos + 1, 8);
 
 	if (obj_id.substr(0, 1).compare(L"o") != 0)
-	{
-		Debug::Alert(Debug::LVL_INFO, "Application.cpp", "Could not find an associated model ID (%s)\n", name.c_str());
 		return L"";
-	}
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Obj ID: %s\n", obj_id);
 

@@ -85,6 +85,10 @@ struct FlverModel
 		this->m_loaded = true;
 	}
 
+	~FlverModel()
+	{
+	}
+
 	void GetModelVertices()
 	{
 		if (m_flver == nullptr)

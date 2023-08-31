@@ -8,12 +8,13 @@ struct FileNameLookupTable
 	UINT64 m_idxOffset;
 	UINT64 m_localOffsetsOffset;
 	UINT64 m_stringsOffset;
-	int* m_idx;
-	int* m_localOffsets;
-	char* m_strings;
+	std::vector<int> m_idx;
+	std::vector<int> m_localOffsets;
+	std::vector<char> m_strings;
 
 	FileNameLookupTable();
 	FileNameLookupTable(BYTE* data);
+	~FileNameLookupTable();
 
 	void WriteToBinary(ofstream* out);
 };
@@ -32,16 +33,18 @@ public:
 		FileNameLookupTable m_animFormat;
 		FileNameLookupTable m_sourceXmdList;
 		FileNameLookupTable m_tagList;
-		int* m_hash;
+		std::vector<int> m_hash;
 
 		BundleData_FileNameLookupTable() {}
 		BundleData_FileNameLookupTable(BYTE* data);
+		~BundleData_FileNameLookupTable() {}
 	};
 
 	BundleData_FileNameLookupTable* m_data;
 
 	MorphemeBundle_FileNameLookupTable();
 	MorphemeBundle_FileNameLookupTable(MorphemeBundle* bundle);
+	~MorphemeBundle_FileNameLookupTable();
 
 	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();

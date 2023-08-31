@@ -18,13 +18,14 @@ public:
 		char* m_trackName;
 		int m_eventId;
 		int m_iVar14;
-		Event* m_events;
+		std::vector<Event> m_events;
 	};
 
 	BundleData_EventTrack* m_data;
 
 	MorphemeBundle_EventTrack();
 	MorphemeBundle_EventTrack(MorphemeBundle* bundle);
+	~MorphemeBundle_EventTrack();
 
 	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();

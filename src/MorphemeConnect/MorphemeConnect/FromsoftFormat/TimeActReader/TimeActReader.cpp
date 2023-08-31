@@ -96,7 +96,6 @@ TimeActData::TimeActData(ifstream* tae)
 
 TimeActData::~TimeActData()
 {
-
 }
 
 void TimeActData::GenerateBinary(ofstream* tae)
@@ -160,6 +159,10 @@ TimeAct::TimeAct(ifstream* tae)
 	tae->seekg(this->m_taeOffset);
 	this->m_taeData = new TimeActData(tae);
 	tae->seekg(bak);
+}
+
+TimeAct::~TimeAct()
+{
 }
 
 void TimeAct::GenerateBinary(ofstream* tae)

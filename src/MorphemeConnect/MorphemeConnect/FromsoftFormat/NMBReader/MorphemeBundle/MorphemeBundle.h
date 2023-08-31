@@ -8,6 +8,7 @@ public:
 
 	MorphemeBundle();
 	MorphemeBundle(ifstream* pFile);
+	~MorphemeBundle();
 
 	void GenerateBundle(ofstream* out);
 	int CalculateBundleSize();

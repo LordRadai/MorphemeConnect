@@ -15,8 +15,7 @@ MorphemeBundle::MorphemeBundle()
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 0;
-	this->m_iVar2C = 0;
-	this->m_data = NULL;
+	this->m_iVar2C = 0;;
 }
 
 MorphemeBundle::MorphemeBundle(ifstream* pFile)
@@ -40,8 +39,6 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 		this->m_data = new BYTE[this->m_dataSize];
 		MemReader::ReadByteArray(pFile, this->m_data, this->m_dataSize);
 	}
-	else
-		this->m_data = NULL;
 
 	if (this->m_bundleType == Bundle_SkeletonMap)
 		offset = 4; //This packet is always off by 4 bytes
@@ -82,6 +79,10 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 
 	printf_s("}\n");
 #endif
+}
+
+MorphemeBundle::~MorphemeBundle()
+{
 }
 
 void MorphemeBundle::GenerateBundle(ofstream* out)

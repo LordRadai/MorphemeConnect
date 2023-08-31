@@ -20,7 +20,7 @@ NodeDataAttrib_Unk::NodeDataAttrib_Unk(BYTE* data, int size)
         this->m_content = new BYTE[data_size];
 
         for (size_t i = 0; i < data_size; i++)
-            this->m_content[i] = *(data + 0x10 + (BYTE)i);
+            this->m_content[i] = (*(data + 0x10 + (BYTE)i));
     }  
 }
 
@@ -45,17 +45,18 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(BYTE* data)
 
     if (this->m_eventTracks[0].m_trackCount > 0)
     {
-        this->m_eventTracks[0].m_trackSignatures = new UINT64[this->m_eventTracks[0].m_trackCount];
         UINT64 offset = *(UINT64*)(data + 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        this->m_eventTracks[0].m_trackSize = new int[this->m_eventTracks[0].m_trackCount];
         int* size_list = (int*)(*(UINT64*)(data + 0x20) + data);
+
+        this->m_eventTracks[0].m_trackSignatures.reserve(this->m_eventTracks[0].m_trackCount);
+        this->m_eventTracks[0].m_trackSize.reserve(this->m_eventTracks[0].m_trackCount);
 
         for (size_t i = 0; i < this->m_eventTracks[0].m_trackCount; i++)
         {
-            this->m_eventTracks[0].m_trackSignatures[i] = track_list_signatures[i];
-            this->m_eventTracks[0].m_trackSize[i] = size_list[i];
+            this->m_eventTracks[0].m_trackSignatures.push_back(track_list_signatures[i]);
+            this->m_eventTracks[0].m_trackSize.push_back(size_list[i]);
         }
     }
 
@@ -64,17 +65,17 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(BYTE* data)
 
     if (this->m_eventTracks[1].m_trackCount > 0)
     {
-        this->m_eventTracks[1].m_trackSignatures = new UINT64[this->m_eventTracks[1].m_trackCount];
         UINT64 offset = *(UINT64*)(data + 0x18 + 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        this->m_eventTracks[1].m_trackSize = new int[this->m_eventTracks[1].m_trackCount];
+        this->m_eventTracks[1].m_trackSignatures.reserve(this->m_eventTracks[1].m_trackCount);
+        this->m_eventTracks[1].m_trackSize.reserve(this->m_eventTracks[1].m_trackCount);
         int* size_list = (int*)(*(UINT64*)(data + 0x20 + 0x18) + data);
 
         for (size_t i = 0; i < this->m_eventTracks[1].m_trackCount; i++)
         {
-            this->m_eventTracks[1].m_trackSignatures[i] = track_list_signatures[i];
-            this->m_eventTracks[1].m_trackSize[i] = size_list[i];
+            this->m_eventTracks[1].m_trackSignatures.push_back(track_list_signatures[i]);
+            this->m_eventTracks[1].m_trackSize.push_back(size_list[i]);
         }
     }
 
@@ -83,17 +84,17 @@ NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(BYTE* data)
 
     if (this->m_eventTracks[2].m_trackCount > 0)
     {
-        this->m_eventTracks[2].m_trackSignatures = new UINT64[this->m_eventTracks[2].m_trackCount];
         UINT64 offset = *(UINT64*)(data + 0x18 + 2 * 0x18);
         UINT64* track_list_signatures = (UINT64*)(offset + data);
 
-        this->m_eventTracks[2].m_trackSize = new int[this->m_eventTracks[2].m_trackCount];
+        this->m_eventTracks[2].m_trackSignatures.reserve(this->m_eventTracks[2].m_trackCount);
+        this->m_eventTracks[2].m_trackSize.reserve(this->m_eventTracks[2].m_trackCount);
         int* size_list = (int*)(*(UINT64*)(data + 0x20 + 2 * 0x18) + data);
 
         for (size_t i = 0; i < this->m_eventTracks[2].m_trackCount; i++)
         {
-            this->m_eventTracks[2].m_trackSignatures[i] = track_list_signatures[i];
-            this->m_eventTracks[2].m_trackSize[i] = size_list[i];
+            this->m_eventTracks[2].m_trackSignatures.push_back(track_list_signatures[i]);
+            this->m_eventTracks[2].m_trackSize.push_back(size_list[i]);
         }
     }
 }
@@ -163,20 +164,20 @@ NodeDef::NodeDef(BYTE* data)
 
     if (this->m_numChildNodeIDs > 0)
     {
-        this->m_childNodeIDs = new short[this->m_numChildNodeIDs];
+        this->m_childNodeIDs.reserve(this->m_numChildNodeIDs);
 
         UINT64 offset = *(UINT64*)(data + 0x20);
         for (size_t i = 0; i < this->m_numChildNodeIDs; i++)
-            this->m_childNodeIDs[i] = *(short*)(data + offset + (BYTE)i * 0x2);
+            this->m_childNodeIDs.push_back(*(short*)(data + offset + (BYTE)i * 0x2));
     }
 
     if (this->m_numControlParamAndOpNodeIDs > 0)
     {
-        this->m_controlParamAndOpNodeIDs = new int[this->m_numChildNodeIDs];
+        this->m_controlParamAndOpNodeIDs.reserve(this->m_numControlParamAndOpNodeIDs);
 
         UINT64 offset = *(UINT64*)(data + 0x28);
-        for (size_t i = 0; i < this->m_numChildNodeIDs; i++)
-            this->m_controlParamAndOpNodeIDs[i] = *(int*)(data + offset + (BYTE)i * 0x2);
+        for (size_t i = 0; i < this->m_numControlParamAndOpNodeIDs; i++)
+            this->m_controlParamAndOpNodeIDs.push_back(*(int*)(data + offset + (BYTE)i * 0x4));
     }
 
     if (m_numDataSet > 0)
@@ -290,8 +291,8 @@ void NodeDef::SaveToFile(ofstream* out)
     MemReader::WriteDWord(out, (DWORD*)&this->field35_0x88);
     MemReader::WriteDWord(out, (DWORD*)&this->field36_0x8C);
 
-    MemReader::WriteWordArray(out, (WORD*)this->m_childNodeIDs, this->m_numChildNodeIDs);
-    MemReader::WriteDWordArray(out, (DWORD*)this->m_controlParamAndOpNodeIDs, this->m_numControlParamAndOpNodeIDs);
+    MemReader::WriteWordArray(out, (WORD*)this->m_childNodeIDs.data(), this->m_numChildNodeIDs);
+    MemReader::WriteDWordArray(out, (DWORD*)this->m_controlParamAndOpNodeIDs.data(), this->m_numControlParamAndOpNodeIDs);
 
     int size = 0x90 + 2 * this->m_numChildNodeIDs;
 
@@ -414,6 +415,10 @@ MorphemeBundle_Network::MorphemeBundle_Network(MorphemeBundle* bundle)
 	this->m_data = new BundleData_Network(bundle->m_data);	
 }
 
+MorphemeBundle_Network::~MorphemeBundle_Network()
+{
+}
+
 void MorphemeBundle_Network::GenerateBundle(ofstream* out)
 {
     MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
@@ -529,7 +534,7 @@ void MorphemeBundle_Network::GenerateBundle(ofstream* out)
     UINT64 pVarC0 = 0;
     //Write offset
 
-    MemReader::WriteWordArray(out, (WORD*)this->m_data->network_node_def.m_childNodeIDs, this->m_data->network_node_def.m_numChildNodeIDs);
+    MemReader::WriteWordArray(out, (WORD*)this->m_data->network_node_def.m_childNodeIDs.data(), this->m_data->network_node_def.m_numChildNodeIDs);
 }
 
 int MorphemeBundle_Network::CalculateBundleSize()

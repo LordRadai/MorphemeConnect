@@ -18,10 +18,21 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 	nmb.open(this->m_filePath, ios::binary);
 
 	int iBundleType = 0;
-	while ((nmb.eof() == false) && (iBundleType < Bundle_FileNameLookupTable))
+	try
 	{
-		this->m_bundles.push_back(MorphemeBundle(&nmb));
-		iBundleType = this->m_bundles.back().m_bundleType;
+		while ((nmb.eof() == false) && (iBundleType < Bundle_FileNameLookupTable))
+		{
+			this->m_bundles.push_back(MorphemeBundle(&nmb));
+			iBundleType = this->m_bundles.back().m_bundleType;
+		}
+	}
+	catch (const char* error)
+	{
+		ShowCursor(true);
+		MessageBoxA(NULL, error, "NMBReader.cpp", MB_ICONERROR);
+
+		this->m_init = false;
+		return;
 	}
 
 	for (int i = 0; i < this->m_bundles.size(); i++)

@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <assert.h>
 #include "TimeActReader.h"
 #include "../../Debug/Debug.h"
 
@@ -257,7 +258,11 @@ Header::Header(ifstream* tae)
 	MemReader::ReadByte(tae, &this->m_bigEndian);
 	MemReader::ReadByte(tae, &this->m_bVar5);
 	MemReader::ReadByte(tae, &this->m_bVar6);
-	MemReader::ReadByte(tae, &this->m_is64Bit);
+	MemReader::ReadByte(tae, &this->m_is64Bit); assert(this->m_is64Bit == -1 || this->m_is64Bit == 0);
+
+	if (this->m_is64Bit == 0)
+		throw("32 bit TAE not supported yet\n");
+
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_version);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileSize);
 	MemReader::ReadQWord(tae, &this->m_flagsOffset);
@@ -345,7 +350,19 @@ TimeActReader::TimeActReader(PWSTR filePath)
 	ifstream tae;
 
 	tae.open(this->m_filePath, ios::binary);
-	this->m_header = Header(&tae);
+
+	try
+	{
+		this->m_header = Header(&tae);
+	}
+	catch (const char* error)
+	{
+		ShowCursor(true);
+		MessageBoxA(NULL, error, "TimeActReader.cpp", MB_ICONERROR);
+
+		this->m_init = false;
+		return;
+	}
 
 	this->m_fileSize = this->m_header.m_fileSize;
 

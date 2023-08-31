@@ -1,4 +1,5 @@
 #include "MorphemeBundle.h"
+#include "../../../Debug/Debug.h"
 
 //define BUNDLE_DEBUG to log to console the read packets. Not recommended unless you think you're getting invalid results
 //#define BUNDLE_DEBUG 
@@ -24,7 +25,14 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 	streampos pStart = pFile->tellg();
 
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_magic[0]); assert(this->m_magic[0] == 24);
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_magic[1]); assert(this->m_magic[1] == 10);
+	MemReader::ReadDWord(pFile, (DWORD*)&this->m_magic[1]); assert(this->m_magic[1] == 10 || this->m_magic[1] == 6);
+
+	if (this->m_magic[1] == 6)
+	{
+		throw("32 bit NMB is not supported yet\n");
+		return;
+	}
+
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_bundleType);
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_signature);
 	MemReader::ReadByteArray(pFile, this->m_header, 16);

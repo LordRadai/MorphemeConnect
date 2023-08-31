@@ -1,6 +1,6 @@
 #pragma once
-#define APPNAME_W L"MorphemeConnect 1.0.0"
-#define APPNAME_A "MorphemeConnect 1.0.0"
+#define APPNAME_W L"MorphemeConnect 1.0.2"
+#define APPNAME_A "MorphemeConnect 1.0.2"
 
 class Application;
 class Scene;

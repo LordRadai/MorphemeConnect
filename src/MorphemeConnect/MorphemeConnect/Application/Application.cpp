@@ -1140,72 +1140,76 @@ void Application::LoadFile()
 							m_nmb = NMBReader(pszFilePath);
 							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.m_filePath, m_nmb.m_bundles.size(), m_nmb.m_fileSize);							
 							
-							this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
-
-							if (this->m_eventTrackEditorFlags.chr_id != -1)
+							if (m_nmb.m_init)
 							{
-								bool found = false;
 
-								std::filesystem::path gamepath = pszFilePath;
-								std::filesystem::path filepath_tae;
-								std::filesystem::path filepath_dcx;
-								do
+								this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
+
+								if (this->m_eventTrackEditorFlags.chr_id != -1)
 								{
-									std::wstring parent_path = gamepath.parent_path();
-									gamepath = parent_path;
+									bool found = false;
 
-									int lastDirPos = parent_path.find_last_of(L"\\");
-
-									std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
-
-									if (folder.compare(L"\\") == 0)
-										break;
-
-									if (folder.compare(L"\\Game") == 0)
+									std::filesystem::path gamepath = pszFilePath;
+									std::filesystem::path filepath_tae;
+									std::filesystem::path filepath_dcx;
+									do
 									{
-										found = true;
-										break;
-									}
-								} while (true);
+										std::wstring parent_path = gamepath.parent_path();
+										gamepath = parent_path;
 
-								if (found)
-								{
-									filepath_tae = gamepath;
-									filepath_dcx = gamepath;
+										int lastDirPos = parent_path.find_last_of(L"\\");
 
-									filepath_tae += "\\timeact\\chr";
-									filepath_dcx += "\\model\\chr";
+										std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
 
-									wchar_t chr_id_str[50];
-									swprintf_s(chr_id_str, L"%04d", this->m_eventTrackEditorFlags.chr_id);
+										if (folder.compare(L"\\") == 0)
+											break;
 
-									std::wstring string = std::wstring(chr_id_str);
-
-									this->m_eventTrackEditorFlags.m_taeList = getTaeFileListFromChrId(filepath_tae, chr_id_str);
-									this->m_eventTrackEditorFlags.m_loadTae = true;
-
-									m_bnd.m_init = false;
-									std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, chr_id_str);
-
-									if (path_tmp.compare(L"") != 0)
-									{
-										PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
-
-										m_bnd = BNDReader(dcx_path);
-
-										std::string filename = "c" + StringHelper::ToNarrow(string.c_str()) + ".flv";
-
-										for (size_t i = 0; i < m_bnd.m_fileCount; i++)
+										if (folder.compare(L"\\Game") == 0)
 										{
-											if (m_bnd.m_files[i].m_name == filename)
+											found = true;
+											break;
+										}
+									} while (true);
+
+									if (found)
+									{
+										filepath_tae = gamepath;
+										filepath_dcx = gamepath;
+
+										filepath_tae += "\\timeact\\chr";
+										filepath_dcx += "\\model\\chr";
+
+										wchar_t chr_id_str[50];
+										swprintf_s(chr_id_str, L"%04d", this->m_eventTrackEditorFlags.chr_id);
+
+										std::wstring string = std::wstring(chr_id_str);
+
+										this->m_eventTrackEditorFlags.m_taeList = getTaeFileListFromChrId(filepath_tae, chr_id_str);
+										this->m_eventTrackEditorFlags.m_loadTae = true;
+
+										m_bnd.m_init = false;
+										std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, chr_id_str);
+
+										if (path_tmp.compare(L"") != 0)
+										{
+											PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
+
+											m_bnd = BNDReader(dcx_path);
+
+											std::string filename = "c" + StringHelper::ToNarrow(string.c_str()) + ".flv";
+
+											for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 											{
-												UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
-												FLVER2 flver_model = FLVER2(umem);
+												if (m_bnd.m_files[i].m_name == filename)
+												{
+													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
+													FLVER2 flver_model = FLVER2(umem);
 
-												this->m_model = FlverModel(umem);
+													this->m_model = FlverModel(umem);
 
-												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
-												break;
+													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+													break;
+												}
 											}
 										}
 									}
@@ -1216,69 +1220,72 @@ void Application::LoadFile()
 						{
 							m_tae.m_init = false;
 							m_tae = TimeActReader(pszFilePath);
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
-							bool found = false;
-
-							std::wstring obj_id = GetObjIdFromTaeFileName(pszFilePath);
-
-							if (obj_id.compare(L"") != 0)
+							if (m_tae.m_init)
 							{
-								std::filesystem::path gamepath = pszFilePath;
-								std::filesystem::path filepath_dcx;
-								do
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+
+								bool found = false;
+
+								std::wstring obj_id = GetObjIdFromTaeFileName(pszFilePath);
+
+								if (obj_id.compare(L"") != 0)
 								{
-									std::wstring parent_path = gamepath.parent_path();
-									gamepath = parent_path;
-
-									int lastDirPos = parent_path.find_last_of(L"\\");
-
-									std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
-
-									if (folder.compare(L"\\") == 0)
-										break;
-
-									if (folder.compare(L"\\Game") == 0)
+									std::filesystem::path gamepath = pszFilePath;
+									std::filesystem::path filepath_dcx;
+									do
 									{
-										found = true;
-										break;
-									}
-								} while (true);
+										std::wstring parent_path = gamepath.parent_path();
+										gamepath = parent_path;
 
-								if (found)
-								{
-									filepath_dcx = gamepath;
+										int lastDirPos = parent_path.find_last_of(L"\\");
 
-									filepath_dcx += "\\model\\obj";
+										std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
 
-									m_bnd.m_init = false;
-									std::wstring obj_path = getModelNameFromObjId(filepath_dcx, obj_id);
+										if (folder.compare(L"\\") == 0)
+											break;
 
-									if (obj_path.compare(L"") != 0)
-									{
-										PWSTR dcx_path = (wchar_t*)obj_path.c_str();
-
-										m_bnd = BNDReader(dcx_path);
-
-										std::string filename = StringHelper::ToNarrow(obj_id.c_str()) + ".flv";
-
-										for (size_t i = 0; i < m_bnd.m_fileCount; i++)
+										if (folder.compare(L"\\Game") == 0)
 										{
-											if (m_bnd.m_files[i].m_name == filename)
+											found = true;
+											break;
+										}
+									} while (true);
+
+									if (found)
+									{
+										filepath_dcx = gamepath;
+
+										filepath_dcx += "\\model\\obj";
+
+										m_bnd.m_init = false;
+										std::wstring obj_path = getModelNameFromObjId(filepath_dcx, obj_id);
+
+										if (obj_path.compare(L"") != 0)
+										{
+											PWSTR dcx_path = (wchar_t*)obj_path.c_str();
+
+											m_bnd = BNDReader(dcx_path);
+
+											std::string filename = StringHelper::ToNarrow(obj_id.c_str()) + ".flv";
+
+											for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 											{
-												UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
-												FLVER2 flver_model = FLVER2(umem);
+												if (m_bnd.m_files[i].m_name == filename)
+												{
+													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
+													FLVER2 flver_model = FLVER2(umem);
 
-												this->m_model = FlverModel(umem);
+													this->m_model = FlverModel(umem);
 
-												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
-												break;
+													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+													break;
+												}
 											}
 										}
-									}								
+									}
 								}
-							}
-							
+							}						
 						}
 					}
 					pItem->Release();

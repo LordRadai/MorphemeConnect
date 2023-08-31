@@ -10,6 +10,8 @@ When opening an NMB, the program will attempt to find the character model in the
 ![Immagine 2023-08-31 204114](https://github.com/LordRadai/MorphemeConnect/assets/22768664/1e271b6a-57d0-4fd6-a663-d9cbb609a316)
 
 # Requirements
+If you want to compile this project, you need the following things:
 * DirectXTK
-* ICU in your System Path folder
-* ZLIB in your System Patch folder
+* ICU
+* ZLIB
+Remember to adjust ZLIB and ICU path in the Project Settings

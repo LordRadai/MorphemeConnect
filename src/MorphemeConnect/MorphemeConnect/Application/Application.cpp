@@ -102,6 +102,78 @@ void Application::Update()
 	RenderGUI(APPNAME_A);
 }
 
+std::string getTaeCategoryTooltip(int category)
+{
+	INIReader reader(".//MorphemeConnect//res//tooltip//timeact//group.ini");
+	
+	char default_info[255];
+	sprintf_s(default_info, "No specific information is known for this category\n");
+
+	if (reader.ParseError() < 0)
+	{
+		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load group.ini\n");
+		return std::string(default_info);
+	}
+
+	std::string category_str = std::to_string(category);
+
+	return reader.GetString(category_str, "tooltip", std::string(default_info));
+}
+
+std::string getTaeEventTooltip(int event_id)
+{
+	INIReader reader(".//MorphemeConnect//res//tooltip//timeact//event.ini");
+
+	char default_info[255];
+	sprintf_s(default_info, "No specific information is known for this event\n");
+
+	if (reader.ParseError() < 0)
+	{
+		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load event.ini\n");
+		return std::string(default_info);
+	}
+
+	std::string category_str = std::to_string(event_id);
+
+	return reader.GetString(category_str, "tooltip", std::string(default_info));
+}
+
+std::string getEventTrackCategoryTooltip(int category)
+{
+	INIReader reader(".//MorphemeConnect//res//tooltip//eventrack//group.ini");
+
+	char default_info[255];
+	sprintf_s(default_info, "No specific information is known for this category\n");
+
+	if (reader.ParseError() < 0)
+	{
+		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load group.ini\n");
+		return std::string(default_info);
+	}
+
+	std::string category_str = std::to_string(category);
+
+	return reader.GetString(category_str, "tooltip", std::string(default_info));
+}
+
+std::string getEventTrackEventTooltip(int event_id)
+{
+	INIReader reader(".//MorphemeConnect//res//tooltip//eventrack//event.ini");
+
+	char default_info[255];
+	sprintf_s(default_info, "No specific information is known for this event\n");
+
+	if (reader.ParseError() < 0)
+	{
+		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load event.ini\n");
+		return std::string(default_info);
+	}
+
+	std::string category_str = std::to_string(event_id);
+
+	return reader.GetString(category_str, "tooltip", std::string(default_info));
+}
+
 void Application::RenderGUI(const char* title)
 {
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y));
@@ -421,7 +493,6 @@ void Application::RenderGUI(const char* title)
 	}
 	ImGui::End();
 
-	static char categoryInfo[100], valueInfo[255];
 	static int selectedTrack = -1;
 	static int selectedEvent = -1;
 	static int firstFrame = 0;
@@ -486,7 +557,9 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("Info");
 				ImGui::Separator();
 
-				ImGui::Text(categoryInfo);
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::Text(getEventTrackCategoryTooltip(track->m_eventId).c_str());
+				ImGui::PopTextWrapPos();
 			}
 
 			ImGui::InputInt("Event Value", &track->m_event[selectedEvent].m_value, 1, 0);
@@ -495,7 +568,9 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("Info");
 				ImGui::Separator();
 
-				ImGui::Text(valueInfo);
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::Text(getEventTrackEventTooltip(track->m_event[selectedEvent].m_value).c_str());
+				ImGui::PopTextWrapPos();
 			}
 
 			ImGui::InputFloat("Start Time", &startTime, 0, 0);
@@ -511,7 +586,6 @@ void Application::RenderGUI(const char* title)
 	}
 	ImGui::End();
 
-	static char valueInfoTae[255], eventInfoTae[255];
 	static int selectedTrackTae = -1;
 	static int selectedEventTae = -1;
 	static int firstFrameTae = 0;
@@ -587,7 +661,9 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("Info");
 				ImGui::Separator();
 
-				ImGui::Text(valueInfoTae);
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::Text(getTaeCategoryTooltip(track->m_eventGroup).c_str());
+				ImGui::PopTextWrapPos();
 			}
 
 			ImGui::InputInt("Event ID", &track->m_event[selectedEventTae].m_value, 1, 0);
@@ -596,7 +672,9 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("Info");
 				ImGui::Separator();
 
-				ImGui::Text(valueInfo);
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::Text(getTaeEventTooltip(track->m_event[selectedEventTae].m_value).c_str());
+				ImGui::PopTextWrapPos();
 			}
 
 			ImGui::InputFloat("Start Time", &startTime);

@@ -34,7 +34,7 @@ struct TimeActEditor
         bool IsEventActive(int idx, int frame);
     };
 
-    TimeAct* m_source = nullptr;
+    TimeAct* m_source;
 
     std::vector<TimeActTrack> m_tracks;
     int m_frameMin, m_frameMax;

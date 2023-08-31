@@ -53,21 +53,23 @@ int TimeActEditor::GetTrackCount() const { return (int)m_tracks.size(); }
 
 std::string getGroupName(int group_id)
 {
-	INIReader reader(".//MorphemeConnect//res//tae//tae_group.ini");
+	INIReader reader(".//MorphemeConnect//res//def//timeact//timeact_group.ini");
+
+	std::string tae_group_str = std::to_string(group_id);
 
 	if (reader.ParseError() < 0) 
 	{
-		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load tae_group.ini\n");
-		return "";
+		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact_group.ini\n");
+		return tae_group_str;
 	}
-
-	std::string tae_group_str = std::to_string(group_id);
 
 	return reader.GetString("Group", tae_group_str, tae_group_str);
 }
 
 TimeActEditor::TimeActEditor() 
 {
+	this->m_source = nullptr;
+
 	INIReader reader(".//MorphemeConnect//res//color//timeact.ini");
 
 	if (reader.ParseError() < 0) 
@@ -99,14 +101,15 @@ std::string TimeActEditor::GetTrackName(int idx)
 
 std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
 {
-	INIReader reader(".//MorphemeConnect//res//tae//tae_event.ini");
+	INIReader reader(".//MorphemeConnect//res//def//timeact//timeact_event.ini");
+	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 
-	if (reader.ParseError() < 0) {
-		printf_s("[ERROR] Failed to load tae.ini\n");
-		return "";
+	if (reader.ParseError() < 0) 
+	{
+		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact_event.ini\n");
+		return default_str;
 	}
 
-	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 	std::string tae_group_str = std::to_string(this->m_tracks[idx].m_eventGroup);
 	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
 

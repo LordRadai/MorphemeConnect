@@ -394,6 +394,8 @@ void EventTrackEditor::ReloadTracks()
 
 EventTrackEditor::EventTrackEditor() 
 {
+    this->m_nodeSource = nullptr;
+
     INIReader reader(".//MorphemeConnect//res//color//eventrack.ini");
 
     if (reader.ParseError() < 0)

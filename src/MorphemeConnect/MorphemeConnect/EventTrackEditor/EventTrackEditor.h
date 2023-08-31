@@ -35,7 +35,8 @@ struct EventTrackEditor
         bool IsEventActive(int event_idx, int frame);
     };
 
-    NodeDef* m_nodeSource = nullptr;
+    NodeDef* m_nodeSource;
+
     int m_animIdx = -1;
     std::vector<EventTrack> m_eventTracks;
     int m_frameMin, m_frameMax;

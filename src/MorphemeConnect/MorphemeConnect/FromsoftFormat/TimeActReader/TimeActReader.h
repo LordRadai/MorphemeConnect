@@ -131,6 +131,8 @@ public:
 class TimeActReader
 {
 public:
+	std::wstring m_fileName;
+
 	PWSTR m_filePath;
 	UINT64 m_fileSize;
 	PWSTR m_outFilePath;

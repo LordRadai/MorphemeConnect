@@ -1,3 +1,4 @@
+#include <filesystem>
 #include "TimeActReader.h"
 #include "../../Debug/Debug.h"
 
@@ -281,7 +282,7 @@ Header::Header(ifstream* tae)
 	MemReader::ReadQWord(tae, &this->m_sibNameOffset);
 
 	if (this->m_sibNameOffset != this->m_taeOffset)
-		MemReader::ReadByteArray(tae, this->m_sibName, this->m_sibNameOffset - this->m_taeOffset);
+		MemReader::ReadByteArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
 }
 
 void Header::GenerateBinary(ofstream* tae)
@@ -323,7 +324,7 @@ void Header::GenerateBinary(ofstream* tae)
 	MemReader::WriteQWord(tae, &this->m_sibNameOffset);
 
 	if (this->m_sibNameOffset != this->m_taeOffset)
-		MemReader::WriteByteArray(tae, this->m_sibName, this->m_sibNameOffset - this->m_taeOffset);
+		MemReader::WriteByteArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
 }
 
 TimeActReader::TimeActReader()
@@ -332,8 +333,11 @@ TimeActReader::TimeActReader()
 
 TimeActReader::TimeActReader(PWSTR filePath)
 {
-	this->m_init = false;
 	this->m_filePath = filePath;
+
+	std::filesystem::path path(filePath);
+
+	this->m_fileName = path.filename().c_str();
 
 	ifstream tae;
 

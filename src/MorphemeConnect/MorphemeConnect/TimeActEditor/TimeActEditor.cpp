@@ -55,8 +55,9 @@ std::string getGroupName(int group_id)
 {
 	INIReader reader(".//MorphemeConnect//res//tae//tae_group.ini");
 
-	if (reader.ParseError() < 0) {
-		printf_s("[ERROR] Failed to load tae_group.ini\n");
+	if (reader.ParseError() < 0) 
+	{
+		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load tae_group.ini\n");
 		return "";
 	}
 
@@ -65,7 +66,31 @@ std::string getGroupName(int group_id)
 	return reader.GetString("Group", tae_group_str, tae_group_str);
 }
 
-TimeActEditor::TimeActEditor() {}
+TimeActEditor::TimeActEditor() 
+{
+	INIReader reader(".//MorphemeConnect//res//color//timeact.ini");
+
+	if (reader.ParseError() < 0) 
+	{
+		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact.ini\n");
+
+		this->m_colors.m_trackColor = { 0.33f, 0.33f, 0.33f, 1.f };
+		this->m_colors.m_trackColorInactive = { 0.33f, 0.33f, 0.33f, 1.f };
+		this->m_colors.m_trackColorActive = { 0.f, 0.4f, 0.8f, 1.f };
+		this->m_colors.m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
+		this->m_colors.m_trackBoundingBoxActive = { 1.f, 1.f, 0.f, 1.f };
+		this->m_colors.m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };
+		this->m_colors.m_cursorColor = { 0.f, 0.f, 0.f, 1.f };
+	}
+
+	this->m_colors.m_trackColor = { (float)reader.GetReal("Track", "r", 0.33f), (float)reader.GetReal("Track", "g", 0.33f), (float)reader.GetReal("Track", "b", 0.33f), (float)reader.GetReal("Track", "a", 1.f) };
+	this->m_colors.m_trackColorInactive = { (float)reader.GetReal("TrackInactive", "r", 0.33f), (float)reader.GetReal("TrackInactive", "g", 0.33f), (float)reader.GetReal("TrackInactive", "b", 0.33f), (float)reader.GetReal("TrackInactive", "a", 1.f) };
+	this->m_colors.m_trackColorActive = { (float)reader.GetReal("TrackActive", "r", 0.f), (float)reader.GetReal("TrackActive", "g", 0.4f), (float)reader.GetReal("TrackActive", "b", 0.8f), (float)reader.GetReal("TrackActive", "a", 1.f) };
+	this->m_colors.m_trackBoundingBox = { (float)reader.GetReal("TrackBoundingBox", "r", 0.f), (float)reader.GetReal("TrackBoundingBox", "g", 0.f), (float)reader.GetReal("TrackBoundingBox", "b", 0.f), (float)reader.GetReal("TrackBoundingBox", "a", 1.f) };
+	this->m_colors.m_trackBoundingBoxActive = { (float)reader.GetReal("TrackActiveBoundingBox", "r", 1.f), (float)reader.GetReal("TrackActiveBoundingBox", "g", 1.f), (float)reader.GetReal("TrackActiveBoundingBox", "b", 0.f), (float)reader.GetReal("TrackActiveBoundingBox", "a", 1.f) };
+	this->m_colors.m_trackTextColor = { (float)reader.GetReal("TrackText", "r", 1.f), (float)reader.GetReal("TrackText", "g", 1.f), (float)reader.GetReal("TrackText", "b", 1.f), (float)reader.GetReal("TrackText", "a", 1.f) };
+	this->m_colors.m_cursorColor = { (float)reader.GetReal("TrackCursor", "r", 1.f), (float)reader.GetReal("TrackCursor", "g", 1.f), (float)reader.GetReal("TrackCursor", "b", 1.f), (float)reader.GetReal("TrackCursor", "a", 1.f) };
+}
 
 std::string TimeActEditor::GetTrackName(int idx) 
 { 

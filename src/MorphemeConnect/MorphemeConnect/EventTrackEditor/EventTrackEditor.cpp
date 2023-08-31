@@ -392,7 +392,32 @@ void EventTrackEditor::ReloadTracks()
     }
 }
 
-EventTrackEditor::EventTrackEditor() {}
+EventTrackEditor::EventTrackEditor() 
+{
+    INIReader reader(".//MorphemeConnect//res//color//eventrack.ini");
+
+    if (reader.ParseError() < 0)
+    {
+        Debug::Alert(Debug::LVL_ERROR, "EventTrackEditor.cpp", "Failed to load eventrack.ini\n");
+
+        this->m_colors.m_trackColor = { 0.31f, 0.31f, 0.91f, 1.f };
+        this->m_colors.m_trackColorInactive = { 0.22f, 0.22f, 0.44f, 1.f };
+        this->m_colors.m_trackColorActive = { 0.39f, 0.39f, 1.f, 1.f };
+        this->m_colors.m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
+        this->m_colors.m_trackBoundingBoxActive = { 0.f, 0.f, 0.f, 1.f };
+        this->m_colors.m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };
+        this->m_colors.m_cursorColor = { 0.f, 0.f, 0.f, 0.f };
+    }
+
+    this->m_colors.m_trackColor = { (float)reader.GetReal("Track", "r", 0.31f), (float)reader.GetReal("Track", "g", 0.31f), (float)reader.GetReal("Track", "b", 0.91f), (float)reader.GetReal("Track", "a", 1.f) };
+    this->m_colors.m_trackColorInactive = { (float)reader.GetReal("TrackInactive", "r", 0.22f), (float)reader.GetReal("TrackInactive", "g", 0.22f), (float)reader.GetReal("TrackInactive", "b", 0.44f), (float)reader.GetReal("TrackInactive", "a", 1.f) };
+    this->m_colors.m_trackColorActive = { (float)reader.GetReal("TrackActive", "r", 0.39f), (float)reader.GetReal("TrackActive", "g", 0.39f), (float)reader.GetReal("TrackActive", "b", 1.f), (float)reader.GetReal("TrackActive", "a", 1.f) };
+    this->m_colors.m_trackBoundingBox = { (float)reader.GetReal("TrackBoundingBox", "r", 0.f), (float)reader.GetReal("TrackBoundingBox", "g", 0.f), (float)reader.GetReal("TrackBoundingBox", "b", 0.f), (float)reader.GetReal("TrackBoundingBox", "a", 1.f) };
+    this->m_colors.m_trackBoundingBoxActive = { (float)reader.GetReal("TrackActiveBoundingBox", "r", 0.f), (float)reader.GetReal("TrackActiveBoundingBox", "g", 0.f), (float)reader.GetReal("TrackActiveBoundingBox", "b", 0.f), (float)reader.GetReal("TrackActiveBoundingBox", "a", 1.f) };
+    this->m_colors.m_trackTextColor = { (float)reader.GetReal("TrackText", "r", 1.f), (float)reader.GetReal("TrackText", "g", 1.f), (float)reader.GetReal("TrackText", "b", 1.f), (float)reader.GetReal("TrackText", "a", 1.f) };
+    this->m_colors.m_cursorColor = { (float)reader.GetReal("TrackCursor", "r", 0.f), (float)reader.GetReal("TrackCursor", "g", 0.f), (float)reader.GetReal("TrackCursor", "b", 0.f), (float)reader.GetReal("TrackCursor", "a", 0.f) };
+
+}
 
 void EventTrackEditor::Clear()
 {

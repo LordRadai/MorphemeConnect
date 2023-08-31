@@ -42,14 +42,13 @@ struct TimeActEditor
 
     struct EventTrackColor
     {
-        ImVec4 m_trackColor = { 0.33f, 0.33f, 0.33f, 1.f };
-        ImVec4 m_trackColorInactive = { 0.33f, 0.33f, 0.33f, 1.f };
-        ImVec4 m_trackColorInvert = { 0.33f, 0.33f, 0.33f, 1.f };
-        ImVec4 m_trackColorActive = { 0.f, 0.4f, 0.8f, 1.f };
-        ImVec4 m_trackBoundingBox = { 0.f, 0.f, 0.f, 1.f };
-        ImVec4 m_trackBoundingBoxActive = { 1.f, 1.f, 0.f, 1.f };
-        ImVec4 m_trackTextColor = { 1.f, 1.f, 1.f, 1.f };
-        ImVec4 m_cursorColor = { 0.f, 0.f, 0.f, 1.f };
+        ImVec4 m_trackColor;
+        ImVec4 m_trackColorInactive;
+        ImVec4 m_trackColorActive;
+        ImVec4 m_trackBoundingBox;
+        ImVec4 m_trackBoundingBoxActive;
+        ImVec4 m_trackTextColor;
+        ImVec4 m_cursorColor;
     } m_colors;
 
     TimeActEditor();

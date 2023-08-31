@@ -133,6 +133,7 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::EndMenuBar();
 	}
+	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(800, 800), ImGuiCond_Appearing);
 	ImGui::Begin("Preview", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar);
@@ -227,11 +228,14 @@ void Application::RenderGUI(const char* title)
 		ImGui::BeginTabBar("assets tab bar");
 		if (ImGui::BeginTabItem("NSA"))
 		{
+			if (this->m_nmb.m_init)
+				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.m_fileName.c_str()).c_str());
+
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (m_nmb.m_init)
+			if (this->m_nmb.m_init)
 			{
 				ImGui::BeginChild("NSA");
 				{
@@ -263,11 +267,14 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginTabItem("Source XMD"))
 		{
+			if (this->m_nmb.m_init)
+				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.m_fileName.c_str()).c_str());
+
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (m_nmb.m_init)
+			if (this->m_nmb.m_init)
 			{
 				ImGui::BeginChild("XMD");
 				{
@@ -356,9 +363,11 @@ void Application::RenderGUI(const char* title)
 			else
 				this->m_timeActFlags.m_deleteTimeAct = false;
 
-			if (this->m_eventTrackEditorFlags.m_taeList.size() > 0)
+			if (this->m_tae.m_init)
 			{
-				if (ImGui::Button("Add TimeAct"))
+				ImGui::Text(StringHelper::ToNarrow(this->m_tae.m_fileName.c_str()).c_str());
+
+				if (ImGui::Button("Add"))
 					this->m_timeActFlags.m_addTimeAct = true;
 
 				if (this->m_timeActEditorFlags.m_taeId != -1)
@@ -367,7 +376,7 @@ void Application::RenderGUI(const char* title)
 
 					this->m_timeActFlags.m_deleteTimeActId = this->m_timeActEditorFlags.m_taeId;
 
-					if (ImGui::Button("Delete TimeAct"))
+					if (ImGui::Button("Delete"))
 						this->m_timeActFlags.m_deleteTimeAct = true;
 				}
 			}
@@ -376,7 +385,7 @@ void Application::RenderGUI(const char* title)
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (m_tae.m_init)
+			if (this->m_tae.m_init)
 			{
 				ImGui::BeginChild("TAE");
 				{
@@ -388,8 +397,15 @@ void Application::RenderGUI(const char* title)
 						{
 							ImGui::PushID(i);
 
-							if (ImGui::Selectable(anim_name.c_str()))
-								this->m_timeActEditorFlags.m_taeId = m_tae.m_tae[i].m_id;
+							ImGui::Selectable(anim_name.c_str());
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+							{
+								this->m_timeActEditorFlags.m_taeId = this->m_tae.m_tae[i].m_id;;
+
+								if (ImGui::IsMouseDoubleClicked(0))
+									this->m_timeActEditorFlags.m_load = true;
+							}
 
 							ImGui::PopID();
 						}
@@ -467,6 +483,9 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputInt("Event ID", &track->m_eventId, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
+				ImGui::Text("Info");
+				ImGui::Separator();
+
 				ImGui::Text(categoryInfo);
 			}
 
@@ -565,10 +584,20 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputInt("Event Group", &track->m_eventGroup, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
+				ImGui::Text("Info");
+				ImGui::Separator();
+
 				ImGui::Text(valueInfoTae);
 			}
 
 			ImGui::InputInt("Event ID", &track->m_event[selectedEventTae].m_value, 1, 0);
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::Text("Info");
+				ImGui::Separator();
+
+				ImGui::Text(valueInfo);
+			}
 
 			ImGui::InputFloat("Start Time", &startTime);
 			ImGui::InputFloat("End Time", &endTime);
@@ -585,8 +614,6 @@ void Application::RenderGUI(const char* title)
 		}
 	}
 	ImGui::End();
-
-	ImGui::End();
 }
 
 void Application::RenderPopups()
@@ -601,19 +628,20 @@ void Application::SettingsWindow()
 
 	ImGui::BeginTabBar("settings");
 
+	/*
 	if (ImGui::BeginTabItem("GUI"))
 	{
 		ImGui::ShowStyleEditor();
 
 		ImGui::EndTabItem();
 	}
+	*/
 
 	if (ImGui::BeginTabItem("EventTrack Editor"))
 	{
 		ImGui::ColorEdit4("Track", (float*)&this->m_eventTrackEditor.m_colors.m_trackColor);
 		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorInactive);
 		ImGui::ColorEdit4("Track Active", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorActive);
-		ImGui::ColorEdit4("Track Inverted", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorInvert);
 		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBox);
 		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_eventTrackEditor.m_colors.m_trackBoundingBoxActive);
 		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_eventTrackEditor.m_colors.m_trackTextColor);
@@ -627,7 +655,6 @@ void Application::SettingsWindow()
 		ImGui::ColorEdit4("Track", (float*)&this->m_timeActEditor.m_colors.m_trackColor);
 		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_timeActEditor.m_colors.m_trackColorInactive);
 		ImGui::ColorEdit4("Track Active", (float*)&this->m_timeActEditor.m_colors.m_trackColorActive);
-		ImGui::ColorEdit4("Track Inverted", (float*)&this->m_timeActEditor.m_colors.m_trackColorInvert);
 		ImGui::ColorEdit4("Track Bounding Box", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBox);
 		ImGui::ColorEdit4("Track Bounding Box Active", (float*)&this->m_timeActEditor.m_colors.m_trackBoundingBoxActive);
 		ImGui::ColorEdit4("Track Text Color", (float*)&this->m_timeActEditor.m_colors.m_trackTextColor);
@@ -999,7 +1026,7 @@ std::wstring getModelNameFromObjId(std::wstring model_path, std::wstring obj_id)
 
 void Application::LoadFile()
 {
-	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"All Files",L"*.*"} };
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -1014,7 +1041,7 @@ void Application::LoadFile()
 
 		if (SUCCEEDED(hr))
 		{
-			pFileOpen->SetFileTypes(4, ComDlgFS);
+			pFileOpen->SetFileTypes(3, ComDlgFS);
 
 			// Show the Open dialog box.
 			hr = pFileOpen->Show(NULL);
@@ -1195,7 +1222,7 @@ void Application::LoadFile()
 
 void Application::SaveFile()
 {
-	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"Text", L"*.txt;*.xml;*.json;*.ini"}, {L"All Files",L"*.*"} };
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"TimeAct", L"*.tae"}, {L"All Files",L"*.*"} };
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -1210,7 +1237,7 @@ void Application::SaveFile()
 
 		if (SUCCEEDED(hr))
 		{
-			pFileSave->SetFileTypes(4, ComDlgFS);
+			pFileSave->SetFileTypes(3, ComDlgFS);
 
 			// Show the Open dialog box.
 			hr = pFileSave->Show(NULL);

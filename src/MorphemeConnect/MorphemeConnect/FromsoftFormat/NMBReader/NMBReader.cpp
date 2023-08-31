@@ -1,8 +1,13 @@
+#include <filesystem>
 #include "NMBReader.h"
 
 NMBReader::NMBReader(PWSTR pszFilePath)
 {
 	this->m_filePath = pszFilePath;
+
+	std::filesystem::path path(pszFilePath);
+
+	this->m_fileName = path.filename().c_str();
 
 	ifstream nmb;
 

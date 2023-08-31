@@ -9,7 +9,13 @@ When opening an NMB, the program will attempt to find the character model in the
 
 ![Immagine 2023-08-31 211346](https://github.com/LordRadai/MorphemeConnect/assets/22768664/9eac1a67-eb14-4d2b-a3b1-c18dcf99c0b0)
 
-# Requirements
+#TODO
+* Implement project save as XML
+* Implement NMB Network generation logic to allow the creation of new EventTrack bundles.
+* Implement proper character skeleton loading
+* Implement NSA animation preview
+
+# Build Requirements
 If you want to compile this project, you need the following things:
 * DirectXTK
 * ICU

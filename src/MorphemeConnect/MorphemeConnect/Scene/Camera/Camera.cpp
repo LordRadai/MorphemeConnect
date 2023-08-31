@@ -153,7 +153,7 @@ void Camera::UpdatePosition(DirectX::SimpleMath::Vector3 speed, float delta_time
 void Camera::UpdateTargetPosition(DirectX::SimpleMath::Vector3 speed, float delta_time)
 {
 	Vector3 deltaPos = Vector3(speed.x * delta_time * cosf(this->m_angles.y) * cosf(this->m_angles.x), speed.y * delta_time, speed.z * delta_time * cosf(this->m_angles.y) * sinf(this->m_angles.x));
-	deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(XM_PIDIV2));
+	deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(-XM_PIDIV2));
 
 	this->m_offsets += deltaPos;
 }

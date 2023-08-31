@@ -898,9 +898,15 @@ void Application::NetworkCleanup()
 int Application::GetChrIdFromNmbFileName(std::wstring name)
 {
 	std::wstring chr_id_str;
-	int chr_id;
+	int chr_id = -1;
 
 	int lastCPos = name.find_last_of(L"\\");
+
+	if (name.substr(lastCPos + 1, 1).compare(L"c") != 0)
+	{
+		Debug::Alert(Debug::LVL_INFO, "Application.cpp", "Could not find an associated model ID (%s)\n", name.c_str());
+		return -1;
+	}
 
 	chr_id_str = name.substr(lastCPos + 2, 4);
 
@@ -919,8 +925,11 @@ std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
 
 	obj_id = name.substr(lastCPos + 1, 8);
 
-	if (obj_id.substr(0, 1).compare(L"c") == 0)
+	if (obj_id.substr(0, 1).compare(L"o") != 0)
+	{
+		Debug::Alert(Debug::LVL_INFO, "Application.cpp", "Could not find an associated model ID (%s)\n", name.c_str());
 		return L"";
+	}
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Obj ID: %s\n", obj_id);
 
@@ -1031,66 +1040,69 @@ void Application::LoadFile()
 							
 							this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
 
-							bool found = false;
-
-							std::filesystem::path gamepath = pszFilePath;
-							std::filesystem::path filepath_tae;
-							std::filesystem::path filepath_dcx;
-							do
+							if (this->m_eventTrackEditorFlags.chr_id != -1)
 							{
-								std::wstring parent_path = gamepath.parent_path();
-								gamepath = parent_path;
+								bool found = false;
 
-								int lastDirPos = parent_path.find_last_of(L"\\");
-
-								std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
-
-								if (folder.compare(L"\\") == 0)
-									break;
-
-								if (folder.compare(L"\\Game") == 0)
-								{	
-									found = true;
-									break;
-								}
-							} while (true);
-
-							if (found)
-							{
-								filepath_tae = gamepath;
-								filepath_dcx = gamepath;
-
-								filepath_tae += "\\timeact\\chr";
-								filepath_dcx += "\\model\\chr";
-
-								this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath_tae, this->m_eventTrackEditorFlags.chr_id);
-								this->m_eventTrackEditorFlags.load_tae = true;
-
-								m_bnd.m_init = false;
-								std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, this->m_eventTrackEditorFlags.chr_id);
-
-								if (path_tmp.compare(L"") != 0)
+								std::filesystem::path gamepath = pszFilePath;
+								std::filesystem::path filepath_tae;
+								std::filesystem::path filepath_dcx;
+								do
 								{
-									PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
+									std::wstring parent_path = gamepath.parent_path();
+									gamepath = parent_path;
 
-									m_bnd = BNDReader(dcx_path);
+									int lastDirPos = parent_path.find_last_of(L"\\");
 
-									char chr_id_str[50];
-									sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
+									std::wstring folder = parent_path.substr(lastDirPos, parent_path.length());
 
-									std::string filename = "c" + std::string(chr_id_str) + ".flv";
+									if (folder.compare(L"\\") == 0)
+										break;
 
-									for (size_t i = 0; i < m_bnd.m_fileCount; i++)
+									if (folder.compare(L"\\Game") == 0)
 									{
-										if (m_bnd.m_files[i].m_name == filename)
+										found = true;
+										break;
+									}
+								} while (true);
+
+								if (found)
+								{
+									filepath_tae = gamepath;
+									filepath_dcx = gamepath;
+
+									filepath_tae += "\\timeact\\chr";
+									filepath_dcx += "\\model\\chr";
+
+									this->m_eventTrackEditorFlags.tae_list = getTaeFileListFromChrId(filepath_tae, this->m_eventTrackEditorFlags.chr_id);
+									this->m_eventTrackEditorFlags.load_tae = true;
+
+									m_bnd.m_init = false;
+									std::wstring path_tmp = getModelNameFromChrId(filepath_dcx, this->m_eventTrackEditorFlags.chr_id);
+
+									if (path_tmp.compare(L"") != 0)
+									{
+										PWSTR dcx_path = (wchar_t*)path_tmp.c_str();
+
+										m_bnd = BNDReader(dcx_path);
+
+										char chr_id_str[50];
+										sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
+
+										std::string filename = "c" + std::string(chr_id_str) + ".flv";
+
+										for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 										{
-											UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
-											FLVER2 flver_model = FLVER2(umem);
+											if (m_bnd.m_files[i].m_name == filename)
+											{
+												UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
+												FLVER2 flver_model = FLVER2(umem);
 
-											this->m_model = FlverModel(umem);
+												this->m_model = FlverModel(umem);
 
-											Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
-											break;
+												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+												break;
+											}
 										}
 									}
 								}

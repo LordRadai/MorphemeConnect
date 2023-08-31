@@ -258,7 +258,7 @@ Header::Header(ifstream* tae)
 	MemReader::ReadByte(tae, &this->m_bigEndian);
 	MemReader::ReadByte(tae, &this->m_bVar5);
 	MemReader::ReadByte(tae, &this->m_bVar6);
-	MemReader::ReadByte(tae, &this->m_is64Bit); assert(this->m_is64Bit == -1 || this->m_is64Bit == 0);
+	MemReader::ReadByte(tae, &this->m_is64Bit); assert(this->m_is64Bit == 255 || this->m_is64Bit == 0);
 
 	if (this->m_is64Bit == 0)
 		throw("32 bit TAE not supported yet\n");

@@ -27,4 +27,5 @@ If you want to compile this project, you need the following things:
 Remember to adjust ZLIB and ICU path in the Project Settings
 
 # Bugs
-Report any bugs in my Discord DMs: lordradai
+Report any bugs in this tool's Discord server
+https://discord.gg/CJk2b5WMMF

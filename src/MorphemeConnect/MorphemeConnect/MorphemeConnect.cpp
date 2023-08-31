@@ -86,8 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ::UpdateWindow(hwnd);
 
     initImGui(hwnd);
-    g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, g_mainRenderTargetView);
-    g_preview.m_renderTargetView = g_mainRenderTargetView;
+    g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, nullptr);
 
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -114,12 +113,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             CleanupRenderTarget();
 
-            g_preview.SetRenderResolution(g_ResizeWidth, g_ResizeHeight);
             g_pSwapChain->ResizeBuffers(0, g_ResizeWidth, g_ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
             g_ResizeWidth = g_ResizeHeight = 0;
             CreateRenderTarget();
 
-            g_preview.m_renderTargetView = g_mainRenderTargetView;
             g_preview.CreateResources();
         }
 

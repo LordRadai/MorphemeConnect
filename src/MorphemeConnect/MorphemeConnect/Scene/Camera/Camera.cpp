@@ -14,7 +14,7 @@ Camera::Camera()
 
 	this->m_radius = 10.f;
 
-	this->m_angles = Vector3(XM_PIDIV4, 0.285f, 0.f);
+	this->m_angles = Vector3(XM_PIDIV4, 0.285f, 0);
 	this->m_position = m_targetPos + Vector3(m_radius * cosf(m_angles.y) * cosf(m_angles.x), m_radius * sinf(m_angles.y), m_radius * cosf(m_angles.y) * sinf(m_angles.x));
 	this->m_lookAt = Vector3::UnitY;
 
@@ -23,8 +23,8 @@ Camera::Camera()
 
 	this->m_fov = XM_PI / 3;
 
-	this->m_width = 1280;
-	this->m_height = 820;
+	this->m_width = 1920;
+	this->m_height = 1080;
 
 	this->m_aspectRatio = this->m_width / this->m_height;
 

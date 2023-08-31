@@ -40,7 +40,6 @@ public:
 
 	HWND m_window;
 	int m_width, m_height;
-	int m_viewportWidth, m_viewportHeight;
 	DX::StepTimer m_timer;
 
 	IDXGISwapChain* m_swapChain;
@@ -79,5 +78,4 @@ public:
 	void Clear();
 	void Render();
 	void SetRenderResolution(int width, int height);
-	void SetViewportSize(int width, int height);
 };

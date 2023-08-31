@@ -20,10 +20,8 @@ Scene::Scene()
     this->m_deviceContext = nullptr;
     this->m_renderTargetView = nullptr;
 
-    this->m_height = 1280;
-    this->m_width = 800;
-    this->m_viewportWidth = 1200;
-    this->m_viewportHeight = 800;
+    this->m_height = 1920;
+    this->m_width = 1080;
 }
 
 Scene::~Scene()
@@ -41,14 +39,56 @@ void Scene::Initialise(HWND hwnd, IDXGISwapChain* pSwapChain, ID3D11Device* pDev
     this->m_swapChain = pSwapChain;
     this->m_device = pDevice;
     this->m_deviceContext = pDeviceContext;
-    this->m_renderTargetView = pRenderTargetView;
 
     this->CreateResources();
+
+    m_states = std::make_unique<CommonStates>(this->m_device);
+
+    m_effect = std::make_unique<BasicEffect>(this->m_device);
+    m_effect->SetVertexColorEnabled(true);
+
+    DX::ThrowIfFailed(
+        CreateInputLayoutFromEffect<VertexPositionColor>(this->m_device, m_effect.get(),
+            m_inputLayout.ReleaseAndGetAddressOf())
+    );
+
+    m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
+
+    m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+        Vector3::Zero, Vector3::UnitY);
+    m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+        float(this->m_width) / float(this->m_height), 0.1f, 10.f);
+    m_world = Matrix::Identity;
+
+    m_effect->SetView(m_view);
+    m_effect->SetProjection(m_proj);
+    m_effect->SetWorld(m_world);
+
+    this->m_sprite = std::make_unique<DirectX::SpriteBatch>(this->m_deviceContext);
+    this->m_font = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font.spritefont");
+    this->m_fontBold = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_bold.spritefont");
+    this->m_fontItalic = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_italic.spritefont");
 }
 
 void Scene::CreateResources()
 {
-    // Clear the previous window size specific context.
+    this->m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+    if (this->m_depthStencilView != nullptr)
+        this->m_depthStencilView->Release();
+
+    if (this->m_renderTargetTextureViewport != nullptr)
+        this->m_renderTargetTextureViewport->Release();
+
+    if (this->m_renderTargetView != nullptr)
+        this->m_renderTargetView->Release();
+
+    if (this->m_shaderResourceViewViewport != nullptr)
+        this->m_shaderResourceViewViewport->Release();
+
+    if (this->m_depthStencilState != nullptr)
+        this->m_depthStencilState->Release();
+
     const UINT backBufferWidth = static_cast<UINT>(this->m_width);
     const UINT backBufferHeight = static_cast<UINT>(this->m_height);
     const DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
@@ -128,28 +168,6 @@ void Scene::CreateResources()
 
     this->m_device->CreateDepthStencilState(&depth_stencil_desc, &this->m_depthStencilState);
 
-    m_states = std::make_unique<CommonStates>(this->m_device);
-
-    m_effect = std::make_unique<BasicEffect>(this->m_device);
-    m_effect->SetVertexColorEnabled(true);
-
-    DX::ThrowIfFailed(
-        CreateInputLayoutFromEffect<VertexPositionColor>(this->m_device, m_effect.get(),
-            m_inputLayout.ReleaseAndGetAddressOf())
-    );
-
-    m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(this->m_deviceContext);
-
-    m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
-        Vector3::Zero, Vector3::UnitY);
-    m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
-        float(this->m_width) / float(this->m_height), 0.1f, 10.f);
-    m_world = Matrix::Identity;
-
-    m_effect->SetView(m_view);
-    m_effect->SetProjection(m_proj);
-    m_effect->SetWorld(m_world);
-
     CD3D11_RASTERIZER_DESC rastDesc(D3D11_FILL_SOLID, D3D11_CULL_NONE, FALSE,
         D3D11_DEFAULT_DEPTH_BIAS, D3D11_DEFAULT_DEPTH_BIAS_CLAMP,
         D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS, TRUE, FALSE, TRUE, FALSE);
@@ -189,11 +207,6 @@ void Scene::CreateResources()
         device->CreateDepthStencilView(depthBuffer.Get(),
             &dsvDesc,
             m_depthStencilSRV.ReleaseAndGetAddressOf()));
-
-    this->m_sprite = std::make_unique<DirectX::SpriteBatch>(this->m_deviceContext);
-    this->m_font = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font.spritefont");
-    this->m_fontBold = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_bold.spritefont");
-    this->m_fontItalic = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_italic.spritefont");
 }
 
 void Scene::Update()
@@ -202,15 +215,17 @@ void Scene::Update()
     {
         float delta_time = float(m_timer.GetElapsedSeconds());
 
-        this->m_camera.Update(this->m_viewportWidth, this->m_viewportHeight, delta_time);
+        this->m_camera.Update(this->m_width, this->m_height, delta_time);
     });
-
-    if (g_morphemeConnect.m_model.m_loaded)
-        this->m_camera.SetTarget(g_morphemeConnect.m_model.m_focusPoint);
 
     this->m_world = Matrix::Identity;
     this->m_view = this->m_camera.m_view;
     this->m_proj = this->m_camera.m_proj;
+
+    if (g_morphemeConnect.m_model.m_loaded)
+        this->m_camera.SetTarget(g_morphemeConnect.m_model.m_focusPoint);
+
+    this->CreateResources();
 
     this->Render();
 }
@@ -270,12 +285,6 @@ void Scene::Render()
 
 void Scene::SetRenderResolution(int width, int height)
 {
-    this->m_height = (std::max)(height, 1);
     this->m_width = (std::max)(width, 1);
-}
-
-void Scene::SetViewportSize(int width, int height)
-{
-    this->m_viewportWidth = (std::max)(height, 1);
-    this->m_viewportHeight = (std::max)(width, 1);
+    this->m_height = (std::max)(height, 1);
 }

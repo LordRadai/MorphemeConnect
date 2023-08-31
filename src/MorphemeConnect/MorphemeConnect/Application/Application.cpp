@@ -233,7 +233,7 @@ void Application::RenderGUI(const char* title)
 		if (ImGui::IsItemHovered())
 			g_preview.m_camera.m_registerInput = true;
 
-		g_preview.SetViewportSize(width, height);
+		g_preview.SetRenderResolution(width, height);
 
 		ImGui::GetWindowDrawList()->AddImage(g_preview.m_shaderResourceViewViewport, pos, ImVec2(pos.x + width, pos.y + height));
 	}

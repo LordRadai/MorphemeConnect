@@ -37,10 +37,10 @@ public:
         int m_id;
         int m_pad;
 		UINT64 m_argsOffset;
-        TimeActEventData* m_args;
+		TimeActEventData* m_args;
 
 		EventData();
-		EventData(int id);
+		EventData(int event_id);
 		EventData(ifstream* tae);
 		~EventData();
 	};

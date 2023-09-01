@@ -1,9 +1,9 @@
 #pragma once
-#define APPNAME_W L"MorphemeConnect 1.0.21"
-#define APPNAME_A "MorphemeConnect 1.0.21"
 
 class Application;
 class Scene;
+class TaeTemplate;
 
 extern Application g_morphemeConnect;
 extern Scene g_preview;
+extern TaeTemplate g_taeTemplate;

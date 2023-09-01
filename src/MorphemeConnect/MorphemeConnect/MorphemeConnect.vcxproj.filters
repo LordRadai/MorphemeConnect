@@ -136,6 +136,15 @@
     <Filter Include="File di intestazione\fromloader">
       <UniqueIdentifier>{cc8e895c-9433-4c28-a60a-e8858c5095de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\nlohmann">
+      <UniqueIdentifier>{fd49140c-2817-4fd3-924f-be3681654025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\TaeTemplate">
+      <UniqueIdentifier>{1415afea-ca77-42c0-be21-4d53163a6f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\TaeTemplate">
+      <UniqueIdentifier>{c7be2271-798b-4add-8ab2-e27bdba665c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -351,6 +360,141 @@
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="nlohmann\detail\abi_macros.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\conversions\from_json.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\conversions\to_chars.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\conversions\to_json.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\exceptions.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\hash.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\binary_reader.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\input_adapters.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\json_sax.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\lexer.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\parser.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\input\position_t.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\internal_iterator.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\iteration_proxy.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\iterator_traits.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\iter_impl.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\json_reverse_iterator.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\iterators\primitive_iterator.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\json_pointer.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\json_ref.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\macro_scope.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\macro_unscope.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\call_std\begin.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\call_std\end.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\cpp_future.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\detected.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\identity_tag.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\is_sax.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\std_fs.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\type_traits.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\meta\void_t.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\output\binary_writer.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\output\output_adapters.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\output\serializer.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\string_concat.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\string_escape.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\detail\value_t.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\thirdparty\hedley\hedley.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\thirdparty\hedley\hedley_undef.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\adl_serializer.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\byte_container_with_subtype.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\json.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\json_fwd.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\ordered_map.hpp">
+      <Filter>File di intestazione\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="TaeTemplate\TaeTemplate.h">
+      <Filter>File di intestazione\TaeTemplate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -514,6 +658,9 @@
     </ClCompile>
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp">
       <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="TaeTemplate\TaeTemplate.cpp">
+      <Filter>File di origine\TaeTemplate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

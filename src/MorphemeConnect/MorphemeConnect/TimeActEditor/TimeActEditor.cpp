@@ -1,5 +1,6 @@
 #include "TimeActEditor.h"
 #include "../Application/Application.h"
+#include "../TaeTemplate/TaeTemplate.h"
 
 TimeActEditor::TimeActTrack::TimeActTrack(int eventId)
 {
@@ -51,21 +52,6 @@ int TimeActEditor::GetFrameMax() const
 
 int TimeActEditor::GetTrackCount() const { return (int)m_tracks.size(); }
 
-std::string getGroupName(int group_id)
-{
-	INIReader reader(".//MorphemeConnect//res//def//timeact//timeact_group.ini");
-
-	std::string tae_group_str = std::to_string(group_id);
-
-	if (reader.ParseError() < 0) 
-	{
-		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact_group.ini\n");
-		return tae_group_str;
-	}
-
-	return reader.GetString("Group", tae_group_str, tae_group_str);
-}
-
 TimeActEditor::TimeActEditor() 
 {
 	this->m_source = nullptr;
@@ -96,24 +82,12 @@ TimeActEditor::TimeActEditor()
 
 std::string TimeActEditor::GetTrackName(int idx) 
 { 
-	return getGroupName(this->m_tracks[idx].m_eventGroup);
+	return g_taeTemplate.GetGroupName(this->m_tracks[idx].m_eventGroup);
 }
 
 std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
 {
-	INIReader reader(".//MorphemeConnect//res//def//timeact//timeact_event.ini");
-	std::string default_str = std::string(getGroupName(this->m_tracks[idx].m_eventGroup)) + "_" + std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
-
-	if (reader.ParseError() < 0) 
-	{
-		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact_event.ini\n");
-		return default_str;
-	}
-
-	std::string tae_group_str = std::to_string(this->m_tracks[idx].m_eventGroup);
-	std::string tae_id_str = std::to_string(this->m_tracks[idx].m_event[event_idx].m_value);
-
-	return reader.GetString(tae_group_str, tae_id_str, default_str) + "[" + tae_id_str + "]" + this->m_tracks[idx].m_event[event_idx].m_args->GetArgumentAsString();
+	return g_taeTemplate.GetEventName(this->m_tracks[idx].m_eventGroup, this->m_tracks[idx].m_event[event_idx].m_value) + this->m_tracks[idx].m_event[event_idx].m_args->GetArgumentsAsString();
 }
 
 void TimeActEditor::AddGroup(int id)

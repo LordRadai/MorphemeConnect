@@ -16,6 +16,9 @@
 #include <DirectXMath.h>
 #include <SimpleMath.h>
 #include <DirectXColors.h>
+
+#include <nlohmann/json.hpp>
+
 //ImGui
 #include "imgui/imgui.h"
 #include "imgui/imconfig.h"

@@ -7,6 +7,7 @@
 #include "extern.h"
 #include "Application/Application.h"
 #include "Scene/Scene.h"
+#include "TaeTemplate/TaeTemplate.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -24,6 +25,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Application g_morphemeConnect;
 Scene g_preview;
+TaeTemplate g_taeTemplate;
 
 void initImGui(HWND hwnd)
 {
@@ -84,6 +86,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Show the window
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
     ::UpdateWindow(hwnd);
+
+    try
+    {
+        ifstream jsonSrc(".//MorphemeConnect//res//def//timeact.json");
+
+        g_taeTemplate = TaeTemplate(jsonSrc);
+    }
+    catch (const std::exception& exc)
+    {
+        Debug::Alert(Debug::LVL_ERROR, "MorphemeConnect.cpp", exc.what());
+    }
 
     initImGui(hwnd);
     g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, nullptr);

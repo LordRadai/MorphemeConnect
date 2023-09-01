@@ -1,210 +1,17 @@
 #include "TimeActEvent.h"
 
-TimeActEventData* getArguments(int id)
-{
-	switch (id)
-	{
-	case 100:
-		return new TimeActEventData_NoArgs;
-	case 201:
-		return new TimeActEventData_Sound201;
-	case 202:
-		return new TimeActEventData_Sound202;
-	case 300:
-		return new TimeActEventData_Ai300;
-	case 301:
-		return new TimeActEventData_Ai300;
-	case 1220:
-		return new TimeActEventData_NoArgs;
-	case 1230:
-		return new TimeActEventData_NoArgs;
-	case 1500:
-		return new TimeActEventData_Camera1500;
-	case 1501:
-		return new TimeActEventData_Camera1501;
-	case 1502:
-		return new TimeActEventData_Camera1502;
-	case 1503:
-		return new TimeActEventData_Camera1503;
-	case 1504:
-		return new TimeActEventData_Camera1504;
-	case 2100:
-		return new TimeActEventData_NoArgs;
-	case 2101:
-		return new TimeActEventData_NoArgs;
-	case 2102:
-		return new TimeActEventData_NoArgs;
-	case 2103:
-		return new TimeActEventData_Sfx2103;
-	case 2104:
-		return new TimeActEventData_Sfx2104;
-	case 2105:
-		return new TimeActEventData_NoArgs;
-	case 2106:
-		return new TimeActEventData_Sfx2106;
-	case 2200:
-		return new TimeActEventData_Damage2200;
-	case 2201:
-		return new TimeActEventData_Damage2201;
-	case 2202:
-		return new TimeActEventData_Damage2202;
-	case 2203:
-		return new TimeActEventData_Damage2203;
-	case 2300:
-		return new TimeActEventData_Bullet2300;
-	case 2301:
-		return new TimeActEventData_Bullet2301;
-	case 2400:
-		return new TimeActEventData_NoArgs;
-	case 2401:
-		return new TimeActEventData_NoArgs;
-	case 2402:
-		return new TimeActEventData_FootEffect2402;
-	case 2403:
-		return new TimeActEventData_NoArgs;
-	case 2500:
-		return new TimeActEventData_Weapon2500;
-	case 2501:
-		return new TimeActEventData_Weapon2501;
-	case 2502:
-		return new TimeActEventData_NoArgs;
-	case 2600:
-		return new TimeActEventData_NoArgs;
-	case 101100:
-		return new TimeActEventData_NoArgs;
-	case 110000:
-		return new TimeActEventData_NoArgs;
-	case 110100:
-		return new TimeActEventData_NoArgs;
-	case 110200:
-		return new TimeActEventData_NoArgs;
-	case 110210:
-		return new TimeActEventData_NoArgs;
-	case 110300:
-		return new TimeActEventData_NoArgs;
-	case 110400:
-		return new TimeActEventData_NoArgs;
-	case 110500:
-		return new TimeActEventData_NoArgs;
-	case 110600:
-		return new TimeActEventData_NoArgs;
-	case 110700:
-		return new TimeActEventData_NoArgs;
-	case 110800:
-		return new TimeActEventData_NoArgs;
-	case 110900:
-		return new TimeActEventData_NoArgs;
-	case 111000:
-		return new TimeActEventData_DamageAction111000;
-	case 111100:
-		return new TimeActEventData_NoArgs;
-	case 111200:
-		return new TimeActEventData_NoArgs;
-	case 111300:
-		return new TimeActEventData_NoArgs;
-	case 111400:
-		return new TimeActEventData_NoArgs;
-	case 111500:
-		return new TimeActEventData_NoArgs;
-	case 111600:
-		return new TimeActEventData_NoArgs;
-	case 111700:
-		return new TimeActEventData_NoArgs;
-	case 111800:
-		return new TimeActEventData_NoArgs;
-	case 111900:
-		return new TimeActEventData_NoArgs;
-	case 120100:
-		return new TimeActEventData_NoArgs;
-	case 120200:
-		return new TimeActEventData_NoArgs;
-	case 120300:
-		return new TimeActEventData_NoArgs;
-	case 210000:
-		return new TimeActEventData_NoArgs;
-	case 210099:
-		return new TimeActEventData_NoArgs;
-	case 210100:
-		return new TimeActEventData_NoArgs;
-	case 210200:
-		return new TimeActEventData_NoArgs;
-	case 220000:
-		return new TimeActEventData_NoArgs;
-	case 220100:
-		return new TimeActEventData_NoArgs;
-	case 220200:
-		return new TimeActEventData_Item220200;
-	case 220300:
-		return new TimeActEventData_NoArgs;
-	case 230000:
-		return new TimeActEventData_NoArgs;
-	case 230001:
-		return new TimeActEventData_NoArgs;
-	case 240000:
-		return new TimeActEventData_NoArgs;
-	case 250000:
-		return new TimeActEventData_NoArgs;
-	case 260000:
-		return new TimeActEventData_NoArgs;
-	case 260001:
-		return new TimeActEventData_Model260001;
-	case 260002:
-		return new TimeActEventData_Model260002;
-	case 260003:
-		return new TimeActEventData_NoArgs;
-	case 260004:
-		return new TimeActEventData_Model260004;
-	case 260005:
-		return new TimeActEventData_Model260005;
-	case 260006:
-		return new TimeActEventData_Model260006;
-	case 270000:
-		return new TimeActEventData_Model270000;
-	case 270001:
-		return new TimeActEventData_NoArgs;
-	case 270002:
-		return new TimeActEventData_NoArgs;
-	case 280000:
-		return new TimeActEventData_NoArgs;
-	case 280100:
-		return new TimeActEventData_Move280100;
-	case 290000:
-		return new TimeActEventData_NoArgs;
-	case 290001:
-		return new TimeActEventData_NoArgs;
-	case 290002:
-		return new TimeActEventData_NoArgs;
-	case 300000:
-		return new TimeActEventData_Event300000;
-	case 300100:
-		return new TimeActEventData_Event300100;
-	case 300200:
-		return new TimeActEventData_Event300200;
-	case 300300:
-		return new TimeActEventData_Event300300;
-	case 310000:
-		return new TimeActEventData_SpEffect310000;
-	case 500000:
-		return new TimeActEventData_MapGimmick500000;
-	case 502000:
-		return new TimeActEventData_MapSound502000;
-	default:
-		return new TimeActEventData_NoArgs;
-	}
-}
-
 TimeActEvent::EventData::EventData() 
 {
 	this->m_id = 0;
 	this->m_pad = 0;
-	this->m_args = getArguments(-1);
+	this->m_args = new TimeActEventData;
 }
 
-TimeActEvent::EventData::EventData(int id)
+TimeActEvent::EventData::EventData(int event_id)
 {
-	this->m_id = id;
+	this->m_id = event_id;
 
-	this->m_args = getArguments(id);
+	this->m_args = new TimeActEventData;
 }
 
 TimeActEvent::EventData::EventData(ifstream* tae)
@@ -213,11 +20,7 @@ TimeActEvent::EventData::EventData(ifstream* tae)
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_pad);
 	MemReader::ReadQWord(tae, &this->m_argsOffset);
 
-	tae->seekg(m_argsOffset);
-
-	this->m_args = getArguments(this->m_id);
-
-	this->m_args->GetData(tae);
+	this->m_args = new TimeActEventData;
 }
 
 TimeActEvent::EventData::~EventData()
@@ -235,7 +38,7 @@ TimeActEvent::TimeActEvent(float start, float end, int id)
 {
 	this->m_start = start;
 	this->m_end = end;
-	this->m_eventData = new EventData(id);
+	this->m_eventData = new EventData();
 }
 
 TimeActEvent::TimeActEvent(ifstream* tae)
@@ -290,14 +93,14 @@ void TimeActEvent::GenerateBinary(ofstream* tae)
 
 	tae->seekp(this->m_eventData->m_argsOffset);
 
-	this->m_eventData->m_args->SaveData(tae);
+	this->m_eventData->m_args->GenerateBinary(tae);
 
 	tae->seekp(bak);
 }
 
 int TimeActEvent::GetArgumentsSize()
 {
-	int size = 64;
+	int size = this->m_eventData->m_args->m_size;
 
 	int remainder = size % 16;
 

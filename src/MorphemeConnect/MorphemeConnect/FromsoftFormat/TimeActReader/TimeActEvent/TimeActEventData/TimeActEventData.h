@@ -353,6 +353,8 @@ class TimeActEventData_Model260005 : public TimeActEventData
 public:
 	float m_fVar0;
 	float m_fVar4;
+	BYTE m_bVar5;
+	BYTE m_condition;
 
 	void GetData(ifstream* tae);
 	void SaveData(ofstream* tae);

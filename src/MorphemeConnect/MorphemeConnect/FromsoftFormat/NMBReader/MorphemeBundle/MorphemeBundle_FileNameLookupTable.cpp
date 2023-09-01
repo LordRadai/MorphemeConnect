@@ -57,7 +57,7 @@ void FileNameLookupTable::WriteToBinary(ofstream* out)
 	{
 		int string_len = strlen(&this->m_strings[this->m_localOffsets[i]]) + 1;
 
-		MemReader::WriteByteArray(out, (BYTE*)&this->m_strings[this->m_localOffsets[i]], string_len);
+		MemReader::WriteByteArray(out, (BYTE*)&this->m_strings.data()[this->m_localOffsets[i]], string_len);
 	}
 
 	streampos pos = out->tellp();
@@ -161,23 +161,8 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_hash.data(), this->m_data->m_animFormat.m_elemCount);
 
-	streampos pos = out->tellp();
-
-	int remainder = pos % 4;
-
-	if (remainder != 0)
-	{
-		int pad_count = 4 - remainder;
-
-		BYTE* pad = new BYTE[pad_count];
-
-		for (size_t i = 0; i < pad_count; i++)
-			pad[i] = 0;
-
-		MemReader::WriteByteArray(out, pad, pad_count);
-
-		delete[] pad;
-	}
+	WORD endFile = 0;
+	MemReader::WriteWord(out, &endFile);
 }
 
 int MorphemeBundle_FileNameLookupTable::CalculateBundleSize()

@@ -1147,16 +1147,20 @@ void TimeActEventData_Model260004::ImGuiEditSection()
 
 void TimeActEventData_Model260005::GetData(ifstream* tae)
 {
-	this->m_size = 8;
+	this->m_size = 10;
 
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_fVar0);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_fVar4);
+	MemReader::ReadByte(tae, &this->m_bVar5);
+	MemReader::ReadByte(tae, &this->m_condition);
 }
 
 void TimeActEventData_Model260005::SaveData(ofstream* tae)
 {
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_fVar0);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_fVar4);
+	MemReader::WriteByte(tae, &this->m_bVar5);
+	MemReader::WriteByte(tae, &this->m_condition);
 
 	UINT64 pos = tae->tellp();
 	int remainder = pos % 16;
@@ -1175,7 +1179,7 @@ std::string TimeActEventData_Model260005::GetArgumentAsString()
 {
 	char args[100];
 
-	sprintf_s(args, "(%.3f, %.3f)\n", this->m_fVar0, this->m_fVar4);
+	sprintf_s(args, "(%.3f, %.3f, %d, %d)\n", this->m_fVar0, this->m_fVar4, this->m_bVar5, this->m_condition);
 	return std::string(args);
 }
 
@@ -1183,8 +1187,10 @@ void TimeActEventData_Model260005::ImGuiEditSection()
 {
 	ImGui::Text("Arguments");
 
-	ImGui::InputFloat("Unk00", &this->m_fVar0, 0, 0, 0);
-	ImGui::InputFloat("Unk04", &this->m_fVar4, 0, 0, 0);
+	ImGui::InputFloat("Fade In Speed", &this->m_fVar0, 0, 0, 0);
+	ImGui::InputFloat("Fade Out Speed", &this->m_fVar4, 0, 0, 0);
+	ImGui::InputByte("Unk05", (char*)&this->m_bVar5, 0, 0, 0);
+	ImGui::InputByte("Condition", (char*)&this->m_condition, 0, 0, 0);
 }
 
 void TimeActEventData_Model260006::GetData(ifstream* tae)

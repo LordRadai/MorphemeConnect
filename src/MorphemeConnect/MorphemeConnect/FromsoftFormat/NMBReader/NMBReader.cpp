@@ -81,6 +81,16 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 	if (this->m_init == false)
 		return false;
 
+	std::filesystem::path path = pszOutFilePath;
+
+	if (std::filesystem::exists(path))
+	{
+		std::filesystem::path bak_path = path;
+		bak_path.replace_extension(L".nmb.bak");
+
+		std::filesystem::copy_file(path, bak_path);
+	}
+
 	bool state = true;
 	this->m_outFilePath = pszOutFilePath;
 

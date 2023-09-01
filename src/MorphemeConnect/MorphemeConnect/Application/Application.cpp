@@ -99,7 +99,7 @@ void Application::Update()
 {
 	this->m_model.UpdateModel();
 	ProcessVariables();
-	RenderGUI(APPNAME_A);
+	RenderGUI("MorphemeConnect");
 }
 
 std::string getTaeCategoryTooltip(int category)
@@ -573,8 +573,8 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputFloat("Start Time", &startTime, 0, 0);
-			ImGui::InputFloat("End Time", &endTime, 0, 0);
+			ImGui::InputFloat("Start Time", &startTime, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("End Time", &endTime, ImGuiInputTextFlags_ReadOnly);
 			ImGui::PopItemWidth();
 
 			if (this->m_eventTrackEditorFlags.m_save)
@@ -677,10 +677,10 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputFloat("Start Time", &startTime);
-			ImGui::InputFloat("End Time", &endTime);
+			ImGui::InputFloat("Start Time", &startTime, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("End Time", &endTime, ImGuiInputTextFlags_ReadOnly);
 
-			track->m_event[selectedEventTae].m_args->ImGuiEditSection();
+			track->m_event[selectedEventTae].m_args->ImGuiEdit();
 
 			if (this->m_timeActEditorFlags.m_save)
 			{

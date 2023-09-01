@@ -81,7 +81,16 @@ TimeActData::TimeActData(ifstream* tae)
 			this->m_groups[i].m_event.reserve(this->m_groups[i].m_count);
 
 			for (size_t j = 0; j < this->m_groups[i].m_count; j++)
+			{
+				UINT64 bak = tae->tellg();
+
 				this->m_groups[i].m_event.push_back(&this->m_events[this->m_groups[i].m_eventIndex[j]]);
+
+				tae->seekg(this->m_groups[i].m_event.back()->m_eventData->m_argsOffset);
+				this->m_groups[i].m_event.back()->m_eventData->m_args->GetData(tae, this->m_groups[i].m_groupData->m_eventType, this->m_groups[i].m_event.back()->m_eventData->m_id);
+
+				tae->seekg(bak);
+			}
 		}
 	}
 
@@ -506,6 +515,16 @@ bool TimeActReader::SaveFile(PWSTR pszOutFilePath)
 	if (this->m_init == false)
 		return false;
 
+	std::filesystem::path path = pszOutFilePath;
+
+	if (std::filesystem::exists(path))
+	{
+		std::filesystem::path bak_path = path;
+		bak_path.replace_extension(L".tae.bak");
+
+		std::filesystem::copy_file(path, bak_path);
+	}
+
 	this->m_outFilePath = pszOutFilePath;
 
 	ofstream out;
@@ -543,7 +562,6 @@ void TimeActReader::CreateTaeGroups()
 TimeAct* TimeActReader::TimeActLookup(int id)
 {
 	//TAE list **MUST** be ordered in crescent order for this to work
-
 	int startIdx = 0;
 	int endIdx = this->m_tae.size() - 1;
 

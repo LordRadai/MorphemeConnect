@@ -765,11 +765,11 @@
 					"id": 260005,
 					"arguments": [
 						{
-							"name": "FadeIn Speed",
+							"name": "FadeIn Duration",
 							"type": "f32"
 						},
 						{
-							"name": "FadeOut Speed",
+							"name": "FadeOut Duration",
 							"type": "f32"
 						},
 						{

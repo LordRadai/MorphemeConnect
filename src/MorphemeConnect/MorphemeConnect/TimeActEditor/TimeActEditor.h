@@ -58,7 +58,7 @@ struct TimeActEditor
     int GetTrackCount() const;
 
     std::string GetTrackName(int idx);
-    std::string GetEventLabel(int idx, int event_idx) const;
+    std::string GetEventLabel(int idx, int event_idx, bool arguments = true) const;
 
     void AddGroup(int id);
     void DeleteGroup(int idx);

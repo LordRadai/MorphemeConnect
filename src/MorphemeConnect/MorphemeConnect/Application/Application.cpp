@@ -653,7 +653,7 @@ void Application::RenderGUI(const char* title)
 			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart);
 			float endTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_duration + track->m_event[selectedEventTae].m_frameStart);
 
-			ImGui::Text(m_timeActEditor.GetEventLabel(selectedTrackTae, selectedEventTae).c_str());
+			ImGui::Text(m_timeActEditor.GetEventLabel(selectedTrackTae, selectedEventTae, false).c_str());
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event Group", &track->m_eventGroup, 1, 0);
 			if (ImGui::IsItemHovered())

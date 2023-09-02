@@ -85,9 +85,12 @@ std::string TimeActEditor::GetTrackName(int idx)
 	return g_taeTemplate.GetGroupName(this->m_tracks[idx].m_eventGroup);
 }
 
-std::string TimeActEditor::GetEventLabel(int idx, int event_idx) const
+std::string TimeActEditor::GetEventLabel(int idx, int event_idx, bool arguments) const
 {
-	return g_taeTemplate.GetEventName(this->m_tracks[idx].m_eventGroup, this->m_tracks[idx].m_event[event_idx].m_value) + this->m_tracks[idx].m_event[event_idx].m_args->GetArgumentsAsString();
+	if (arguments)
+		return g_taeTemplate.GetEventName(this->m_tracks[idx].m_eventGroup, this->m_tracks[idx].m_event[event_idx].m_value) + this->m_tracks[idx].m_event[event_idx].m_args->GetArgumentsAsString();
+
+	return g_taeTemplate.GetEventName(this->m_tracks[idx].m_eventGroup, this->m_tracks[idx].m_event[event_idx].m_value);
 }
 
 void TimeActEditor::AddGroup(int id)

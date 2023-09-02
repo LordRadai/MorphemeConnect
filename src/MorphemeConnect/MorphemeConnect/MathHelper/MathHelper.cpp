@@ -1,3 +1,4 @@
+#include <cmath>
 #include "MathHelper.h"
 
 using namespace DirectX;
@@ -93,6 +94,9 @@ float MathHelper::FrameToTime(int frame, int frameRate)
 int MathHelper::TimeToFrame(float time, int frameRate)
 {
 	float frame = (time * frameRate);
+	
+	if (std::round(frame) == 0 && frame > 0)
+		return 1;
 
-	return (frame + 0.9);
+	return std::round(frame);
 }

@@ -522,7 +522,7 @@ bool TimeActReader::SaveFile(PWSTR pszOutFilePath)
 		std::filesystem::path bak_path = path;
 		bak_path.replace_extension(L".tae.bak");
 
-		std::filesystem::copy_file(path, bak_path);
+		std::filesystem::copy_file(path, bak_path, std::filesystem::copy_options::overwrite_existing);
 	}
 
 	this->m_outFilePath = pszOutFilePath;

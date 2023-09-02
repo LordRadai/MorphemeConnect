@@ -38,6 +38,7 @@ struct EventTrackEditor
     NodeDef* m_nodeSource;
 
     int m_animIdx = -1;
+
     std::vector<EventTrack> m_eventTracks;
     int m_frameMin, m_frameMax;
     bool focused = false;
@@ -69,6 +70,7 @@ struct EventTrackEditor
     void DeleteEvent(int track_idx, int event_idx);
 
     void ReloadTracks();
+    void SetEditedState(bool state);
 
     void Clear();
 };

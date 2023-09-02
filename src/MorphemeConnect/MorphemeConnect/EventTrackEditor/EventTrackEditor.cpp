@@ -259,9 +259,10 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
 void EventTrackEditor::ReloadTracks()
 {
-    this->Clear();
+    this->m_eventTracks.clear();
+    this->SetEditedState(false);
 
-    if ((g_morphemeConnect.m_nmb.m_init == true) && (g_morphemeConnect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+    if ((g_morphemeConnect.m_nmb.m_init) && (g_morphemeConnect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
     {
         bool found = false;
 
@@ -326,7 +327,19 @@ EventTrackEditor::EventTrackEditor()
 
 }
 
+void EventTrackEditor::SetEditedState(bool state)
+{
+    if (this->m_animIdx == -1)
+        return;
+
+    if (g_morphemeConnect.m_eventTrackEditorFlags.m_edited.size() > this->m_animIdx)
+        g_morphemeConnect.m_eventTrackEditorFlags.m_edited[this->m_animIdx] = state;
+    else
+        Debug::Panic("EventTrackEditor.cpp", "Out of bound read while setting edited state (idx=%d, size=%d)\n", this->m_animIdx, g_morphemeConnect.m_eventTrackEditorFlags.m_edited.size());
+}
+
 void EventTrackEditor::Clear()
 {
+    this->m_nodeSource = nullptr;
     this->m_eventTracks.clear();
 }

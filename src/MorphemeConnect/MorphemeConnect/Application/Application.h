@@ -224,6 +224,9 @@ public:
 	{
 		bool m_load = false;
 		bool m_save = false;
+		int m_selectedAnimIdx = -1;
+		std::vector<BYTE> m_edited;
+
 		int m_targetAnimIdx = -1;
 		float m_lenMult = 1.f;
 		bool m_loadTae = false;
@@ -235,6 +238,8 @@ public:
 	{
 		bool m_load = false;
 		bool m_save = false;
+		int m_selectedTimeActIdx = -1;
+		std::vector<BYTE> m_edited;
 		int m_taeId = -1;
 		float m_lenght = 0.f;
 	} m_timeActEditorFlags;

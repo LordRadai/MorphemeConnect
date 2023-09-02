@@ -89,8 +89,8 @@ void Camera::CameraInput(float delta_time)
 	{
 		Vector2 drag_delta(ImGui::GetMousePos().x - old_mouse_pos.x, ImGui::GetMousePos().y - old_mouse_pos.y);
 
-		this->UpdateTargetAngleXZ(this->m_speedParams.m_dragSpeed * drag_delta.y, delta_time);
-		this->UpdateTargetAngleY(this->m_speedParams.m_dragSpeed * drag_delta.x, delta_time);
+		this->UpdateTargetAngleXZ(this->m_settings.m_speedParams.m_dragSpeed * drag_delta.y, delta_time);
+		this->UpdateTargetAngleY(this->m_settings.m_speedParams.m_dragSpeed * drag_delta.x, delta_time);
 
 		register_input = true;
 	}
@@ -99,13 +99,13 @@ void Camera::CameraInput(float delta_time)
 	{
 		Vector2 drag_delta(ImGui::GetMousePos().x - old_mouse_pos.x, ImGui::GetMousePos().y - old_mouse_pos.y);
 
-		this->UpdateTargetPosition(Vector3(this->m_speedParams.m_dragSpeed * drag_delta.x, this->m_speedParams.m_dragSpeed * drag_delta.y, this->m_speedParams.m_dragSpeed * drag_delta.x), delta_time);
+		this->UpdateTargetPosition(Vector3(this->m_settings.m_speedParams.m_dragSpeed * drag_delta.x, this->m_settings.m_speedParams.m_dragSpeed * drag_delta.y, this->m_settings.m_speedParams.m_dragSpeed * drag_delta.x), delta_time);
 
 		register_input = true;
 	}
 
 	if (io.MouseWheel > FLT_EPSILON || io.MouseWheel < -FLT_EPSILON)
-		this->UpdateRadius(-io.MouseWheel * this->m_speedParams.m_zoomSpeed, delta_time);
+		this->UpdateRadius(-io.MouseWheel * this->m_settings.m_speedParams.m_zoomSpeed, delta_time);
 
 	old_mouse_pos = ImGui::GetMousePos();
 
@@ -125,7 +125,10 @@ void Camera::UpdateRadius(float speed, float delta_time)
 
 void Camera::UpdateTargetAngleXZ(float omega, float delta_time)
 {
-	this->m_angles.y += omega * delta_time;
+	if (this->m_settings.m_rotInvertY)
+		this->m_angles.y += -omega * delta_time;
+	else
+		this->m_angles.y += omega * delta_time;
 
 	if (this->m_angles.y > XM_PIDIV2)
 		this->m_angles.y = XM_PIDIV2 - FLT_EPSILON;
@@ -136,7 +139,10 @@ void Camera::UpdateTargetAngleXZ(float omega, float delta_time)
 
 void Camera::UpdateTargetAngleY(float omega, float delta_time)
 {
-	this->m_angles.x += omega * delta_time;
+	if (this->m_settings.m_rotInvertX)
+		this->m_angles.x += -omega * delta_time;
+	else
+		this->m_angles.x += omega * delta_time;
 
 	if (this->m_angles.x > XM_2PI)
 		this->m_angles.x -= XM_2PI;
@@ -153,7 +159,14 @@ void Camera::UpdatePosition(DirectX::SimpleMath::Vector3 speed, float delta_time
 void Camera::UpdateTargetPosition(DirectX::SimpleMath::Vector3 speed, float delta_time)
 {
 	Vector3 deltaPos = Vector3(speed.x * delta_time * cosf(this->m_angles.y) * cosf(this->m_angles.x), speed.y * delta_time, speed.z * delta_time * cosf(this->m_angles.y) * sinf(this->m_angles.x));
-	deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(-XM_PIDIV2));
+	
+	if (this->m_settings.m_dragInvertX)
+		deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(-XM_PIDIV2));
+	else
+		deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationY(XM_PIDIV2));
+
+	if (this->m_settings.m_dragInvertY)
+		deltaPos = Vector3::Transform(deltaPos, Matrix::CreateRotationX(XM_PI));
 
 	this->m_offsets += deltaPos;
 }

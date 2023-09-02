@@ -36,6 +36,7 @@ struct TimeActEditor
 
     TimeAct* m_source;
 
+    int m_taeIdx = -1;
     std::vector<TimeActTrack> m_tracks;
     int m_frameMin, m_frameMax;
     bool focused = false;
@@ -67,6 +68,7 @@ struct TimeActEditor
     void DeleteEvent(int group_idx, int event_idx);
 
     void ReloadTracks();
+    void SetEditedState(bool state);
 
     void Clear();
 };

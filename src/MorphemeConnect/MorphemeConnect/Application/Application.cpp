@@ -632,6 +632,9 @@ void Application::RenderGUI(const char* title)
 	static int selectedEventTae = -1;
 	static int firstFrameTae = 0;
 	static bool expandedTae = true;
+	static int currentFrameTae = 0;
+
+	currentFrameTae = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrame), 30);
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct");
@@ -680,11 +683,13 @@ void Application::RenderGUI(const char* title)
 				this->m_timeActEditor.m_frameMax = max;
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrame, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
 	ImGui::End();
+
+	currentFrame = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrameTae, 30));
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct Data");
@@ -1047,10 +1052,10 @@ void Application::ProcessVariables()
 							this->m_timeActEditor.m_tracks.push_back(&timeact->m_taeData->m_groups[j]);
 						}
 
-						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max);
+						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max, 30);
 
 						if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
-							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght);
+							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght, 30);
 
 						this->m_timeActEditor.m_frameMin = 0;
 					}

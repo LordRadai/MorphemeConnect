@@ -68,9 +68,9 @@ void Application::GUIStyle()
 	colors[ImGuiCol_Separator] = ImVec4(0.47f, 0.47f, 0.47f, 0.39f);
 	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.51f, 0.51f, 0.51f, 0.39f);
 	colors[ImGuiCol_SeparatorActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-	colors[ImGuiCol_ResizeGrip] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
-	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+	colors[ImGuiCol_ResizeGrip] = ImVec4(0.f, 0.f, 0.f, 0.f);
+	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.f, 0.f, 0.f, 0.f);
+	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.f, 0.f, 0.f, 0.f);
 	colors[ImGuiCol_Tab] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_TabHovered] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
 	colors[ImGuiCol_TabActive] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
@@ -230,8 +230,13 @@ void Application::RenderGUI(const char* title)
 	
 		ImGui::InvisibleButton("viewport_preview", ImVec2(width, height));
 
-		if (ImGui::IsItemHovered())
+		if (ImGui::IsItemFocused() && ImGui::IsItemHovered())
+		{
 			g_preview.m_camera.m_registerInput = true;
+
+			if (ImGui::IsMouseDown(0) || ImGui::IsMouseDown(1))
+				ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+		}
 
 		g_preview.SetRenderResolution(width, height);
 
@@ -265,9 +270,23 @@ void Application::RenderGUI(const char* title)
 			{
 				m_tae.m_init = false;
 				m_tae = TimeActReader(PWSTR(filepath.c_str()));
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
-				this->m_eventTrackEditorFlags.m_loadTae = false;
+				this->m_timeActEditorFlags.m_selectedTimeActIdx = -1;
+
+				this->m_timeActEditorFlags.m_edited.clear();
+
+				if (m_tae.m_init)
+				{
+					this->m_timeActEditorFlags.m_edited.reserve(m_tae.m_tae.size());
+
+					for (int i = 0; i < m_tae.m_tae.size(); i++)
+						this->m_timeActEditorFlags.m_edited.push_back(false);
+
+					Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+
+					this->m_eventTrackEditorFlags.m_loadTae = false;
+				}
+
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -313,16 +332,24 @@ void Application::RenderGUI(const char* title)
 				{
 					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
 					{
-						std::string anim_name = m_nmb.GetAnimFileName(i);
+						std::string anim_name = "";
+
+						if (this->m_eventTrackEditorFlags.m_edited[i])
+							anim_name += "*";
+
+						anim_name += m_nmb.GetAnimFileName(i);
+
+						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == i);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
-							ImGui::Selectable(anim_name.c_str());
+							ImGui::Selectable(anim_name.c_str(), &selected);
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
 
 								if (ImGui::IsMouseDoubleClicked(0))
 									this->m_eventTrackEditorFlags.m_load = true;
@@ -353,11 +380,16 @@ void Application::RenderGUI(const char* title)
 					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
 					{
 						std::string anim_name = m_nmb.GetXmdSourceAnimFileName(i);
+						bool selected = (this->m_timeActEditorFlags.m_selectedTimeActIdx == i);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
-							ImGui::Selectable(anim_name.c_str());
+							ImGui::Selectable(anim_name.c_str(), &selected);
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
+
 							ImGui::PopID();
 						}
 					}
@@ -463,17 +495,25 @@ void Application::RenderGUI(const char* title)
 				{
 					for (int i = 0; i < m_tae.m_header.m_taeCount; i++)
 					{
-						std::string anim_name = std::to_string(m_tae.m_tae[i].m_id);
+						bool selected = (this->m_timeActEditorFlags.m_selectedTimeActIdx == i);
+
+						std::string anim_name = "";
+
+						if (this->m_timeActEditorFlags.m_edited[i])
+							anim_name += "*";
+
+						anim_name += std::to_string(m_tae.m_tae[i].m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
 							ImGui::PushID(i);
 
-							ImGui::Selectable(anim_name.c_str());
+							ImGui::Selectable(anim_name.c_str(), &selected);
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
-								this->m_timeActEditorFlags.m_taeId = this->m_tae.m_tae[i].m_id;;
+								this->m_timeActEditorFlags.m_taeId = this->m_tae.m_tae[i].m_id;
+								this->m_timeActEditorFlags.m_selectedTimeActIdx = i;
 
 								if (ImGui::IsMouseDoubleClicked(0))
 									this->m_timeActEditorFlags.m_load = true;
@@ -580,6 +620,8 @@ void Application::RenderGUI(const char* title)
 			if (this->m_eventTrackEditorFlags.m_save)
 			{
 				this->m_eventTrackEditorFlags.m_save = false;
+				this->m_eventTrackEditor.SetEditedState(false);
+
 				track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
 			}
 		}
@@ -685,6 +727,8 @@ void Application::RenderGUI(const char* title)
 			if (this->m_timeActEditorFlags.m_save)
 			{
 				this->m_timeActEditorFlags.m_save = false;
+				this->m_timeActEditor.SetEditedState(false);
+
 				track->SaveTimeActTrack();
 			}
 
@@ -767,18 +811,24 @@ void Application::PreviewDebugManagerWindow()
 		ImGui::InputFloat("Near Plane", &g_preview.m_camera.m_nearZ);
 		ImGui::InputFloat("Far Plane", &g_preview.m_camera.m_farZ);
 
-		ImGui::Text("Input");
-		ImGui::Separator();
-
 		ImGui::InputFloat("Width", &g_preview.m_camera.m_width, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat("Height", &g_preview.m_camera.m_height, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat("Aspect Ratio", &g_preview.m_camera.m_aspectRatio, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 
+		ImGui::Text("Input");
+		ImGui::Separator();
+
+		ImGui::Checkbox("Invert X Drag", &g_preview.m_camera.m_settings.m_dragInvertX);
+		ImGui::Checkbox("Invert Y Drag", &g_preview.m_camera.m_settings.m_dragInvertY);
+
+		ImGui::Checkbox("Invert X Rotation", &g_preview.m_camera.m_settings.m_rotInvertX);
+		ImGui::Checkbox("Invert Y Rotation", &g_preview.m_camera.m_settings.m_rotInvertY);
+
 		ImGui::Text("Speed Settings");
 		ImGui::Separator();
 
-		ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
-		ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
+		ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_settings.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
+		ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_settings.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
 	
 		ImGui::EndTabItem();
 	}
@@ -859,6 +909,7 @@ void Application::ProcessVariables()
 		this->m_eventTrackEditor.Clear();
 
 		m_eventTrackEditorFlags.m_load = false;
+		m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 	}
 
 	if (this->m_eventTrackEditorFlags.m_load)
@@ -933,8 +984,17 @@ void Application::ProcessVariables()
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
 											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+
+											for (size_t j = 0; j < this->m_tae.m_tae.size(); j++)
+											{
+												if (this->m_tae.m_tae[j].m_id == this->m_timeActEditorFlags.m_taeId)
+													this->m_timeActEditorFlags.m_selectedTimeActIdx = j;
+											}
+
 											this->m_timeActEditorFlags.m_lenght = source_anim->m_animLen;
 											this->m_timeActEditorFlags.m_load = true;
+
+											break;
 										}
 									}
 								}
@@ -953,12 +1013,15 @@ void Application::ProcessVariables()
 		this->m_timeActEditor.Clear();
 
 		m_timeActEditorFlags.m_load = false;
+		m_timeActEditorFlags.m_selectedTimeActIdx = -1;
 	}
 
 	if (this->m_timeActEditorFlags.m_load)
 	{
 		this->m_timeActEditorFlags.m_load = false;
 		this->m_timeActEditor.Clear();
+
+		this->m_timeActEditor.m_taeIdx = this->m_timeActEditorFlags.m_selectedTimeActIdx;
 
 		if (this->m_tae.m_init && this->m_timeActEditorFlags.m_taeId > -1)
 		{
@@ -1138,10 +1201,19 @@ void Application::LoadFile()
 						{
 							m_nmb.m_init = false;
 							m_nmb = NMBReader(pszFilePath);
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.m_filePath, m_nmb.m_bundles.size(), m_nmb.m_fileSize);							
 							
 							if (m_nmb.m_init)
 							{
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.m_filePath, m_nmb.m_bundles.size(), m_nmb.m_fileSize);
+
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = -1;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
+
+								this->m_eventTrackEditorFlags.m_edited.clear();
+								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount);
+
+								for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+									this->m_eventTrackEditorFlags.m_edited.push_back(false);
 
 								this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
 
@@ -1223,6 +1295,14 @@ void Application::LoadFile()
 
 							if (m_tae.m_init)
 							{
+								this->m_timeActEditorFlags.m_selectedTimeActIdx = -1;
+
+								this->m_timeActEditorFlags.m_edited.clear();
+								this->m_timeActEditorFlags.m_edited.reserve(m_tae.m_tae.size());
+
+								for (int i = 0; i < m_tae.m_tae.size(); i++)
+									this->m_timeActEditorFlags.m_edited.push_back(false);
+
 								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
 								bool found = false;

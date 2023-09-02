@@ -164,20 +164,35 @@ void TimeActEditor::DeleteEvent(int group_idx, int event_idx)
 void TimeActEditor::ReloadTracks()
 {
 	this->m_tracks.clear();
+	this->SetEditedState(false);
 
-	for (size_t i = 0; i < this->m_source->m_taeData->m_eventGroupCount; i++)
+	if ((g_morphemeConnect.m_tae.m_init == true))
 	{
-		this->m_source->m_taeData->m_groups[i].m_event.clear();
+		for (size_t i = 0; i < this->m_source->m_taeData->m_eventGroupCount; i++)
+		{
+			this->m_source->m_taeData->m_groups[i].m_event.clear();
 
-		for (size_t j = 0; j < this->m_source->m_taeData->m_groups[i].m_count; j++)
-			this->m_source->m_taeData->m_groups[i].m_event.push_back(&this->m_source->m_taeData->m_events[this->m_source->m_taeData->m_groups[i].m_eventIndex[j]]);
-	}
+			for (size_t j = 0; j < this->m_source->m_taeData->m_groups[i].m_count; j++)
+				this->m_source->m_taeData->m_groups[i].m_event.push_back(&this->m_source->m_taeData->m_events[this->m_source->m_taeData->m_groups[i].m_eventIndex[j]]);
+		}
 
-	if (this->m_source->m_taeData->m_eventGroupCount > 0)
-	{
-		for (int j = 0; j < this->m_source->m_taeData->m_eventGroupCount; j++)
-			this->m_tracks.push_back(&this->m_source->m_taeData->m_groups[j]);
-	}
+		if (this->m_source->m_taeData->m_eventGroupCount > 0)
+		{
+			for (int j = 0; j < this->m_source->m_taeData->m_eventGroupCount; j++)
+				this->m_tracks.push_back(&this->m_source->m_taeData->m_groups[j]);
+		}
+	}	
+}
+
+void TimeActEditor::SetEditedState(bool state)
+{
+	if (this->m_taeIdx == -1)
+		return;
+
+	if (g_morphemeConnect.m_timeActEditorFlags.m_edited.size() > this->m_taeIdx)
+		g_morphemeConnect.m_timeActEditorFlags.m_edited[this->m_taeIdx] = state;
+	else
+		Debug::Panic("TimeActEditor.cpp", "Out of bound read while setting edited state (idx=%d, size=%d)\n", this->m_taeIdx, g_morphemeConnect.m_timeActEditorFlags.m_edited.size());
 }
 
 void TimeActEditor::Clear()

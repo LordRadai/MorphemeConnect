@@ -3,11 +3,19 @@
 class Camera
 {
 public:
-	struct CameraSpeed
+	struct Settings
 	{
-		float m_zoomSpeed = 10.f;
-		float m_dragSpeed = 0.3f;
-	} m_speedParams;
+		struct CameraSpeed
+		{
+			float m_zoomSpeed = 10.f;
+			float m_dragSpeed = 0.3f;
+		} m_speedParams;
+
+		bool m_dragInvertX = true;
+		bool m_dragInvertY = false;
+		bool m_rotInvertX = false;
+		bool m_rotInvertY = false;
+	} m_settings;
 
 	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Matrix m_view;

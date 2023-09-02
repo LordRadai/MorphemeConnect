@@ -1144,7 +1144,11 @@ namespace ImSequencer
                         //eventTrackEditor->Paste();
                     }
                 }
-                //
+
+                if ((movingTrack >= 0 && movingEvent >= 0))
+                {
+                    eventTrackEditor->SetEditedState(true);
+                }
             }
 
             ImGui::EndChildFrame();
@@ -2126,7 +2130,11 @@ namespace ImSequencer
                         //timeActEditor->Paste();
                     }
                 }
-                //
+                
+                if ((movingTrack >= 0 && movingEvent >= 0))
+                {
+                    timeActEditor->SetEditedState(true);
+                }
             }
 
             ImGui::EndChildFrame();

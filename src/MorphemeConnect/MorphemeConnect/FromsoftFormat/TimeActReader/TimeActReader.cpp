@@ -5,6 +5,14 @@
 
 AnimData::AnimData()
 {
+	this->m_reference = 0;
+	this->m_bVar18 = 0;
+	this->m_fps = 30;
+	this->m_bVar1A = 0;
+	this->m_bVar1B = 0;
+	this->m_lenght = 0;
+	this->m_pad[0] = 0;
+	this->m_pad[1] = 0;
 }
 
 AnimData::AnimData(ifstream* tae)
@@ -12,16 +20,22 @@ AnimData::AnimData(ifstream* tae)
 	MemReader::ReadQWord(tae, &this->m_reference);
 	MemReader::ReadQWord(tae, &this->m_nextOffsetOffset);
 	MemReader::ReadQWord(tae, &this->m_nextOffset);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_readable);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_iVar1C);
+	MemReader::ReadByte(tae, &this->m_bVar18);
+	MemReader::ReadByte(tae, &this->m_fps);
+	MemReader::ReadByte(tae, &this->m_bVar1A);
+	MemReader::ReadByte(tae, &this->m_bVar1B);
+	MemReader::ReadDWord(tae, (DWORD*)&this->m_lenght);
 	MemReader::ReadQWordArray(tae, this->m_pad, 2);
 }
 
 AnimData::~AnimData()
 {
 	this->m_reference = 0;
-	this->m_readable = 7680;
-	this->m_iVar1C = 0;
+	this->m_bVar18 = 0;
+	this->m_fps = 30;
+	this->m_bVar1A = 0;
+	this->m_bVar1B = 0;
+	this->m_lenght = 0;
 	this->m_pad[0] = 0;
 	this->m_pad[1] = 0;
 }
@@ -31,8 +45,11 @@ void AnimData::GenerateBinary(ofstream* tae)
 	MemReader::WriteQWord(tae, &this->m_reference);
 	MemReader::WriteQWord(tae, &this->m_nextOffsetOffset);
 	MemReader::WriteQWord(tae, &this->m_nextOffset);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_readable);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_iVar1C);
+	MemReader::WriteByte(tae, &this->m_bVar18);
+	MemReader::WriteByte(tae, &this->m_fps);
+	MemReader::WriteByte(tae, &this->m_bVar1A);
+	MemReader::WriteByte(tae, &this->m_bVar1B);
+	MemReader::WriteDWord(tae, (DWORD*)&this->m_lenght);
 	MemReader::WriteQWordArray(tae, this->m_pad, 2);
 }
 
@@ -42,7 +59,17 @@ TimeActData::TimeActData()
 	this->m_eventGroupCount = 0;
 	this->m_timeCount = 0;
 
-	this->m_unkData = new AnimData;
+	this->m_animData = new AnimData;
+}
+
+TimeActData::TimeActData(int lenght)
+{
+	this->m_eventCount = 0;
+	this->m_eventGroupCount = 0;
+	this->m_timeCount = 0;
+
+	this->m_animData = new AnimData;
+	this->m_animData->m_lenght = lenght;
 }
 
 TimeActData::TimeActData(ifstream* tae)
@@ -50,7 +77,7 @@ TimeActData::TimeActData(ifstream* tae)
 	MemReader::ReadQWord(tae, &this->m_eventOffset);
 	MemReader::ReadQWord(tae, &this->m_eventGroupOffset);
 	MemReader::ReadQWord(tae, &this->m_timesOffset);
-	MemReader::ReadQWord(tae, &this->m_unkDataOffset);
+	MemReader::ReadQWord(tae, &this->m_animDataOffset);
 
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_eventCount);
 	MemReader::ReadDWord(tae, (DWORD*)&this->m_eventGroupCount);
@@ -94,13 +121,13 @@ TimeActData::TimeActData(ifstream* tae)
 		}
 	}
 
-	if (m_unkDataOffset)
+	if (m_animDataOffset)
 	{
 		streampos bak = tae->tellg();
 
-		tae->seekg(m_unkDataOffset);
+		tae->seekg(m_animDataOffset);
 
-		this->m_unkData = new AnimData(tae);
+		this->m_animData = new AnimData(tae);
 	}
 }
 
@@ -113,7 +140,7 @@ void TimeActData::GenerateBinary(ofstream* tae)
 	MemReader::WriteQWord(tae, &this->m_eventOffset);
 	MemReader::WriteQWord(tae, &this->m_eventGroupOffset);
 	MemReader::WriteQWord(tae, &this->m_timesOffset);
-	MemReader::WriteQWord(tae, &this->m_unkDataOffset);
+	MemReader::WriteQWord(tae, &this->m_animDataOffset);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventCount);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventGroupCount);
 	MemReader::WriteDWord(tae, (DWORD*)&this->m_timeCount);
@@ -123,8 +150,8 @@ void TimeActData::GenerateBinary(ofstream* tae)
 
 	UINT64 bak = tae->tellp();
 
-	tae->seekp(m_unkDataOffset);
-	this->m_unkData->GenerateBinary(tae);
+	tae->seekp(m_animDataOffset);
+	this->m_animData->GenerateBinary(tae);
 
 	tae->seekp(m_timesOffset);
 
@@ -186,6 +213,17 @@ void TimeAct::GenerateBinary(ofstream* tae)
 	this->m_taeData->GenerateBinary(tae);
 
 	tae->seekp(bak);
+}
+
+float TimeAct::CalculatePlaybackPosFromMorphemeEventTrack(float eventStart, float eventDuration, float eventPlaybackPos)
+{
+	if (eventPlaybackPos < eventStart)
+		return 0.f;
+
+	float taeDuration = (float)this->m_taeData->m_animData->m_lenght / (float)this->m_taeData->m_animData->m_fps;
+	float playSpeed = taeDuration / eventDuration;
+
+	return playSpeed * (eventPlaybackPos - eventStart);
 }
 
 TimeActGroup::TimeActGroup() {}
@@ -415,16 +453,16 @@ void TimeActReader::AdjustOffsets()
 	UINT64 nextUnkDataOffset = dataBase;
 	for (int i = 0; i < this->m_tae.size(); i++)
 	{
-		this->m_tae[i].m_taeData->m_unkDataOffset = nextUnkDataOffset;
+		this->m_tae[i].m_taeData->m_animDataOffset = nextUnkDataOffset;
 
-		this->m_tae[i].m_taeData->m_unkData->m_nextOffsetOffset = this->m_tae[i].m_taeData->m_unkDataOffset + 0x10;
-		this->m_tae[i].m_taeData->m_unkData->m_nextOffset = this->m_tae[i].m_taeData->m_unkData->m_nextOffsetOffset + 0x20;
+		this->m_tae[i].m_taeData->m_animData->m_nextOffsetOffset = this->m_tae[i].m_taeData->m_animDataOffset + 0x10;
+		this->m_tae[i].m_taeData->m_animData->m_nextOffset = this->m_tae[i].m_taeData->m_animData->m_nextOffsetOffset + 0x20;
 
-		UINT64 biggestOffset = this->m_tae[i].m_taeData->m_unkDataOffset + 0x30;
+		UINT64 biggestOffset = this->m_tae[i].m_taeData->m_animDataOffset + 0x30;
 
 		if (this->m_tae[i].m_taeData->m_timeCount > 0)
 		{
-			this->m_tae[i].m_taeData->m_timesOffset = this->m_tae[i].m_taeData->m_unkDataOffset + 0x30;
+			this->m_tae[i].m_taeData->m_timesOffset = this->m_tae[i].m_taeData->m_animDataOffset + 0x30;
 			biggestOffset = this->m_tae[i].m_taeData->m_timesOffset;
 		}
 		else
@@ -507,7 +545,7 @@ void TimeActReader::AdjustOffsets()
 		}
 	}
 
-	this->m_header.m_fileSize = this->m_tae.back().m_taeData->m_unkData->m_nextOffset;
+	this->m_header.m_fileSize = this->m_tae.back().m_taeData->m_animData->m_nextOffset;
 }
 
 bool TimeActReader::SaveFile(PWSTR pszOutFilePath)

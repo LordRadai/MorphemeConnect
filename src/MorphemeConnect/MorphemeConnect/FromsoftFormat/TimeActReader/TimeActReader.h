@@ -7,8 +7,11 @@ public:
 	UINT64 m_reference;
 	UINT64 m_nextOffsetOffset;
 	UINT64 m_nextOffset;
-	int m_readable;
-	int m_iVar1C;
+	BYTE m_bVar18;
+	BYTE m_fps;
+	BYTE m_bVar1A;
+	BYTE m_bVar1B;
+	int m_lenght;
 	UINT64 m_pad[2];
 
 	AnimData();
@@ -28,14 +31,15 @@ public:
 	UINT64 m_eventOffset;
 	UINT64 m_eventGroupOffset;
 	UINT64 m_timesOffset;
-	UINT64 m_unkDataOffset;
+	UINT64 m_animDataOffset;
 
 	std::vector<TimeActEvent> m_events;
 	std::vector<EventGroup> m_groups;
 	std::vector<float> m_times;
-	AnimData* m_unkData;
+	AnimData* m_animData;
 
 	TimeActData();
+	TimeActData(int lenght);
 	TimeActData(ifstream* tae);
 	~TimeActData();
 
@@ -57,6 +61,7 @@ public:
 	~TimeAct();
 
 	void GenerateBinary(ofstream* tae);
+	float CalculatePlaybackPosFromMorphemeEventTrack(float eventStart, float eventDuration, float eventPlaybackPos);
 };
 
 class TimeActGroup

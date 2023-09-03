@@ -638,7 +638,21 @@ void Application::RenderGUI(const char* title)
 
 	zoomLevelTae = 2 * zoomLevel;
 
-	currentFrameTae = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrame), 30);
+	if (this->m_eventTrackEditor.GetTrackCount() > 0)
+	{
+		for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
+		{
+			if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+			{
+				this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+				this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+				this->m_timeActEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+			}
+		}
+
+		if (this->m_timeActEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
+			currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30);
+	}
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct");
@@ -672,20 +686,6 @@ void Application::RenderGUI(const char* title)
 			else
 				ImGui::Text("");
 
-			int max = 0;
-
-			for (int i = 0; i < m_timeActEditor.m_tracks.size(); i++)
-			{
-				for (int j = 0; j < m_timeActEditor.m_tracks[i].m_count; j++)
-				{
-					if (m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration > max)
-						max = m_timeActEditor.m_tracks[i].m_event[j].m_frameStart + m_timeActEditor.m_tracks[i].m_event[j].m_duration;
-				}
-			}
-
-			if (this->m_eventTrackEditorFlags.m_targetAnimIdx == -1)
-				this->m_timeActEditor.m_frameMax = max;
-
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, &zoomLevelTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
@@ -694,7 +694,6 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 
 	zoomLevel = zoomLevelTae * 0.5f;
-	currentFrame = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrameTae, 30));
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct Data");
@@ -702,8 +701,8 @@ void Application::RenderGUI(const char* title)
 		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1 && selectedTrackTae < this->m_timeActEditor.m_tracks.size()) && (selectedEventTae != -1 && this->m_timeActEditor.m_tracks[selectedTrackTae].m_count))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[selectedTrackTae];
-			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart);
-			float endTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_duration + track->m_event[selectedEventTae].m_frameStart);
+			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart, 30);
+			float endTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_duration + track->m_event[selectedEventTae].m_frameStart, 30);
 
 			ImGui::Text(m_timeActEditor.GetEventLabel(selectedTrackTae, selectedEventTae, false).c_str());
 			ImGui::PushItemWidth(100);
@@ -993,6 +992,9 @@ void Application::ProcessVariables()
 									{
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
+											this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+											this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+
 											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
 
 											for (size_t j = 0; j < this->m_tae.m_tae.size(); j++)
@@ -1001,7 +1003,6 @@ void Application::ProcessVariables()
 													this->m_timeActEditorFlags.m_selectedTimeActIdx = j;
 											}
 
-											this->m_timeActEditorFlags.m_lenght = source_anim->m_animLen;
 											this->m_timeActEditorFlags.m_load = true;
 
 											break;
@@ -1044,24 +1045,12 @@ void Application::ProcessVariables()
 				{
 					if (timeact->m_taeData->m_eventGroupCount > 0)
 					{
-						float max = 0;
-
 						for (int j = 0; j < timeact->m_taeData->m_eventGroupCount; j++)
-						{
-							for (int k = 0; k < timeact->m_taeData->m_groups[j].m_count; k++)
-							{
-								if (timeact->m_taeData->m_groups[j].m_event[k]->m_end > max)
-									max = timeact->m_taeData->m_groups[j].m_event[k]->m_end;
-							}
-
 							this->m_timeActEditor.m_tracks.push_back(&timeact->m_taeData->m_groups[j]);
-						}
 
-						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(max, 30);
+						float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
 
-						if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
-							this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(this->m_timeActEditorFlags.m_lenght, 30);
-
+						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
 						this->m_timeActEditor.m_frameMin = 0;
 					}
 				}

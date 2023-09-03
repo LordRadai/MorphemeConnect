@@ -241,7 +241,9 @@ public:
 		int m_selectedTimeActIdx = -1;
 		std::vector<BYTE> m_edited;
 		int m_taeId = -1;
-		float m_lenght = 0.f;
+		float m_eventTrackActionTimeActStart = 0.f;
+		float m_eventTrackActionTimeActDuration = 0.f;
+		int m_eventTrackActionTimeActValue = 0;
 	} m_timeActEditorFlags;
 
 	NMBReader m_nmb;

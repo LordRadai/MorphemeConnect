@@ -217,6 +217,9 @@ void TimeAct::GenerateBinary(ofstream* tae)
 
 float TimeAct::CalculatePlaybackPosFromMorphemeEventTrack(float eventStart, float eventDuration, float eventPlaybackPos)
 {
+	if (this == nullptr)
+		return 0.f;
+
 	if (eventPlaybackPos < eventStart)
 		return 0.f;
 

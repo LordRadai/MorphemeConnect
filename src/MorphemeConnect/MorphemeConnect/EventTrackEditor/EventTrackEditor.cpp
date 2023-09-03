@@ -340,6 +340,7 @@ void EventTrackEditor::SetEditedState(bool state)
 
 void EventTrackEditor::Clear()
 {
+    this->m_animIdx = -1;
     this->m_frameMax = 0;
     this->m_frameMin = 0;
     this->m_nodeSource = nullptr;

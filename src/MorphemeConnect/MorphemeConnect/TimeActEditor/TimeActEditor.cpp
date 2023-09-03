@@ -197,6 +197,7 @@ void TimeActEditor::SetEditedState(bool state)
 
 void TimeActEditor::Clear()
 {
+	this->m_taeIdx = -1;
 	this->m_frameMax = 0;
 	this->m_frameMin = 0;
 	this->m_source = nullptr;

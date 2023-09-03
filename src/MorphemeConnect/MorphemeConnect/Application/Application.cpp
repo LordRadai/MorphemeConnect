@@ -568,7 +568,6 @@ void Application::RenderGUI(const char* title)
 					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No Event Tracks are loaded\n");
 			}
 
-
 			if (this->m_eventTrackEditor.m_animIdx > -1)
 				ImGui::Text(m_nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
 			else

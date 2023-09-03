@@ -39,11 +39,11 @@
 					]
 				},
 				{
-					"name": "ChrSoundCtrl2",
+					"name": "PlayWeaponSound",
 					"id": 202,
 					"arguments": [
 						{
-							"name": "Sound ID",
+							"name": "Index",
 							"type": "s32"
 						},
 						{
@@ -583,7 +583,7 @@
 					"arguments": []
 				},
 				{
-					"name": "InvokeWeaponTrail",
+					"name": "ChrAttackCtrl3",
 					"id": 120300,
 					"arguments": []
 				}
@@ -929,11 +929,15 @@
 							"type": "s32"
 						},
 						{
-							"name": "Type",
-							"type": "s32"
+							"name": "Unk04",
+							"type": "s16"
 						},
 						{
-							"name": "Mode",
+							"name": "Unk06",
+							"type": "s16"
+						},
+						{
+							"name": "Unk08",
 							"type": "s32"
 						}
 					]

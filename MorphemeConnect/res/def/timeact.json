@@ -733,11 +733,11 @@
 						},
 						{
 							"name": "Unk04",
-							"type": "s32"
+							"type": "f32"
 						},
 						{
 							"name": "Unk08",
-							"type": "s32"
+							"type": "f32"
 						}
 					]
 				},

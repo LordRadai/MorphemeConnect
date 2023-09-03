@@ -1719,9 +1719,11 @@ namespace ImSequencer
                 ImGui::Text(timeActEditor->GetTrackName(*selectedTrack).c_str());
                 ImGui::Separator();
 
-                ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
+                if (addEvent.m_end < addEvent.m_start)
+                    addEvent.m_end = addEvent.m_start;
 
-                ImGui::InputFloat("End", &addEvent.m_end, 1.f / 60.f);
+                ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 30.f);
+                ImGui::InputFloat("End", &addEvent.m_end, 1.f / 30.f);
 
                 *currentFrame = MathHelper::TimeToFrame(addEvent.m_start, 30);
 

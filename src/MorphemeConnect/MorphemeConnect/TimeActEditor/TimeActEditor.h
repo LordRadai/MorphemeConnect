@@ -36,6 +36,7 @@ struct TimeActEditor
 
     TimeAct* m_source;
 
+    int m_fps = 30;
     int m_taeIdx = -1;
     std::vector<TimeActTrack> m_tracks;
     int m_frameMin, m_frameMax;

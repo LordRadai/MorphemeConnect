@@ -538,6 +538,7 @@ void Application::RenderGUI(const char* title)
 	static int firstFrame = 0;
 	static bool expanded = true;
 	static int currentFrame = 0;
+	static float zoomLevel = 5.f;
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("EventTrack");
@@ -574,7 +575,7 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, focused, & firstFrame, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, focused, &firstFrame, &zoomLevel, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
@@ -633,6 +634,9 @@ void Application::RenderGUI(const char* title)
 	static int firstFrameTae = 0;
 	static bool expandedTae = true;
 	static int currentFrameTae = 0;
+	static float zoomLevelTae = 10.f;
+
+	zoomLevelTae = 2 * zoomLevel;
 
 	currentFrameTae = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrame), 30);
 
@@ -683,12 +687,13 @@ void Application::RenderGUI(const char* title)
 				this->m_timeActEditor.m_frameMax = max;
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, &zoomLevelTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
 	ImGui::End();
 
+	zoomLevel = zoomLevelTae * 0.5f;
 	currentFrame = MathHelper::TimeToFrame(MathHelper::FrameToTime(currentFrameTae, 30));
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);

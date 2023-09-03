@@ -37,6 +37,7 @@ struct EventTrackEditor
 
     NodeDef* m_nodeSource;
 
+    int m_fps = 60;
     int m_animIdx = -1;
 
     std::vector<EventTrack> m_eventTracks;

@@ -140,7 +140,7 @@ namespace ImSequencer
         return overDel;
     }
 
-    bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, int sequenceOptions)
+    bool Sequencer(EventTrackEditor* eventTrackEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, float* zoomLevel, int sequenceOptions)
     {
         static bool hovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
@@ -148,8 +148,8 @@ namespace ImSequencer
         ImGuiIO& io = ImGui::GetIO();
         int cx = (int)(io.MousePos.x);
         int cy = (int)(io.MousePos.y);
-        static float framePixelWidth = 10.f;
-        static float framePixelWidthTarget = 10.f;
+        float framePixelWidth = *zoomLevel;
+        float framePixelWidthTarget = *zoomLevel;
 
         static bool resizeLegend = false;
         static int legendWidth = 210;
@@ -736,7 +736,7 @@ namespace ImSequencer
                         ImVec2 textSizeIdx = ImGui::CalcTextSize(std::to_string(eventIdx).c_str());
                         ImVec2 textP(slotP1.x + (slotP2.x - slotP1.x - textSize.x) / 2, slotP2.y + (slotP1.y - slotP2.y - textSize.y) / 2);
                         ImVec2 textD(slotD1.x + (slotD2.x - slotD1.x - textSize.x) / 2, slotD2.y + (slotD1.y - slotD2.y - textSize.y) / 2);
-                        ImVec2 textDIdx(slotD1.x + framePixelWidth / 2 + textSize.x / 3, slotT3.y - textSizeIdx.y);
+                        ImVec2 textDIdx(slotD1.x + 5.f + textSize.x / 3, slotT3.y - textSizeIdx.y);
                         ImVec2 textPLoop;
                         ImVec2 textDLoop;
 
@@ -744,11 +744,11 @@ namespace ImSequencer
                         {
                             if (isDiscrete)
                             {
-                                slotD1.x -= framePixelWidth / 2;
-                                slotD2.x += framePixelWidth / 2;
+                                slotD1.x -= 5.f;
+                                slotD2.x += 5.f;
 
-                                slotT1.x -= framePixelWidth / 2;
-                                slotT2.x += framePixelWidth / 2;
+                                slotT1.x -= 5.f;
+                                slotT2.x += 5.f;
 
                                 draw_list->AddRectFilled(slotD1, slotD2, slotColor, 0); //Track Box
                                 draw_list->AddLine(slotD1, ImVec2(slotD2.x, slotD1.y), boundColor);
@@ -816,7 +816,7 @@ namespace ImSequencer
                                 }
                                 else
                                 {
-                                    if (slotD1.x + framePixelWidth / 2 > frameMax.x)
+                                    if (slotD1.x + 5.f > frameMax.x)
                                     {
                                         slotD1Loop = ImVec2(frameMin.x + abs(slotD1.x - frameMax.x), slotD1.y);
                                         slotD2Loop = ImVec2(slotD1Loop.x + framePixelWidth, slotD2.y);
@@ -843,7 +843,7 @@ namespace ImSequencer
                                         draw_list->AddText(textPLoop, ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackTextColor), event_value.c_str()); //Event Value
                                         draw_list->AddText(textDLoop, ImGui::ColorConvertFloat4ToU32(eventTrackEditor->m_colors.m_trackTextColor), std::to_string(eventIdx).c_str()); //Event Idx
                                     }
-                                    else if (slotD1.x + framePixelWidth / 2 < frameMin.x)
+                                    else if (slotD1.x + 5.f < frameMin.x)
                                     {
                                         slotD2Loop = ImVec2(frameMax.x - abs(frameMin.x - slotD2.x), slotD2.y);
                                         slotD1Loop = ImVec2(slotD2Loop.x - framePixelWidth, slotD1.y);
@@ -1175,95 +1175,32 @@ namespace ImSequencer
                 ImVec2 scrollBarD(scrollBarMin.x + legendWidth + barWidthInPixels + startFrameOffset, scrollBarMax.y - 2);
                 draw_list->AddRectFilled(scrollBarC, scrollBarD, (inScrollBar || MovingScrollBar) ? 0xFF606060 : 0xFF505050, 6);
 
-                ImRect barHandleLeft(scrollBarC, ImVec2(scrollBarC.x + 14, scrollBarD.y));
-                ImRect barHandleRight(ImVec2(scrollBarD.x - 14, scrollBarC.y), scrollBarD);
-
-                bool onLeft = barHandleLeft.Contains(io.MousePos);
-                bool onRight = barHandleRight.Contains(io.MousePos);
-
                 static bool sizingRBar = false;
                 static bool sizingLBar = false;
 
-                draw_list->AddRectFilled(barHandleLeft.Min, barHandleLeft.Max, (onLeft || sizingLBar) ? 0xFFAAAAAA : 0xFF666666, 6);
-                draw_list->AddRectFilled(barHandleRight.Min, barHandleRight.Max, (onRight || sizingRBar) ? 0xFFAAAAAA : 0xFF666666, 6);
-
                 ImRect scrollBarThumb(scrollBarC, scrollBarD);
                 static const float MinBarWidth = 44.f;
-                if (sizingRBar)
-                {
-                    if (!io.MouseDown[0])
-                    {
-                        sizingRBar = false;
-                    }
-                    else
-                    {
-                        float barNewWidth = ImMax(barWidthInPixels + io.MouseDelta.x, MinBarWidth);
-                        float barRatio = barNewWidth / barWidthInPixels;
-                        framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
-                        int newVisibleFrameCount = int((canvas_size.x - legendWidth) / framePixelWidthTarget);
-                        int lastFrame = *firstFrame + newVisibleFrameCount;
-                        if (lastFrame > eventTrackEditor->GetFrameMax())
-                        {
-                            framePixelWidthTarget = framePixelWidth = (canvas_size.x - legendWidth) / float(eventTrackEditor->GetFrameMax() - *firstFrame);
-                        }
-                    }
-                }
-                else if (sizingLBar)
-                {
-                    if (!io.MouseDown[0])
-                    {
-                        sizingLBar = false;
-                    }
-                    else
-                    {
-                        if (fabsf(io.MouseDelta.x) > FLT_EPSILON)
-                        {
-                            float barNewWidth = ImMax(barWidthInPixels - io.MouseDelta.x, MinBarWidth);
-                            float barRatio = barNewWidth / barWidthInPixels;
-                            float previousFramePixelWidthTarget = framePixelWidthTarget;
-                            framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
-                            int newVisibleFrameCount = int(visibleFrameCount / barRatio);
-                            int newFirstFrame = *firstFrame + newVisibleFrameCount - visibleFrameCount;
-                            newFirstFrame = ImClamp(newFirstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount, eventTrackEditor->GetFrameMin()));
-                            if (newFirstFrame == *firstFrame)
-                            {
-                                framePixelWidth = framePixelWidthTarget = previousFramePixelWidthTarget;
-                            }
-                            else
-                            {
-                                *firstFrame = newFirstFrame;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (MovingScrollBar)
-                    {
-                        if (!io.MouseDown[0])
-                        {
-                            MovingScrollBar = false;
-                        }
-                        else
-                        {
-                            float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
-                            *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
-                            *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount + 10, eventTrackEditor->GetFrameMin()));
-                        }
-                    }
-                    else if (focused && eventTrackEditor->focused)
-                    {
-                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
-                        {
-                            MovingScrollBar = true;
-                            panningViewSource = io.MousePos;
-                            panningViewFrame = -*firstFrame;
-                        }
-                        if (!sizingRBar && onRight && ImGui::IsMouseClicked(0))
-                            sizingRBar = true;
-                        if (!sizingLBar && onLeft && ImGui::IsMouseClicked(0))
-                            sizingLBar = true;
 
+                if (MovingScrollBar)
+                {
+                    if (!io.MouseDown[0])
+                    {
+                        MovingScrollBar = false;
+                    }
+                    else
+                    {
+                        float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
+                        *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
+                        *firstFrame = ImClamp(*firstFrame, eventTrackEditor->GetFrameMin(), ImMax(eventTrackEditor->GetFrameMax() - visibleFrameCount + 10, eventTrackEditor->GetFrameMin()));
+                    }
+                }
+                else if (focused && eventTrackEditor->focused)
+                {
+                    if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
+                    {
+                        MovingScrollBar = true;
+                        panningViewSource = io.MousePos;
+                        panningViewFrame = -*firstFrame;
                     }
                 }
             }
@@ -1294,16 +1231,16 @@ namespace ImSequencer
                         {
                             if (io.MouseWheel < -FLT_EPSILON)
                             {
-                                framePixelWidthTarget *= 0.9f;
-                                framePixelWidth *= 0.9f;
+                                framePixelWidthTarget -= 0.3f;
+                                framePixelWidth -= 0.3f;
                                 int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
                                 *firstFrame += frameOverCursor - newFrameOverCursor;
                             }
 
                             if (io.MouseWheel > FLT_EPSILON)
                             {
-                                framePixelWidthTarget *= 1.1f;
-                                framePixelWidth *= 1.1f;
+                                framePixelWidthTarget += 0.3f;
+                                framePixelWidth += 0.3f;
                                 int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
                                 *firstFrame += frameOverCursor - newFrameOverCursor;
                             }
@@ -1328,17 +1265,20 @@ namespace ImSequencer
         if (!ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId | ImGuiPopupFlags_AnyPopupLevel))
             popupOpened = false;
 
+        if (framePixelWidth > 1.f && framePixelWidth < 50.f)
+            *zoomLevel = framePixelWidth;
+
         return ret;
     }
     
-    bool Sequencer(TimeActEditor* timeActEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, int sequenceOptions)
+    bool Sequencer(TimeActEditor* timeActEditor, int* currentFrame, int* selectedTrack, int* selectedEvent, bool* expanded, bool focused, int* firstFrame, float* zoomLevel, int sequenceOptions)
     {
         bool ret = false;
         ImGuiIO& io = ImGui::GetIO();
         int cx = (int)(io.MousePos.x);
         int cy = (int)(io.MousePos.y);
-        static float framePixelWidth = 10.f;
-        static float framePixelWidthTarget = 10.f;
+        float framePixelWidth = *zoomLevel;
+        float framePixelWidthTarget = *zoomLevel;
 
         static bool resizeLegend = false;
         static int legendWidth = 210;
@@ -2161,95 +2101,29 @@ namespace ImSequencer
                 ImVec2 scrollBarD(scrollBarMin.x + legendWidth + barWidthInPixels + startFrameOffset, scrollBarMax.y - 2);
                 draw_list->AddRectFilled(scrollBarC, scrollBarD, (inScrollBar || MovingScrollBar) ? 0xFF606060 : 0xFF505050, 6);
 
-                ImRect barHandleLeft(scrollBarC, ImVec2(scrollBarC.x + 14, scrollBarD.y));
-                ImRect barHandleRight(ImVec2(scrollBarD.x - 14, scrollBarC.y), scrollBarD);
-
-                bool onLeft = barHandleLeft.Contains(io.MousePos);
-                bool onRight = barHandleRight.Contains(io.MousePos);
-
-                static bool sizingRBar = false;
-                static bool sizingLBar = false;
-
-                draw_list->AddRectFilled(barHandleLeft.Min, barHandleLeft.Max, (onLeft || sizingLBar) ? 0xFFAAAAAA : 0xFF666666, 6);
-                draw_list->AddRectFilled(barHandleRight.Min, barHandleRight.Max, (onRight || sizingRBar) ? 0xFFAAAAAA : 0xFF666666, 6);
-
                 ImRect scrollBarThumb(scrollBarC, scrollBarD);
                 static const float MinBarWidth = 44.f;
-                if (sizingRBar)
-                {
-                    if (!io.MouseDown[0])
-                    {
-                        sizingRBar = false;
-                    }
-                    else
-                    {
-                        float barNewWidth = ImMax(barWidthInPixels + io.MouseDelta.x, MinBarWidth);
-                        float barRatio = barNewWidth / barWidthInPixels;
-                        framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
-                        int newVisibleFrameCount = int((canvas_size.x - legendWidth) / framePixelWidthTarget);
-                        int lastFrame = *firstFrame + newVisibleFrameCount;
-                        if (lastFrame > timeActEditor->GetFrameMax())
-                        {
-                            framePixelWidthTarget = framePixelWidth = (canvas_size.x - legendWidth) / float(timeActEditor->GetFrameMax() - *firstFrame);
-                        }
-                    }
-                }
-                else if (sizingLBar)
-                {
-                    if (!io.MouseDown[0])
-                    {
-                        sizingLBar = false;
-                    }
-                    else
-                    {
-                        if (fabsf(io.MouseDelta.x) > FLT_EPSILON)
-                        {
-                            float barNewWidth = ImMax(barWidthInPixels - io.MouseDelta.x, MinBarWidth);
-                            float barRatio = barNewWidth / barWidthInPixels;
-                            float previousFramePixelWidthTarget = framePixelWidthTarget;
-                            framePixelWidthTarget = framePixelWidth = framePixelWidth / barRatio;
-                            int newVisibleFrameCount = int(visibleFrameCount / barRatio);
-                            int newFirstFrame = *firstFrame + newVisibleFrameCount - visibleFrameCount;
-                            newFirstFrame = ImClamp(newFirstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount, timeActEditor->GetFrameMin()));
-                            if (newFirstFrame == *firstFrame)
-                            {
-                                framePixelWidth = framePixelWidthTarget = previousFramePixelWidthTarget;
-                            }
-                            else
-                            {
-                                *firstFrame = newFirstFrame;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (MovingScrollBar)
-                    {
-                        if (!io.MouseDown[0])
-                        {
-                            MovingScrollBar = false;
-                        }
-                        else
-                        {
-                            float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
-                            *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
-                            *firstFrame = ImClamp(*firstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount + 10, timeActEditor->GetFrameMin()));
-                        }
-                    }
-                    else if (focused && timeActEditor->focused)
-                    {
-                        if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
-                        {
-                            MovingScrollBar = true;
-                            panningViewSource = io.MousePos;
-                            panningViewFrame = -*firstFrame;
-                        }
-                        if (!sizingRBar && onRight && ImGui::IsMouseClicked(0))
-                            sizingRBar = true;
-                        if (!sizingLBar && onLeft && ImGui::IsMouseClicked(0))
-                            sizingLBar = true;
 
+                if (MovingScrollBar)
+                {
+                    if (!io.MouseDown[0])
+                    {
+                        MovingScrollBar = false;
+                    }
+                    else
+                    {
+                        float framesPerPixelInBar = barWidthInPixels / (float)visibleFrameCount;
+                        *firstFrame = int((io.MousePos.x - panningViewSource.x) / framesPerPixelInBar) - panningViewFrame;
+                        *firstFrame = ImClamp(*firstFrame, timeActEditor->GetFrameMin(), ImMax(timeActEditor->GetFrameMax() - visibleFrameCount + 10, timeActEditor->GetFrameMin()));
+                    }
+                }
+                else if (focused && timeActEditor->focused)
+                {
+                    if (scrollBarThumb.Contains(io.MousePos) && ImGui::IsMouseClicked(0) && firstFrame && !MovingCurrentFrame && movingTrack == -1 && !popupOpened && !resizeLegend)
+                    {
+                        MovingScrollBar = true;
+                        panningViewSource = io.MousePos;
+                        panningViewFrame = -*firstFrame;
                     }
                 }
             }
@@ -2280,16 +2154,16 @@ namespace ImSequencer
                         {
                             if (io.MouseWheel < -FLT_EPSILON)
                             {
-                                framePixelWidthTarget *= 0.9f;
-                                framePixelWidth *= 0.9f;
+                                framePixelWidthTarget -= 0.3f;
+                                framePixelWidth -= 0.3f;
                                 int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
                                 *firstFrame += frameOverCursor - newFrameOverCursor;
                             }
 
                             if (io.MouseWheel > FLT_EPSILON)
                             {
-                                framePixelWidthTarget *= 1.1f;
-                                framePixelWidth *= 1.1f;
+                                framePixelWidthTarget += 0.3f;
+                                framePixelWidth += 0.3f;
                                 int newFrameOverCursor = (int)((io.MousePos.x - topRect.Min.x) / framePixelWidth) + firstFrameUsed;
                                 *firstFrame += frameOverCursor - newFrameOverCursor;
                             }
@@ -2313,6 +2187,9 @@ namespace ImSequencer
 
         if (!ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId | ImGuiPopupFlags_AnyPopupLevel))
             popupOpened = false;
+
+        if (framePixelWidth > 1.f && framePixelWidth < 50.f)
+            *zoomLevel = framePixelWidth;
 
         return ret;
     }

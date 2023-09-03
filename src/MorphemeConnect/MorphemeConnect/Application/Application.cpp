@@ -613,8 +613,8 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputFloat("Start Time", &startTime, ImGuiInputTextFlags_ReadOnly);
-			ImGui::InputFloat("End Time", &endTime, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("Start Time", &startTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("End Time", &endTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
 			ImGui::PopItemWidth();
 
 			if (this->m_eventTrackEditorFlags.m_save)
@@ -637,20 +637,23 @@ void Application::RenderGUI(const char* title)
 
 	zoomLevelTae = 2 * zoomLevel;
 
-	if (this->m_eventTrackEditor.GetTrackCount() > 0)
+	if (m_timeActEditor.m_source)
 	{
-		for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
+		if (this->m_eventTrackEditor.GetTrackCount() > 0)
 		{
-			if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+			for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
 			{
-				this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-				this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
-				this->m_timeActEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+				if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+				{
+					this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+					this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+					this->m_timeActEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+				}
 			}
-		}
 
-		if (this->m_timeActEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-			currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30);
+			if (this->m_timeActEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
+				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30);
+		}
 	}
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
@@ -727,8 +730,8 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputFloat("Start Time", &startTime, ImGuiInputTextFlags_ReadOnly);
-			ImGui::InputFloat("End Time", &endTime, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("Start Time", &startTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat("End Time", &endTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
 
 			track->m_event[selectedEventTae].m_args->ImGuiEdit();
 
@@ -925,8 +928,6 @@ void Application::ProcessVariables()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
-		this->m_timeActEditor.Clear();
-
 		if ((this->m_nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found = false;
@@ -984,6 +985,8 @@ void Application::ProcessVariables()
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 								}
+
+								this->m_eventTrackEditor.SetEditedState(false);
 
 								if (this->m_tae.m_init)
 								{
@@ -1051,6 +1054,8 @@ void Application::ProcessVariables()
 
 						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
 						this->m_timeActEditor.m_frameMin = 0;
+
+						this->m_timeActEditor.SetEditedState(false);
 					}
 				}
 				else

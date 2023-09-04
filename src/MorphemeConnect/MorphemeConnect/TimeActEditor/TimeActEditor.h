@@ -41,6 +41,7 @@ struct TimeActEditor
     std::vector<TimeActTrack> m_tracks;
     int m_frameMin, m_frameMax;
     bool focused = false;
+    bool m_reload = false;
 
     struct EventTrackColor
     {

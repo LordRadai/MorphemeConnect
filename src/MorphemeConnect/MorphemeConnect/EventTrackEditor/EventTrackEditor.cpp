@@ -181,7 +181,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
         }
     }
 
-    this->ReloadTracks();
+    bool m_reload = true;
 
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added EventTrack %d (%s) (node=%d)\n", signature, name, this->m_nodeSource->m_nodeID);
 };
@@ -193,8 +193,8 @@ void EventTrackEditor::DeleteTrack(int idx)
 
     strcpy(delete_name, this->m_eventTracks[idx].m_name);
 
-    for (size_t i = 0; i < this->m_eventTracks[idx].m_numEvents; i++)
-        this->DeleteEvent(idx, i);
+    while (this->m_eventTracks[idx].m_numEvents > 0)
+        this->DeleteEvent(idx, 0);
 
     NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
     NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
@@ -224,7 +224,7 @@ void EventTrackEditor::DeleteTrack(int idx)
         }
     }
 
-    this->ReloadTracks();
+    bool m_reload = true;
 
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted track %d (%s) (node=%d)\n", delete_signature, delete_name, this->m_nodeSource->m_nodeID);
 }
@@ -252,13 +252,15 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
     Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d from Track %d (node=%d)\n", event_idx, track->m_signature, this->m_nodeSource->m_nodeID);
 
-    this->ReloadTracks();
+    bool m_reload = true;
 
     return;
 }
 
 void EventTrackEditor::ReloadTracks()
 {
+    bool m_reload = false;
+
     this->m_eventTracks.clear();
     this->SetEditedState(false);
 

@@ -98,5 +98,5 @@ int MathHelper::TimeToFrame(float time, int frameRate)
 	if (std::round(frame) == 0 && frame > 0)
 		return 1;
 
-	return std::round(frame);
+	return frame;
 }

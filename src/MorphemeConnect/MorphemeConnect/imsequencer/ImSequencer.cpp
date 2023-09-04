@@ -533,6 +533,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteTrack") && popupOpened)
             {
+                removeTrack = false;
+
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
 
                 ImGui::Text(header.c_str());
@@ -560,6 +562,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("renameTrack") && popupOpened)
             {
+                renameTrack = false;
+
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
 
                 ImGui::Text(header.c_str());
@@ -581,6 +585,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteEvent") && popupOpened)
             {
+                delEvent = false;
+
                 std::string header = std::string(eventTrackEditor->m_eventTracks[*selectedTrack].m_name) + " [" + std::to_string(*selectedEvent) + "]";
 
                 ImGui::Text(header.c_str());
@@ -609,6 +615,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("addEvent") && popupOpened)
             {
+                addTrack = false;
+
                 ImGui::Text(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
                 ImGui::Separator();
 
@@ -1034,6 +1042,9 @@ namespace ImSequencer
                         ImGui::CaptureMouseFromApp();
                         int diffFrame = int((cx - movingPos) / framePixelWidth);
 
+                        if (diffFrame != 0)
+                            eventTrackEditor->SetEditedState(true);
+
                         if (std::abs(diffFrame) > 0)
                         {
                             if (selectedTrack)
@@ -1143,11 +1154,6 @@ namespace ImSequencer
                     {
                         //eventTrackEditor->Paste();
                     }
-                }
-
-                if ((movingTrack >= 0 && movingEvent >= 0))
-                {
-                    eventTrackEditor->SetEditedState(true);
                 }
             }
 
@@ -1640,6 +1646,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteTrack") && popupOpened)
             {
+                removeTrack = false;
+
                 std::string header = timeActEditor->GetTrackName(*selectedTrack);
 
                 ImGui::Text(header.c_str());
@@ -1667,6 +1675,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("renameTrack") && popupOpened)
             {
+                renameTrack = false;
+
                 std::string header = timeActEditor->GetTrackName(*selectedTrack);
 
                 ImGui::Text(header.c_str());
@@ -1688,6 +1698,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("deleteEvent") && popupOpened)
             {
+                delEvent = false;
+
                 std::string header = timeActEditor->GetTrackName(*selectedTrack) + " [" + std::to_string(*selectedEvent) + "]";
 
                 ImGui::Text(header.c_str());
@@ -1716,6 +1728,8 @@ namespace ImSequencer
 
             if (ImGui::BeginPopup("addEvent") && popupOpened)
             {
+                addTrack = false;
+
                 ImGui::Text(timeActEditor->GetTrackName(*selectedTrack).c_str());
                 ImGui::Separator();
 
@@ -1974,6 +1988,9 @@ namespace ImSequencer
                         ImGui::CaptureMouseFromApp();
                         int diffFrame = int((cx - movingPos) / framePixelWidth);
 
+                        if (diffFrame != 0)
+                            timeActEditor->SetEditedState(true);
+
                         if (std::abs(diffFrame) > 0)
                         {
                             if (selectedTrack)
@@ -2071,11 +2088,6 @@ namespace ImSequencer
                     {
                         //timeActEditor->Paste();
                     }
-                }
-                
-                if ((movingTrack >= 0 && movingEvent >= 0))
-                {
-                    timeActEditor->SetEditedState(true);
                 }
             }
 

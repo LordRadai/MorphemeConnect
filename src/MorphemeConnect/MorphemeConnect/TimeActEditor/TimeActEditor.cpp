@@ -99,20 +99,21 @@ void TimeActEditor::AddGroup(int id)
 	this->m_source->m_taeData->m_groups.push_back(EventGroup(id));
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added group ID %d\n", id);
-	this->ReloadTracks();
+
+	this->m_reload = true;
 }
 
 void TimeActEditor::DeleteGroup(int idx)
 {
-	for (size_t i = 0; i < this->m_source->m_taeData->m_groups[idx].m_count; i++)
-		this->DeleteEvent(idx, i);
+	while (this->m_source->m_taeData->m_groups[idx].m_count > 0)
+		this->DeleteEvent(idx, 0);
 
 	this->m_source->m_taeData->m_eventGroupCount--;
 	this->m_source->m_taeData->m_groups.erase(this->m_source->m_taeData->m_groups.begin() + idx);
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Removed group %d\n", idx);
 
-	this->ReloadTracks();
+	this->m_reload = true;
 }
 
 void TimeActEditor::AddEvent(int group_idx, TimeActEvent event)
@@ -128,14 +129,13 @@ void TimeActEditor::AddEvent(int group_idx, TimeActEvent event)
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event (%.3f, %.3f, %d)\n", event.m_start, event.m_end, event.m_eventData->m_id);
 
-	this->ReloadTracks();
+	this->m_reload = true;
 }
 
 void TimeActEditor::DeleteEvent(int group_idx, int event_idx)
 {
-	this->m_source->m_taeData->m_groups[group_idx].m_count--;
-
 	int delete_index = this->m_source->m_taeData->m_groups[group_idx].m_eventIndex[event_idx];
+	this->m_source->m_taeData->m_groups[group_idx].m_count--;
 
 	this->m_source->m_taeData->m_groups[group_idx].m_eventOffset.erase(this->m_source->m_taeData->m_groups[group_idx].m_eventOffset.begin() + event_idx);
 	this->m_source->m_taeData->m_groups[group_idx].m_eventIndex.erase(this->m_source->m_taeData->m_groups[group_idx].m_eventIndex.begin() + event_idx);
@@ -155,14 +155,13 @@ void TimeActEditor::DeleteEvent(int group_idx, int event_idx)
 
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d (group=%d)\n", event_idx, group_idx);
 
-	if (this->m_source->m_taeData->m_groups[group_idx].m_count < 1)
-		this->DeleteGroup(group_idx);
-
-	this->ReloadTracks();
+	this->m_reload = true;
 }
 
 void TimeActEditor::ReloadTracks()
 {
+	this->m_reload = false;
+
 	this->m_tracks.clear();
 	this->SetEditedState(false);
 

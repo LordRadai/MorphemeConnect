@@ -923,6 +923,9 @@ void Application::ProcessVariables()
 		m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 	}
 
+	if (this->m_eventTrackEditor.m_reload)
+		this->m_eventTrackEditor.ReloadTracks();
+
 	if (this->m_eventTrackEditorFlags.m_load)
 	{
 		this->m_eventTrackEditorFlags.m_load = false;
@@ -1028,6 +1031,9 @@ void Application::ProcessVariables()
 		m_timeActEditorFlags.m_load = false;
 		m_timeActEditorFlags.m_selectedTimeActIdx = -1;
 	}
+
+	if (this->m_timeActEditor.m_reload)
+		this->m_timeActEditor.ReloadTracks();
 
 	if (this->m_timeActEditorFlags.m_load)
 	{

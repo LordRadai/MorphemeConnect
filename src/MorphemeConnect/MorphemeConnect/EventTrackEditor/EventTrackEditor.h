@@ -43,6 +43,7 @@ struct EventTrackEditor
     std::vector<EventTrack> m_eventTracks;
     int m_frameMin, m_frameMax;
     bool focused = false;
+    bool m_reload = false;
 
     struct EventTrackColor
     {

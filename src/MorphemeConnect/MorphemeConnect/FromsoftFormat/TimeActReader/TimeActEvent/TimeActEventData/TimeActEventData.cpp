@@ -155,6 +155,9 @@ std::string TimeActEventData::GetArgumentsAsString()
 
 void TimeActEventData::ImGuiEdit()
 {
+	if (this->m_args.size() == 0)
+		return;
+
 	ImGui::Text("Arguments");
 
 	for (size_t i = 0; i < this->m_args.size(); i++)

@@ -652,7 +652,7 @@ void Application::RenderGUI(const char* title)
 			}
 
 			if (this->m_timeActEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30);
+				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30, false);
 		}
 	}
 

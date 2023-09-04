@@ -19,5 +19,5 @@ namespace MathHelper
 
 	float FrameToTime(int frame, int frameRate = 60.f);
 
-	int TimeToFrame(float time, int frameRate = 60.f);
+	int TimeToFrame(float time, int frameRate = 60.f, bool round = true);
 }

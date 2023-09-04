@@ -91,12 +91,15 @@ float MathHelper::FrameToTime(int frame, int frameRate)
 	return ((float)frame / (float)frameRate);
 }
 
-int MathHelper::TimeToFrame(float time, int frameRate)
+int MathHelper::TimeToFrame(float time, int frameRate, bool round)
 {
 	float frame = (time * frameRate);
 	
-	if (std::round(frame) == 0 && frame > 0)
+	if (std::roundf(frame) == 0 && frame > 0)
 		return 1;
 
-	return frame;
+	if (!round)
+		return frame;
+
+	return std::roundf(frame);
 }

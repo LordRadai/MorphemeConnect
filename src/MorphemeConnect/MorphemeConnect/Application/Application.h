@@ -217,6 +217,7 @@ public:
 		bool m_addTimeAct = false;
 		bool m_deleteTimeAct = false;
 		int m_addTimeActId = 0;
+		float m_addTimeActLenght = 1.f;
 		int m_deleteTimeActId = -1;
 	} m_timeActFlags;
 

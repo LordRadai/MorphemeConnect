@@ -56,7 +56,7 @@ public:
 	TimeActData* m_taeData;
 
 	TimeAct();
-	TimeAct(int id);
+	TimeAct(int id, float lenght);
 	TimeAct(ifstream* tae);
 	~TimeAct();
 
@@ -157,6 +157,6 @@ public:
 	bool SaveFile(PWSTR pszOutFilePath);
 	void CreateTaeGroups();
 	TimeAct* TimeActLookup(int id);
-	bool AddTimeAct(int id);
+	bool AddTimeAct(int id, float lenght);
 	bool DeleteTimeAct(int id);
 };

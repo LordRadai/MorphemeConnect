@@ -181,10 +181,12 @@ UINT64 TimeActData::GetEventGroupPtr(int index)
 
 TimeAct::TimeAct() {}
 
-TimeAct::TimeAct(int id)
+TimeAct::TimeAct(int id, float lenght)
 {
 	this->m_id = id;
-	this->m_taeData = new TimeActData;
+
+	int frameCount = lenght * 30;
+	this->m_taeData = new TimeActData(frameCount);
 }
 
 TimeAct::TimeAct(ifstream* tae)
@@ -622,7 +624,7 @@ TimeAct* TimeActReader::TimeActLookup(int id)
 	return NULL;
 }
 
-bool TimeActReader::AddTimeAct(int id)
+bool TimeActReader::AddTimeAct(int id, float lenght)
 {
 	int startIdx = 0;
 	int endIdx = this->m_tae.size() - 1;
@@ -649,7 +651,7 @@ bool TimeActReader::AddTimeAct(int id)
 		this->m_header.m_taeCount++;
 		this->m_header.m_taeCount2++;
 
-		this->m_tae.insert(this->m_tae.begin() + insertIdx, TimeAct(id));
+		this->m_tae.insert(this->m_tae.begin() + insertIdx, TimeAct(id, lenght));
 	}
 }
 

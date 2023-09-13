@@ -18,7 +18,11 @@
 						},
 						{
 							"name": "Unk08",
-							"type": "s16"
+							"type": "s8"
+						},
+						{
+							"name": "Unk09",
+							"type": "s8"
 						},
 						{
 							"name": "Unk0A",
@@ -26,11 +30,19 @@
 						},
 						{
 							"name": "Unk0C",
-							"type": "s16"
+							"type": "s8"
+						},
+						{
+							"name": "Unk0D",
+							"type": "s8"
 						},
 						{
 							"name": "Unk0E",
-							"type": "s16"
+							"type": "s8"
+						},
+						{
+							"name": "Unk0F",
+							"type": "s8"
 						},
 						{
 							"name": "Unk10",
@@ -48,6 +60,10 @@
 						},
 						{
 							"name": "Unk04",
+							"type": "s32"
+						},
+						{
+							"name": "Unk08",
 							"type": "s32"
 						}
 					]
@@ -78,7 +94,19 @@
 					"arguments": [
 						{
 							"name": "Unk00",
-							"type": "s32"
+							"type": "s8"
+						},
+						{
+							"name": "Unk01",
+							"type": "s8"
+						},
+						{
+							"name": "Unk02",
+							"type": "s8"
+						},
+						{
+							"name": "Unk03",
+							"type": "s8"
 						},
 						{
 							"name": "Unk04",
@@ -890,6 +918,14 @@
 						},
 						{
 							"name": "Intensity",
+							"type": "f32"
+						},
+						{
+							"name": "Unk0C",
+							"type": "f32"
+						},
+						{
+							"name": "Unk10",
 							"type": "f32"
 						}
 					]

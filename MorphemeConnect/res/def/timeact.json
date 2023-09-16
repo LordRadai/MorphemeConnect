@@ -110,7 +110,7 @@
 						},
 						{
 							"name": "Unk04",
-							"type": "s32"
+							"type": "f32"
 						}
 					]
 				}
@@ -176,10 +176,6 @@
 					"arguments": [
 						{
 							"name": "Index",
-							"type": "s32"
-						},
-						{
-							"name": "Unk04",
 							"type": "s32"
 						}
 					]
@@ -425,15 +421,11 @@
 			"id": 2300,
 			"events": [
 				{
-					"name": "ChrWeaponCtrl0",
+					"name": "SwitchToWeapon",
 					"id": 2500,
 					"arguments": [
 						{
-							"name": "Unk00",
-							"type": "s16"
-						},
-						{
-							"name": "Unk02",
+							"name": "Index",
 							"type": "s16"
 						}
 					]
@@ -481,12 +473,21 @@
 			"id": 110000,
 			"events": [
 				{
-					"name": "ChrDamageActionCtrl0",
+					"name": "SetUnkDamageActionValue",
 					"id": 110000,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "Value",
+							"type": "f32"
+						},
+						{
+							"name": "Index",
+							"type": "s32"
+						}
+					]
 				},
 				{
-					"name": "InvokeInvincibility",
+					"name": "DisableHitDetection",
 					"id": 110100,
 					"arguments": []
 				},
@@ -501,12 +502,12 @@
 					"arguments": []
 				},
 				{
-					"name": "InvokeScaledInvincibility",
+					"name": "InvokeInvincibility",
 					"id": 110300,
 					"arguments": []
 				},
 				{
-					"name": "InvokeInvincibility2",
+					"name": "DisableHitDetection2",
 					"id": 110400,
 					"arguments": []
 				},
@@ -565,7 +566,7 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl14",
+					"name": "DisableBackstab",
 					"id": 111400,
 					"arguments": []
 				},
@@ -622,17 +623,17 @@
 			"id": 210000,
 			"events": [
 				{
-					"name": "ChrGimmickCtrl0",
+					"name": "PlayGimmickSound",
 					"id": 210000,
 					"arguments": []
 				},
 				{
-					"name": "ChrGimmickCtrl9",
+					"name": "EnableGimmickStateChange",
 					"id": 210099,
 					"arguments": []
 				},
 				{
-					"name": "ChrGimmickCtrl10",
+					"name": "LightTorch",
 					"id": 210100,
 					"arguments": []
 				},
@@ -653,32 +654,36 @@
 					"arguments": []
 				},
 				{
-					"name": "InvokeMovementCorrection",
+					"name": "EnableItemMovementCorrection",
 					"id": 220100,
 					"arguments": []
 				},
 				{
-					"name": "InvokeChrItemBehaviour",
+					"name": "InvokeItemSfx",
 					"id": 220200,
 					"arguments": [
 						{
-							"name": "Type",
+							"name": "DummyPoly ID",
 							"type": "s32"
 						},
 						{
 							"name": "Index",
-							"type": "s32"
+							"type": "s8"
+						},
+						{
+							"name": "Unk05",
+							"type": "s8"
+						},
+						{
+							"name": "Unk06",
+							"type": "s8"
+						},
+						{
+							"name": "Unk07",
+							"type": "s8"
 						},
 						{
 							"name": "Unk08",
-							"type": "s32"
-						},
-						{
-							"name": "Unk0C",
-							"type": "s32"
-						},
-						{
-							"name": "Unk10",
 							"type": "s32"
 						}
 					]
@@ -733,7 +738,7 @@
 			"id": 260000,
 			"events": [
 				{
-					"name": "ChrModelCtrl0",
+					"name": "ApplyChrNetworkPhantomParameters",
 					"id": 260000,
 					"arguments": []
 				},
@@ -744,19 +749,15 @@
 						{
 							"name": "Unk00",
 							"type": "s32"
-						},
-						{
-							"name": "Unk04",
-							"type": "s32"
 						}
 					]
 				},
 				{
-					"name": "ChrModelCtrl2",
+					"name": "SetUnkModelProperty",
 					"id": 260002,
 					"arguments": [
 						{
-							"name": "Unk00",
+							"name": "Index",
 							"type": "s32"
 						},
 						{
@@ -813,12 +814,7 @@
 				{
 					"name": "ChrModelCtrl6",
 					"id": 260006,
-					"arguments": [
-						{
-							"name": "Unk00",
-							"type": "s32"
-						}
-					]
+					"arguments": []
 				}
 			]
 		},
@@ -837,7 +833,7 @@
 					]
 				},
 				{
-					"name": "ChrPartsCtrl1",
+					"name": "Dismember",
 					"id": 270001,
 					"arguments": []
 				},
@@ -853,7 +849,7 @@
 			"id": 280000,
 			"events": [
 				{
-					"name": "ChrMoveCtrl0",
+					"name": "DisableJumpPhysics",
 					"id": 280000,
 					"arguments": []
 				},
@@ -874,12 +870,12 @@
 			"id": 290000,
 			"events": [
 				{
-					"name": "DisableCollision",
+					"name": "DisableChrCollision",
 					"id": 290000,
 					"arguments": []
 				},
 				{
-					"name": "ChrCollisionCtrl1",
+					"name": "DisableObjCollision",
 					"id": 290001,
 					"arguments": []
 				},

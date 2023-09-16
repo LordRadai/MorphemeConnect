@@ -1348,37 +1348,40 @@ Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel* flver)
+    DirectX::XMMATRIX world, FlverModel flver)
 {
     constexpr float scale = 2.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
 
     /*
-    for (size_t i = 0; i < flver->m_flver->header.boneCount; i++)
+    for (size_t i = 0; i < flver.m_flver->header.boneCount; i++)
     {
-        if (flver->m_flver->bones[i].parentIndex != -1)
+        if (flver.m_flver->bones[i].parentIndex != -1)
         {
-            Vector3 boneA = calculateBonePosition(flver->m_flver, i);
+            Vector3 boneA = calculateBonePosition(flver.m_flver, i);
             boneA = Vector3::Transform(boneA, transf);
 
-            Vector3 boneB = calculateBonePosition(flver->m_flver, flver->m_flver->bones[i].parentIndex);
+            Vector3 boneB = calculateBonePosition(flver.m_flver, flver.m_flver->bones[i].parentIndex);
             boneB = Vector3::Transform(boneB, transf);
 
             DX::DrawLine(batch, boneA, boneB, Colors::Orange);
 
-            std::string boneB_name = StringHelper::ToNarrow(flver->m_flver->bones[flver->m_flver->bones[i].parentIndex].name);
+            std::string boneB_name = StringHelper::ToNarrow(flver.m_flver->bones[flver.m_flver->bones[i].parentIndex].name);
         }
 
-        //std::string bone_name = StringHelper::ToNarrow(flver->bones[i].name);
+        //std::string bone_name = StringHelper::ToNarrow(flver.bones[i].name);
 
         //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(flver, i)), g_preview.m_camera, Colors::White);
     }
     */
 
-    for (int i = 0; i < flver->verts.size(); i += 3)
+    for (int i = 0; i < flver.verts.size(); i += 3)
     {
-        batch->DrawTriangle(flver->verts[i], flver->verts[i + 1], flver->verts[i + 2]);
-        DX::DrawTriangle(batch, Vector3(flver->verts[i].position), Vector3(flver->verts[i + 1].position), Vector3(flver->verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
+        if (i + 1 < flver.verts.size() && i + 2 < flver.verts.size())
+        {
+            batch->DrawTriangle(flver.verts[i], flver.verts[i + 1], flver.verts[i + 2]);
+            DX::DrawTriangle(batch, Vector3(flver.verts[i].position), Vector3(flver.verts[i + 1].position), Vector3(flver.verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
+        }
     }
 }
 

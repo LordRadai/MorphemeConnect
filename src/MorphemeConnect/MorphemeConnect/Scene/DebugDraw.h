@@ -138,7 +138,7 @@ namespace DX
         DirectX::GXMVECTOR color = DirectX::Colors::Yellow);
 
     void XM_CALLCONV DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX world, FlverModel* flver);
+        DirectX::XMMATRIX world, FlverModel flver);
 
     void XM_CALLCONV AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags);
     

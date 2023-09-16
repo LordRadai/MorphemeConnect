@@ -273,7 +273,7 @@ void Scene::Render()
         DX::DrawOriginMarker(this->m_batch.get(), Matrix::Identity, 0.5f, Colors::DarkCyan);
         
         if (g_morphemeConnect.m_model.m_loaded)
-            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), &g_morphemeConnect.m_model);
+            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model);
 
         m_batch->End();
 

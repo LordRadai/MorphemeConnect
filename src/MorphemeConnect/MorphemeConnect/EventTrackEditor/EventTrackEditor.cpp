@@ -153,8 +153,8 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 
     g_morphemeConnect.m_nmb.m_eventTracks.push_back(new_bundle);
 
-    NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
-    NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
+    NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib;
+    NodeAttribSourceEventTrack* event_tracks = (NodeAttribSourceEventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib;
 
     if (!duration)
     {        
@@ -173,7 +173,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
     {
         if (nodes[i] != this->m_nodeSource)
         {
-            NodeDataAttrib_EventTrack* event_tracks_new = (NodeDataAttrib_EventTrack*)nodes[i]->m_nodeData[2].m_attrib->m_content;
+            NodeAttribSourceEventTrack* event_tracks_new = (NodeAttribSourceEventTrack*)nodes[i]->m_nodeData[2].m_attrib;
 
             event_tracks_new->m_eventTracks[0] = event_tracks->m_eventTracks[0];
             event_tracks_new->m_eventTracks[1] = event_tracks->m_eventTracks[1];
@@ -196,8 +196,8 @@ void EventTrackEditor::DeleteTrack(int idx)
     while (this->m_eventTracks[idx].m_numEvents > 0)
         this->DeleteEvent(idx, 0);
 
-    NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
-    NodeDataAttrib_EventTrack* event_tracks = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
+    NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib;
+    NodeAttribSourceEventTrack* event_tracks = (NodeAttribSourceEventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib;
 
     if (this->m_eventTracks[idx].m_discrete)
     {
@@ -216,7 +216,7 @@ void EventTrackEditor::DeleteTrack(int idx)
     {
         if (nodes[i] != this->m_nodeSource)
         {
-            NodeDataAttrib_EventTrack* event_tracks_new = (NodeDataAttrib_EventTrack*)nodes[i]->m_nodeData[2].m_attrib->m_content;
+            NodeAttribSourceEventTrack* event_tracks_new = (NodeAttribSourceEventTrack*)nodes[i]->m_nodeData[2].m_attrib;
 
             event_tracks_new->m_eventTracks[0] = event_tracks->m_eventTracks[0];
             event_tracks_new->m_eventTracks[1] = event_tracks->m_eventTracks[1];
@@ -268,8 +268,8 @@ void EventTrackEditor::ReloadTracks()
     {
         bool found = false;
 
-        NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib->m_content;
-        NodeDataAttrib_EventTrack* event_track_source = (NodeDataAttrib_EventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib->m_content;
+        NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib;
+        NodeAttribSourceEventTrack* event_track_source = (NodeAttribSourceEventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib;
 
         if (event_track_source != NULL)
         {

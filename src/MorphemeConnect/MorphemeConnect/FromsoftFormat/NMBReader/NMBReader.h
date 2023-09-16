@@ -5,6 +5,12 @@
 #include "MorphemeBundle/MorphemeBundle_Network.h"
 #include "MorphemeBundle/MorphemeBundle_FileNameLookupTable.h"
 
+struct AnimFileInterface
+{
+	std::string m_name;
+	int m_id;
+};
+
 class NMBReader
 {
 public:
@@ -28,6 +34,9 @@ public:
 
 	MorphemeBundle m_networkRaw;
 
+	std::vector<AnimFileInterface> m_compressedNsa;
+	std::vector<AnimFileInterface> m_sourceXmd;
+
 	NMBReader() {}
 	NMBReader(PWSTR pszFilePath);
 	~NMBReader();
@@ -39,4 +48,5 @@ public:
 	MorphemeBundle_EventTrack* GetEventTrackBundle(int signature);				//Returns the event track bundle with the matching m_signature parameter. Returns NULL if not found
 	std::vector<EventTrackList*> GetEventTrackListBySignature(int signature);	//Returns all the EventTrackList objects with references to the specified signature
 	std::vector<NodeDef*> GetNodesByAnimReference(int anim_idx);				//Returns all node that reference the same animation
+	void SortAnimList();														//Sorts the animation list from the filename lookup table and stores them into m_compressedNsa and m_sourceXmd
 };

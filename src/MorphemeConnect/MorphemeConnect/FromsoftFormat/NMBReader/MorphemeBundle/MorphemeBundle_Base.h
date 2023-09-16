@@ -26,6 +26,6 @@ public:
 	UINT m_dataAlignment;					//I've only seen this be equal to 4 or 16
 	UINT m_iVar2C;
 
-	virtual void GenerateBundle(ofstream* out) { return; }
+	virtual void WriteBinary(ofstream* out) { return; }
 	virtual int CalculateBundleSize() { return this->m_dataSize; }
 };

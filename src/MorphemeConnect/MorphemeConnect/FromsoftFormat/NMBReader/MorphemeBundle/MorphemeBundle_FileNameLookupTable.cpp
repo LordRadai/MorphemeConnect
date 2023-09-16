@@ -60,7 +60,7 @@ void FileNameLookupTable::WriteToBinary(ofstream* out)
 		MemReader::WriteByteArray(out, (BYTE*)&this->m_strings.data()[this->m_localOffsets[i]], string_len);
 	}
 
-	streampos pos = out->tellp();
+	UINT64 pos = out->tellp();
 
 	int remainder = pos % 4;
 
@@ -135,7 +135,7 @@ MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
 {
 }
 
-void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
+void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);
@@ -148,6 +148,8 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
 
+	UINT64 pos = out->tellp();
+
 	MemReader::WriteQWord(out, &this->m_data->m_animTableOffset);
 	MemReader::WriteQWord(out, &this->m_data->m_formatTableOffset);
 	MemReader::WriteQWord(out, &this->m_data->m_sourceTableOffset);
@@ -158,6 +160,8 @@ void MorphemeBundle_FileNameLookupTable::GenerateBundle(ofstream* out)
 	this->m_data->m_animFormat.WriteToBinary(out);
 	this->m_data->m_sourceXmdList.WriteToBinary(out);
 	this->m_data->m_tagList.WriteToBinary(out);
+
+	out->seekp(pos + this->m_data->m_hashOffset);
 
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_hash.data(), this->m_data->m_animFormat.m_elemCount);
 

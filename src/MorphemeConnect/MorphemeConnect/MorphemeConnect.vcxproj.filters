@@ -495,6 +495,24 @@
     <ClInclude Include="TaeTemplate\TaeTemplate.h">
       <Filter>File di intestazione\TaeTemplate</Filter>
     </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeDataAttribUnknown.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -662,6 +680,21 @@
     <ClCompile Include="TaeTemplate\TaeTemplate.cpp">
       <Filter>File di origine\TaeTemplate</Filter>
     </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MorphemeConnect.rc">
@@ -680,6 +713,12 @@
     <None Include="packages.config" />
     <None Include="fromloader\src\util\stringio\simple_sjis_table.bin">
       <Filter>File di intestazione\fromloader</Filter>
+    </None>
+    <None Include="rotate.cur">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="rotate_alt.cur">
+      <Filter>File di risorse</Filter>
     </None>
   </ItemGroup>
 </Project>

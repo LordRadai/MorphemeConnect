@@ -27,6 +27,6 @@ public:
 	MorphemeBundle_EventTrack(MorphemeBundle* bundle);
 	~MorphemeBundle_EventTrack();
 
-	void GenerateBundle(ofstream* out);
+	void WriteBinary(ofstream* out);
 	int CalculateBundleSize();
 };

@@ -93,7 +93,7 @@ MorphemeBundle::~MorphemeBundle()
 {
 }
 
-void MorphemeBundle::GenerateBundle(ofstream* out)
+void MorphemeBundle::WriteBinary(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);

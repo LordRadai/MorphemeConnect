@@ -32,7 +32,7 @@ MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)
 	this->m_data = (BundleData_Header*)bundle->m_data;
 }
 
-void MorphemeBundle_Header::GenerateBundle(ofstream* out)
+void MorphemeBundle_Header::WriteBinary(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);

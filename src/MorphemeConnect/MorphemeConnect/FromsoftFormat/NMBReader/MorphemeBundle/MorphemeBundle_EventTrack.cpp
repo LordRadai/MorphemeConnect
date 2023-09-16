@@ -56,7 +56,7 @@ MorphemeBundle_EventTrack::~MorphemeBundle_EventTrack()
 {
 }
 
-void MorphemeBundle_EventTrack::GenerateBundle(ofstream* out)
+void MorphemeBundle_EventTrack::WriteBinary(ofstream* out)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);

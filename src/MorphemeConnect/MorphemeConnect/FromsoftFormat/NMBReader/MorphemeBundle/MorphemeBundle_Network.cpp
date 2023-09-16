@@ -1,149 +1,197 @@
 #include "MorphemeBundle_Network.h"
 
-NodeDataAttribBase::NodeDataAttribBase(BYTE* data)
+NodeAttribBase* NodeAttribFactory(NodeDataSet data_set, BYTE* data)
 {
-    this->field0_0x0 = *(int*)(data);
-    this->field1_0x4 = *(int*)(data + 0x4);
-    this->field2_0x8 = *(short*)(data + 0x8);
-    this->m_type = *(AttribType*)(data + 0xA);
-    this->padding = *(int*)(data + 0xC);
-}
+    data_set.m_attrib = new NodeAttribBase(data);
 
-NodeDataAttrib_Unk::NodeDataAttrib_Unk(BYTE* data, int size)
-{
-    this->m_attribBase = NodeDataAttribBase(data);
-
-    int data_size = size - 16;
-
-    if (data_size > -1)
+    switch (data_set.m_attrib->m_type)
     {
-        this->m_content = new BYTE[data_size];
-
-        for (size_t i = 0; i < data_size; i++)
-            this->m_content[i] = (*(data + 0x10 + (BYTE)i));
-    }  
-}
-
-void NodeDataAttrib_Unk::SaveToFile(ofstream* out)
-{
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attribBase.field0_0x0);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attribBase.field1_0x4);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attribBase.field2_0x8);
-    MemReader::WriteWord(out, (WORD*)&this->m_attribBase.m_type);
-    MemReader::WriteWord(out, (WORD*)&this->m_attribBase.padding);
-}
-
-NodeDataAttrib_Bool::NodeDataAttrib_Bool(BYTE* data)
-{
-    this->m_bool = *(bool*)(data + 0x10);
-}
-
-NodeDataAttrib_EventTrack::NodeDataAttrib_EventTrack(BYTE* data)
-{
-    this->m_eventTracks[0].m_trackCount = *(int*)(data + 0x10);
-    this->m_eventTracks[0].padding = *(int*)(data + 0x14);
-
-    if (this->m_eventTracks[0].m_trackCount > 0)
-    {
-        UINT64 offset = *(UINT64*)(data + 0x18);
-        UINT64* track_list_signatures = (UINT64*)(offset + data);
-
-        int* size_list = (int*)(*(UINT64*)(data + 0x20) + data);
-
-        this->m_eventTracks[0].m_trackSignatures.reserve(this->m_eventTracks[0].m_trackCount);
-        this->m_eventTracks[0].m_trackSize.reserve(this->m_eventTracks[0].m_trackCount);
-
-        for (size_t i = 0; i < this->m_eventTracks[0].m_trackCount; i++)
-        {
-            this->m_eventTracks[0].m_trackSignatures.push_back(track_list_signatures[i]);
-            this->m_eventTracks[0].m_trackSize.push_back(size_list[i]);
-        }
+    case ATTRIB_TYPE_BOOL:
+        return new NodeAttribBool(data);
+    case ATTRIB_TYPE_UINT:
+        break;
+    case ATTRIB_TYPE_INT:
+        break;
+    case ATTRIB_TYPE_FLOAT:
+        break;
+    case ATTRIB_TYPE_VECTOR3:
+        break;
+    case ATTRIB_TYPE_VECTOR4:
+        break;
+    case ATTRIB_TYPE_BOOL_ARRAY:
+        break;
+    case ATTRIB_TYPE_UINT_ARRAY:
+        break;
+    case ATTRIB_TYPE_INT_ARRAY:
+        break;
+    case ATTRIB_TYPE_FLOAT_ARRAY:
+        break;
+    case ATTRIB_TYPE_UPDATE_PLAYBACK_POS:
+        break;
+    case ATTRIB_TYPE_PLAYBACK_POS:
+        break;
+    case ATTRIB_TYPE_UPDATE_SYNC_EVENT_PLAYBACK_POS:
+        break;
+    case ATTRIB_TYPE_TRANSFORM_BUFFER:
+        break;
+    case ATTRIB_TYPE_TRAJECTORY_DELTA_TRANSFORM:
+        break;
+    case ATTRIB_TYPE_TRANSFORM:
+        break;
+    case ATTRIB_TYPE_VELOCITY:
+        break;
+    case ATTRIB_TYPE_SYNC_EVENT_TRACK:
+        break;
+    case ATTRIB_TYPE_SAMPLED_EVENTS_BUFFER:
+        break;
+    case ATTRIB_TYPE_DURATION_EVENT_TRACK_SET:
+        break;
+    case ATTRIB_TYPE_RIG:
+        break;
+    case ATTRIB_TYPE_SOURCE_ANIM:
+        return new NodeAttribSourceAnim(data);
+    case ATTRIB_TYPE_SOURCE_EVENT_TRACKS:
+        return new NodeAttribSourceEventTrack(data);
+    case ATTRIB_TYPE_HEAD_LOOK_SETUP:
+        break;
+    case ATTRIB_TYPE_HEAD_LOOK_CHAIN:
+        break;
+    case ATTRIB_TYPE_GUN_AIM_SETUP:
+        break;
+    case ATTRIB_TYPE_GUN_AIM_IK_CHAIN:
+        break;
+    case ATTRIB_TYPE_TWO_BONE_IK_SETUP:
+        break;
+    case ATTRIB_TYPE_TWO_BONE_IK_CHAIN:
+        break;
+    case ATTRIB_TYPE_LOCK_FOOT_SETUP:
+        break;
+    case ATTRIB_TYPE_LOCK_FOOT_CHAIN:
+        break;
+    case ATTRIB_TYPE_LOCK_FOOT_STATE:
+        break;
+    case ATTRIB_TYPE_HIPS_IK_DEF:
+        break;
+    case ATTRIB_TYPE_HIPS_IK_ANIM_SET_DEF:
+        break;
+    case ATTRIB_TYPE_CLOSEST_ANIM_DEF:
+        break;
+    case ATTRIB_TYPE_CLOSEST_ANIM_DEF_ANIM_SET:
+        break;
+    case ATTRIB_TYPE_CLOSEST_ANIM_STATE:
+        break;
+    case ATTRIB_TYPE_STATE_MACHINE_DEF:
+        break;
+    case ATTRIB_TYPE_STATE_MACHINE:
+        break;
+    case ATTRIB_TYPE_CHARACTER_PROPERTIES:
+        break;
+    case ATTRIB_TYPE_CHARACTER_CONTROLLER_DEF:
+        break;
+    case ATTRIB_TYPE_PHYSICS_SETUP:
+        break;
+    case ATTRIB_TYPE_PHYSICS_SETUP_ANIM_SET:
+        break;
+    case ATTRIB_TYPE_PHYSICS_STATE:
+        break;
+    case ATTRIB_TYPE_PHYSICS_INITIALISATION:
+        break;
+    case ATTRIB_TYPE_PHYSICS_GROUPER_CONFIG:
+        break;
+    case ATTRIB_TYPE_FLOAT_OPERATION:
+        break;
+    case ATTRIB_TYPE_2_FLOAT_OPERATION:
+        break;
+    case ATTRIB_TYPE_SMOOTH_FLOAT_OPERATION:
+        break;
+    case ATTRIB_TYPE_RATE_OF_CHANGE_OPERATION:
+        break;
+    case ATTRIB_TYPE_RANDOM_FLOAT_OPERATION:
+        break;
+    case ATTRIB_TYPE_RANDOM_FLOAT_DEF:
+        break;
+    case ATTRIB_TYPE_NOISE_GEN_DEF:
+        break;
+    case ATTRIB_TYPE_SWITCH_DEF:
+        break;
+    case ATTRIB_TYPE_RAY_CAST_DEF:
+        break;
+    case ATTRIB_TYPE_TRANSIT_DEF:
+        break;
+    case ATTRIB_TYPE_TRANSIT_SYNC_EVENTS_DEF:
+        break;
+    case ATTRIB_TYPE_TRANSIT_SYNC_EVENTS:
+        break;
+    case ATTRIB_TYPE_DEAD_BLEND_DEF:
+        break;
+    case ATTRIB_TYPE_DEAD_BLEND_STATE:
+        break;
+    case ATTRIB_TYPE_BLEND_NXM_DEF:
+        break;
+    case ATTRIB_TYPE_ANIM_MIRRORED_MAPPING:
+        break;
+    case ATTRIB_TYPE_PLAYBACK_POS_INIT:
+        break;
+    case ATTRIB_TYPE_EMITTED_MESSAGE_MAP:
+        break;
+    case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_SETUP:
+        break;
+    case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_SETUP:
+        break;
+    case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_FOOT_LIFTING_TARGET:
+        break;
+    case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_STATE:
+        break;
+    case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_CHAIN:
+        break;
+    case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_IK_PREDICTION_STATE:
+        break;
+    case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_FOOT_LIFTING_STATE:
+        break;
+    case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_PREDICTION_DEF:
+        break;
+    case ATTRIB_TYPE_SCATTER_BLEND_ANALYSIS_DEF:
+        break;
+    case ATTRIB_TYPE_SCATTER_BLEND_1D_DEF:
+        break;
+    case ATTRIB_TYPE_SCATTER_BLEND_2D_DEF:
+        break;
+    case ATTRIB_TYPE_EMIT_MESSAGE_ON_CP_VALUE:
+        break;
+    case ATTRIB_TYPE_PHYSICS_INFO_DEF:
+        break;
+    case ATTRIB_TYPE_JOINT_LIMITS:
+        break;
+    case ATTRIB_TYPE_BLEND_FLAGS:
+        break;
+    case ATTRIB_TYPE_BLEND_WEIGHTS:
+        break;
+    case ATTRIB_TYPE_FEATHER_BLEND2_CHANNEL_ALPHAS:
+        break;
+    case ATTRIB_TYPE_RETARGET_STATE:
+        break;
+    case ATTRIB_TYPE_RIG_RETARGET_MAPPING:
+        break;
+    case ATTRIB_TYPE_SCALECHARACTER_STATE:
+        break;
+    case ATTRIB_TYPE_RETARGET_STORAGE_STATS:
+        break;
+    case ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS_DEF:
+        break;
+    case ATTRIB_TYPE_C_C_OVERRIDE_PROPERTIES_DEF:
+        break;
+    case ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS:
+        break;
+    default:
+        break;
     }
 
-    this->m_eventTracks[1].m_trackCount = *(int*)(data + 0x10 + 0x18);
-    this->m_eventTracks[1].padding = *(int*)(data + 0x14 + 0x18);
-
-    if (this->m_eventTracks[1].m_trackCount > 0)
-    {
-        UINT64 offset = *(UINT64*)(data + 0x18 + 0x18);
-        UINT64* track_list_signatures = (UINT64*)(offset + data);
-
-        this->m_eventTracks[1].m_trackSignatures.reserve(this->m_eventTracks[1].m_trackCount);
-        this->m_eventTracks[1].m_trackSize.reserve(this->m_eventTracks[1].m_trackCount);
-        int* size_list = (int*)(*(UINT64*)(data + 0x20 + 0x18) + data);
-
-        for (size_t i = 0; i < this->m_eventTracks[1].m_trackCount; i++)
-        {
-            this->m_eventTracks[1].m_trackSignatures.push_back(track_list_signatures[i]);
-            this->m_eventTracks[1].m_trackSize.push_back(size_list[i]);
-        }
-    }
-
-    this->m_eventTracks[2].m_trackCount = *(int*)(data + 0x10 + 2 * 0x18);
-    this->m_eventTracks[2].padding = *(int*)(data + 0x14 + 2 * 0x18);
-
-    if (this->m_eventTracks[2].m_trackCount > 0)
-    {
-        UINT64 offset = *(UINT64*)(data + 0x18 + 2 * 0x18);
-        UINT64* track_list_signatures = (UINT64*)(offset + data);
-
-        this->m_eventTracks[2].m_trackSignatures.reserve(this->m_eventTracks[2].m_trackCount);
-        this->m_eventTracks[2].m_trackSize.reserve(this->m_eventTracks[2].m_trackCount);
-        int* size_list = (int*)(*(UINT64*)(data + 0x20 + 2 * 0x18) + data);
-
-        for (size_t i = 0; i < this->m_eventTracks[2].m_trackCount; i++)
-        {
-            this->m_eventTracks[2].m_trackSignatures.push_back(track_list_signatures[i]);
-            this->m_eventTracks[2].m_trackSize.push_back(size_list[i]);
-        }
-    }
-}
-
-NodeDataAttrib_SourceAnim::NodeDataAttrib_SourceAnim(BYTE* data)
-{
-    this->m_pVar0 = *(UINT64*)(data + 0x10);
-    this->m_pVar8 = *(UINT64*)(data + 0x18);
-    this->m_fVar10 = *(float*)(data + 0x20);
-    this->m_fVar14 = *(float*)(data + 0x24);
-    this->m_iVar18 = *(UINT64*)(data + 0x28);
-    this->m_iVar20 = *(UINT64*)(data + 0x30);
-    this->m_fVar28 = *(float*)(data + 0x38);
-    this->m_fVar2C = *(float*)(data + 0x3C);
-    this->m_fVar30 = *(float*)(data + 0x40);
-    this->m_fVar34 = *(float*)(data + 0x44);
-    this->m_iVar38 = *(UINT64*)(data + 0x48);
-    this->m_iVar40 = *(UINT64*)(data + 0x50);
-    this->m_fVar48 = *(float*)(data + 0x58);
-    this->m_fVar4C = *(float*)(data + 0x5C);
-    this->m_pVar50 = *(UINT64*)(data + 0x60);
-    this->m_pad0 = *(int*)(data + 0x68);
-    this->m_iVar5C = *(int*)(data + 0x6C);
-    this->m_pad1 = *(int*)(data + 0x70);
-    this->m_animIdx = *(int*)(data + 0x74);
-    this->m_iVar68 = *(int*)(data + 0x78);
-    this->m_bVar6C = *(BYTE*)(data + 0x7C);
-    this->m_bVar6D = *(BYTE*)(data + 0x7D);
-    this->m_bVar6E = *(BYTE*)(data + 0x7E);
-    this->m_pad2 = *(BYTE*)(data + 0x7F);
-    this->m_fVar70 = *(float*)(data + 0x80);
-    this->m_trackLen = *(float*)(data + 0x84);
-    this->m_animLen = *(float*)(data + 0x88);
-    this->m_fVar7C = *(float*)(data + 0x8C);
-    this->m_bVar80 = *(BYTE*)(data + 0x90);
-
-    for (size_t i = 0; i < 15; i++)
-        this->m_pad3[i] = *(BYTE*)(data + 0x91 + (BYTE)i);
+    return new NodeAttribUnknown(data, data_set.m_size);
 }
 
 void NodeDataSet::SaveToFile(ofstream* out)
 {
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attrib->m_attribBase.field0_0x0);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attrib->m_attribBase.field1_0x4);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_attrib->m_attribBase.field2_0x8);
-    MemReader::WriteWord(out, (WORD*)&this->m_attrib->m_attribBase.m_type);
-    MemReader::WriteWord(out, (WORD*)&this->m_attrib->m_attribBase.padding);
-
-    MemReader::WriteByteArray(out, this->m_attrib->m_content, this->m_size);
+    this->m_attrib->GenerateBinary(out);
 }
 
 NodeDef::NodeDef(BYTE* data)
@@ -215,23 +263,7 @@ bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, BYTE* srcNodeData, i
             dst[i].m_iVar0 = *(int*)(srcNodeData + offset + 0x14 + (BYTE)i * 0x18);
 
             if (attrib_data_offset != 0)
-            {
-                dst[i].m_attrib = new NodeDataAttrib_Unk((srcNodeData + attrib_data_offset), dst[i].m_size);
-
-                switch (dst[i].m_attrib->m_attribBase.m_type)
-                {
-                case ATTRIB_TYPE_SOURCE_ANIM:
-                    delete[] dst[i].m_attrib->m_content;
-                    dst[i].m_attrib->m_content = (BYTE*)new NodeDataAttrib_SourceAnim((srcNodeData + attrib_data_offset));
-                    break;
-                case ATTRIB_TYPE_SOURCE_EVENT_TRACKS:
-                    delete[] dst[i].m_attrib->m_content;
-                    dst[i].m_attrib->m_content = (BYTE*)new NodeDataAttrib_EventTrack((srcNodeData + attrib_data_offset));
-                    break;
-                default:
-                    break;
-                }
-            }
+                dst[i].m_attrib = NodeAttribFactory(dst[i], (srcNodeData + attrib_data_offset));
             else
                 dst[i].m_attrib = NULL;
         }
@@ -419,7 +451,7 @@ MorphemeBundle_Network::~MorphemeBundle_Network()
 {
 }
 
-void MorphemeBundle_Network::GenerateBundle(ofstream* out)
+void MorphemeBundle_Network::WriteBinary(ofstream* out)
 {
     MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
     MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);

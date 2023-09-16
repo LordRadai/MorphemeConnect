@@ -234,7 +234,10 @@ void Application::RenderGUI(const char* title)
 		{
 			g_preview.m_camera.m_registerInput = true;
 
-			if (ImGui::IsMouseDown(0) || ImGui::IsMouseDown(1))
+			if (ImGui::IsMouseDown(0))
+				ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+			if (ImGui::IsMouseDown(1))
 				ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
 
@@ -303,10 +306,37 @@ void Application::RenderGUI(const char* title)
 				std::filesystem::path path = this->m_eventTrackEditorFlags.m_taeList[i];
 				std::string tae_file = StringHelper::ToNarrow(path.filename().c_str());
 
-				if (ImGui::Selectable(tae_file.c_str()))
+				bool selected = (selected_tae_file_idx == i);
+				ImGui::Selectable(tae_file.c_str(), selected);
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 				{
 					selected_tae_file_idx = i;
 					filepath = path.c_str();
+
+					if (ImGui::IsMouseDoubleClicked(0))
+					{
+						m_tae.m_init = false;
+						m_tae = TimeActReader(PWSTR(filepath.c_str()));
+
+						this->m_timeActEditorFlags.m_selectedTimeActIdx = -1;
+
+						this->m_timeActEditorFlags.m_edited.clear();
+
+						if (m_tae.m_init)
+						{
+							this->m_timeActEditorFlags.m_edited.reserve(m_tae.m_tae.size());
+
+							for (int i = 0; i < m_tae.m_tae.size(); i++)
+								this->m_timeActEditorFlags.m_edited.push_back(false);
+
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+
+							this->m_eventTrackEditorFlags.m_loadTae = false;
+						}
+
+						ImGui::CloseCurrentPopup();
+					}
 				}
 			}
 			ImGui::EndChild();
@@ -337,9 +367,9 @@ void Application::RenderGUI(const char* title)
 						if (this->m_eventTrackEditorFlags.m_edited[i])
 							anim_name += "*";
 
-						anim_name += m_nmb.GetAnimFileName(i);
+						anim_name += m_nmb.m_compressedNsa[i].m_name;
 
-						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == i);
+						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.m_compressedNsa[i].m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -348,8 +378,8 @@ void Application::RenderGUI(const char* title)
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
-								this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.m_compressedNsa[i].m_id;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.m_compressedNsa[i].m_id;
 
 								if (ImGui::IsMouseDoubleClicked(0))
 									this->m_eventTrackEditorFlags.m_load = true;
@@ -379,8 +409,9 @@ void Application::RenderGUI(const char* title)
 				{
 					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
 					{
-						std::string anim_name = m_nmb.GetXmdSourceAnimFileName(i);
-						bool selected = (this->m_timeActEditorFlags.m_selectedTimeActIdx == i);
+						std::string anim_name = m_nmb.m_sourceXmd[i].m_name;
+
+						bool selected = (this->m_timeActEditorFlags.m_selectedTimeActIdx == m_nmb.m_sourceXmd[i].m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -388,7 +419,13 @@ void Application::RenderGUI(const char* title)
 							ImGui::Selectable(anim_name.c_str(), &selected);
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
+							{
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.m_sourceXmd[i].m_id;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.m_sourceXmd[i].m_id;
+
+								if (ImGui::IsMouseDoubleClicked(0))
+									this->m_eventTrackEditorFlags.m_load = true;
+							}
 
 							ImGui::PopID();
 						}
@@ -956,15 +993,22 @@ void Application::ProcessVariables()
 				{
 					if (this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
 					{
-						NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib->m_content;
-						NodeDataAttrib_EventTrack* event_track = (NodeDataAttrib_EventTrack*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib->m_content;
+						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
+						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
 
 						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
 							this->m_eventTrackEditor.m_nodeSource = node;
 							this->m_eventTrackEditor.m_frameMin = 0;
 							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(source_anim->m_animLen);
-							this->m_eventTrackEditor.m_animIdx = source_anim->m_animIdx;
+
+							this->m_eventTrackEditor.m_animIdx = -1;
+
+							for (int i = 0; i < this->m_nmb.m_compressedNsa.size(); i++)
+							{
+								if (this->m_nmb.m_compressedNsa[i].m_id == source_anim->m_animIdx)
+									this->m_eventTrackEditor.m_animIdx = i;
+							}
 
 							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / source_anim->m_trackLen;
 

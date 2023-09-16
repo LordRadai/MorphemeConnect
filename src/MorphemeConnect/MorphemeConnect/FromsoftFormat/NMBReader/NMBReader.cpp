@@ -69,6 +69,8 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 
 	this->m_init = true;
 
+	this->SortAnimList();
+
 	nmb.close();
 }
 
@@ -100,15 +102,15 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 
 	try
 	{
-		this->m_header.GenerateBundle(&nmb_out);
+		this->m_header.WriteBinary(&nmb_out);
 
 		if (this->m_characterControllerDef.size() == this->m_skeletonMap.size())
 		{
 			for (size_t i = 0; i < this->m_characterControllerDef.size(); i++)
 			{
-				this->m_characterControllerDef[i].GenerateBundle(&nmb_out);
+				this->m_characterControllerDef[i].WriteBinary(&nmb_out);
 
-				this->m_skeletonMap[i].GenerateBundle(&nmb_out);
+				this->m_skeletonMap[i].WriteBinary(&nmb_out);
 
 				BYTE pad_array[4] = { 0xCD, 0xCD, 0xCD, 0xCD };
 				MemReader::WriteByteArray(&nmb_out, pad_array, 4);
@@ -116,14 +118,14 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		}
 
 		for (int i = 0; i < this->m_eventTracks.size(); i++)
-			this->m_eventTracks[i].GenerateBundle(&nmb_out);
+			this->m_eventTracks[i].WriteBinary(&nmb_out);
 
 		for (int i = 0; i < this->m_messageIndices.size(); i++)
-			this->m_messageIndices[i].GenerateBundle(&nmb_out);
+			this->m_messageIndices[i].WriteBinary(&nmb_out);
 
-		//this->m_network.GenerateBundle(&nmb_out);
-		this->m_networkRaw.GenerateBundle(&nmb_out);
-		this->m_fileNameLookupTable.GenerateBundle(&nmb_out);
+		//this->m_network.WriteBinary(&nmb_out);
+		this->m_networkRaw.WriteBinary(&nmb_out);
+		this->m_fileNameLookupTable.WriteBinary(&nmb_out);
 	}
 	catch (const std::exception&)
 	{
@@ -170,7 +172,7 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 		return "";
 	}
 
-	NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)m_node->m_nodeData[1].m_attrib;
+	NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)m_node->m_nodeData[1].m_attrib;
 
 	if (source_anim->m_animIdx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
 		return "";
@@ -202,7 +204,7 @@ std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signatu
 
 		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeDataAttrib_EventTrack* source_event_track = (NodeDataAttrib_EventTrack*)node->m_nodeData[2].m_attrib;
+			NodeAttribSourceEventTrack* source_event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
 
 			for (int j = 0; j < source_event_track->m_eventTracks[0].m_trackCount; j++)
 			{
@@ -237,7 +239,7 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 
 		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeDataAttrib_SourceAnim* source_anim = (NodeDataAttrib_SourceAnim*)node->m_nodeData[1].m_attrib->m_content;
+			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
 
 			if (source_anim->m_animIdx == anim_idx)
 				nodes.push_back(node);
@@ -245,4 +247,24 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 	}
 
 	return nodes;
+}
+
+bool compareAnimFileInterface(AnimFileInterface a, AnimFileInterface b)
+{
+	return a.m_name < b.m_name;
+}
+
+void NMBReader::SortAnimList()
+{
+	this->m_compressedNsa.reserve(this->m_fileNameLookupTable.m_data->m_animList.m_elemCount);
+	this->m_sourceXmd.reserve(this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount);
+
+	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+		this->m_compressedNsa.push_back(AnimFileInterface{ this->GetAnimFileName(i), i });
+
+	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
+		this->m_sourceXmd.push_back(AnimFileInterface{ this->GetXmdSourceAnimFileName(i), i });
+
+	std::sort(this->m_compressedNsa.begin(), this->m_compressedNsa.end(), compareAnimFileInterface);
+	std::sort(this->m_sourceXmd.begin(), this->m_sourceXmd.end(), compareAnimFileInterface);
 }

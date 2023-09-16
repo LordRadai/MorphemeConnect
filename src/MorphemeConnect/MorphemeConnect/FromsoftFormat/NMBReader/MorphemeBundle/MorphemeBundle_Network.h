@@ -1,5 +1,9 @@
 #pragma once
 #include "MorphemeBundle.h"
+#include "NodeAttrib/NodeAttribUnknown.h"
+#include "NodeAttrib/NodeAttribBool.h"
+#include "NodeAttrib/NodeAttribSourceAnim.h"
+#include "NodeAttrib/NodeAttribSourceEventTrack.h"
 
 enum NodeType
 {
@@ -41,98 +45,6 @@ enum NodeType
     Unk550 = 550,
 };
 
-enum AttribType : short
-{
-    ATTRIB_TYPE_BOOL = 0,
-    ATTRIB_TYPE_UINT = 1,
-    ATTRIB_TYPE_INT = 2,
-    ATTRIB_TYPE_FLOAT = 3,
-    ATTRIB_TYPE_VECTOR3 = 4,
-    ATTRIB_TYPE_VECTOR4 = 5,
-    ATTRIB_TYPE_BOOL_ARRAY = 6,
-    ATTRIB_TYPE_UINT_ARRAY = 7,
-    ATTRIB_TYPE_INT_ARRAY = 8,
-    ATTRIB_TYPE_FLOAT_ARRAY = 9,
-    ATTRIB_TYPE_UPDATE_PLAYBACK_POS = 10,
-    ATTRIB_TYPE_PLAYBACK_POS = 11,
-    ATTRIB_TYPE_UPDATE_SYNC_EVENT_PLAYBACK_POS = 12,
-    ATTRIB_TYPE_TRANSFORM_BUFFER = 13,
-    ATTRIB_TYPE_TRAJECTORY_DELTA_TRANSFORM = 14,
-    ATTRIB_TYPE_TRANSFORM = 15,
-    ATTRIB_TYPE_VELOCITY = 16,
-    ATTRIB_TYPE_SYNC_EVENT_TRACK = 17,
-    ATTRIB_TYPE_SAMPLED_EVENTS_BUFFER = 18,
-    ATTRIB_TYPE_DURATION_EVENT_TRACK_SET = 19,
-    ATTRIB_TYPE_RIG = 20,
-    ATTRIB_TYPE_SOURCE_ANIM = 21,
-    ATTRIB_TYPE_SOURCE_EVENT_TRACKS = 23,
-    ATTRIB_TYPE_HEAD_LOOK_SETUP = 24,
-    ATTRIB_TYPE_HEAD_LOOK_CHAIN = 25,
-    ATTRIB_TYPE_GUN_AIM_SETUP = 26,
-    ATTRIB_TYPE_GUN_AIM_IK_CHAIN = 27,
-    ATTRIB_TYPE_TWO_BONE_IK_SETUP = 28,
-    ATTRIB_TYPE_TWO_BONE_IK_CHAIN = 29,
-    ATTRIB_TYPE_LOCK_FOOT_SETUP = 30,
-    ATTRIB_TYPE_LOCK_FOOT_CHAIN = 31,
-    ATTRIB_TYPE_LOCK_FOOT_STATE = 32,
-    ATTRIB_TYPE_HIPS_IK_DEF = 33,
-    ATTRIB_TYPE_HIPS_IK_ANIM_SET_DEF = 34,
-    ATTRIB_TYPE_CLOSEST_ANIM_DEF = 35,
-    ATTRIB_TYPE_CLOSEST_ANIM_DEF_ANIM_SET = 36,
-    ATTRIB_TYPE_CLOSEST_ANIM_STATE = 37,
-    ATTRIB_TYPE_STATE_MACHINE_DEF = 38,
-    ATTRIB_TYPE_STATE_MACHINE = 39,
-    ATTRIB_TYPE_CHARACTER_PROPERTIES = 42,
-    ATTRIB_TYPE_CHARACTER_CONTROLLER_DEF = 43,
-    ATTRIB_TYPE_PHYSICS_SETUP = 45,
-    ATTRIB_TYPE_PHYSICS_SETUP_ANIM_SET = 46,
-    ATTRIB_TYPE_PHYSICS_STATE = 47,
-    ATTRIB_TYPE_PHYSICS_INITIALISATION = 48,
-    ATTRIB_TYPE_PHYSICS_GROUPER_CONFIG = 49,
-    ATTRIB_TYPE_FLOAT_OPERATION = 50,
-    ATTRIB_TYPE_2_FLOAT_OPERATION = 51,
-    ATTRIB_TYPE_SMOOTH_FLOAT_OPERATION = 52,
-    ATTRIB_TYPE_RATE_OF_CHANGE_OPERATION = 53,
-    ATTRIB_TYPE_RANDOM_FLOAT_OPERATION = 54,
-    ATTRIB_TYPE_RANDOM_FLOAT_DEF = 55,
-    ATTRIB_TYPE_NOISE_GEN_DEF = 56,
-    ATTRIB_TYPE_SWITCH_DEF = 57,
-    ATTRIB_TYPE_RAY_CAST_DEF = 58,
-    ATTRIB_TYPE_TRANSIT_DEF = 59,
-    ATTRIB_TYPE_TRANSIT_SYNC_EVENTS_DEF = 60,
-    ATTRIB_TYPE_TRANSIT_SYNC_EVENTS = 61,
-    ATTRIB_TYPE_DEAD_BLEND_DEF = 62,
-    ATTRIB_TYPE_DEAD_BLEND_STATE = 63,
-    ATTRIB_TYPE_BLEND_NXM_DEF = 65,
-    ATTRIB_TYPE_ANIM_MIRRORED_MAPPING = 66,
-    ATTRIB_TYPE_PLAYBACK_POS_INIT = 67,
-    ATTRIB_TYPE_EMITTED_MESSAGE_MAP = 68,
-    ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_SETUP = 69,
-    ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_SETUP = 70,
-    ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_FOOT_LIFTING_TARGET = 71,
-    ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_STATE = 72,
-    ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_CHAIN = 73,
-    ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_IK_PREDICTION_STATE = 74,
-    ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_FOOT_LIFTING_STATE = 75,
-    ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_PREDICTION_DEF = 76,
-    ATTRIB_TYPE_SCATTER_BLEND_ANALYSIS_DEF = 77,
-    ATTRIB_TYPE_SCATTER_BLEND_1D_DEF = 78,
-    ATTRIB_TYPE_SCATTER_BLEND_2D_DEF = 79,
-    ATTRIB_TYPE_EMIT_MESSAGE_ON_CP_VALUE = 81,
-    ATTRIB_TYPE_PHYSICS_INFO_DEF = 82,
-    ATTRIB_TYPE_JOINT_LIMITS = 84,
-    ATTRIB_TYPE_BLEND_FLAGS = 85,
-    ATTRIB_TYPE_BLEND_WEIGHTS = 86,
-    ATTRIB_TYPE_FEATHER_BLEND2_CHANNEL_ALPHAS = 87,
-    ATTRIB_TYPE_RETARGET_STATE = 88,
-    ATTRIB_TYPE_RIG_RETARGET_MAPPING = 89,
-    ATTRIB_TYPE_SCALECHARACTER_STATE = 90,
-    ATTRIB_TYPE_RETARGET_STORAGE_STATS = 91,
-    ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS_DEF = 92,
-    ATTRIB_TYPE_C_C_OVERRIDE_PROPERTIES_DEF = 93,
-    ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS = 94,
-};
-
 struct sSmStateList {
     uint32_t m_numStateMachinesNodes;
     int field1_0x4;
@@ -163,96 +75,14 @@ struct sMessageDef {
     short* node_array;
 };
 
-struct NodeDataAttribBase
-{
-    int field0_0x0;
-    int field1_0x4;
-    short field2_0x8;
-    AttribType m_type;
-    int padding;
-
-    NodeDataAttribBase() {}
-    NodeDataAttribBase(BYTE* data);
-};
-
-struct NodeDataAttrib_Unk
-{
-    NodeDataAttribBase m_attribBase;
-    BYTE* m_content;
-
-    NodeDataAttrib_Unk() {}
-    NodeDataAttrib_Unk(BYTE* data, int size);
-    void SaveToFile(ofstream* out);
-};
-
 struct NodeDataSet
 {
-    NodeDataAttrib_Unk* m_attrib;
+    NodeAttribBase* m_attrib;
     UINT64 m_size;
     int m_alignment;
     int m_iVar0;
 
     void SaveToFile(ofstream* out);
-};
-
-struct NodeDataAttrib_Bool
-{
-    bool m_bool;
-
-    NodeDataAttrib_Bool() {}
-    NodeDataAttrib_Bool(BYTE* data);
-};
-
-struct EventTrackList {
-    int m_trackCount;
-    int padding;
-    std::vector<int> m_trackSignatures;
-    std::vector<int> m_trackSize;
-};
-
-struct NodeDataAttrib_EventTrack 
-{
-    EventTrackList m_eventTracks[3];
-
-    NodeDataAttrib_EventTrack() {}
-    NodeDataAttrib_EventTrack(BYTE* data);
-};
-
-struct NodeDataAttrib_SourceAnim
-{
-    UINT64 m_pVar0;     //The runtime module will put the referenced NSA pointer here
-    UINT64 m_pVar8;
-    float m_fVar10;
-    float m_fVar14;
-    UINT64 m_iVar18;
-    UINT64 m_iVar20;
-    float m_fVar28;
-    float m_fVar2C;
-    float m_fVar30;
-    float m_fVar34;
-    UINT64 m_iVar38;
-    UINT64 m_iVar40;
-    float m_fVar48;
-    float m_fVar4C;
-    UINT64 m_pVar50;
-    int m_pad0;
-    int m_iVar5C;
-    int m_pad1;
-    int m_animIdx;      //Used to access the FileNameLookupTable and get the NSA file pointer
-    int m_iVar68;
-    BYTE m_bVar6C;
-    BYTE m_bVar6D;
-    BYTE m_bVar6E;
-    BYTE m_pad2;
-    float m_fVar70;
-    float m_trackLen;
-    float m_animLen;
-    float m_fVar7C;
-    BYTE m_bVar80;
-    BYTE m_pad3[15];
-
-    NodeDataAttrib_SourceAnim() {}
-    NodeDataAttrib_SourceAnim(BYTE* data);
 };
 
 struct NodeDef {
@@ -342,6 +172,6 @@ public:
 	MorphemeBundle_Network(MorphemeBundle* bundle);
     ~MorphemeBundle_Network();
 
-    void GenerateBundle(ofstream* out);
+    void WriteBinary(ofstream* out);
     int CalculateBundleSize();
 };

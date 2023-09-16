@@ -411,7 +411,7 @@ void Application::RenderGUI(const char* title)
 					{
 						std::string anim_name = m_nmb.m_sourceXmd[i].m_name;
 
-						bool selected = (this->m_timeActEditorFlags.m_selectedTimeActIdx == m_nmb.m_sourceXmd[i].m_id);
+						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.m_compressedNsa[i].m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -619,7 +619,7 @@ void Application::RenderGUI(const char* title)
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(m_nmb.GetAnimFileName(this->m_eventTrackEditor.m_animIdx).c_str());
+				ImGui::Text(m_nmb.m_compressedNsa[this->m_eventTrackEditor.m_animIdx].m_name.c_str());
 			else
 				ImGui::Text("");
 

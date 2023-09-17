@@ -233,6 +233,9 @@ public:
 		bool m_loadTae = false;
 		std::vector<std::wstring> m_taeList;
 		int chr_id;
+
+		int m_selectedTrack = -1;
+		int m_selectedEvent = -1;
 	} m_eventTrackEditorFlags;
 
 	struct TimeActEditorFlags
@@ -245,6 +248,9 @@ public:
 		float m_eventTrackActionTimeActStart = 0.f;
 		float m_eventTrackActionTimeActDuration = 0.f;
 		int m_eventTrackActionTimeActValue = 0;
+
+		int m_selectedTrack = -1;
+		int m_selectedEvent = -1;
 	} m_timeActEditorFlags;
 
 	NMBReader m_nmb;
@@ -269,4 +275,6 @@ public:
 	void NetworkCleanup();
 	int GetChrIdFromNmbFileName(std::wstring name);
 	std::wstring GetObjIdFromTaeFileName(std::wstring name);
+	void ResetEventTrackEditor();
+	void ResetTimeActEditor();
 };

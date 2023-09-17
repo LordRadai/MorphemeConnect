@@ -583,12 +583,13 @@ void Application::RenderGUI(const char* title)
 	}
 	ImGui::End();
 
-	static int selectedTrack = -1;
-	static int selectedEvent = -1;
 	static int firstFrame = 0;
 	static bool expanded = true;
 	static int currentFrame = 0;
 	static float zoomLevel = 5.f;
+
+	if (this->m_eventTrackEditorFlags.m_load)
+		this->ResetEventTrackEditor();
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("EventTrack");
@@ -602,8 +603,7 @@ void Application::RenderGUI(const char* title)
 				if (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1)
 				{
 					this->m_eventTrackEditorFlags.m_load = true;
-					selectedTrack = -1;
-					selectedEvent = -1;
+					this->ResetEventTrackEditor();
 				}
 				else
 					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No animation is selected\n");
@@ -624,7 +624,7 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &selectedTrack, &selectedEvent, &expanded, focused, &firstFrame, &zoomLevel, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &this->m_eventTrackEditorFlags.m_selectedTrack, &this->m_eventTrackEditorFlags.m_selectedEvent, &expanded, focused, &firstFrame, &zoomLevel, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
@@ -633,11 +633,11 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("Event Data");
 	{
-		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (selectedTrack != -1 && selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[selectedTrack].m_numEvents))
+		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (this->m_eventTrackEditorFlags.m_selectedTrack != -1 && this->m_eventTrackEditorFlags.m_selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (this->m_eventTrackEditorFlags.m_selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack].m_numEvents))
 		{
-			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[selectedTrack];
-			float startTime = MathHelper::FrameToTime(track->m_event[selectedEvent].m_frameStart);
-			float endTime = MathHelper::FrameToTime(track->m_event[selectedEvent].m_duration + track->m_event[selectedEvent].m_frameStart);
+			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack];
+			float startTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float endTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
 			ImGui::Text(track->m_name);
 			ImGui::PushItemWidth(100);
@@ -652,14 +652,14 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputInt("Event Value", &track->m_event[selectedEvent].m_value, 1, 0);
+			ImGui::InputInt("Event Value", &track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_value, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
 				ImGui::Text("Info");
 				ImGui::Separator();
 
 				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
-				ImGui::Text(getEventTrackEventTooltip(track->m_event[selectedEvent].m_value).c_str());
+				ImGui::Text(getEventTrackEventTooltip(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_value).c_str());
 				ImGui::PopTextWrapPos();
 			}
 
@@ -678,12 +678,13 @@ void Application::RenderGUI(const char* title)
 	}
 	ImGui::End();
 
-	static int selectedTrackTae = -1;
-	static int selectedEventTae = -1;
 	static int firstFrameTae = 0;
 	static bool expandedTae = true;
 	static int currentFrameTae = 0;
 	static float zoomLevelTae = 10.f;
+
+	if (this->m_eventTrackEditorFlags.m_load)
+		this->ResetTimeActEditor();
 
 	zoomLevelTae = 2 * zoomLevel;
 
@@ -718,7 +719,7 @@ void Application::RenderGUI(const char* title)
 				if (this->m_tae.m_init)
 				{
 					this->m_timeActEditorFlags.m_load = true;
-					selectedTrackTae = -1;
+					this->ResetTimeActEditor();
 				}
 				else
 					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct file is currently loaded\n");
@@ -739,7 +740,7 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &selectedTrackTae, &selectedEventTae, &expandedTae, focused, &firstFrameTae, &zoomLevelTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &this->m_timeActEditorFlags.m_selectedTrack, &this->m_timeActEditorFlags.m_selectedEvent, &expandedTae, focused, &firstFrameTae, &zoomLevelTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
@@ -750,13 +751,13 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct Data");
 	{
-		if ((this->m_timeActEditor.m_tracks.size() > 0) && (selectedTrackTae != -1 && selectedTrackTae < this->m_timeActEditor.m_tracks.size()) && (selectedEventTae != -1 && this->m_timeActEditor.m_tracks[selectedTrackTae].m_count))
+		if ((this->m_timeActEditor.m_tracks.size() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.m_tracks.size()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
 		{
-			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[selectedTrackTae];
-			float startTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_frameStart, 30);
-			float endTime = MathHelper::FrameToTime(track->m_event[selectedEventTae].m_duration + track->m_event[selectedEventTae].m_frameStart, 30);
+			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack];
+			float startTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float endTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
 
-			ImGui::Text(m_timeActEditor.GetEventLabel(selectedTrackTae, selectedEventTae, false).c_str());
+			ImGui::Text(m_timeActEditor.GetEventLabel(this->m_timeActEditorFlags.m_selectedTrack, this->m_timeActEditorFlags.m_selectedEvent, false).c_str());
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event Group", &track->m_eventGroup, 1, 0);
 			if (ImGui::IsItemHovered())
@@ -769,21 +770,21 @@ void Application::RenderGUI(const char* title)
 				ImGui::PopTextWrapPos();
 			}
 
-			ImGui::InputInt("Event ID", &track->m_event[selectedEventTae].m_value, 1, 0);
+			ImGui::InputInt("Event ID", &track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_value, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
 				ImGui::Text("Info");
 				ImGui::Separator();
 
 				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
-				ImGui::Text(getTaeEventTooltip(track->m_event[selectedEventTae].m_value).c_str());
+				ImGui::Text(getTaeEventTooltip(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_value).c_str());
 				ImGui::PopTextWrapPos();
 			}
 
 			ImGui::InputFloat("Start Time", &startTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
 			ImGui::InputFloat("End Time", &endTime, 0.f, 0.f, "%.3f", ImGuiInputTextFlags_ReadOnly);
 
-			track->m_event[selectedEventTae].m_args->ImGuiEdit();
+			track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_args->ImGuiEdit();
 
 			if (this->m_timeActEditorFlags.m_save)
 			{
@@ -1511,4 +1512,16 @@ void Application::SaveFile()
 		}
 		CoUninitialize();
 	}
+}
+
+void Application::ResetEventTrackEditor()
+{
+	this->m_eventTrackEditorFlags.m_selectedEvent = -1;
+	this->m_eventTrackEditorFlags.m_selectedTrack = -1;
+}
+
+void Application::ResetTimeActEditor()
+{
+	this->m_timeActEditorFlags.m_selectedEvent = -1;
+	this->m_timeActEditorFlags.m_selectedTrack = -1;
 }

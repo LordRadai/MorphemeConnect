@@ -473,21 +473,12 @@
 			"id": 110000,
 			"events": [
 				{
-					"name": "SetUnkDamageActionValue",
+					"name": "InvokeDefaultDamageState",
 					"id": 110000,
-					"arguments": [
-						{
-							"name": "Value",
-							"type": "f32"
-						},
-						{
-							"name": "Index",
-							"type": "s32"
-						}
-					]
+					"arguments": []
 				},
 				{
-					"name": "DisableHitDetection",
+					"name": "InvokeInvincibility",
 					"id": 110100,
 					"arguments": []
 				},
@@ -502,12 +493,12 @@
 					"arguments": []
 				},
 				{
-					"name": "InvokeInvincibility",
+					"name": "InvokeScaledInvincibility",
 					"id": 110300,
 					"arguments": []
 				},
 				{
-					"name": "DisableHitDetection2",
+					"name": "DisableHitDetection",
 					"id": 110400,
 					"arguments": []
 				},
@@ -537,31 +528,31 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl10",
+					"name": "SetUnkDamageActionParam",
 					"id": 111000,
 					"arguments": [
 						{
-							"name": "Unk00",
-							"type": "s32"
+							"name": "Value",
+							"type": "f32"
 						},
 						{
-							"name": "Unk04",
+							"name": "Index",
 							"type": "s32"
 						}
 					]
 				},
 				{
-					"name": "ChrDamageActionCtrl11",
+					"name": "InvokeDamageReduction",
 					"id": 111100,
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl12",
+					"name": "PostureRelated",
 					"id": 111200,
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl13",
+					"name": "PoiseRelated",
 					"id": 111300,
 					"arguments": []
 				},
@@ -576,22 +567,22 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl16",
+					"name": "EnableCounterDamage",
 					"id": 111600,
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl17",
+					"name": "ForceHitBackBehaviour",
 					"id": 111700,
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl18",
+					"name": "DisableDamage",
 					"id": 111800,
 					"arguments": []
 				},
 				{
-					"name": "InvokeHyperArmor",
+					"name": "InvokeSuperPoise",
 					"id": 111900,
 					"arguments": []
 				}
@@ -607,7 +598,7 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrAttackCtrl2",
+					"name": "LockTargetRelated",
 					"id": 120200,
 					"arguments": []
 				},
@@ -691,7 +682,12 @@
 				{
 					"name": "ChrItemCtrl3",
 					"id": 220300,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "DummyPoly ID",
+							"type": "s32"
+						}
+					]
 				}
 			]
 		},
@@ -705,7 +701,7 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrGenerateCtr1 1",
+					"name": "ChrGenerateCtrl1",
 					"id": 230001,
 					"arguments": []
 				}
@@ -727,7 +723,7 @@
 			"id": 250000,
 			"events": [
 				{
-					"name": "ChrObjectGenerateCtrl",
+					"name": "ChrObjGenerateCtrl",
 					"id": 250000,
 					"arguments": []
 				}

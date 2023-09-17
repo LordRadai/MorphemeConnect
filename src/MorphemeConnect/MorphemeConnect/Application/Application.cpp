@@ -672,7 +672,8 @@ void Application::RenderGUI(const char* title)
 				this->m_eventTrackEditorFlags.m_save = false;
 				this->m_eventTrackEditor.SetEditedState(false);
 
-				track->SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
+				for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
+					this->m_eventTrackEditor.m_eventTracks[i].SaveEventTrackData(this->m_eventTrackEditorFlags.m_lenMult);
 			}
 		}
 	}
@@ -751,7 +752,7 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 	ImGui::Begin("TimeAct Data");
 	{
-		if ((this->m_timeActEditor.m_tracks.size() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.m_tracks.size()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
+		if ((this->m_timeActEditor.GetTrackCount() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.GetTrackCount()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack];
 			float startTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
@@ -791,7 +792,8 @@ void Application::RenderGUI(const char* title)
 				this->m_timeActEditorFlags.m_save = false;
 				this->m_timeActEditor.SetEditedState(false);
 
-				track->SaveTimeActTrack();
+				for (int i = 0; i < this->m_timeActEditor.GetTrackCount(); i++)
+					this->m_timeActEditor.m_tracks[i].SaveTimeActTrack();
 			}
 
 			ImGui::PopItemWidth();

@@ -258,7 +258,7 @@ void TimeActLookupTable::AddGroup(int tae_id)
 	}
 
 	//Look at the last inserted TAE
-	if ((tae_id - this->m_groups.back().m_taeStart) < 10)
+	if ((tae_id - this->m_groups.back().m_taeEnd) == 1)
 	{
 		this->m_groups.back().m_taeEnd = tae_id;
 		found = true;
@@ -269,7 +269,7 @@ void TimeActLookupTable::AddGroup(int tae_id)
 	{
 		for (size_t i = 0; i < this->m_groupCount; i++)
 		{
-			if ((tae_id - this->m_groups[i].m_taeStart) < 10)
+			if ((tae_id - this->m_groups[i].m_taeEnd) == 1)
 			{
 				this->m_groups[i].m_taeEnd = tae_id;
 				found = true;

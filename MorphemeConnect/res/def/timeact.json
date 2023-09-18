@@ -89,7 +89,7 @@
 					]
 				},
 				{
-					"name": "ChrAiCtrl1",
+					"name": "SetAiStateManually",
 					"id": 301,
 					"arguments": [
 						{

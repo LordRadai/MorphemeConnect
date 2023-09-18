@@ -75,15 +75,15 @@
 			"id": 300,
 			"events": [
 				{
-					"name": "ChrAICtrl0",
+					"name": "SetAiState",
 					"id": 300,
 					"arguments": [
 						{
-							"name": "Unk00",
+							"name": "Index",
 							"type": "s8"
 						},
 						{
-							"name": "Unk01",
+							"name": "State",
 							"type": "s8"
 						}
 					]
@@ -483,7 +483,7 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl2",
+					"name": "Unusued110200",
 					"id": 110200,
 					"arguments": []
 				},
@@ -562,7 +562,7 @@
 					"arguments": []
 				},
 				{
-					"name": "ChrDamageActionCtrl15",
+					"name": "DisableHitBack",
 					"id": 111500,
 					"arguments": []
 				},

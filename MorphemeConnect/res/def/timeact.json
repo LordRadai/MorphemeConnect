@@ -614,7 +614,7 @@
 			"id": 210000,
 			"events": [
 				{
-					"name": "PlayGimmickSound",
+					"name": "InvokeGimmickBehaviour",
 					"id": 210000,
 					"arguments": []
 				},

@@ -33,4 +33,5 @@ public:
 	void GenerateBinary(ofstream* tae);
 	std::string GetArgumentsAsString();
 	void ImGuiEdit();
+	void CreateArguments(int id);
 };

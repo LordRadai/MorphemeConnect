@@ -186,3 +186,63 @@ void TimeActEventData::ImGuiEdit()
 		ImGui::PopID();
 	}
 }
+
+void TimeActEventData::CreateArguments(int id)
+{
+	for (int group_idx = 0; group_idx < g_taeTemplate.m_groups.size(); group_idx++)
+	{
+		for (int event_idx = 0; event_idx < g_taeTemplate.m_groups[group_idx].m_events.size(); event_idx++)
+		{
+			if (g_taeTemplate.m_groups[group_idx].m_events[event_idx].m_id == id)
+			{
+				for (int arg_idx = 0; arg_idx < g_taeTemplate.m_groups[group_idx].m_events[event_idx].m_args.size(); arg_idx++)
+				{
+					this->m_args.push_back(Argument());
+					this->m_args.back().m_type = g_taeTemplate.m_groups[group_idx].m_events[event_idx].m_args[arg_idx].m_type;
+					this->m_args.back().m_name = g_taeTemplate.m_groups[group_idx].m_events[event_idx].m_args[arg_idx].m_name;
+
+					std::string arg_type = this->m_args[arg_idx].m_type;
+
+					if (arg_type.compare("s8") == 0)
+					{
+						this->m_size += 1;
+					}
+					else if (arg_type.compare("u8") == 0)
+					{
+						this->m_size += 1;
+					}
+					else if (arg_type.compare("s16") == 0)
+					{
+						this->m_size += 2;
+					}
+					else if (arg_type.compare("u16") == 0)
+					{
+						this->m_size += 2;
+					}
+					else if (arg_type.compare("s32") == 0)
+					{
+						this->m_size += 4;
+					}
+					else if (arg_type.compare("u32") == 0)
+					{
+						this->m_size += 4;
+					}
+					else if (arg_type.compare("f32") == 0)
+					{
+						this->m_size += 4;
+					}
+					else if (arg_type.compare("s64") == 0)
+					{
+						this->m_size += 8;
+					}
+					else if (arg_type.compare("u64") == 0)
+					{
+						this->m_size += 8;
+					}
+				}
+
+				return;
+			}
+		}
+	}
+}

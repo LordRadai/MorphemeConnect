@@ -12,6 +12,7 @@ TimeActEvent::EventData::EventData(int event_id)
 	this->m_id = event_id;
 
 	this->m_args = new TimeActEventData;
+	this->m_args->CreateArguments(event_id);
 }
 
 TimeActEvent::EventData::EventData(ifstream* tae)
@@ -38,7 +39,7 @@ TimeActEvent::TimeActEvent(float start, float end, int id)
 {
 	this->m_start = start;
 	this->m_end = end;
-	this->m_eventData = new EventData();
+	this->m_eventData = new EventData(id);
 }
 
 TimeActEvent::TimeActEvent(ifstream* tae)

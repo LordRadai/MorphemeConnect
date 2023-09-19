@@ -120,7 +120,9 @@ void TimeActEditor::AddEvent(int group_idx, TimeActEvent event)
 {
 	this->m_source->m_taeData->m_eventCount++;
 
-	this->m_source->m_taeData->m_events.push_back(event);
+	TimeActEvent new_event(event.m_start, event.m_end, event.m_eventData->m_id);
+
+	this->m_source->m_taeData->m_events.push_back(new_event);
 
 	this->m_source->m_taeData->m_groups[group_idx].m_count++;
 

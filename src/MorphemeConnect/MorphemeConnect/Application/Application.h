@@ -236,6 +236,10 @@ public:
 
 		int m_selectedTrack = -1;
 		int m_selectedEvent = -1;
+
+		float m_eventTrackActionTimeActStart = 0.f;
+		float m_eventTrackActionTimeActDuration = 0.f;
+		int m_eventTrackActionTimeActValue = -1;
 	} m_eventTrackEditorFlags;
 
 	struct TimeActEditorFlags
@@ -245,9 +249,6 @@ public:
 		int m_selectedTimeActIdx = -1;
 		std::vector<BYTE> m_edited;
 		int m_taeId = -1;
-		float m_eventTrackActionTimeActStart = 0.f;
-		float m_eventTrackActionTimeActDuration = 0.f;
-		int m_eventTrackActionTimeActValue = 0;
 
 		int m_selectedTrack = -1;
 		int m_selectedEvent = -1;

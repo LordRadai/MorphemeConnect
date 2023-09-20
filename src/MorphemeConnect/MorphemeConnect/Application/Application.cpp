@@ -494,7 +494,7 @@ void Application::RenderGUI(const char* title)
 				{
 					if (ImGui::Button("Add Selected"))
 					{
-						this->m_timeActFlags.m_addTimeActId = this->m_timeActEditorFlags.m_taeId;
+						this->m_timeActFlags.m_addTimeActId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
 						this->m_timeActFlags.m_addTimeActLenght = MathHelper::FrameToTime(this->m_eventTrackEditor.m_frameMax);
 
 						if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
@@ -726,14 +726,14 @@ void Application::RenderGUI(const char* title)
 			{
 				if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 				{
-					this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-					this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
-					this->m_timeActEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
 				}
 			}
 
-			if (this->m_timeActEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_timeActEditorFlags.m_eventTrackActionTimeActStart, this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30, false);
+			if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
+				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30, false);
 		}
 	}
 
@@ -1016,6 +1016,9 @@ void Application::ProcessVariables()
 		if ((this->m_nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found = false;
+			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = -1;
+			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = 0.f;
+			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = 0.f;
 
 			for (int idx = 0; idx < this->m_nmb.m_network.m_data->m_numNodes; idx++)
 			{
@@ -1086,10 +1089,11 @@ void Application::ProcessVariables()
 									{
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
-											this->m_timeActEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-											this->m_timeActEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 
-											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
 
 											for (size_t j = 0; j < this->m_tae.m_tae.size(); j++)
 											{

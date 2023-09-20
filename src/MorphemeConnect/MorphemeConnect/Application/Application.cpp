@@ -484,6 +484,7 @@ void Application::RenderGUI(const char* title)
 						}
 					}
 					
+					this->m_eventTrackEditorFlags.m_load = true;
 					this->m_timeActFlags.m_addTimeAct = false;
 					ImGui::CloseCurrentPopup();
 				}
@@ -512,6 +513,7 @@ void Application::RenderGUI(const char* title)
 							}
 						}
 
+						this->m_eventTrackEditorFlags.m_load = true;
 						this->m_timeActFlags.m_addTimeAct = false;
 						ImGui::CloseCurrentPopup();
 					}
@@ -1144,17 +1146,17 @@ void Application::ProcessVariables()
 
 				if (timeact)
 				{
+					float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
+
+					this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
+					this->m_timeActEditor.m_frameMin = 0;
+
+					this->m_timeActEditor.SetEditedState(false);
+
 					if (timeact->m_taeData->m_eventGroupCount > 0)
 					{
 						for (int j = 0; j < timeact->m_taeData->m_eventGroupCount; j++)
 							this->m_timeActEditor.m_tracks.push_back(&timeact->m_taeData->m_groups[j]);
-
-						float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
-
-						this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
-						this->m_timeActEditor.m_frameMin = 0;
-
-						this->m_timeActEditor.SetEditedState(false);
 					}
 				}
 				else

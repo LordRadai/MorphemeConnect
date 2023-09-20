@@ -121,7 +121,7 @@
 			"id": 1100,
 			"events": [
 				{
-					"name": "InvokeWeaponHitbox",
+					"name": "InvokeWeaponDamage",
 					"id": 2200,
 					"arguments": [
 						{
@@ -141,7 +141,7 @@
 					]
 				},
 				{
-					"name": "InvokeHitbox",
+					"name": "InvokeDamage",
 					"id": 2202,
 					"arguments": [
 						{
@@ -150,7 +150,7 @@
 						},
 						{
 							"name": "Index",
-							"type": "s32"
+							"type": "s8"
 						}
 					]
 				},
@@ -680,7 +680,7 @@
 					]
 				},
 				{
-					"name": "ChrItemCtrl3",
+					"name": "GiveItem",
 					"id": 220300,
 					"arguments": [
 						{

@@ -538,6 +538,7 @@ void Application::RenderGUI(const char* title)
 					if (this->m_tae.DeleteTimeAct(this->m_timeActFlags.m_deleteTimeActId) == false)
 						Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "Failed to delete TimeAct %d\n", this->m_timeActFlags.m_deleteTimeActId);
 
+					this->m_eventTrackEditorFlags.m_load = true;
 					this->m_timeActFlags.m_deleteTimeAct = false;
 
 					ImGui::CloseCurrentPopup();

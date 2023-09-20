@@ -490,7 +490,7 @@ void Application::RenderGUI(const char* title)
 
 				ImGui::SameLine();
 
-				if (this->m_timeActEditorFlags.m_taeId != -1)
+				if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue != -1)
 				{
 					if (ImGui::Button("Add Selected"))
 					{

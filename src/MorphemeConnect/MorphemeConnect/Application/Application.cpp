@@ -488,6 +488,35 @@ void Application::RenderGUI(const char* title)
 					ImGui::CloseCurrentPopup();
 				}
 
+				ImGui::SameLine();
+
+				if (this->m_timeActEditorFlags.m_taeId != -1)
+				{
+					if (ImGui::Button("Add Selected"))
+					{
+						this->m_timeActFlags.m_addTimeActId = this->m_timeActEditorFlags.m_taeId;
+						this->m_timeActFlags.m_addTimeActLenght = MathHelper::FrameToTime(this->m_eventTrackEditor.m_frameMax);
+
+						if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
+							Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
+						else
+						{
+							this->m_timeActEditorFlags.m_edited.clear();
+
+							if (m_tae.m_init)
+							{
+								this->m_timeActEditorFlags.m_edited.reserve(m_tae.m_tae.size());
+
+								for (int i = 0; i < m_tae.m_tae.size(); i++)
+									this->m_timeActEditorFlags.m_edited.push_back(false);
+							}
+						}
+
+						this->m_timeActFlags.m_addTimeAct = false;
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
 				ImGui::EndPopup();
 			}
 			else

@@ -465,6 +465,8 @@ void TimeActReader::AdjustOffsets()
 
 		UINT64 biggestOffset = this->m_tae[i].m_taeData->m_animDataOffset + 0x30;
 
+		this->m_tae[i].m_taeData->m_timeCount = 2 * this->m_tae[i].m_taeData->m_eventCount;
+
 		if (this->m_tae[i].m_taeData->m_timeCount > 0)
 		{
 			this->m_tae[i].m_taeData->m_timesOffset = this->m_tae[i].m_taeData->m_animDataOffset + 0x30;

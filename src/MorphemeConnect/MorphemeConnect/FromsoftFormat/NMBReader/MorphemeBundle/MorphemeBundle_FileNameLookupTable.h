@@ -46,6 +46,10 @@ public:
 	MorphemeBundle_FileNameLookupTable(MorphemeBundle* bundle);
 	~MorphemeBundle_FileNameLookupTable();
 
-	void WriteBinary(ofstream* out);
+	void WriteBinary(ofstream* out, UINT64 alignmnent);
 	int CalculateBundleSize();
+
+	std::string GetAnimName(int anim_id);											//Returns the anim name from its index from the string table 
+	std::string GetXmdSourceAnimFileName(int anim_id);								//Returns the XMD source anim name from its index from the string table 
+	std::string GetAnimTake(int anim_id);
 };

@@ -10,6 +10,6 @@ public:
 	MorphemeBundle(ifstream* pFile);
 	~MorphemeBundle();
 
-	void WriteBinary(ofstream* out);
+	void WriteBinary(ofstream* out, UINT64 alignment);
 	int CalculateBundleSize();
 };

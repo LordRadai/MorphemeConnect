@@ -79,3 +79,32 @@ void MemReader::WriteQWordArray(ofstream* pStream, UINT64* pDst, int iSize)
 {
 	pStream->write((const char*)pDst, 8 * iSize);
 }
+
+void MemReader::WriteString(ofstream* pStream, const char** pString)
+{
+	int strlen = std::strlen(*pString);
+
+	MemReader::WriteByteArray(pStream, (BYTE*)pString, strlen);
+}
+
+void MemReader::AlignStream(ofstream* pStream, UINT64 alignment)
+{
+	if (alignment == 0)
+		return;
+
+	streampos pPos = pStream->tellp();
+	UINT64 remainder = pPos % alignment;
+	UINT64 pad_amt = alignment - remainder;
+
+	if (pad_amt > 0)
+	{
+		BYTE* pad = new BYTE[pad_amt];
+
+		for (size_t i = 0; i < pad_amt; i++)
+			pad[i] = 0xCD;
+
+		MemReader::WriteByteArray(pStream, pad, pad_amt);
+
+		delete[] pad;
+	}
+}

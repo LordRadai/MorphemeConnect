@@ -1,5 +1,5 @@
 #include "TaeTemplate.h"
-#include "../Debug/Debug.h"
+#include "../DebugOutput/Debug.h"
 
 TaeTemplate::Group::Event::Arg::Arg(std::string name, std::string type)
 {

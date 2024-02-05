@@ -21,11 +21,10 @@ Tooltips are inside the `MorphemeConnect/res/tooltip folder`. They are shown whe
 
 # Build Requirements
 If you want to compile this project, you need the following things:
-* DirectXTK
+* DirectXTK UWP (install with VS GnuPackage)
 * ICU
 * ZLIB
-Remember to adjust ZLIB and ICU path in the Project Settings
+* betstick's cfromloader
 
 # Bugs
-Report any bugs in the Discord server's bug report forum: https://discord.gg/CJk2b5WMMF
-
+Report any bugs in the Discord server's bug report forum https://discord.gg/CJk2b5WMMF

@@ -1,6 +1,7 @@
 #pragma once
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN 
+
 //System
 #include <windows.h>
 #include <stdlib.h>
@@ -12,6 +13,7 @@
 #include <shobjidl.h> 
 #include <iostream>
 #include <fstream>
+
 //DirectXTK
 #include <DirectXMath.h>
 #include <SimpleMath.h>
@@ -28,10 +30,11 @@
 #include "imgui/imstb_rectpack.h"
 #include "imgui/imstb_textedit.h"
 #include "imgui/imstb_truetype.h"
-//ImNodes
-#include "imnodes/imnodes.h"
-#include "imnodes/imnodes_internal.h"
+#include "imgui/custom/imgui_custom_logic.h"
+#include "imgui/custom/imgui_custom_widget.h"
 
-#include "Debug/Debug.h"
+#include "DebugOutput/Debug.h"
+
+//IniReader
 #include "inih/ini.h"
 #include "inih/INIReader.h"

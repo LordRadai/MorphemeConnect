@@ -31,4 +31,7 @@ namespace MemReader
 	void WriteWordArray(ofstream* pStream, WORD* pSrc, int iSize);
 	void WriteDWordArray(ofstream* pStream, DWORD* pSrc, int iSize);
 	void WriteQWordArray(ofstream* pStream, UINT64* pSrc, int iSize);
+	void WriteString(ofstream* pStream, const char** pString);
+
+	void AlignStream(ofstream* pStream, UINT64 alignment);
 }

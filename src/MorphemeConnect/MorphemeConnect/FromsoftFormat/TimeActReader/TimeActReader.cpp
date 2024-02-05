@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <assert.h>
 #include "TimeActReader.h"
-#include "../../Debug/Debug.h"
+#include "../../DebugOutput/Debug.h"
 
 AnimData::AnimData()
 {

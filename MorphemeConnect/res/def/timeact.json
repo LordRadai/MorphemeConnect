@@ -275,17 +275,64 @@
 				{
 					"name": "ChrSfxCtrl0",
 					"id": 2100,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "Unk00",
+							"type": "s32"
+						},
+						{
+							"name": "Unk04",
+							"type": "s32"
+						},
+						{
+							"name": "Unk08",
+							"type": "s16"
+						},
+						{
+							"name": "Unk0A",
+							"type": "s16"
+						},
+						{
+							"name": "Unk0C",
+							"type": "s8"
+						},
+						{
+							"name": "Unk0D",
+							"type": "s8"
+						},
+						{
+							"name": "Unk0E",
+							"type": "s8"
+						}
+					]
 				},
 				{
 					"name": "ChrSfxCtrl1",
 					"id": 2101,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "Unk00",
+							"type": "s32"
+						},
+						{
+							"name": "Unk04",
+							"type": "s32"
+						}
+					]
 				},
 				{
 					"name": "ChrSfxCtrl2",
 					"id": 2102,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "Unk00",
+							"type": "s8"
+						},
+						{
+							"name": "Unk01",
+							"type": "s8"
+						}
+					]
 				},
 				{
 					"name": "InvokeChrFullBodySfx",
@@ -338,7 +385,12 @@
 				{
 					"name": "ChrSfxCtrl5",
 					"id": 2105,
-					"arguments": []
+					"arguments": [
+						{
+							"name": "Sfx ID",
+							"type": "s32"
+						}
+					]
 				},
 				{
 					"name": "SimpletonRingSfx",

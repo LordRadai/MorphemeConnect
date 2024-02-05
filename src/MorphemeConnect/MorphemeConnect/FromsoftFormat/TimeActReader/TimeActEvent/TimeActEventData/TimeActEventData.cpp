@@ -158,7 +158,7 @@ void TimeActEventData::ImGuiEdit()
 	if (this->m_args.size() == 0)
 		return;
 
-	ImGui::Text("Arguments");
+	ImGui::SeparatorText("Arguments");
 
 	for (size_t i = 0; i < this->m_args.size(); i++)
 	{
@@ -166,23 +166,23 @@ void TimeActEventData::ImGuiEdit()
 
 		ImGui::PushID(i);
 		if (arg_type.compare("s8") == 0)
-			ImGui::InputByte(this->m_args[i].m_name.c_str(), &this->m_args[i].m_s8, 0, 0, 0);
+			ImGui::InputByte(this->m_args[i].m_name.c_str(), (ImS8*)&this->m_args[i].m_s8, 0, 0, 0);
 		else if (arg_type.compare("u8") == 0)
-			ImGui::InputUByte(this->m_args[i].m_name.c_str(), &this->m_args[i].m_u8, 0, 0, 0);
+			ImGui::InputUByte(this->m_args[i].m_name.c_str(), (ImU8*)&this->m_args[i].m_u8, 0, 0, 0);
 		else if (arg_type.compare("s16") == 0)
-			ImGui::InputShort(this->m_args[i].m_name.c_str(), &this->m_args[i].m_s16, 0, 0, 0);
+			ImGui::InputShort(this->m_args[i].m_name.c_str(), (ImS16*)&this->m_args[i].m_s16, 0, 0, 0);
 		else if (arg_type.compare("u16") == 0)
-			ImGui::InputUShort(this->m_args[i].m_name.c_str(), &this->m_args[i].m_u16, 0, 0, 0);
+			ImGui::InputUShort(this->m_args[i].m_name.c_str(), (ImU16*)&this->m_args[i].m_u16, 0, 0, 0);
 		else if (arg_type.compare("s32") == 0)
-			ImGui::InputInt(this->m_args[i].m_name.c_str(), &this->m_args[i].m_s32, 0, 0, 0);
+			ImGui::InputInt(this->m_args[i].m_name.c_str(), (ImS32*)&this->m_args[i].m_s32, 0, 0, 0);
 		else if (arg_type.compare("u32") == 0)
-			ImGui::InputUInt(this->m_args[i].m_name.c_str(), &this->m_args[i].m_u32, 0, 0, 0);
+			ImGui::InputUInt(this->m_args[i].m_name.c_str(), (ImU32*)&this->m_args[i].m_u32, 0, 0, 0);
 		else if (arg_type.compare("f32") == 0)
 			ImGui::InputFloat(this->m_args[i].m_name.c_str(), &this->m_args[i].m_f32, 0, 0, 0);
 		else if (arg_type.compare("s64") == 0)
-			ImGui::InputInt64(this->m_args[i].m_name.c_str(), &this->m_args[i].m_s64, 0, 0, 0);
+			ImGui::InputInt64(this->m_args[i].m_name.c_str(), (ImS64*)&this->m_args[i].m_s64, 0, 0, 0);
 		else if (arg_type.compare("u64") == 0)
-			ImGui::InputUInt64(this->m_args[i].m_name.c_str(), &this->m_args[i].m_u64, 0, 0, 0);
+			ImGui::InputUInt64(this->m_args[i].m_name.c_str(), (ImU64*)&this->m_args[i].m_u64, 0, 0, 0);
 		ImGui::PopID();
 	}
 }

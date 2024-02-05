@@ -449,7 +449,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
     XMVECTOR transformed_pos;
 
     XMMATRIX rotation = XMMatrixIdentity();
-    rotation = MathHelper::GetRotationFrom2Vectors(pointB, pointA);
+    rotation = Math::GetRotationFrom2Vectors(pointB, pointA);
 
     Vector3 center_bot = Vector3(pointA.x, pointA.y, pointA.z);
     Vector3 center_top = Vector3(pointB.x, pointB.y, pointB.z);
@@ -689,7 +689,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
     XMVECTOR transformed_pos;
 
     XMMATRIX rotation = XMMatrixIdentity();
-    rotation = MathHelper::GetRotationFrom2Vectors(pointB, pointA);
+    rotation = Math::GetRotationFrom2Vectors(pointB, pointA);
 
     Vector3 center_bot = Vector3(pointA.x, pointA.y, pointA.z);
     Vector3 center_top = Vector3(pointB.x, pointB.y, pointB.z);
@@ -1328,59 +1328,69 @@ void XM_CALLCONV DX::Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionCo
     }
 }
 
+XMMATRIX GetFlverBoneTransform(cfr::FLVER2* flver, int bone_id)
+{
+    XMMATRIX transform = XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
+    transform *= XMMatrixRotationX(flver->bones[bone_id].rot.x);
+    transform *= XMMatrixRotationZ(flver->bones[bone_id].rot.z);
+    transform *= XMMatrixRotationY(flver->bones[bone_id].rot.y);
+    transform *= XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
+
+    return transform;
+}
+
 Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 {
-    Vector3 position = Vector3(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
-    position = Vector3::Transform(position, XMMatrixRotationRollPitchYaw(flver->bones[bone_id].rot.x, flver->bones[bone_id].rot.y, flver->bones[bone_id].rot.z));
-    position = Vector3::Transform(position, XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z));
+    XMMATRIX boneLocalTransform = GetFlverBoneTransform(flver, bone_id);
 
     cfr::FLVER2::Bone bone = flver->bones[bone_id];
     while (bone.parentIndex != -1)
     {
-        position += Vector3(flver->bones[bone.parentIndex].translation.x, flver->bones[bone.parentIndex].translation.y, flver->bones[bone.parentIndex].translation.z);
-        position = Vector3::Transform(position, XMMatrixRotationRollPitchYaw(flver->bones[bone.parentIndex].rot.x, flver->bones[bone.parentIndex].rot.y, flver->bones[bone.parentIndex].rot.z));
-        position = Vector3::Transform(position, XMMatrixScaling(flver->bones[bone.parentIndex].scale.x, flver->bones[bone.parentIndex].scale.y, flver->bones[bone.parentIndex].scale.z));
-        
+        XMMATRIX parentBoneTransform = GetFlverBoneTransform(flver, bone.parentIndex);
+        boneLocalTransform *= parentBoneTransform;
+
         bone = flver->bones[bone.parentIndex];
     }
+
+    boneLocalTransform *= XMMatrixRotationY(XM_PI);
+
+    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
 
     return position;
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel flver)
+    DirectX::XMMATRIX world, FlverModel model, MorphemeBundle_Rig* rig)
 {
-    constexpr float scale = 2.f;
+    constexpr float scale = 1.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
-
-    /*
-    for (size_t i = 0; i < flver.m_flver->header.boneCount; i++)
+    
+    for (size_t i = 0; i < model.m_flver->header.boneCount; i++)
     {
-        if (flver.m_flver->bones[i].parentIndex != -1)
+        if (model.m_flver->bones[i].parentIndex != -1)
         {
-            Vector3 boneA = calculateBonePosition(flver.m_flver, i);
+            Vector3 boneA = calculateBonePosition(model.m_flver, i);
             boneA = Vector3::Transform(boneA, transf);
 
-            Vector3 boneB = calculateBonePosition(flver.m_flver, flver.m_flver->bones[i].parentIndex);
+            Vector3 boneB = calculateBonePosition(model.m_flver, model.m_flver->bones[i].parentIndex);
             boneB = Vector3::Transform(boneB, transf);
 
             DX::DrawLine(batch, boneA, boneB, Colors::Orange);
 
-            std::string boneB_name = StringHelper::ToNarrow(flver.m_flver->bones[flver.m_flver->bones[i].parentIndex].name);
+            std::string boneB_name = StringHelper::ToNarrow(model.m_flver->bones[model.m_flver->bones[i].parentIndex].name);
         }
 
-        //std::string bone_name = StringHelper::ToNarrow(flver.bones[i].name);
+        std::string bone_name = StringHelper::ToNarrow(model.m_flver->bones[i].name);
 
-        //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(flver, i)), g_preview.m_camera, Colors::White);
+        //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(model.m_flver, i)), g_preview.m_camera, Colors::White);
     }
-    */
 
-    for (int i = 0; i < flver.verts.size(); i += 3)
+    for (int i = 0; i < model.m_verts.size(); i += 3)
     {
-        if (i + 1 < flver.verts.size() && i + 2 < flver.verts.size())
+        if (i + 1 < model.m_verts.size() && i + 2 < model.m_verts.size())
         {
-            batch->DrawTriangle(flver.verts[i], flver.verts[i + 1], flver.verts[i + 2]);
-            DX::DrawTriangle(batch, Vector3(flver.verts[i].position), Vector3(flver.verts[i + 1].position), Vector3(flver.verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
+            batch->DrawTriangle(model.m_verts[i], model.m_verts[i + 1], model.m_verts[i + 2]);
+            DX::DrawTriangle(batch, Vector3(model.m_verts[i].position), Vector3(model.m_verts[i + 1].position), Vector3(model.m_verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
         }
     }
 }

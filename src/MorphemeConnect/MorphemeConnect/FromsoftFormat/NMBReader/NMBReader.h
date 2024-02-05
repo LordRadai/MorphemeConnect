@@ -2,18 +2,20 @@
 #include "MorphemeBundle/MorphemeBundle.h"
 #include "MorphemeBundle/MorphemeBundle_Header.h"
 #include "MorphemeBundle/MorphemeBundle_EventTrack.h"
-#include "MorphemeBundle/MorphemeBundle_Network.h"
+#include "MorphemeBundle/MorphemeBundle_NetworkDef.h"
 #include "MorphemeBundle/MorphemeBundle_FileNameLookupTable.h"
+#include "MorphemeBundle/MorphemeBundle_Rig.h"
 
-struct AnimFileInterface
+struct AnimInterface
 {
 	std::string m_name;
+	std::string m_sourceName;
 	int m_id;
 };
 
 class NMBReader
 {
-public:
+private:
 	std::wstring m_fileName;
 
 	PWSTR m_filePath;
@@ -22,31 +24,51 @@ public:
 	UINT64 m_outFileSize;
 	bool m_init = false;
 
+	std::vector<AnimInterface> m_animations;
+
 	std::vector<MorphemeBundle> m_bundles;
 
-	std::vector<MorphemeBundle> m_skeletonMap;
-	std::vector<MorphemeBundle> m_messageIndices;
+	std::vector<MorphemeBundle> m_rigRaw;
+	std::vector<MorphemeBundle_Rig> m_rig;
+	std::vector<MorphemeBundle> m_rigToAnimMap;
 	std::vector<MorphemeBundle_EventTrack> m_eventTracks;
 	std::vector<MorphemeBundle> m_characterControllerDef;
-	MorphemeBundle_Network m_network;
+	MorphemeBundle_NetworkDef m_networkDef;
 	MorphemeBundle_Header m_header;
 	MorphemeBundle_FileNameLookupTable m_fileNameLookupTable;
 
 	MorphemeBundle m_networkRaw;
 
-	std::vector<AnimFileInterface> m_compressedNsa;
-	std::vector<AnimFileInterface> m_sourceXmd;
-
+public:
 	NMBReader() {}
 	NMBReader(PWSTR pszFilePath);
 	~NMBReader();
 
+	bool IsInitialised();
+	std::wstring GetFileName();
+	int GetFileSize();
+	PWSTR GetFilePath();
+	PWSTR GetOutFilePath();
+	int GetOutFileSize();
+	int GetBundleCount();
+	int GetRigCount();
+	int GetAnimationCount();
+
+	AnimInterface* GetAnimationInterface(int idx);								
+	MorphemeBundle* GetBundle(int idx);											
+	MorphemeBundle_NetworkDef* GetNetworkDef();									
+	MorphemeBundle_FileNameLookupTable* GetFilenameLookupTable();				
+	MorphemeBundle_Rig* GetRig(int idx);								
+	MorphemeBundle_EventTrack* GetEventTrackBundle(int signature);				
+
+	MorphemeBundle_EventTrack* AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration);
+
+	std::string GetSourceAnimName(int idx);										
+	std::string GetAnimNameFromAnimNode(NodeDef* m_node);						
+	std::vector<EventTrackList*> GetEventTrackListBySignature(int signature);	
+	std::vector<NodeDef*> GetNodesByAnimReference(int anim_idx);				
+	bool ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id);				
+
+	void SortAnimList();
 	bool SaveToFile(PWSTR pszOutFilePath);
-	std::string GetAnimFileName(int idx);										//Returns the anim name from its index from the string table 
-	std::string GetXmdSourceAnimFileName(int idx);								//Returns the XMD source anim name from its index from the string table 
-	std::string GetAnimNameFromAnimNode(NodeDef* m_node);						//Returns the anim name inside an AnimSyncEvent node
-	MorphemeBundle_EventTrack* GetEventTrackBundle(int signature);				//Returns the event track bundle with the matching m_signature parameter. Returns NULL if not found
-	std::vector<EventTrackList*> GetEventTrackListBySignature(int signature);	//Returns all the EventTrackList objects with references to the specified signature
-	std::vector<NodeDef*> GetNodesByAnimReference(int anim_idx);				//Returns all node that reference the same animation
-	void SortAnimList();														//Sorts the animation list from the filename lookup table and stores them into m_compressedNsa and m_sourceXmd
 };

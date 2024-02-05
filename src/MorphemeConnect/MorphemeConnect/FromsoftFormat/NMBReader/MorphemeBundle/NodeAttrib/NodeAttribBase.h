@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include "../../../MemReader/MemReader.h"
-#include "../../../../Debug/Debug.h"
+#include "../../../../DebugOutput/Debug.h"
 
 enum AttribType : short
 {

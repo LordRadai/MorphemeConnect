@@ -27,8 +27,8 @@ public:
     BYTE m_bVar6D;
     BYTE m_bVar6E;
     BYTE m_pad2;
-    float m_fVar70;
-    float m_trackLen;
+    float m_clipStart;
+    float m_clipEnd;
     float m_animLen;
     float m_fVar7C;
     BYTE m_bVar80;

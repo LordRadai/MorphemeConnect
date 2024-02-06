@@ -29,8 +29,8 @@ NodeAttribSourceAnim::NodeAttribSourceAnim(BYTE* data) : NodeAttribBase(data)
     this->m_bVar6D = *(BYTE*)(data + 0x7D);
     this->m_bVar6E = *(BYTE*)(data + 0x7E);
     this->m_pad2 = *(BYTE*)(data + 0x7F);
-    this->m_fVar70 = *(float*)(data + 0x80);
-    this->m_trackLen = *(float*)(data + 0x84);
+    this->m_clipStart = *(float*)(data + 0x80);
+    this->m_clipEnd = *(float*)(data + 0x84);
     this->m_animLen = *(float*)(data + 0x88);
     this->m_fVar7C = *(float*)(data + 0x8C);
     this->m_bVar80 = *(BYTE*)(data + 0x90);

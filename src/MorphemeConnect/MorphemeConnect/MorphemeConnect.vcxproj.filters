@@ -159,43 +159,10 @@
     <ClInclude Include="MorphemeConnect.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_dx11.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_win32.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>File di intestazione\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imnodes\imnodes.h">
-      <Filter>File di intestazione\imnodes</Filter>
-    </ClInclude>
-    <ClInclude Include="imnodes\imnodes_internal.h">
-      <Filter>File di intestazione\imnodes</Filter>
-    </ClInclude>
     <ClInclude Include="imsequencer\ImSequencer.h">
       <Filter>File di intestazione\imsequencer</Filter>
     </ClInclude>
-    <ClInclude Include="MathHelper\MathHelper.h">
-      <Filter>File di intestazione\MathHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug\Debug.h">
+    <ClInclude Include="DebugOutput\Debug.h">
       <Filter>File di intestazione\Debug</Filter>
     </ClInclude>
     <ClInclude Include="extern.h">
@@ -513,39 +480,75 @@
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="FromsoftFormat\NSAReader\NSAReader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_SkeletonMap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessReader\ProcessReader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_custom_widget.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_custom_logic.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\custom\imgui_custom_logic.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\custom\imgui_custom_widget.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StepTimer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\TinyXML\tinyxml2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FlverModel\FlverModel.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Math.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_win32.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_tables.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>File di origine\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imnodes\imnodes.cpp">
-      <Filter>File di origine\imnodes</Filter>
-    </ClCompile>
     <ClCompile Include="imsequencer\ImSequencer.cpp">
       <Filter>File di origine\imsequencer</Filter>
     </ClCompile>
-    <ClCompile Include="MathHelper\MathHelper.cpp">
-      <Filter>File di origine\MathHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug\Debug.cpp">
+    <ClCompile Include="DebugOutput\Debug.cpp">
       <Filter>File di origine\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">
@@ -586,9 +589,6 @@
     </ClCompile>
     <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp">
       <Filter>File di origine\FromsoftReader\NMBReader</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
     </ClCompile>
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.cpp">
       <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
@@ -695,6 +695,54 @@
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="FromsoftFormat\NSAReader\NSAReader.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessReader\ProcessReader.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\custom\imgui_custom_logic.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\custom\imgui_custom_widget.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\TinyXML\tinyxml2.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FlverModel\FlverModel.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Math.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MorphemeConnect.rc">
@@ -710,7 +758,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="fromloader\src\util\stringio\simple_sjis_table.bin">
       <Filter>File di intestazione\fromloader</Filter>
     </None>
@@ -720,5 +767,6 @@
     <None Include="rotate_alt.cur">
       <Filter>File di risorse</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

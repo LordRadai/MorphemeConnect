@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
-#include "../MathHelper/MathHelper.h"
+#include "../Math/Math.h"
 
 struct TimeActEditor
 {

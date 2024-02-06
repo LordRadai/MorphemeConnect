@@ -14,10 +14,10 @@ public:
 		};
 
 		int m_numEvents;
-		int m_iVar4;
+		int m_channelId;
 		char* m_trackName;
 		int m_eventId;
-		int m_iVar14;
+		int m_index;
 		std::vector<Event> m_events;
 	};
 
@@ -27,6 +27,6 @@ public:
 	MorphemeBundle_EventTrack(MorphemeBundle* bundle);
 	~MorphemeBundle_EventTrack();
 
-	void WriteBinary(ofstream* out);
+	void WriteBinary(ofstream* out, UINT64 alignment);
 	int CalculateBundleSize();
 };

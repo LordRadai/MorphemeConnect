@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../FromsoftFormat/NMBReader/NMBReader.h"
-#include "../MathHelper/MathHelper.h"
+#include "../Math/Math.h"
 
 struct EventTrackEditor
 {

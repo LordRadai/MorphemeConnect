@@ -5,6 +5,22 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_new|Win32">
+      <Configuration>Release_new</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_new|x64">
+      <Configuration>Release_new</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_test|Win32">
+      <Configuration>Release_test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_test|x64">
+      <Configuration>Release_test</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -33,6 +49,18 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -41,6 +69,20 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -63,10 +105,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -74,15 +128,52 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)External\lib\Debug;$(LibraryPath)</LibraryPath>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
     <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'">
+    <LibraryPath>$(SolutionDir)External\lib\Release;$(LibraryPath)</LibraryPath>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'">
+    <LibraryPath>$(SolutionDir)External\lib\Debug;$(LibraryPath)</LibraryPath>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <LinkIncremental />
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)External\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
@@ -114,42 +205,89 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Env;C:\Env\nlohmann;C:\Env\icu-windows\include\unicode;C:\Env\icu-windows\include;C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <Optimization>MaxSpeed</Optimization>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);IM_VEC2_CLASS_EXTRA</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Env;C:\Env\nlohmann;C:\Env\icu-windows\include\unicode;C:\Env\icu-windows\include;C:\Env\vcpkg-2023.08.09\vcpkg-2023.08.09\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;$(SolutionDir)External\include\inih;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <Optimization>Disabled</Optimization>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
-    <ClInclude Include="Debug\Debug.h" />
+    <ClInclude Include="DebugOutput\Debug.h" />
     <ClInclude Include="extern.h" />
+    <ClInclude Include="FlverModel\FlverModel.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="fromloader\cmem.h" />
     <ClInclude Include="fromloader\fromloader.h" />
@@ -191,6 +329,9 @@
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_SkeletonMap.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h" />
@@ -198,23 +339,27 @@
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeDataAttribUnknown.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h" />
+    <ClInclude Include="FromsoftFormat\NMBReader\TinyXML\tinyxml2.h" />
+    <ClInclude Include="FromsoftFormat\NSAReader\NSAReader.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h" />
+    <ClInclude Include="imgui\custom\imgui_custom_logic.h" />
+    <ClInclude Include="imgui\custom\imgui_custom_widget.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_custom_logic.h" />
+    <ClInclude Include="imgui\imgui_custom_widget.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
     <ClInclude Include="imgui\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="imnodes\imnodes.h" />
-    <ClInclude Include="imnodes\imnodes_internal.h" />
     <ClInclude Include="imsequencer\ImSequencer.h" />
     <ClInclude Include="inih\ini.h" />
     <ClInclude Include="inih\INIReader.h" />
-    <ClInclude Include="MathHelper\MathHelper.h" />
+    <ClInclude Include="Math\Math.h" />
     <ClInclude Include="MorphemeConnect.h" />
     <ClInclude Include="nlohmann\adl_serializer.hpp" />
     <ClInclude Include="nlohmann\byte_container_with_subtype.hpp" />
@@ -260,11 +405,13 @@
     <ClInclude Include="nlohmann\ordered_map.hpp" />
     <ClInclude Include="nlohmann\thirdparty\hedley\hedley.hpp" />
     <ClInclude Include="nlohmann\thirdparty\hedley\hedley_undef.hpp" />
+    <ClInclude Include="ProcessReader\ProcessReader.h" />
     <ClInclude Include="Renderer\StepTimer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\Camera\Camera.h" />
     <ClInclude Include="Scene\DebugDraw.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\StepTimer.h" />
     <ClInclude Include="StringHelper\StringHelper.h" />
     <ClInclude Include="TaeTemplate\TaeTemplate.h" />
     <ClInclude Include="targetver.h" />
@@ -272,9 +419,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="Debug\Debug.cpp" />
+    <ClCompile Include="DebugOutput\Debug.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.h" />
+    <ClCompile Include="FlverModel\FlverModel.cpp" />
     <ClCompile Include="fromloader\cmem.c" />
     <ClCompile Include="fromloader\src\formats\binder\binder.cpp" />
     <ClCompile Include="fromloader\src\formats\binder\bnd\bnd3.cpp" />
@@ -302,16 +450,21 @@
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp" />
+    <ClCompile Include="FromsoftFormat\NMBReader\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="FromsoftFormat\NSAReader\NSAReader.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp" />
+    <ClCompile Include="imgui\custom\imgui_custom_logic.cpp" />
+    <ClCompile Include="imgui\custom\imgui_custom_widget.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -319,12 +472,12 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="imnodes\imnodes.cpp" />
     <ClCompile Include="imsequencer\ImSequencer.cpp" />
     <ClCompile Include="inih\ini.c" />
     <ClCompile Include="inih\INIReader.cpp" />
-    <ClCompile Include="MathHelper\MathHelper.cpp" />
+    <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="MorphemeConnect.cpp" />
+    <ClCompile Include="ProcessReader\ProcessReader.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />
     <ClCompile Include="Scene\DebugDraw.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -347,12 +500,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\directxtk_uwp.2023.4.28.1\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2023.4.28.1\build\native\directxtk_uwp.targets')" />
+    <Import Project="..\packages\directxtk_uwp.2023.9.6.1\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2023.9.6.1\build\native\directxtk_uwp.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\directxtk_uwp.2023.4.28.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2023.4.28.1\build\native\directxtk_uwp.targets'))" />
+    <Error Condition="!Exists('..\packages\directxtk_uwp.2023.9.6.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2023.9.6.1\build\native\directxtk_uwp.targets'))" />
   </Target>
 </Project>

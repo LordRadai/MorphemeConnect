@@ -103,11 +103,11 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
 {
 	this->m_magic[0] = 0;
 	this->m_magic[1] = 0;
-	this->m_bundleType = Bundle_FileHeader;
+	this->m_assetType = kAsset_Header;
 	this->m_signature = 0;
 
 	for (size_t i = 0; i < 16; i++)
-		this->m_header[i] = 0;
+		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 0;
@@ -119,11 +119,11 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 {
 	this->m_magic[0] = bundle->m_magic[0]; assert(this->m_magic[0] == 24);
 	this->m_magic[1] = bundle->m_magic[1]; assert(this->m_magic[1] == 10);
-	this->m_bundleType = bundle->m_bundleType; assert(this->m_bundleType == Bundle_FileNameLookupTable);
+	this->m_assetType = bundle->m_assetType; assert(this->m_assetType == kAsset_SimpleAnimruntimeIDtoFilenameLookup);
 	this->m_signature = bundle->m_signature;
 
 	for (size_t i = 0; i < 16; i++)
-		this->m_header[i] = bundle->m_header[i];
+		this->m_guid[i] = bundle->m_guid[i];
 
 	this->m_dataSize = bundle->m_dataSize;
 	this->m_dataAlignment = bundle->m_dataAlignment;
@@ -135,12 +135,12 @@ MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
 {
 }
 
-void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out)
+void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 alignmnent)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_header, 16);
+	MemReader::WriteByteArray(out, this->m_guid, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
@@ -167,9 +167,35 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out)
 
 	WORD endFile = 0;
 	MemReader::WriteWord(out, &endFile);
+
+	MemReader::AlignStream(out, alignmnent);
 }
 
 int MorphemeBundle_FileNameLookupTable::CalculateBundleSize()
 {
 	return this->m_dataSize;
+}
+
+std::string MorphemeBundle_FileNameLookupTable::GetAnimName(int anim_id)
+{
+	if (anim_id > this->m_data->m_animList.m_elemCount)
+		return "";
+
+	return std::string(&this->m_data->m_animList.m_strings[this->m_data->m_animList.m_localOffsets[anim_id]]);
+}
+
+std::string MorphemeBundle_FileNameLookupTable::GetXmdSourceAnimFileName(int anim_id)
+{
+	if (anim_id > this->m_data->m_sourceXmdList.m_elemCount)
+		return "";
+
+	return std::string(&this->m_data->m_sourceXmdList.m_strings[this->m_data->m_sourceXmdList.m_localOffsets[anim_id]]);
+}
+
+std::string MorphemeBundle_FileNameLookupTable::GetAnimTake(int anim_id)
+{
+	if (anim_id > this->m_data->m_tagList.m_elemCount)
+		return "";
+
+	return std::string(&this->m_data->m_tagList.m_strings[this->m_data->m_tagList.m_localOffsets[anim_id]]);
 }

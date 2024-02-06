@@ -8,6 +8,8 @@
 #include "Application/Application.h"
 #include "Scene/Scene.h"
 #include "TaeTemplate/TaeTemplate.h"
+#include "ProcessReader/ProcessReader.h"
+#include "fbxsdk.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -26,6 +28,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 Application g_morphemeConnect;
 Scene g_preview;
 TaeTemplate g_taeTemplate;
+ProcessReader g_frpg2;
+fbxsdk::FbxManager* g_pFbxManager = nullptr;
 
 void initImGui(HWND hwnd)
 {
@@ -100,6 +104,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     initImGui(hwnd);
     g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, nullptr);
+    g_pFbxManager = FbxManager::Create();
 
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

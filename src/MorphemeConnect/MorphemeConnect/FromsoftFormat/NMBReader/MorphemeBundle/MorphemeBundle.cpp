@@ -1,5 +1,5 @@
 #include "MorphemeBundle.h"
-#include "../../../Debug/Debug.h"
+#include "../../../DebugOutput/Debug.h"
 
 //define BUNDLE_DEBUG to log to console the read packets. Not recommended unless you think you're getting invalid results
 //#define BUNDLE_DEBUG 
@@ -8,11 +8,11 @@ MorphemeBundle::MorphemeBundle()
 {
 	this->m_magic[0] = 0;
 	this->m_magic[1] = 0;
-	this->m_bundleType = Bundle_Invalid;
+	this->m_assetType = kAsset_Invalid;
 	this->m_signature = 0;
 
 	for (size_t i = 0; i < 16; i++)
-		this->m_header[i] = 0;
+		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 0;
@@ -33,9 +33,9 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 		return;
 	}
 
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_bundleType);
+	MemReader::ReadDWord(pFile, (DWORD*)&this->m_assetType);
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_signature);
-	MemReader::ReadByteArray(pFile, this->m_header, 16);
+	MemReader::ReadByteArray(pFile, this->m_guid, 16);
 	MemReader::ReadQWord(pFile, &this->m_dataSize);
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_dataAlignment);
 	MemReader::ReadDWord(pFile, (DWORD*)&this->m_iVar2C);
@@ -48,7 +48,7 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 		MemReader::ReadByteArray(pFile, this->m_data, this->m_dataSize);
 	}
 
-	if (this->m_bundleType == Bundle_SkeletonMap)
+	if (this->m_assetType == kAsset_Rig)
 		offset = 4; //This packet is always off by 4 bytes
 
 	streampos pNext = ((streampos)this->m_dataSize + (streampos)3 + pDataStart) & 0xfffffffffffffffcLL; //Align the next section to 32 bits. The NMB file is compiled in 32 bits and then padded for 64
@@ -57,13 +57,13 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 #ifdef BUNDLE_DEBUG
 	printf_s("Bundle {\n");
 	printf_s("\tm_magic=(%d, %d)\n", this->m_magic[0], this->m_magic[1]);
-	printf_s("\tm_bundleType=%d\n", this->m_bundleType);
+	printf_s("\tm_bundleType=%d\n", this->m_assetType);
 	printf_s("\tm_signature=%x\n", this->m_signature);
 	printf_s("\tm_header={");
 
 	for (size_t i = 0; i < 16; i++)
 	{
-		printf_s("%x", this->m_header[i]);
+		printf_s("%x", this->m_guid[i]);
 
 		if (i != 15)
 			printf_s(" ");
@@ -93,12 +93,12 @@ MorphemeBundle::~MorphemeBundle()
 {
 }
 
-void MorphemeBundle::WriteBinary(ofstream* out)
+void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
 {
 	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_bundleType);
+	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
 	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_header, 16);
+	MemReader::WriteByteArray(out, this->m_guid, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
@@ -107,6 +107,8 @@ void MorphemeBundle::WriteBinary(ofstream* out)
 	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
 
 	MemReader::WriteByteArray(out, this->m_data, this->m_dataSize);
+
+	MemReader::AlignStream(out, alignment);
 }
 
 int MorphemeBundle::CalculateBundleSize()

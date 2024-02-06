@@ -1,22 +1,74 @@
 #include "Application.h"
 #include "../extern.h"
-#include "../MathHelper/MathHelper.h"
+#include "../Math/Math.h"
 #include "../StringHelper/StringHelper.h"
 #include "../Scene/Scene.h"
 
 #include <Shlwapi.h>
 #include <filesystem>
 
+std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, std::wstring m_chrId)
+{
+	std::vector<std::wstring> files;
+
+	for (const auto& entry : std::filesystem::directory_iterator(tae_path))
+	{
+		if (entry.path().extension().compare(".tae") == 0)
+		{
+			std::wstring filename = entry.path().filename();
+			std::wstring file_chr_id_str = filename.substr(1, 4);
+
+			if (file_chr_id_str.compare(m_chrId) == 0)
+			{
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
+				files.push_back(entry.path());
+			}
+		}
+	}
+
+	if (files.size() == 0)
+		Debug::Alert(Debug::LVL_DEBUG, "Application.cpp", "Could not find any TimeAct files belonging to c%d in %ws\n", m_chrId, tae_path);
+
+	return files;
+}
+
+std::wstring getModelNameFromChrId(std::wstring model_path, std::wstring m_chrId)
+{
+	for (const auto& entry : std::filesystem::directory_iterator(model_path))
+	{
+		if (entry.path().extension().compare(".bnd") == 0)
+		{
+			std::wstring filename = entry.path().filename();
+			std::wstring file_chr_id_str = filename.substr(1, 4);
+
+			if (file_chr_id_str.compare(m_chrId) == 0)
+				return entry.path();
+		}
+	}
+
+	return L"";
+}
+
+std::wstring getModelNameFromObjId(std::wstring model_path, std::wstring obj_id)
+{
+	for (const auto& entry : std::filesystem::directory_iterator(model_path))
+	{
+		std::wstring filename = entry.path().filename();
+		std::wstring file_chr_id_str = filename.substr(0, 8);
+
+		if ((file_chr_id_str.compare(obj_id) == 0) && (entry.path().extension() == ".bnd"))
+			return entry.path();
+	}
+
+	return L"";
+}
+
 Application::Application()
 {
-	this->m_windowStates.m_settingWindow = false;
-	this->m_windowStates.m_previewSettings = false;
 }
 
 Application::~Application()
 {
-	this->m_windowStates.m_settingWindow = false;
-	this->m_windowStates.m_previewSettings = false;
 }
 
 void Application::GUIStyle()
@@ -98,8 +150,8 @@ void Application::GUIStyle()
 void Application::Update()
 {
 	this->m_model.UpdateModel();
-	ProcessVariables();
-	RenderGUI("MorphemeConnect");
+	this->CheckFlags();
+	this->RenderGUI("MorphemeConnect");
 }
 
 std::string getTaeCategoryTooltip(int category)
@@ -185,13 +237,35 @@ void Application::RenderGUI(const char* title)
 	ImGuiID dockSpace = ImGui::GetID("MainWindowDockspace");
 	ImGui::DockSpace(dockSpace, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 
+	//Menu Bar
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open", NULL, &this->m_flags.m_loadFile)) { this->m_flags.m_loadFile = true; }
-			if (ImGui::MenuItem("Save", NULL, &this->m_flags.m_saveFile)) { this->m_flags.m_saveFile = true; }
-			if (ImGui::MenuItem("Save All", NULL, &this->m_flags.m_saveAll)) { this->m_flags.m_saveAll = true; }
+			if (ImGui::MenuItem("Open...", NULL, &this->m_flags.m_loadFile)) { this->m_flags.m_loadFile = true; }
+
+			ImGui::Separator();
+
+			if (ImGui::BeginMenu("Save"))
+			{
+				if (ImGui::MenuItem("Save NMB", NULL, &this->m_flags.m_saveNmb)) { this->m_flags.m_saveNmb = true; }
+				if (ImGui::MenuItem("Save TAE", NULL, &this->m_flags.m_saveTae)) { this->m_flags.m_saveTae = true; }
+				if (ImGui::MenuItem("Save All", NULL, &this->m_flags.m_saveAll)) { this->m_flags.m_saveAll = true; }
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::BeginMenu("Export"))
+			{
+#ifdef _DEBUG
+				if (ImGui::MenuItem("Export All", NULL, &this->m_flags.m_exportAll)) { this->m_flags.m_exportAll = true; }
+#endif
+				if (ImGui::MenuItem("Export Model", NULL, &this->m_flags.m_exportModel)) { this->m_flags.m_exportModel = true; }
+
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenu();
 		}
@@ -199,7 +273,13 @@ void Application::RenderGUI(const char* title)
 		if (ImGui::BeginMenu("Edit"))
 		{
 			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_settingWindow)) { this->m_windowStates.m_settingWindow != this->m_windowStates.m_settingWindow; }
+			
+#ifdef _DEBUG
+			ImGui::Separator();
 
+			if (ImGui::MenuItem("Find TimeAct", NULL, &this->m_windowStates.m_queryTae)) { this->m_windowStates.m_queryTae != this->m_windowStates.m_queryTae; }
+			if (ImGui::MenuItem("Find EventTrack", NULL, &this->m_windowStates.m_queryEventTrack)) { this->m_windowStates.m_queryEventTrack != this->m_windowStates.m_queryEventTrack; }
+#endif
 			ImGui::EndMenu();
 		}
 
@@ -208,7 +288,55 @@ void Application::RenderGUI(const char* title)
 	ImGui::End();
 
 	ImGui::SetNextWindowSize(ImVec2(800, 800), ImGuiCond_Appearing);
+	this->ModelPreviewWindow();
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+
+	this->AssetsWindow();
+
+	static int firstFrame = 0;
+	static bool expanded = true;
+	static int currentFrame = 0;
+	static float zoomLevel = 5.f;
+
+	if (this->m_eventTrackEditorFlags.m_load)
+		this->ResetEventTrackEditor();
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+
+	this->EventTrackWindow(&currentFrame, &firstFrame, &zoomLevel, &expanded);
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+
+	this->EventTrackInfoWindow();
+
+	static int firstFrameTae = 0;
+	static bool expandedTae = true;
+	static int currentFrameTae = 0;
+	static float zoomLevelTae = 10.f;
+
+	if (this->m_eventTrackEditorFlags.m_load)
+		this->ResetTimeActEditor();
+
+	zoomLevelTae = 2 * zoomLevel;
+
+	this->SetTimeActCurrentFrameFromEventTrack(&currentFrameTae, currentFrame);
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+
+	this->TimeActWindow(&currentFrameTae, &firstFrameTae, &zoomLevelTae, &expandedTae);
+
+	zoomLevel = zoomLevelTae * 0.5f;
+
+	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+
+	this->TimeActInfoWindow();
+}
+
+void Application::ModelPreviewWindow()
+{
 	ImGui::Begin("Preview", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar);
+
 	{
 		if (ImGui::BeginMenuBar())
 		{
@@ -217,7 +345,7 @@ void Application::RenderGUI(const char* title)
 			if (ImGui::BeginMenu("View"))
 			{
 				if (ImGui::MenuItem("Xray", NULL, &this->m_model.m_settings.m_xray)) { this->m_model.m_settings.m_xray != this->m_model.m_settings.m_xray; }
-				
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -227,7 +355,7 @@ void Application::RenderGUI(const char* title)
 
 		int	width = ImGui::GetWindowSize().x;
 		int	height = ImGui::GetWindowSize().y;
-	
+
 		ImGui::InvisibleButton("viewport_preview", ImVec2(width, height));
 
 		if (ImGui::IsItemFocused() && ImGui::IsItemHovered())
@@ -245,14 +373,18 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::GetWindowDrawList()->AddImage(g_preview.m_shaderResourceViewViewport, pos, ImVec2(pos.x + width, pos.y + height));
 	}
-	ImGui::End();
 
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::End();
+}
+
+void Application::AssetsWindow()
+{
 	ImGui::Begin("Assets");
+
 	{
 		static int selected_tae_file_idx = -1;
 		char chr_id_str[50];
-		sprintf_s(chr_id_str, "%04d", this->m_eventTrackEditorFlags.chr_id);
+		sprintf_s(chr_id_str, "%04d", this->m_chrId);
 
 		std::string tae_popup = "Load TimeAct (c" + std::string(chr_id_str) + ")";
 
@@ -316,6 +448,8 @@ void Application::RenderGUI(const char* title)
 
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
+						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Selected TimeAct %s\n", tae_file.c_str());
+
 						m_tae.m_init = false;
 						m_tae = TimeActReader(PWSTR(filepath.c_str()));
 
@@ -334,6 +468,8 @@ void Application::RenderGUI(const char* title)
 
 							this->m_eventTrackEditorFlags.m_loadTae = false;
 						}
+						else
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Failed to load file %s\n", tae_file.c_str());
 
 						ImGui::CloseCurrentPopup();
 					}
@@ -349,27 +485,27 @@ void Application::RenderGUI(const char* title)
 		ImGui::BeginTabBar("assets tab bar");
 		if (ImGui::BeginTabItem("NSA"))
 		{
-			if (this->m_nmb.m_init)
-				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.m_fileName.c_str()).c_str());
+			if (this->m_nmb.IsInitialised())
+				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
 
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (this->m_nmb.m_init)
+			if (this->m_nmb.IsInitialised())
 			{
 				ImGui::BeginChild("NSA");
 				{
-					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
 					{
 						std::string anim_name = "";
 
 						if (this->m_eventTrackEditorFlags.m_edited[i])
 							anim_name += "*";
 
-						anim_name += m_nmb.m_compressedNsa[i].m_name;
+						anim_name += m_nmb.GetAnimationInterface(i)->m_name;
 
-						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.m_compressedNsa[i].m_id);
+						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.GetAnimationInterface(i)->m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -378,8 +514,8 @@ void Application::RenderGUI(const char* title)
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
-								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.m_compressedNsa[i].m_id;
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.m_compressedNsa[i].m_id;
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
 
 								if (ImGui::IsMouseDoubleClicked(0))
 									this->m_eventTrackEditorFlags.m_load = true;
@@ -396,22 +532,22 @@ void Application::RenderGUI(const char* title)
 
 		if (ImGui::BeginTabItem("Source XMD"))
 		{
-			if (this->m_nmb.m_init)
-				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.m_fileName.c_str()).c_str());
+			if (this->m_nmb.IsInitialised())
+				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
 
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
 			filter.Draw("##asset searchbar", 340.f);
 
-			if (this->m_nmb.m_init)
+			if (this->m_nmb.IsInitialised())
 			{
 				ImGui::BeginChild("XMD");
 				{
-					for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdList.m_elemCount; i++)
 					{
-						std::string anim_name = m_nmb.m_sourceXmd[i].m_name;
+						std::string anim_name = m_nmb.GetAnimationInterface(i)->m_sourceName;
 
-						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.m_compressedNsa[i].m_id);
+						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.GetAnimationInterface(i)->m_id);
 
 						if (filter.PassFilter(anim_name.c_str()))
 						{
@@ -420,8 +556,8 @@ void Application::RenderGUI(const char* title)
 
 							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 							{
-								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.m_sourceXmd[i].m_id;
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.m_sourceXmd[i].m_id;
+								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
+								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
 
 								if (ImGui::IsMouseDoubleClicked(0))
 									this->m_eventTrackEditorFlags.m_load = true;
@@ -483,7 +619,7 @@ void Application::RenderGUI(const char* title)
 								this->m_timeActEditorFlags.m_edited.push_back(false);
 						}
 					}
-					
+
 					this->m_eventTrackEditorFlags.m_load = true;
 					this->m_timeActFlags.m_addTimeAct = false;
 					ImGui::CloseCurrentPopup();
@@ -496,7 +632,7 @@ void Application::RenderGUI(const char* title)
 					if (ImGui::Button("Add Selected"))
 					{
 						this->m_timeActFlags.m_addTimeActId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
-						this->m_timeActFlags.m_addTimeActLenght = MathHelper::FrameToTime(this->m_eventTrackEditor.m_frameMax);
+						this->m_timeActFlags.m_addTimeActLenght = Math::FrameToTime(this->m_eventTrackEditor.m_frameMax);
 
 						if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
 							Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
@@ -613,22 +749,17 @@ void Application::RenderGUI(const char* title)
 
 		ImGui::EndTabItem();
 	}
+
 	ImGui::End();
+}
 
-	static int firstFrame = 0;
-	static bool expanded = true;
-	static int currentFrame = 0;
-	static float zoomLevel = 5.f;
-
-	if (this->m_eventTrackEditorFlags.m_load)
-		this->ResetEventTrackEditor();
-
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+void Application::EventTrackWindow(int* current_frame, int* first_frame, float* zoom_level, bool* is_expanded)
+{
 	ImGui::Begin("EventTrack");
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
-		if (this->m_nmb.m_init)
+		if (this->m_nmb.IsInitialised())
 		{
 			if (ImGui::Button("Load"))
 			{
@@ -651,35 +782,37 @@ void Application::RenderGUI(const char* title)
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(m_nmb.m_compressedNsa[this->m_eventTrackEditor.m_animIdx].m_name.c_str());
+				ImGui::Text(StringHelper::RemoveExtension(m_nmb.GetAnimationInterface(this->m_eventTrackEditor.m_animIdx)->m_sourceName).c_str());
 			else
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_eventTrackEditor, &currentFrame, &this->m_eventTrackEditorFlags.m_selectedTrack, &this->m_eventTrackEditorFlags.m_selectedEvent, &expanded, focused, &firstFrame, &zoomLevel, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_eventTrackEditor, current_frame, &this->m_eventTrackEditorFlags.m_selectedTrack, &this->m_eventTrackEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
-	ImGui::End();
 
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+	ImGui::End();
+}
+
+void Application::EventTrackInfoWindow()
+{
 	ImGui::Begin("Event Data");
 	{
 		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (this->m_eventTrackEditorFlags.m_selectedTrack != -1 && this->m_eventTrackEditorFlags.m_selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (this->m_eventTrackEditorFlags.m_selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack].m_numEvents))
 		{
 			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack];
-			float startTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
-			float endTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float startTime = Math::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float endTime = Math::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
 			ImGui::Text(track->m_name);
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event ID", &track->m_eventId, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
-				ImGui::Text("Info");
-				ImGui::Separator();
+				ImGui::SeparatorText("Info");
 
-				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentWidth());
 				ImGui::Text(getEventTrackCategoryTooltip(track->m_eventId).c_str());
 				ImGui::PopTextWrapPos();
 			}
@@ -687,10 +820,9 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputInt("Event Value", &track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_value, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
-				ImGui::Text("Info");
-				ImGui::Separator();
+				ImGui::SeparatorText("Info");
 
-				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentWidth());
 				ImGui::Text(getEventTrackEventTooltip(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_value).c_str());
 				ImGui::PopTextWrapPos();
 			}
@@ -709,39 +841,14 @@ void Application::RenderGUI(const char* title)
 			}
 		}
 	}
+
 	ImGui::End();
+}
 
-	static int firstFrameTae = 0;
-	static bool expandedTae = true;
-	static int currentFrameTae = 0;
-	static float zoomLevelTae = 10.f;
-
-	if (this->m_eventTrackEditorFlags.m_load)
-		this->ResetTimeActEditor();
-
-	zoomLevelTae = 2 * zoomLevel;
-
-	if (m_timeActEditor.m_source)
-	{
-		if (this->m_eventTrackEditor.GetTrackCount() > 0)
-		{
-			for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
-			{
-				if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
-				{
-					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
-					this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-				}
-			}
-
-			if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-				currentFrameTae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(currentFrame)), 30, false);
-		}
-	}
-
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+void Application::TimeActWindow(int* current_frame, int* first_frame, float* zoom_level, bool* is_expanded)
+{
 	ImGui::Begin("TimeAct");
+
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
@@ -773,32 +880,32 @@ void Application::RenderGUI(const char* title)
 				ImGui::Text("");
 
 			ImGui::BeginChild("sequencer");
-			ImSequencer::Sequencer(&m_timeActEditor, &currentFrameTae, &this->m_timeActEditorFlags.m_selectedTrack, &this->m_timeActEditorFlags.m_selectedEvent, &expandedTae, focused, &firstFrameTae, &zoomLevelTae, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
+			ImSequencer::Sequencer(&m_timeActEditor, current_frame, &this->m_timeActEditorFlags.m_selectedTrack, &this->m_timeActEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
+
 	ImGui::End();
+}
 
-	zoomLevel = zoomLevelTae * 0.5f;
-
-	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
+void Application::TimeActInfoWindow()
+{
 	ImGui::Begin("TimeAct Data");
 	{
 		if ((this->m_timeActEditor.GetTrackCount() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.GetTrackCount()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack];
-			float startTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
-			float endTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float startTime = Math::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float endTime = Math::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
 
 			ImGui::Text(m_timeActEditor.GetEventLabel(this->m_timeActEditorFlags.m_selectedTrack, this->m_timeActEditorFlags.m_selectedEvent, false).c_str());
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event Group", &track->m_eventGroup, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
-				ImGui::Text("Info");
-				ImGui::Separator();
+				ImGui::SeparatorText("Info");
 
-				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentWidth());
 				ImGui::Text(getTaeCategoryTooltip(track->m_eventGroup).c_str());
 				ImGui::PopTextWrapPos();
 			}
@@ -806,10 +913,9 @@ void Application::RenderGUI(const char* title)
 			ImGui::InputInt("Event ID", &track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_value, 1, 0);
 			if (ImGui::IsItemHovered())
 			{
-				ImGui::Text("Info");
-				ImGui::Separator();
+				ImGui::SeparatorText("Info");
 
-				ImGui::PushTextWrapPos(ImGui::GetWindowContentRegionWidth());
+				ImGui::PushTextWrapPos(ImGui::GetWindowContentWidth());
 				ImGui::Text(getTaeEventTooltip(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_value).c_str());
 				ImGui::PopTextWrapPos();
 			}
@@ -831,12 +937,8 @@ void Application::RenderGUI(const char* title)
 			ImGui::PopItemWidth();
 		}
 	}
+
 	ImGui::End();
-}
-
-void Application::RenderPopups()
-{
-
 }
 
 void Application::SettingsWindow()
@@ -846,16 +948,26 @@ void Application::SettingsWindow()
 
 	ImGui::BeginTabBar("settings");
 
-	/*
-	if (ImGui::BeginTabItem("GUI"))
+#ifdef _DEBUG
+	if (ImGui::BeginTabItem("Style"))
 	{
 		ImGui::ShowStyleEditor();
 
 		ImGui::EndTabItem();
 	}
-	*/
+#endif
 
-	if (ImGui::BeginTabItem("EventTrack Editor"))
+	if (ImGui::BeginTabItem("Export Settings"))
+	{
+		ImGui::Checkbox("Export morpheme rig with flver model", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
+
+#ifdef _DEBUG
+		ImGui::Checkbox("Export model with animations", &this->m_fbxExportFlags.m_exportModelWithAnims);
+#endif
+		ImGui::EndTabItem();
+	}
+
+	if (ImGui::BeginTabItem("EventTrack Editor Colors"))
 	{
 		ImGui::ColorEdit4("Track", (float*)&this->m_eventTrackEditor.m_colors.m_trackColor);
 		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_eventTrackEditor.m_colors.m_trackColorInactive);
@@ -868,7 +980,7 @@ void Application::SettingsWindow()
 		ImGui::EndTabItem();
 	}
 
-	if (ImGui::BeginTabItem("TimeAct Editor"))
+	if (ImGui::BeginTabItem("TimeAct Editor Colors"))
 	{
 		ImGui::ColorEdit4("Track", (float*)&this->m_timeActEditor.m_colors.m_trackColor);
 		ImGui::ColorEdit4("Track Inactive", (float*)&this->m_timeActEditor.m_colors.m_trackColorInactive);
@@ -896,8 +1008,7 @@ void Application::PreviewDebugManagerWindow()
 	ImGui::BeginTabBar("preview_settings");
 	if (ImGui::BeginTabItem("Camera"))
 	{
-		ImGui::Text("Parameters");
-		ImGui::Separator();
+		ImGui::SeparatorText("Parameters");
 
 		ImGui::DragFloat("Target Distance", &g_preview.m_camera.m_radius, 0.1f, 0.1f, 10.f);
 		ImGui::InputFloat3("Target Offset", &g_preview.m_camera.m_offsets.x);
@@ -911,8 +1022,7 @@ void Application::PreviewDebugManagerWindow()
 		ImGui::InputFloat("Height", &g_preview.m_camera.m_height, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat("Aspect Ratio", &g_preview.m_camera.m_aspectRatio, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
 
-		ImGui::Text("Input");
-		ImGui::Separator();
+		ImGui::SeparatorText("Input");
 
 		ImGui::Checkbox("Invert X Drag", &g_preview.m_camera.m_settings.m_dragInvertX);
 		ImGui::Checkbox("Invert Y Drag", &g_preview.m_camera.m_settings.m_dragInvertY);
@@ -920,8 +1030,7 @@ void Application::PreviewDebugManagerWindow()
 		ImGui::Checkbox("Invert X Rotation", &g_preview.m_camera.m_settings.m_rotInvertX);
 		ImGui::Checkbox("Invert Y Rotation", &g_preview.m_camera.m_settings.m_rotInvertY);
 
-		ImGui::Text("Speed Settings");
-		ImGui::Separator();
+		ImGui::SeparatorText("Speed Settings");
 
 		ImGui::DragFloat("Drag Speed", &g_preview.m_camera.m_settings.m_speedParams.m_dragSpeed, 0.1f, 0.f, 10.f);
 		ImGui::DragFloat("Zoom Speed", &g_preview.m_camera.m_settings.m_speedParams.m_zoomSpeed, 0.1f, 0.f, 100.f);
@@ -940,7 +1049,7 @@ void Application::PreviewDebugManagerWindow()
 	ImGui::End();
 }
 
-void Application::ProcessVariables()
+void Application::CheckFlags()
 {
 	if (this->m_windowStates.m_settingWindow)
 	{
@@ -950,6 +1059,16 @@ void Application::ProcessVariables()
 	if (this->m_windowStates.m_previewSettings)
 	{
 		this->PreviewDebugManagerWindow();
+	}
+
+	if (this->m_windowStates.m_queryEventTrack)
+	{
+
+	}
+
+	if (this->m_windowStates.m_queryTae)
+	{
+
 	}
 
 	if (this->m_flags.m_loadFile)
@@ -965,26 +1084,36 @@ void Application::ProcessVariables()
 		this->LoadFile();
 	}
 
-	if (this->m_flags.m_saveFile)
+	if (this->m_flags.m_saveNmb)
 	{
-		this->m_flags.m_saveFile = false;
+		this->m_flags.m_saveNmb = false;
 
-		if (this->m_nmb.m_init || this->m_tae.m_init)
-			this->SaveFile();
+		if (this->m_nmb.IsInitialised())
+			this->SaveNmbFile();
 		else
-			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No file is loaded\n");
+			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No NMB file is loaded\n");
+	}
+
+	if (this->m_flags.m_saveTae)
+	{
+		this->m_flags.m_saveTae = false;
+
+		if (this->m_tae.m_init)
+			this->SaveTaeFile();
+		else
+			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No TAE file is loaded\n");
 	}
 
 	if (this->m_flags.m_saveAll)
 	{
 		this->m_flags.m_saveAll = false;
 
-		if (this->m_nmb.m_init)
+		if (this->m_nmb.IsInitialised())
 		{
-			bool status = m_nmb.SaveToFile(this->m_nmb.m_filePath);
+			bool status = m_nmb.SaveToFile(this->m_nmb.GetFilePath());
 
 			if (status)
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
+				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 			else
 				Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
 		}
@@ -1000,7 +1129,59 @@ void Application::ProcessVariables()
 		}
 	}
 
-	if (this->m_nmb.m_init == false)
+	if (this->m_flags.m_exportAll)
+	{
+		this->m_flags.m_exportAll = false;
+
+		if (this->m_animFiles.size() == 0)
+			Debug::Alert(Debug::LVL_WARN, "Application.cpp", "No animations are loaded");
+
+		std::wstring out_path = L".//Export";
+
+		wchar_t chr_id_str[50];
+		swprintf_s(chr_id_str, L"c%04d", this->m_chrId);
+
+		out_path += L"//" + std::wstring(chr_id_str) + L"//";
+
+		std::filesystem::create_directories(out_path);
+
+		PWSTR export_path = (wchar_t*)out_path.c_str();
+
+		if (!this->ExportModelToFbx(export_path))
+			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
+
+		for (int i = 0; i < this->m_animFiles.size(); i++)
+		{
+			std::filesystem::path anim_out = std::filesystem::path(StringHelper::ToNarrow(export_path) + "//Animations//" + this->m_nmb.GetSourceAnimName(i)).replace_extension(".fbx");
+			std::filesystem::create_directories(anim_out.parent_path());
+
+			if (!this->ExportAnimationToFbx(anim_out, i))
+				Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to export animation %d\n", i);
+
+			if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
+				Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to export event track to XML for animation %d\n", i);
+		}
+	}
+
+	if (this->m_flags.m_exportModel)
+	{
+		this->m_flags.m_exportModel = false;
+
+		std::wstring out_path = L".//Export";
+
+		wchar_t chr_id_str[50];
+		swprintf_s(chr_id_str, L"c%04d", this->m_chrId);
+
+		out_path += L"//" + std::wstring(chr_id_str) + L"//";
+
+		std::filesystem::create_directories(out_path);
+
+		PWSTR export_path = (wchar_t*)out_path.c_str();
+
+		this->ExportModelToFbx(export_path);
+	}
+
+	if (this->m_nmb.IsInitialised() == false)
 	{
 		this->m_eventTrackEditor.Clear();
 
@@ -1016,39 +1197,49 @@ void Application::ProcessVariables()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
-		if ((this->m_nmb.m_init == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+		if ((this->m_nmb.IsInitialised() == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
-			bool found = false;
+			bool found_et = false;
+			bool found_anim = false;
+
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = -1;
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = 0.f;
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = 0.f;
 
-			for (int idx = 0; idx < this->m_nmb.m_network.m_data->m_numNodes; idx++)
+			Debug::DebuggerMessage(Debug::LVL_DEBUG, "Performing lookup for animation ID %d\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
+
+			for (int idx = 0; idx < this->m_nmb.GetNetworkDef()->m_data->m_numNodes; idx++)
 			{
-				NodeDef* node = this->m_nmb.m_network.m_data->m_nodes[idx];
+				MorphemeBundle_NetworkDef* networkDef = this->m_nmb.GetNetworkDef();
+
+				NodeDef* node = networkDef->m_data->m_nodes[idx];
 
 				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
 				{
-					if (this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
+					if (networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
 					{
-						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
-						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)this->m_nmb.m_network.m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
+						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
+						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
 
 						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
+							found_anim = true;
+
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Animation found after %d steps\n", idx);
+
 							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = 0;
-							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = Math::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMax = Math::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
 
 							this->m_eventTrackEditor.m_animIdx = -1;
 
-							for (int i = 0; i < this->m_nmb.m_compressedNsa.size(); i++)
+							for (int i = 0; i < this->m_nmb.GetAnimationCount(); i++)
 							{
-								if (this->m_nmb.m_compressedNsa[i].m_id == source_anim->m_animIdx)
+								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->m_animIdx)
 									this->m_eventTrackEditor.m_animIdx = i;
 							}
 
-							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / source_anim->m_trackLen;
+							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / (source_anim->m_clipEnd - source_anim->m_clipStart);
 
 							int track_count = 0;
 							for (size_t i = 0; i < 3; i++)
@@ -1058,7 +1249,7 @@ void Application::ProcessVariables()
 
 							if (track_count > 0)
 							{
-								found = true;
+								found_et = true;
 
 								for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 								{
@@ -1093,8 +1284,8 @@ void Application::ProcessVariables()
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
 											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 
 											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
 
@@ -1113,10 +1304,19 @@ void Application::ProcessVariables()
 
 								break;
 							}
+							else
+							{
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
+							}
 						}
 					}
 				}
 			}
+
+			if (!found_anim)
+				Debug::DebuggerMessage(Debug::LVL_WARN, "Animation ID %d not found\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
+
+			Debug::DebuggerMessage(Debug::LVL_DEBUG, "\n");
 		}
 	}
 
@@ -1149,7 +1349,7 @@ void Application::ProcessVariables()
 				{
 					float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
 
-					this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
+					this->m_timeActEditor.m_frameMax = Math::TimeToFrame(trackLen, 30);
 					this->m_timeActEditor.m_frameMin = 0;
 
 					this->m_timeActEditor.SetEditedState(false);
@@ -1169,14 +1369,10 @@ void Application::ProcessVariables()
 	}
 }
 
-void Application::NetworkCleanup()
-{
-}
-
 int Application::GetChrIdFromNmbFileName(std::wstring name)
 {
 	std::wstring chr_id_str;
-	int chr_id = -1;
+	int m_chrId = -1;
 
 	int lastCPos = name.find_last_of(L"\\");
 
@@ -1185,11 +1381,11 @@ int Application::GetChrIdFromNmbFileName(std::wstring name)
 
 	chr_id_str = name.substr(lastCPos + 2, 4);
 
-	chr_id = stoi(chr_id_str);
+	m_chrId = stoi(chr_id_str);
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %d\n", chr_id);
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %d\n", m_chrId);
 
-	return chr_id;
+	return m_chrId;
 }
 
 std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
@@ -1206,62 +1402,6 @@ std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
 	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Obj ID: %s\n", obj_id);
 
 	return obj_id;
-}
-
-std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, std::wstring chr_id)
-{
-	std::vector<std::wstring> files;
-	
-	for (const auto& entry : std::filesystem::directory_iterator(tae_path))
-	{
-		if (entry.path().extension().compare(".tae") == 0)
-		{
-			std::wstring filename = entry.path().filename();
-			std::wstring file_chr_id_str = filename.substr(1, 4);
-
-			if (file_chr_id_str.compare(chr_id) == 0)
-			{
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
-				files.push_back(entry.path());
-			}
-		}	
-	}
-
-	if (files.size() == 0)
-		Debug::Alert(Debug::LVL_DEBUG, "Application.cpp", "Found 0 TimeAct files that belong to c%d in %ws\n", chr_id, tae_path);
-
-	return files;
-}
-
-std::wstring getModelNameFromChrId(std::wstring model_path, std::wstring chr_id)
-{
-	for (const auto& entry : std::filesystem::directory_iterator(model_path))
-	{
-		if (entry.path().extension().compare(".bnd") == 0)
-		{
-			std::wstring filename = entry.path().filename();
-			std::wstring file_chr_id_str = filename.substr(1, 4);
-
-			if (file_chr_id_str.compare(chr_id) == 0)
-				return entry.path();
-		}
-	}
-
-	return L"";
-}
-
-std::wstring getModelNameFromObjId(std::wstring model_path, std::wstring obj_id)
-{
-	for (const auto& entry : std::filesystem::directory_iterator(model_path))
-	{
-		std::wstring filename = entry.path().filename();
-		std::wstring file_chr_id_str = filename.substr(0, 8);
-
-		if ((file_chr_id_str.compare(obj_id) == 0) && (entry.path().extension() == ".bnd"))
-			return entry.path();
-	}
-
-	return L"";
 }
 
 void Application::LoadFile()
@@ -1300,29 +1440,45 @@ void Application::LoadFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
-						std::filesystem::path filepath_tae = std::wstring(pszFilePath);
+						std::filesystem::path filepath = std::wstring(pszFilePath);
 
-						if (filepath_tae.extension() == ".nmb")
+						if (filepath.extension() == ".nmb")
 						{
-							m_nmb.m_init = false;
 							m_nmb = NMBReader(pszFilePath);
 							
-							if (m_nmb.m_init)
+							if (m_nmb.IsInitialised())
 							{
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.m_filePath, m_nmb.m_bundles.size(), m_nmb.m_fileSize);
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
+
+								this->m_animFiles.clear();
+								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
+
+								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+								{
+									std::filesystem::path gamepath = pszFilePath;
+									std::wstring parent_path = gamepath.parent_path();
+
+									std::wstring anim_name = StringHelper::ToWide(this->m_nmb.GetFilenameLookupTable()->GetAnimName(i));
+
+									std::wstring anim_path_str = parent_path + L"\\" + anim_name;
+
+									PWSTR anim_path = (wchar_t*)anim_path_str.c_str();
+
+									this->m_animFiles.push_back(NSAReader(anim_path));
+								}
 
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = -1;
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 
 								this->m_eventTrackEditorFlags.m_edited.clear();
-								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount);
+								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
 
-								for (int i = 0; i < m_nmb.m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
 									this->m_eventTrackEditorFlags.m_edited.push_back(false);
 
-								this->m_eventTrackEditorFlags.chr_id = GetChrIdFromNmbFileName(m_nmb.m_filePath);
+								this->m_chrId = GetChrIdFromNmbFileName(m_nmb.GetFilePath());
 
-								if (this->m_eventTrackEditorFlags.chr_id != -1)
+								if (this->m_chrId != -1)
 								{
 									bool found = false;
 
@@ -1357,7 +1513,7 @@ void Application::LoadFile()
 										filepath_dcx += "\\model\\chr";
 
 										wchar_t chr_id_str[50];
-										swprintf_s(chr_id_str, L"%04d", this->m_eventTrackEditorFlags.chr_id);
+										swprintf_s(chr_id_str, L"%04d", this->m_chrId);
 
 										std::wstring string = std::wstring(chr_id_str);
 
@@ -1375,6 +1531,8 @@ void Application::LoadFile()
 
 											std::string filename = "c" + StringHelper::ToNarrow(string.c_str()) + ".flv";
 
+											bool found_model = false;
+
 											for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 											{
 												if (m_bnd.m_files[i].m_name == filename)
@@ -1385,15 +1543,24 @@ void Application::LoadFile()
 													this->m_model = FlverModel(umem);
 
 													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+
+													found_model = true;
 													break;
 												}
 											}
+
+											if (!found_model)
+												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find model for c%04d\n", this->m_chrId);
 										}
 									}
+									else
+										Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find Game folder\n");
 								}
 							}
 						}
-						else if (filepath_tae.extension() == ".tae")
+						else if (filepath.extension() == ".tae")
 						{
 							m_tae.m_init = false;
 							m_tae = TimeActReader(pszFilePath);
@@ -1454,6 +1621,8 @@ void Application::LoadFile()
 
 											std::string filename = StringHelper::ToNarrow(obj_id.c_str()) + ".flv";
 
+											bool found_model = false;
+
 											for (size_t i = 0; i < m_bnd.m_fileCount; i++)
 											{
 												if (m_bnd.m_files[i].m_name == filename)
@@ -1464,11 +1633,21 @@ void Application::LoadFile()
 													this->m_model = FlverModel(umem);
 
 													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+
+													found_model = true;
+
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+
 													break;
 												}
 											}
+
+											if (!found_model)
+												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find model for c%04d\n", this->m_chrId);
 										}
 									}
+									else
+										Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find Game folder\n");
 								}
 							}						
 						}
@@ -1527,7 +1706,7 @@ void Application::SaveFile()
 							bool status = m_nmb.SaveToFile(pszOutFilePath);
 
 							if (status)
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.m_outFilePath, m_nmb.m_bundles.size(), m_nmb.m_outFileSize);
+								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 							else
 								Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Failed to generate NMB file\n");
 						}
@@ -1552,6 +1731,118 @@ void Application::SaveFile()
 	}
 }
 
+void Application::SaveNmbFile()
+{
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"Morpheme Network Binary", L"*.nmb"}, {L"All Files",L"*.*"} };
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+		COINIT_DISABLE_OLE1DDE);
+
+	if (SUCCEEDED(hr))
+	{
+		IFileOpenDialog* pFileSave = NULL;
+
+		// Create the FileOpenDialog object.
+		hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+			IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+		if (SUCCEEDED(hr))
+		{
+			pFileSave->SetFileTypes(2, ComDlgFS);
+
+			// Show the Open dialog box.
+			hr = pFileSave->Show(NULL);
+
+			// Get the file name from the dialog box.
+			if (SUCCEEDED(hr))
+			{
+				IShellItem* pItem;
+				hr = pFileSave->GetResult(&pItem);
+
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszOutFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszOutFilePath);
+
+					// Display the file name to the user.
+					if (SUCCEEDED(hr))
+					{
+						std::filesystem::path filepath = std::wstring(pszOutFilePath);
+
+						bool status = m_nmb.SaveToFile(pszOutFilePath);
+
+						if (status)
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
+						else
+							Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Failed to generate NMB file\n");
+					}
+					pItem->Release();
+				}
+				else
+					MessageBoxW(NULL, L"Failed to save file", L"Application.cpp", MB_ICONERROR);
+			}
+			pFileSave->Release();
+		}
+		CoUninitialize();
+	}
+}
+
+void Application::SaveTaeFile()
+{
+	COMDLG_FILTERSPEC ComDlgFS[] = { {L"TimeAct", L"*.tae"}, {L"All Files",L"*.*"} };
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+		COINIT_DISABLE_OLE1DDE);
+
+	if (SUCCEEDED(hr))
+	{
+		IFileOpenDialog* pFileSave = NULL;
+
+		// Create the FileOpenDialog object.
+		hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+			IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+		if (SUCCEEDED(hr))
+		{
+			pFileSave->SetFileTypes(2, ComDlgFS);
+
+			// Show the Open dialog box.
+			hr = pFileSave->Show(NULL);
+
+			// Get the file name from the dialog box.
+			if (SUCCEEDED(hr))
+			{
+				IShellItem* pItem;
+				hr = pFileSave->GetResult(&pItem);
+
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszOutFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszOutFilePath);
+
+					// Display the file name to the user.
+					if (SUCCEEDED(hr))
+					{
+						std::filesystem::path filepath = std::wstring(pszOutFilePath);
+
+						bool status = m_tae.SaveFile(pszOutFilePath);
+
+						if (status)
+							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+						else
+							Debug::Alert(Debug::LVL_ERROR, "TimeActReader.cpp", "Failed to generate TAE file\n");
+					}
+					pItem->Release();
+				}
+				else
+					MessageBoxW(NULL, L"Failed to save file", L"Application.cpp", MB_ICONERROR);
+			}
+			pFileSave->Release();
+		}
+		CoUninitialize();
+	}
+}
+
 void Application::ResetEventTrackEditor()
 {
 	this->m_eventTrackEditorFlags.m_selectedEvent = -1;
@@ -1562,4 +1853,422 @@ void Application::ResetTimeActEditor()
 {
 	this->m_timeActEditorFlags.m_selectedEvent = -1;
 	this->m_timeActEditorFlags.m_selectedTrack = -1;
+}
+
+void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, int current_frame)
+{
+	if (this->m_timeActEditor.m_source == nullptr)
+		return;
+
+	if (this->m_eventTrackEditor.GetTrackCount() > 0)
+	{
+		for (int i = 0; i < this->m_eventTrackEditor.GetTrackCount(); i++)
+		{
+			if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+			{
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+			}
+		}
+
+		if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
+			*current_frame_tae = Math::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, Math::FrameToTime(current_frame)), 30, false);
+	}
+}
+
+inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel, int idx)
+{
+	std::string boneName = StringHelper::ToNarrow(pFlverModel->m_flver->bones[idx].name);
+	int boneIdx = pMorphemeRig->GetBoneIndex(boneName);
+
+	if (boneIdx == -1)
+		Debug::DebuggerMessage(Debug::LVL_DEBUG, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
+
+	return boneIdx;
+}
+
+//Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
+void Application::CreateMorphemeRigBoneToFlverBoneMap(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel)
+{
+	this->m_flverToMorphemeBoneMap.clear();
+	this->m_flverToMorphemeBoneMap.reserve(pFlverModel->m_flver->header.boneCount);
+
+	for (int i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
+		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
+}
+
+//Adds flver meshes to the scene
+bool CreateFbxModel(Application* pApplication, FbxScene* pScene, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path, MorphemeBundle_Rig* pMorphemeRig, bool useMorphemeRig)
+{
+	std::string model_node_name = "c" + std::to_string(pApplication->m_chrId) + "_model";
+
+	FbxNode* pModelNode = FbxNode::Create(pScene, model_node_name.c_str());
+	pScene->GetRootNode()->AddChild(pModelNode);
+
+	std::vector<FbxNode*> pMeshNodesList;
+
+	pMeshNodesList.reserve(pApplication->m_model.m_flver->header.meshCount);
+
+	for (int i = 0; i < pApplication->m_model.m_flver->header.meshCount; i++)
+	{
+		FbxNode* pMeshNode = nullptr;
+
+		if (!useMorphemeRig || pMorphemeRig == nullptr)
+			pMeshNode = pApplication->m_model.CreateModelFbxMesh(pScene, pBoneList, i);
+		else
+			pMeshNode = pApplication->m_model.CreateModelFbxMesh(pScene, pBoneList, pMorphemeRig, pApplication->m_flverToMorphemeBoneMap, i);
+
+		if (pMeshNode != nullptr)
+		{
+			pModelNode->AddChild(pMeshNode);
+			pBindPoses->Add(pMeshNode, FbxAMatrix());
+
+			pMeshNodesList.push_back(pMeshNode);
+		}
+		else
+			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create MeshNode object for mesh %d (file=%s)\n", i, export_path.filename().c_str());
+	}
+	
+	return true;
+}
+
+inline double GetTimeByAnimFrame(float animLenght, float fps, int frameNum)
+{
+	return (animLenght / fps) * frameNum;
+}
+
+//Creates FBX animation take from an NSA file input
+bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NSAReader* pAnimFile, std::string name)
+{
+	if (!pAnimFile->m_init)
+		return false;
+
+	const char* cStrName = name.c_str();
+
+	FbxAnimStack* pAnimStack = FbxAnimStack::Create(pScene, cStrName);
+	FbxAnimLayer* pAnimBaseLayer = FbxAnimLayer::Create(pScene, cStrName);
+
+	pAnimStack->AddMember(pAnimBaseLayer);
+
+	FbxTime start;
+	start.SetSecondDouble(0.0);
+
+	float animSampleRate = pAnimFile->m_header.m_fps;
+	float animDuration = pAnimFile->m_header.m_duration;
+
+	FbxTime end;
+	end.SetSecondDouble(animDuration);
+
+	FbxTimeSpan timeSpan = FbxTimeSpan(start, end);
+	pAnimStack->SetLocalTimeSpan(timeSpan);
+
+	int keyframeCount = pAnimFile->m_header.m_fps * animDuration;
+	int boneCount = std::min<int>(pSkeleton.size(), pAnimFile->m_header.m_boneCount);
+
+	for (int boneIdx = 0; boneIdx < boneCount; boneIdx++)
+	{
+		FbxNode* pBone = pSkeleton[boneIdx];
+
+		FbxAnimCurve* curveTX = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+		FbxAnimCurve* curveTY = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+		FbxAnimCurve* curveTZ = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+
+		FbxAnimCurve* curveRX = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+		FbxAnimCurve* curveRY = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+		FbxAnimCurve* curveRZ = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+
+		FbxAnimCurve* curveSX = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+		FbxAnimCurve* curveSY = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+		FbxAnimCurve* curveSZ = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+
+		curveTX->KeyModifyBegin();
+		curveTY->KeyModifyBegin();
+		curveTZ->KeyModifyBegin();
+
+		curveRX->KeyModifyBegin();
+		curveRY->KeyModifyBegin();
+		curveRZ->KeyModifyBegin();
+
+		curveSX->KeyModifyBegin();
+		curveSY->KeyModifyBegin();
+		curveSZ->KeyModifyBegin();
+
+		for (int frame = 0; frame < keyframeCount; frame++)
+		{
+			int keyIndex;
+
+			FbxTime keyTime;
+			keyTime.SetSecondDouble(GetTimeByAnimFrame(animDuration, animSampleRate, frame));
+
+			DirectX::SimpleMath::Vector3 translation = pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_translation;
+
+			keyIndex = curveTX->KeyAdd(keyTime);
+			curveTX->KeySetValue(keyIndex, translation.x);
+			curveTX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveTY->KeyAdd(keyTime);
+			curveTY->KeySetValue(keyIndex, translation.y);
+			curveTY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveTZ->KeyAdd(keyTime);
+			curveTZ->KeySetValue(keyIndex, translation.z);
+			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			DirectX::SimpleMath::Vector3 rotationEuler = Math::CovnertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
+
+			keyIndex = curveRX->KeyAdd(keyTime);
+			curveRX->KeySetValue(keyIndex, rotationEuler.x);
+			curveRX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveRY->KeyAdd(keyTime);
+			curveRY->KeySetValue(keyIndex, rotationEuler.y);
+			curveRY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveRZ->KeyAdd(keyTime);
+			curveRZ->KeySetValue(keyIndex, rotationEuler.z);
+			curveRZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			DirectX::SimpleMath::Vector3 scale = pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_scale;
+
+			keyIndex = curveSX->KeyAdd(keyTime);
+			curveSX->KeySetValue(keyIndex, scale.x);
+			curveSX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveSY->KeyAdd(keyTime);
+			curveSY->KeySetValue(keyIndex, scale.y);
+			curveSY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveSZ->KeyAdd(keyTime);
+			curveSZ->KeySetValue(keyIndex, scale.z);
+			curveSZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+		}
+
+		curveTX->KeyModifyEnd();
+		curveTY->KeyModifyEnd();
+		curveTZ->KeyModifyEnd();
+
+		curveRX->KeyModifyEnd();
+		curveRY->KeyModifyEnd();
+		curveRZ->KeyModifyEnd();
+
+		curveSX->KeyModifyEnd();
+		curveSY->KeyModifyEnd();
+		curveSZ->KeyModifyEnd();
+	}
+
+	return true;
+}
+
+bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
+{
+	bool status = true;
+
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Exporting animation %d (%s)\n", anim_id, export_path.filename().string().c_str());
+
+	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
+	pExporter->SetFileExportVersion(FBX_2014_00_COMPATIBLE);
+
+	if (!pExporter->Initialize(export_path.string().c_str(), g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()))
+	{
+		Debug::Panic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", export_path.string().c_str());
+
+		return false;
+	}
+
+	FbxScene* pScene = FbxScene::Create(g_pFbxManager, export_path.string().c_str());
+	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::OpenGL);
+	pScene->GetGlobalSettings().SetSystemUnit(FbxSystemUnit::m);
+
+	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
+	pBindPoses->SetIsBindPose(true);
+
+	std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_nmb.GetRig(0));
+
+	if (this->m_fbxExportFlags.m_exportModelWithAnims)
+	{
+		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, export_path, this->m_nmb.GetRig(0), true))
+		{
+			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+			status = false;
+		}
+	}
+
+	if (!CreateFbxTake(pScene, pMorphemeRig, &this->m_animFiles[anim_id], this->m_nmb.GetFilenameLookupTable()->GetAnimTake(anim_id)))
+	{
+		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+		status = false;
+	}
+
+	pScene->AddPose(pBindPoses);
+
+	pExporter->Export(pScene);
+	pScene->Destroy(true);
+	pExporter->Destroy(true);
+
+	return status;
+}
+
+bool Application::ExportModelToFbx(std::filesystem::path export_path)
+{
+	bool status = true;
+
+	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Exporting model to FBX for c%04d\n", this->m_chrId);
+
+	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
+	pExporter->SetFileExportVersion(FBX_2014_00_COMPATIBLE);
+
+	char chr_id_str[20];
+	sprintf(chr_id_str, "c%04d", this->m_chrId);
+
+	std::string model_out = export_path.string() + std::string(chr_id_str) + ".fbx";
+
+	if (!pExporter->Initialize(model_out.c_str(), g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()))
+	{
+		Debug::Panic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", model_out);
+
+		return false;
+	}
+
+	FbxScene* pScene = FbxScene::Create(g_pFbxManager, chr_id_str);
+	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::OpenGL);
+	pScene->GetGlobalSettings().SetSystemUnit(FbxSystemUnit::m);
+
+	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
+	pBindPoses->SetIsBindPose(true);
+
+	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
+	{
+		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_nmb.GetRig(0));
+
+		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_nmb.GetRig(0), true))
+		{
+			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+
+			status = false;
+		}
+	}
+	else
+	{
+		std::vector<FbxNode*> pFlverSkeleton = this->m_model.CreateFbxFlverSkeleton(pScene, pBindPoses);
+
+		if (!CreateFbxModel(this, pScene, pBindPoses, pFlverSkeleton, model_out, nullptr, false))
+		{
+			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+
+			status = false;
+		}
+	}
+
+	pScene->AddPose(pBindPoses);
+
+	pExporter->Export(pScene);
+	pScene->Destroy(true);
+	pExporter->Destroy(true);
+
+	return status;
+}
+
+bool Application::ExportToXMD(PWSTR export_path)
+{
+	Debug::DebuggerMessage(Debug::LVL_ERROR, "XMD export not yet implemented\n");
+
+	return false;
+}
+
+bool Application::ExportToFbxTest(PWSTR export_path)
+{
+	FbxScene* pScene = FbxScene::Create(g_pFbxManager, "testScene");
+
+	FbxNode* pMeshNode = FbxNode::Create(pScene, "meshNode");
+	int i, j;
+	FbxMesh* lMesh = FbxMesh::Create(pScene, "mesh");
+
+	FbxVector4 lControlPoint0(-50, 0, 50);
+	FbxVector4 lControlPoint1(50, 0, 50);
+	FbxVector4 lControlPoint2(50, 100, 50);
+	FbxVector4 lControlPoint3(-50, 100, 50);
+	FbxVector4 lControlPoint4(-50, 0, -50);
+	FbxVector4 lControlPoint5(50, 0, -50);
+	FbxVector4 lControlPoint6(50, 100, -50);
+	FbxVector4 lControlPoint7(-50, 100, -50);
+
+	FbxVector4 lNormalXPos(1, 0, 0);
+	FbxVector4 lNormalXNeg(-1, 0, 0);
+	FbxVector4 lNormalYPos(0, 1, 0);
+	FbxVector4 lNormalYNeg(0, -1, 0);
+	FbxVector4 lNormalZPos(0, 0, 1);
+	FbxVector4 lNormalZNeg(0, 0, -1);
+
+	// Create control points.
+	lMesh->InitControlPoints(24);
+	FbxVector4* lControlPoints = lMesh->GetControlPoints();
+
+	lControlPoints[0] = lControlPoint0;
+	lControlPoints[1] = lControlPoint1;
+	lControlPoints[2] = lControlPoint2;
+	lControlPoints[3] = lControlPoint3;
+	lControlPoints[4] = lControlPoint1;
+	lControlPoints[5] = lControlPoint5;
+	lControlPoints[6] = lControlPoint6;
+	lControlPoints[7] = lControlPoint2;
+	lControlPoints[8] = lControlPoint5;
+	lControlPoints[9] = lControlPoint4;
+	lControlPoints[10] = lControlPoint7;
+	lControlPoints[11] = lControlPoint6;
+	lControlPoints[12] = lControlPoint4;
+	lControlPoints[13] = lControlPoint0;
+	lControlPoints[14] = lControlPoint3;
+	lControlPoints[15] = lControlPoint7;
+	lControlPoints[16] = lControlPoint3;
+	lControlPoints[17] = lControlPoint2;
+	lControlPoints[18] = lControlPoint6;
+	lControlPoints[19] = lControlPoint7;
+	lControlPoints[20] = lControlPoint1;
+	lControlPoints[21] = lControlPoint0;
+	lControlPoints[22] = lControlPoint4;
+	lControlPoints[23] = lControlPoint5;
+
+	// Array of polygon vertices.
+	int lPolygonVertices[] = { 0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15,
+		16, 17, 18, 19,
+		20, 21, 22, 23 };
+
+	// Create polygons. Assign texture and texture UV indices.
+	for (i = 0; i < 6; i++)
+	{
+		//we won't use the default way of assigning textures, as we have
+		//textures on more than just the default (diffuse) channel.
+		lMesh->BeginPolygon(-1, -1, false);
+
+		for (j = 0; j < 4; j++)
+		{
+			//this function points 
+			lMesh->AddPolygon(lPolygonVertices[i * 4 + j] // Control point index. 
+			);
+		}
+
+		lMesh->EndPolygon();
+	}
+
+	pMeshNode->SetNodeAttribute(lMesh);
+	pScene->GetRootNode()->AddChild(pMeshNode);
+
+	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
+
+	bool export_status = pExporter->Initialize("test.fbx", -1, g_pFbxManager->GetIOSettings());
+
+	if (!export_status)
+	{
+		Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Failed to initialise FBXExporter object\n");
+		return false;
+	}
+
+	pExporter->Export(pScene);
+	pExporter->Destroy();
+
+	return true;
 }

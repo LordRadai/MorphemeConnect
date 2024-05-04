@@ -29,37 +29,35 @@ AnimBoneTransform::AnimBoneTransform(int frameCount)
 	this->m_frames = std::vector<AnimationFrame>(frameCount);
 }
 
-NSA::DequantizationInfo::DequantizationInfo(ifstream* nsa)
+AnimSourceNSA::DequantizationInfo::DequantizationInfo(ifstream* nsa)
 {
 	MemReader::ReadArray(nsa, this->m_init, 3);
 	MemReader::ReadArray(nsa, this->m_factorIdx, 3);
 }
 
-NSA::Vec3Short::Vec3Short(ifstream* nsa)
+AnimSourceNSA::Vec3Short::Vec3Short(ifstream* nsa)
 {
 	MemReader::Read(nsa, &this->m_x);
 	MemReader::Read(nsa, &this->m_y);
 	MemReader::Read(nsa, &this->m_z);
 }
 
-NSA::RotationSample::RotationSample(int x, int y, int z)
+AnimSourceNSA::ChannelRotVecQuantised::ChannelRotVecQuantised(int x, int y, int z)
 {
 	this->m_sample.m_x = x;
 	this->m_sample.m_y = y;
 	this->m_sample.m_z = z;
 }
 
-NSA::RotationSample::RotationSample(ifstream* nsa)
+AnimSourceNSA::ChannelRotVecQuantised::ChannelRotVecQuantised(ifstream* nsa)
 {
 	this->m_sample = Vec3Short(nsa);
 }
 
 //Dequantizes compressed rotation
-Quaternion NSA::RotationSample::DequantizeRotation(NSA::DequantizationFactor factor)
+Quaternion AnimSourceNSA::ChannelRotVecQuantised::GetQuat(AnimSourceNSA::VecQuantisedInfo factor)
 {
-	NSA::TranslationSample quant_sample(this->m_sample.m_x, this->m_sample.m_y, this->m_sample.m_z);
-
-	Vector3 dequantized = quant_sample.DequantizeTranslation(factor);
+	Vector3 dequantized(this->m_sample.m_x * factor.m_scaledExtent[0] + factor.m_min[0], this->m_sample.m_y * factor.m_scaledExtent[1] + factor.m_min[1], this->m_sample.m_z * factor.m_scaledExtent[2] + factor.m_min[2]);
 
 	float sq_magn = dequantized.LengthSquared();
 	float scalar = 2.0f / (sq_magn + 1.0f);
@@ -72,14 +70,14 @@ Quaternion NSA::RotationSample::DequantizeRotation(NSA::DequantizationFactor fac
 	);
 }
 
-NSA::TranslationSample::TranslationSample(int x, int y, int z)
+AnimSourceNSA::ChannelPosQuantised::ChannelPosQuantised(int x, int y, int z)
 {
 	this->m_x = x;
 	this->m_y = y;
 	this->m_z = z;
 }
 
-NSA::TranslationSample::TranslationSample(ifstream* nsa)
+AnimSourceNSA::ChannelPosQuantised::ChannelPosQuantised(ifstream* nsa)
 {
 	MemReader::Read(nsa, &this->m_sample);
 
@@ -89,18 +87,18 @@ NSA::TranslationSample::TranslationSample(ifstream* nsa)
 }
 
 //Dequantizes compressed translation
-Vector3 NSA::TranslationSample::DequantizeTranslation(NSA::DequantizationFactor factor)
+Vector3 AnimSourceNSA::ChannelPosQuantised::GetPos(AnimSourceNSA::VecQuantisedInfo factor)
 {
 	return Vector3(this->m_x * factor.m_scaledExtent[0] + factor.m_min[0], this->m_y * factor.m_scaledExtent[1] + factor.m_min[1], this->m_z * factor.m_scaledExtent[2] + factor.m_min[2]);
 }
 
-NSA::DequantizationFactor::DequantizationFactor(ifstream* nsa)
+AnimSourceNSA::VecQuantisedInfo::VecQuantisedInfo(ifstream* nsa)
 {
 	MemReader::ReadArray(nsa, this->m_min, 3);
 	MemReader::ReadArray(nsa, this->m_scaledExtent, 3);
 }
 
-NSA::DequantizationFactor::DequantizationFactor(Vector3 min, Vector3 scaledExtent)
+AnimSourceNSA::VecQuantisedInfo::VecQuantisedInfo(Vector3 min, Vector3 scaledExtent)
 {
 	this->m_min[0] = min.x;
 	this->m_min[1] = min.y;
@@ -111,7 +109,7 @@ NSA::DequantizationFactor::DequantizationFactor(Vector3 min, Vector3 scaledExten
 	this->m_scaledExtent[2] = scaledExtent.z;
 }
 
-NSA::IndexList::IndexList(ifstream* nsa)
+AnimSourceNSA::IndexList::IndexList(ifstream* nsa)
 {
 	MemReader::Read(nsa, &this->m_count);
 
@@ -122,15 +120,15 @@ NSA::IndexList::IndexList(ifstream* nsa)
 		MemReader::Read(nsa, &this->m_indices[i]);
 }
 
-NSA::StaticSegment::StaticSegment(ifstream* nsa)
+AnimSourceNSA::StaticSegment::StaticSegment(ifstream* nsa)
 {
 	UINT64 pStart = nsa->tellg();
 
 	MemReader::Read(nsa, &this->m_translationBoneCount);
 	MemReader::Read(nsa, &this->m_rotationBoneCount);
 
-	this->m_translationBoneDequantizationFactors = DequantizationFactor(nsa);
-	this->m_rotationBoneDequantizationFactors = DequantizationFactor(nsa);
+	this->m_translationBoneDequantizationFactors = VecQuantisedInfo(nsa);
+	this->m_rotationBoneDequantizationFactors = VecQuantisedInfo(nsa);
 
 	UINT64 pCompressedTranslation;
 	UINT64 pCompressedRotation;
@@ -153,24 +151,24 @@ NSA::StaticSegment::StaticSegment(ifstream* nsa)
 		this->m_compressedRotations.push_back(Vec3Short(nsa));
 }
 
-bool NSA::StaticSegment::Dequantize()
+bool AnimSourceNSA::StaticSegment::Dequantize()
 {
 	try
 	{
 		this->m_translations.reserve(this->m_translationBoneCount);
 		for (int i = 0; i < this->m_translationBoneCount; i++)
 		{
-			NSA::TranslationSample translation_sample(this->m_compressedTranslations[i].m_x, this->m_compressedTranslations[i].m_y, this->m_compressedTranslations[i].m_z);
+			AnimSourceNSA::ChannelPosQuantised translation_sample(this->m_compressedTranslations[i].m_x, this->m_compressedTranslations[i].m_y, this->m_compressedTranslations[i].m_z);
 
-			this->m_translations.push_back(translation_sample.DequantizeTranslation(this->m_translationBoneDequantizationFactors));
+			this->m_translations.push_back(translation_sample.GetPos(this->m_translationBoneDequantizationFactors));
 		}
 
 		this->m_rotations.reserve(this->m_rotationBoneCount);
 		for (int i = 0; i < this->m_rotationBoneCount; i++)
 		{
-			NSA::RotationSample rot_sample(this->m_compressedTranslations[i].m_x, this->m_compressedTranslations[i].m_y, this->m_compressedTranslations[i].m_z);
+			AnimSourceNSA::ChannelRotVecQuantised rot_sample(this->m_compressedTranslations[i].m_x, this->m_compressedTranslations[i].m_y, this->m_compressedTranslations[i].m_z);
 
-			this->m_rotations.push_back(rot_sample.DequantizeRotation(this->m_rotationBoneDequantizationFactors));
+			this->m_rotations.push_back(rot_sample.GetQuat(this->m_rotationBoneDequantizationFactors));
 		}
 	}
 	catch (const std::exception& e)
@@ -193,7 +191,7 @@ int getDeqInfoCount(int bone_count)
 	return multiple * 4;
 }
 
-NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
+AnimSourceNSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 {
 	UINT64 pStart = nsa->tellg();
 
@@ -223,10 +221,10 @@ NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 
 	for (int i = 0; i < this->m_sampleCount; i++)
 	{
-		this->m_translationSamples.push_back(std::vector<TranslationSample>(this->m_translationBoneCount, TranslationSample(0, 0, 0)));
+		this->m_translationSamples.push_back(std::vector<ChannelPosQuantised>(this->m_translationBoneCount, ChannelPosQuantised(0, 0, 0)));
 
 		for (size_t j = 0; j < this->m_translationBoneCount; j++)
-			this->m_translationSamples[i].push_back(TranslationSample(nsa));
+			this->m_translationSamples[i].push_back(ChannelPosQuantised(nsa));
 	}
 
 	nsa->seekg(pStart + pTranslationDeqInfo);
@@ -242,10 +240,10 @@ NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 
 	for (int i = 0; i < this->m_sampleCount; i++)
 	{
-		this->m_rotationSample.push_back(std::vector<RotationSample>(this->m_rotationBoneCount, RotationSample(0, 0, 0)));
+		this->m_rotationSample.push_back(std::vector<ChannelRotVecQuantised>(this->m_rotationBoneCount, ChannelRotVecQuantised(0, 0, 0)));
 
 		for (size_t j = 0; j < this->m_rotationBoneCount; j++)
-			this->m_rotationSample[i].push_back(RotationSample(nsa));
+			this->m_rotationSample[i].push_back(ChannelRotVecQuantised(nsa));
 	}
 
 	nsa->seekg(pStart + pRotationDeqInfo);
@@ -256,7 +254,7 @@ NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 		this->m_rotationDequantizationInfo.push_back(DequantizationInfo(nsa));
 }
 
-bool NSA::DynamicSegment::Dequantize(NSA::DequantizationFactor startPosFactor, std::vector<DequantizationFactor> translationFactors, std::vector<DequantizationFactor> rotationFactors)
+bool AnimSourceNSA::DynamicSegment::Dequantize(AnimSourceNSA::VecQuantisedInfo startPosFactor, std::vector<VecQuantisedInfo> translationFactors, std::vector<VecQuantisedInfo> rotationFactors)
 {
 	try
 	{
@@ -273,10 +271,10 @@ bool NSA::DynamicSegment::Dequantize(NSA::DequantizationFactor startPosFactor, s
 					Vector3 factorMin(translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[0]].m_min[0], translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[1]].m_min[1], translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[2]].m_min[2]);
 					Vector3 scaledExtent(translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[0]].m_scaledExtent[0], translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[1]].m_scaledExtent[1], translationFactors[this->m_translationDequantizationInfo[boneIdx].m_factorIdx[2]].m_scaledExtent[2]);
 
-					TranslationSample quantizedStart(this->m_translationDequantizationInfo[boneIdx].m_init[0], this->m_translationDequantizationInfo[boneIdx].m_init[1], this->m_translationDequantizationInfo[boneIdx].m_init[2]);
+					ChannelPosQuantised quantizedStart(this->m_translationDequantizationInfo[boneIdx].m_init[0], this->m_translationDequantizationInfo[boneIdx].m_init[1], this->m_translationDequantizationInfo[boneIdx].m_init[2]);
 
-					Vector3 dequantizedStart = quantizedStart.DequantizeTranslation(startPosFactor);
-					Vector3 dequantizedTranslation = this->m_translationSamples[sampleIdx][boneIdx].DequantizeTranslation(DequantizationFactor(factorMin, scaledExtent));
+					Vector3 dequantizedStart = quantizedStart.GetPos(startPosFactor);
+					Vector3 dequantizedTranslation = this->m_translationSamples[sampleIdx][boneIdx].GetPos(VecQuantisedInfo(factorMin, scaledExtent));
 				
 					sample.push_back(dequantizedStart + dequantizedTranslation);
 				}
@@ -298,7 +296,7 @@ bool NSA::DynamicSegment::Dequantize(NSA::DequantizationFactor startPosFactor, s
 					Vector3 factorMin(rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[0]].m_min[0], rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[1]].m_min[1], rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[2]].m_min[2]);
 					Vector3 scaledExtent(rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[0]].m_scaledExtent[0], rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[1]].m_scaledExtent[1], rotationFactors[this->m_rotationDequantizationInfo[boneIdx].m_factorIdx[2]].m_scaledExtent[2]);
 
-					Quaternion dequantizedRotation = this->m_rotationSample[sampleIdx][boneIdx].DequantizeRotation(DequantizationFactor(factorMin, scaledExtent));
+					Quaternion dequantizedRotation = this->m_rotationSample[sampleIdx][boneIdx].GetQuat(VecQuantisedInfo(factorMin, scaledExtent));
 					
 					sample.push_back(dequantizedRotation);
 				}
@@ -317,7 +315,7 @@ bool NSA::DynamicSegment::Dequantize(NSA::DequantizationFactor startPosFactor, s
 	return true;
 }
 
-NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
+AnimSourceNSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 {
 	UINT64 pStart = nsa->tellg();
 
@@ -326,7 +324,7 @@ NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 	MemReader::Read(nsa, &this->m_fps);
 	MemReader::Read(nsa, &this->m_sampleCount);
 
-	this->m_dequantizationFactors = DequantizationFactor(nsa);
+	this->m_dequantizationFactors = VecQuantisedInfo(nsa);
 
 	MemReader::Read(nsa, &this->m_rotation.x);
 	MemReader::Read(nsa, &this->m_rotation.y);
@@ -349,7 +347,7 @@ NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 		this->m_translationSample.reserve(this->m_sampleCount);
 
 		for (int i = 0; i < this->m_sampleCount; i++)
-			this->m_translationSample.push_back(TranslationSample(nsa));
+			this->m_translationSample.push_back(ChannelPosQuantised(nsa));
 	}	
 
 	if (pRotationSample != 0)
@@ -359,11 +357,11 @@ NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 		this->m_rotationSample.reserve(this->m_sampleCount);
 
 		for (int i = 0; i < this->m_sampleCount; i++)
-			this->m_rotationSample.push_back(RotationSample(nsa));
+			this->m_rotationSample.push_back(ChannelRotVecQuantised(nsa));
 	}
 }
 
-NSA::Header::Header(ifstream* nsa)
+AnimSourceNSA::Header::Header(ifstream* nsa)
 {
 	UINT64 start = nsa->tellg();
 	nsa->seekg(start + 0x8);
@@ -387,7 +385,7 @@ NSA::Header::Header(ifstream* nsa)
 	MemReader::Read(nsa, &this->m_ppDynamicTranslationBoneIndices);
 	MemReader::Read(nsa, &this->m_ppDynamicRotationBoneIndices);
 
-	this->m_translationStartPosFactors = DequantizationFactor(nsa);
+	this->m_translationStartPosFactors = VecQuantisedInfo(nsa);
 
 	MemReader::Read(nsa, &this->m_translationDequantizationCount);
 	MemReader::Read(nsa, &this->m_rotationDequantizationCount);
@@ -432,13 +430,13 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 
 	try
 	{
-		this->m_header = NSA::Header(&nsa);
+		this->m_header = AnimSourceNSA::Header(&nsa);
 
 		nsa.seekg(this->m_header.m_pStaticTranslationBoneIndices);
-		this->m_staticTranslationIndices = NSA::IndexList(&nsa);
+		this->m_staticTranslationIndices = AnimSourceNSA::IndexList(&nsa);
 
 		nsa.seekg(this->m_header.m_pStaticRotationBoneIndices);
-		this->m_staticRotationIndices = NSA::IndexList(&nsa);
+		this->m_staticRotationIndices = AnimSourceNSA::IndexList(&nsa);
 
 		nsa.seekg(this->m_header.m_ppDynamicTranslationBoneIndices);
 
@@ -446,7 +444,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 		MemReader::Read(&nsa, &pDynamicTranslationBoneIndices);
 
 		nsa.seekg(pDynamicTranslationBoneIndices);
-		this->m_dynamicTranslationIndices = NSA::IndexList(&nsa);
+		this->m_dynamicTranslationIndices = AnimSourceNSA::IndexList(&nsa);
 
 		nsa.seekg(this->m_header.m_ppDynamicRotationBoneIndices);
 
@@ -454,33 +452,33 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 		MemReader::Read(&nsa, &pDynamicRotationBoneIndices);
 
 		nsa.seekg(pDynamicRotationBoneIndices);
-		this->m_dynamicRotationIndices = NSA::IndexList(&nsa);
+		this->m_dynamicRotationIndices = AnimSourceNSA::IndexList(&nsa);
 
 		nsa.seekg(this->m_header.m_pTranslationDequantizationFactors);
 
 		this->m_translationAnimDequantizationFactors.reserve(this->m_header.m_translationDequantizationCount);
 
 		for (int i = 0; i < this->m_header.m_translationDequantizationCount; i++)
-			this->m_translationAnimDequantizationFactors.push_back(NSA::DequantizationFactor(&nsa));
+			this->m_translationAnimDequantizationFactors.push_back(AnimSourceNSA::VecQuantisedInfo(&nsa));
 
 		nsa.seekg(this->m_header.m_pRotationDequantizationFactors);
 
 		this->m_rotationAnimDequantizationFactors.reserve(this->m_header.m_rotationDequantizationCount);
 
 		for (int i = 0; i < this->m_header.m_rotationDequantizationCount; i++)
-			this->m_rotationAnimDequantizationFactors.push_back(NSA::DequantizationFactor(&nsa));
+			this->m_rotationAnimDequantizationFactors.push_back(AnimSourceNSA::VecQuantisedInfo(&nsa));
 
 		nsa.seekg(this->m_header.m_pStaticSegment);
 
-		this->m_staticSegment = NSA::StaticSegment(&nsa);
+		this->m_staticSegment = AnimSourceNSA::StaticSegment(&nsa);
 
 		nsa.seekg(this->m_header.m_pDynamicSegment);
 
-		this->m_dynamicSegment = NSA::DynamicSegment(&nsa);
+		this->m_dynamicSegment = AnimSourceNSA::DynamicSegment(&nsa);
 
 		nsa.seekg(this->m_header.m_pRootMotionSegment);
 
-		this->m_rootMotionSegment = NSA::RootMotionSegment(&nsa);
+		this->m_rootMotionSegment = AnimSourceNSA::RootMotionSegment(&nsa);
 	}
 	catch (const std::exception& e)
 	{

@@ -24,7 +24,7 @@ public:
 	AnimBoneTransform(int frameCount);
 };
 
-namespace NSA
+namespace AnimSourceNSA
 {
 	struct DequantizationInfo
 	{
@@ -45,39 +45,39 @@ namespace NSA
 		Vec3Short(ifstream* nsa);
 	};
 
-	struct DequantizationFactor
+	struct VecQuantisedInfo
 	{
 		float m_min[3];
 		float m_scaledExtent[3];
 
-		DequantizationFactor() {}
-		DequantizationFactor(ifstream* nsa);
-		DequantizationFactor(Vector3 min, Vector3 scaledExtent);
+		VecQuantisedInfo() {}
+		VecQuantisedInfo(ifstream* nsa);
+		VecQuantisedInfo(Vector3 min, Vector3 scaledExtent);
 	};
 
-	struct RotationSample
+	struct ChannelRotVecQuantised
 	{
 		Vec3Short m_sample;
 
-		RotationSample() {}
-		RotationSample(int x, int y, int z);
-		RotationSample(ifstream* nsa);
+		ChannelRotVecQuantised() {}
+		ChannelRotVecQuantised(int x, int y, int z);
+		ChannelRotVecQuantised(ifstream* nsa);
 
-		Quaternion DequantizeRotation(DequantizationFactor factor);
+		Quaternion GetQuat(VecQuantisedInfo factor);
 	};
 
-	struct TranslationSample
+	struct ChannelPosQuantised
 	{
 		DWORD m_sample;
 		int m_x;
 		int m_y;
 		int m_z;
 
-		TranslationSample() {}
-		TranslationSample(int x, int y, int z);
-		TranslationSample(ifstream* nsa);
+		ChannelPosQuantised() {}
+		ChannelPosQuantised(int x, int y, int z);
+		ChannelPosQuantised(ifstream* nsa);
 
-		Vector3 DequantizeTranslation(DequantizationFactor factor);
+		Vector3 GetPos(VecQuantisedInfo factor);
 	};
 
 	struct IndexList
@@ -93,8 +93,8 @@ namespace NSA
 	{
 		int m_translationBoneCount;
 		int m_rotationBoneCount;
-		DequantizationFactor m_translationBoneDequantizationFactors;
-		DequantizationFactor m_rotationBoneDequantizationFactors;
+		VecQuantisedInfo m_translationBoneDequantizationFactors;
+		VecQuantisedInfo m_rotationBoneDequantizationFactors;
 		std::vector<Vec3Short> m_compressedTranslations;
 		std::vector<Vec3Short> m_compressedRotations;
 
@@ -114,9 +114,9 @@ namespace NSA
 		int m_sampleCount;
 		int m_translationBoneCount;
 		int m_rotationBoneCount;
-		std::vector<std::vector<TranslationSample>> m_translationSamples;
+		std::vector<std::vector<ChannelPosQuantised>> m_translationSamples;
 		std::vector<DequantizationInfo> m_translationDequantizationInfo;
-		std::vector<std::vector<RotationSample>> m_rotationSample;
+		std::vector<std::vector<ChannelRotVecQuantised>> m_rotationSample;
 		std::vector<DequantizationInfo> m_rotationDequantizationInfo;
 
 		std::vector<AnimBoneTransform> m_boneTransforms;
@@ -124,17 +124,17 @@ namespace NSA
 		DynamicSegment() {}
 		DynamicSegment(ifstream* nsa);
 
-		bool Dequantize(DequantizationFactor startPosFactor, std::vector<DequantizationFactor> translationFactors, std::vector<DequantizationFactor> rotationFactors);
+		bool Dequantize(VecQuantisedInfo startPosFactor, std::vector<VecQuantisedInfo> translationFactors, std::vector<VecQuantisedInfo> rotationFactors);
 	};
 
 	struct RootMotionSegment
 	{
 		float m_fps;
 		int m_sampleCount;
-		DequantizationFactor m_dequantizationFactors;
+		VecQuantisedInfo m_dequantizationFactors;
 		DirectX::SimpleMath::Quaternion m_rotation;
-		std::vector<TranslationSample> m_translationSample;
-		std::vector<RotationSample> m_rotationSample;
+		std::vector<ChannelPosQuantised> m_translationSample;
+		std::vector<ChannelRotVecQuantised> m_rotationSample;
 
 		AnimBoneTransform m_boneTransform;
 
@@ -155,7 +155,7 @@ namespace NSA
 		UINT64 m_pStaticRotationBoneIndices;
 		UINT64 m_ppDynamicTranslationBoneIndices;
 		UINT64 m_ppDynamicRotationBoneIndices;
-		DequantizationFactor m_translationStartPosFactors;
+		VecQuantisedInfo m_translationStartPosFactors;
 		int m_translationDequantizationCount;
 		int m_rotationDequantizationCount;
 		UINT64 m_pTranslationDequantizationFactors;
@@ -183,16 +183,16 @@ public:
 	UINT64 m_outFileSize;
 	bool m_init = false;
 
-	NSA::Header m_header;
-	NSA::IndexList m_staticTranslationIndices;
-	NSA::IndexList m_staticRotationIndices;
-	NSA::IndexList m_dynamicTranslationIndices;
-	NSA::IndexList m_dynamicRotationIndices;
-	std::vector<NSA::DequantizationFactor> m_translationAnimDequantizationFactors;
-	std::vector<NSA::DequantizationFactor> m_rotationAnimDequantizationFactors;
-	NSA::StaticSegment m_staticSegment;
-	NSA::DynamicSegment m_dynamicSegment;
-	NSA::RootMotionSegment m_rootMotionSegment;
+	AnimSourceNSA::Header m_header;
+	AnimSourceNSA::IndexList m_staticTranslationIndices;
+	AnimSourceNSA::IndexList m_staticRotationIndices;
+	AnimSourceNSA::IndexList m_dynamicTranslationIndices;
+	AnimSourceNSA::IndexList m_dynamicRotationIndices;
+	std::vector<AnimSourceNSA::VecQuantisedInfo> m_translationAnimDequantizationFactors;
+	std::vector<AnimSourceNSA::VecQuantisedInfo> m_rotationAnimDequantizationFactors;
+	AnimSourceNSA::StaticSegment m_staticSegment;
+	AnimSourceNSA::DynamicSegment m_dynamicSegment;
+	AnimSourceNSA::RootMotionSegment m_rootMotionSegment;
 
 	std::vector<AnimBoneTransform> m_boneKeyframes;
 

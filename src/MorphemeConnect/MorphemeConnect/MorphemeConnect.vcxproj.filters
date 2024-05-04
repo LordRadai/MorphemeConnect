@@ -198,9 +198,6 @@
     <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h">
       <Filter>File di intestazione\FromsoftReader\NMBReader</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h">
       <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
     </ClInclude>

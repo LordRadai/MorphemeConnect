@@ -31,15 +31,15 @@ AnimBoneTransform::AnimBoneTransform(int frameCount)
 
 NSA::DequantizationInfo::DequantizationInfo(ifstream* nsa)
 {
-	MemReader::ReadByteArray(nsa, this->m_init, 3);
-	MemReader::ReadByteArray(nsa, this->m_factorIdx, 3);
+	MemReader::ReadArray(nsa, this->m_init, 3);
+	MemReader::ReadArray(nsa, this->m_factorIdx, 3);
 }
 
 NSA::Vec3Short::Vec3Short(ifstream* nsa)
 {
-	MemReader::ReadWord(nsa, (WORD*)&this->m_x);
-	MemReader::ReadWord(nsa, (WORD*)&this->m_y);
-	MemReader::ReadWord(nsa, (WORD*)&this->m_z);
+	MemReader::Read(nsa, &this->m_x);
+	MemReader::Read(nsa, &this->m_y);
+	MemReader::Read(nsa, &this->m_z);
 }
 
 NSA::RotationSample::RotationSample(int x, int y, int z)
@@ -81,7 +81,7 @@ NSA::TranslationSample::TranslationSample(int x, int y, int z)
 
 NSA::TranslationSample::TranslationSample(ifstream* nsa)
 {
-	MemReader::ReadDWord(nsa, &this->m_sample);
+	MemReader::Read(nsa, &this->m_sample);
 
 	this->m_x = Math::ExtractBits(this->m_sample, 21, 0);
 	this->m_y = Math::ExtractBits(this->m_sample, 10, 0x7FF);
@@ -96,8 +96,8 @@ Vector3 NSA::TranslationSample::DequantizeTranslation(NSA::DequantizationFactor 
 
 NSA::DequantizationFactor::DequantizationFactor(ifstream* nsa)
 {
-	MemReader::ReadDWordArray(nsa, (DWORD*)this->m_min, 3);
-	MemReader::ReadDWordArray(nsa, (DWORD*)this->m_scaledExtent, 3);
+	MemReader::ReadArray(nsa, this->m_min, 3);
+	MemReader::ReadArray(nsa, this->m_scaledExtent, 3);
 }
 
 NSA::DequantizationFactor::DequantizationFactor(Vector3 min, Vector3 scaledExtent)
@@ -113,39 +113,39 @@ NSA::DequantizationFactor::DequantizationFactor(Vector3 min, Vector3 scaledExten
 
 NSA::IndexList::IndexList(ifstream* nsa)
 {
-	MemReader::ReadWord(nsa, (WORD*)&this->m_count);
+	MemReader::Read(nsa, &this->m_count);
 
 	this->m_indices.reserve(this->m_count);
 	this->m_indices = std::vector<short>(this->m_count, 0);
 
 	for (int i = 0; i < this->m_indices.size(); i++)
-		MemReader::ReadWord(nsa, (WORD*)&this->m_indices[i]);
+		MemReader::Read(nsa, &this->m_indices[i]);
 }
 
 NSA::StaticSegment::StaticSegment(ifstream* nsa)
 {
 	UINT64 pStart = nsa->tellg();
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_translationBoneCount);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotationBoneCount);
+	MemReader::Read(nsa, &this->m_translationBoneCount);
+	MemReader::Read(nsa, &this->m_rotationBoneCount);
 
 	this->m_translationBoneDequantizationFactors = DequantizationFactor(nsa);
 	this->m_rotationBoneDequantizationFactors = DequantizationFactor(nsa);
 
-	UINT64 m_pCompressedTranslation;
-	UINT64 m_pCompressedRotation;
+	UINT64 pCompressedTranslation;
+	UINT64 pCompressedRotation;
 
-	MemReader::ReadQWord(nsa, &m_pCompressedTranslation);
-	MemReader::ReadQWord(nsa, &m_pCompressedRotation);
+	MemReader::Read(nsa, &pCompressedTranslation);
+	MemReader::Read(nsa, &pCompressedRotation);
 
-	nsa->seekg(pStart + m_pCompressedTranslation);
+	nsa->seekg(pStart + pCompressedTranslation);
 
 	this->m_compressedTranslations.reserve(this->m_translationBoneCount);
 
 	for (size_t i = 0; i < this->m_translationBoneCount; i++)
 		this->m_compressedTranslations.push_back(Vec3Short(nsa));
 
-	nsa->seekg(pStart + m_pCompressedRotation);
+	nsa->seekg(pStart + pCompressedRotation);
 
 	this->m_compressedTranslations.reserve(this->m_rotationBoneCount);
 
@@ -197,9 +197,9 @@ NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 {
 	UINT64 pStart = nsa->tellg();
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_sampleCount);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_translationBoneCount);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotationBoneCount);
+	MemReader::Read(nsa, &this->m_sampleCount);
+	MemReader::Read(nsa, &this->m_translationBoneCount);
+	MemReader::Read(nsa, &this->m_rotationBoneCount);
 
 	UINT64 pCurrentPos = nsa->tellg();
 	nsa->seekg(pCurrentPos + 0x4);
@@ -209,10 +209,10 @@ NSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 	UINT64 pRotationSample;
 	UINT64 pRotationDeqInfo;
 
-	MemReader::ReadQWord(nsa, &pTranslationSample);
-	MemReader::ReadQWord(nsa, &pTranslationDeqInfo);
-	MemReader::ReadQWord(nsa, &pRotationSample);
-	MemReader::ReadQWord(nsa, &pRotationDeqInfo);
+	MemReader::Read(nsa, &pTranslationSample);
+	MemReader::Read(nsa, &pTranslationDeqInfo);
+	MemReader::Read(nsa, &pRotationSample);
+	MemReader::Read(nsa, &pRotationDeqInfo);
 
 	int translDeqCount = getDeqInfoCount(this->m_translationBoneCount);
 	int rotationDeqCount = getDeqInfoCount(this->m_rotationBoneCount);
@@ -323,15 +323,15 @@ NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 
 	nsa->seekg(pStart + 0x20);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_fps);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_sampleCount);
+	MemReader::Read(nsa, &this->m_fps);
+	MemReader::Read(nsa, &this->m_sampleCount);
 
 	this->m_dequantizationFactors = DequantizationFactor(nsa);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotation.x);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotation.y);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotation.z);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotation.w);
+	MemReader::Read(nsa, &this->m_rotation.x);
+	MemReader::Read(nsa, &this->m_rotation.y);
+	MemReader::Read(nsa, &this->m_rotation.z);
+	MemReader::Read(nsa, &this->m_rotation.w);
 
 	UINT pPos = nsa->tellg();
 	nsa->seekg(pPos + 0x8);
@@ -339,8 +339,8 @@ NSA::RootMotionSegment::RootMotionSegment(ifstream* nsa)
 	UINT64 pTranslationSample;
 	UINT64 pRotationSample;
 
-	MemReader::ReadQWord(nsa, &pTranslationSample);
-	MemReader::ReadQWord(nsa, &pRotationSample);
+	MemReader::Read(nsa, &pTranslationSample);
+	MemReader::Read(nsa, &pRotationSample);
 
 	if (pTranslationSample != 0)
 	{
@@ -367,40 +367,40 @@ NSA::Header::Header(ifstream* nsa)
 {
 	UINT64 start = nsa->tellg();
 	nsa->seekg(start + 0x8);
-	MemReader::ReadQWord(nsa, &this->m_pDynamicSegment);
+	MemReader::Read(nsa, &this->m_pDynamicSegment);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_alignment);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_size);
+	MemReader::Read(nsa, &this->m_alignment);
+	MemReader::Read(nsa, &this->m_size);
 
 	nsa->seekg(start + 0x28);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_duration);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_fps);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_boneCount);
+	MemReader::Read(nsa, &this->m_duration);
+	MemReader::Read(nsa, &this->m_fps);
+	MemReader::Read(nsa, &this->m_boneCount);
 
 	nsa->seekg(start + 0x3C);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_animBoneCount);
+	MemReader::Read(nsa, &this->m_animBoneCount);
 
-	MemReader::ReadQWord(nsa, &this->m_pStaticTranslationBoneIndices);
-	MemReader::ReadQWord(nsa, &this->m_pStaticRotationBoneIndices);
-	MemReader::ReadQWord(nsa, &this->m_ppDynamicTranslationBoneIndices);
-	MemReader::ReadQWord(nsa, &this->m_ppDynamicRotationBoneIndices);
+	MemReader::Read(nsa, &this->m_pStaticTranslationBoneIndices);
+	MemReader::Read(nsa, &this->m_pStaticRotationBoneIndices);
+	MemReader::Read(nsa, &this->m_ppDynamicTranslationBoneIndices);
+	MemReader::Read(nsa, &this->m_ppDynamicRotationBoneIndices);
 
 	this->m_translationStartPosFactors = DequantizationFactor(nsa);
 
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_translationDequantizationCount);
-	MemReader::ReadDWord(nsa, (DWORD*)&this->m_rotationDequantizationCount);
+	MemReader::Read(nsa, &this->m_translationDequantizationCount);
+	MemReader::Read(nsa, &this->m_rotationDequantizationCount);
 
-	MemReader::ReadQWord(nsa, &this->m_pTranslationDequantizationFactors);
-	MemReader::ReadQWord(nsa, &this->m_pRotationDequantizationFactors);
+	MemReader::Read(nsa, &this->m_pTranslationDequantizationFactors);
+	MemReader::Read(nsa, &this->m_pRotationDequantizationFactors);
 
-	MemReader::ReadQWord(nsa, &this->m_pStaticSegment);
-	MemReader::ReadQWord(nsa, &this->m_dynamicSegmentSize);
-	MemReader::ReadQWord(nsa, &this->m_pVarA0);
-	MemReader::ReadQWord(nsa, &this->m_pDynamicSegmentSize);
-	MemReader::ReadQWord(nsa, &this->m_ppDynamicSegment);
-	MemReader::ReadQWord(nsa, &this->m_pRootMotionSegment);
+	MemReader::Read(nsa, &this->m_pStaticSegment);
+	MemReader::Read(nsa, &this->m_dynamicSegmentSize);
+	MemReader::Read(nsa, &this->m_pVarA0);
+	MemReader::Read(nsa, &this->m_pDynamicSegmentSize);
+	MemReader::Read(nsa, &this->m_ppDynamicSegment);
+	MemReader::Read(nsa, &this->m_pRootMotionSegment);
 
 	nsa->seekg(m_pStaticTranslationBoneIndices);
 }
@@ -443,7 +443,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 		nsa.seekg(this->m_header.m_ppDynamicTranslationBoneIndices);
 
 		UINT64 pDynamicTranslationBoneIndices;
-		MemReader::ReadQWord(&nsa, &pDynamicTranslationBoneIndices);
+		MemReader::Read(&nsa, &pDynamicTranslationBoneIndices);
 
 		nsa.seekg(pDynamicTranslationBoneIndices);
 		this->m_dynamicTranslationIndices = NSA::IndexList(&nsa);
@@ -451,7 +451,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 		nsa.seekg(this->m_header.m_ppDynamicRotationBoneIndices);
 
 		UINT64 pDynamicRotationBoneIndices;
-		MemReader::ReadQWord(&nsa, &pDynamicRotationBoneIndices);
+		MemReader::Read(&nsa, &pDynamicRotationBoneIndices);
 
 		nsa.seekg(pDynamicRotationBoneIndices);
 		this->m_dynamicRotationIndices = NSA::IndexList(&nsa);

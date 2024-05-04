@@ -34,20 +34,20 @@ MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)
 
 void MorphemeBundle_Header::WriteBinary(ofstream* out, UINT64 alignment)
 {
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_guid, 16);
+	MemReader::WriteArray(out, this->m_magic, 2);
+	MemReader::Write(out, this->m_assetType);
+	MemReader::Write(out, this->m_signature);
+	MemReader::WriteArray(out, this->m_guid, 16);
 
 	UINT64 bundleSize = this->CalculateBundleSize();
-	MemReader::WriteQWord(out, &bundleSize);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
+	MemReader::Write(out, bundleSize);
+	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Write(out, this->m_iVar2C);
 
-	MemReader::WriteQWord(out, (UINT64*)&this->m_data->m_iVar0);
-	MemReader::WriteQWord(out, (UINT64*)&this->m_data->m_iVar1);
-	MemReader::WriteQWord(out, (UINT64*)&this->m_data->m_iVar2);
-	MemReader::WriteQWord(out, (UINT64*)&this->m_data->m_iVar3);
+	MemReader::Write(out, this->m_data->m_iVar0);
+	MemReader::Write(out, this->m_data->m_iVar1);
+	MemReader::Write(out, this->m_data->m_iVar2);
+	MemReader::Write(out, this->m_data->m_iVar3);
 
 	MemReader::AlignStream(out, alignment);
 }

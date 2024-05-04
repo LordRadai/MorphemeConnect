@@ -58,51 +58,40 @@ MorphemeBundle_EventTrack::~MorphemeBundle_EventTrack()
 
 void MorphemeBundle_EventTrack::WriteBinary(ofstream* out, UINT64 alignment)
 {
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_guid, 16);
+	MemReader::WriteArray(out, this->m_magic, 2);
+	MemReader::Write(out, this->m_assetType);
+	MemReader::Write(out, this->m_signature);
+	MemReader::WriteArray(out, this->m_guid, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
-	MemReader::WriteQWord(out, &this->m_dataSize);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
+	MemReader::Write(out, this->m_dataSize);
+	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Write(out, this->m_iVar2C);
 
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_numEvents);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_channelId);
+	MemReader::Write(out, this->m_data->m_numEvents);
+	MemReader::Write(out, this->m_data->m_channelId);
 
 	UINT64 name_offset = 32 + 12 * this->m_data->m_numEvents;
-	MemReader::WriteQWord(out, &name_offset);
+	MemReader::Write(out, name_offset);
 
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_eventId);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_index);
+	MemReader::Write(out, this->m_data->m_eventId);
+	MemReader::Write(out, this->m_data->m_index);
 
 	UINT64 offset = 32;
-	MemReader::WriteQWord(out, &offset);
+	MemReader::Write(out, offset);
 
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_data->m_events.data(), 3 * this->m_data->m_numEvents);
+	MemReader::WriteArray(out, this->m_data->m_events.data(), this->m_data->m_numEvents);
 
 	int str_len = strlen(this->m_data->m_trackName);
-
-	MemReader::WriteByteArray(out, (BYTE*)this->m_data->m_trackName, str_len);
-
-	BYTE padByte = 0;
-	MemReader::WriteByte(out, &padByte);
 	
-	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len); assert(pad_count > -1);
+	MemReader::WriteArray(out, this->m_data->m_trackName, str_len);
 
-	if (pad_count > 0)
-	{
-		BYTE* pad_bytes = new BYTE[pad_count];
+	MemReader::Pad(out, 0, 1);
+	
+	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len) - 1; assert(pad_count > -1);
 
-		for (int i = 0; i < pad_count; i++)
-			pad_bytes[i] = 0xCD;
-
-		MemReader::WriteByteArray(out, pad_bytes, pad_count - 1);
-
-		delete[] pad_bytes;
-	}
+	MemReader::Pad(out, 0xCD, pad_count);
 
 	MemReader::AlignStream(out, alignment);
 }

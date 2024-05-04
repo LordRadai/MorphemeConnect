@@ -1,5 +1,5 @@
 #include "TimeActEventData.h"
-#include "../../../MemReader/MemReader.h"
+#include "../../../Utils/MemReader/MemReader.h"
 #include "../../../../Application/Application.h"
 #include "../../../../StringHelper/StringHelper.h"
 #include "../../../../TaeTemplate/TaeTemplate.h"
@@ -26,55 +26,55 @@ void TimeActEventData::GetData(ifstream* tae, int group_id, int event_id)
 						{
 							this->m_size += 1;
 
-							MemReader::ReadByte(tae, (BYTE*)&this->m_args.back().m_s8);
+							MemReader::Read(tae, &this->m_args.back().m_s8);
 						}
 						else if (arg_type.compare("u8") == 0)
 						{
 							this->m_size += 1;
 
-							MemReader::ReadByte(tae, (BYTE*)&this->m_args.back().m_u8);
+							MemReader::Read(tae, &this->m_args.back().m_u8);
 						}
 						else if (arg_type.compare("s16") == 0)
 						{
 							this->m_size += 2;
 
-							MemReader::ReadWord(tae, (WORD*)&this->m_args.back().m_s16);
+							MemReader::Read(tae, &this->m_args.back().m_s16);
 						}
 						else if (arg_type.compare("u16") == 0)
 						{
 							this->m_size += 2;
 
-							MemReader::ReadWord(tae, (WORD*)&this->m_args.back().m_u16);
+							MemReader::Read(tae, &this->m_args.back().m_u16);
 						}
 						else if (arg_type.compare("s32") == 0)
 						{
 							this->m_size += 4;
 
-							MemReader::ReadDWord(tae, (DWORD*)&this->m_args.back().m_s32);
+							MemReader::Read(tae, &this->m_args.back().m_s32);
 						}
 						else if (arg_type.compare("u32") == 0)
 						{
 							this->m_size += 4;
 
-							MemReader::ReadDWord(tae, (DWORD*)&this->m_args.back().m_u32);
+							MemReader::Read(tae, &this->m_args.back().m_u32);
 						}
 						else if (arg_type.compare("f32") == 0)
 						{
 							this->m_size += 4;
 
-							MemReader::ReadDWord(tae, (DWORD*)&this->m_args.back().m_f32);
+							MemReader::Read(tae, &this->m_args.back().m_f32);
 						}
 						else if (arg_type.compare("s64") == 0)
 						{
 							this->m_size += 8;
 
-							MemReader::ReadQWord(tae, (UINT64*)&this->m_args.back().m_s64);
+							MemReader::Read(tae, &this->m_args.back().m_s64);
 						}
 						else if (arg_type.compare("u64") == 0)
 						{
 							this->m_size += 8;
 
-							MemReader::ReadQWord(tae, (UINT64*)&this->m_args.back().m_u64);
+							MemReader::Read(tae, &this->m_args.back().m_u64);
 						}
 					}
 
@@ -94,23 +94,23 @@ void TimeActEventData::GenerateBinary(ofstream* tae)
 		std::string arg_type = this->m_args[i].m_type;
 
 		if (arg_type.compare("s8") == 0)
-			MemReader::WriteByte(tae, (BYTE*)&this->m_args[i].m_s8);
+			MemReader::Write(tae, this->m_args[i].m_s8);
 		else if (arg_type.compare("u8") == 0)
-			MemReader::WriteByte(tae, (BYTE*)&this->m_args[i].m_u8);
+			MemReader::Write(tae, this->m_args[i].m_u8);
 		else if (arg_type.compare("s16") == 0)
-			MemReader::WriteWord(tae, (WORD*)&this->m_args[i].m_s16);
+			MemReader::Write(tae, this->m_args[i].m_s16);
 		else if (arg_type.compare("u16") == 0)
-			MemReader::WriteWord(tae, (WORD*)&this->m_args[i].m_u16);
+			MemReader::Write(tae, this->m_args[i].m_u16);
 		else if (arg_type.compare("s32") == 0)
-			MemReader::WriteDWord(tae, (DWORD*)&this->m_args[i].m_s32);
+			MemReader::Write(tae, this->m_args[i].m_s32);
 		else if (arg_type.compare("u32") == 0)
-			MemReader::WriteDWord(tae, (DWORD*)&this->m_args[i].m_u32);
+			MemReader::Write(tae, this->m_args[i].m_u32);
 		else if (arg_type.compare("f32") == 0)
-			MemReader::WriteDWord(tae, (DWORD*)&this->m_args[i].m_f32);
+			MemReader::Write(tae, this->m_args[i].m_f32);
 		else if (arg_type.compare("s64") == 0)
-			MemReader::WriteQWord(tae, (UINT64*)&this->m_args[i].m_s64);
+			MemReader::Write(tae, this->m_args[i].m_s64);
 		else if (arg_type.compare("u64") == 0)
-			MemReader::WriteQWord(tae, (UINT64*)&this->m_args[i].m_u64);
+			MemReader::Write(tae, this->m_args[i].m_u64);
 	}
 }
 

@@ -15,9 +15,9 @@ NodeAttribUnknown::NodeAttribUnknown(BYTE* data, int size) : NodeAttribBase(data
 
 void NodeAttribUnknown::GenerateBinary(std::ofstream* out)
 {
-    MemReader::WriteDWord(out, (DWORD*)&this->field0_0x0);
-    MemReader::WriteDWord(out, (DWORD*)&this->field1_0x4);
-    MemReader::WriteDWord(out, (DWORD*)&this->field2_0x8);
-    MemReader::WriteWord(out, (WORD*)&this->m_type);
-    MemReader::WriteWord(out, (WORD*)&this->padding);
+    MemReader::Write(out, &this->field0_0x0);
+    MemReader::Write(out, &this->field1_0x4);
+    MemReader::Write(out, &this->field2_0x8);
+    MemReader::Write(out, (WORD*)&this->m_type);
+    MemReader::Write(out, (WORD*)&this->padding);
 }

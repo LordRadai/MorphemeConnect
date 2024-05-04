@@ -124,67 +124,67 @@ MorphemeBundle_Rig::~MorphemeBundle_Rig()
 
 void MorphemeBundle_Rig::WriteBinary(ofstream* out, UINT64 alignment)
 {
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_guid, 16);
+	MemReader::WriteArray(out, this->m_magic, 2);
+	MemReader::Write(out, this->m_assetType);
+	MemReader::Write(out, this->m_signature);
+	MemReader::WriteArray(out, this->m_guid, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
 	//TODO finish this
-	MemReader::WriteQWord(out, &this->m_dataSize);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
+	MemReader::Write(out, this->m_dataSize);
+	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Write(out, this->m_iVar2C);
 
-	MemReader::WriteQWord(out, &this->m_data->m_version);
-	MemReader::WriteQWord(out, &this->m_data->m_lVar8);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_fVar10);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar14);
-	MemReader::WriteQWord(out, &this->m_data->m_lVar18);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar20);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar24);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar28);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_trajectoryBoneId);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_characterRootBoneId);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar34);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar38);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar3C);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar40);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneCount);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_pad);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar4C);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_iVar50);
+	MemReader::Write(out, this->m_data->m_version);
+	MemReader::Write(out, this->m_data->m_lVar8);
+	MemReader::Write(out, this->m_data->m_fVar10);
+	MemReader::Write(out, this->m_data->m_iVar14);
+	MemReader::Write(out, this->m_data->m_lVar18);
+	MemReader::Write(out, this->m_data->m_iVar20);
+	MemReader::Write(out, this->m_data->m_iVar24);
+	MemReader::Write(out, this->m_data->m_iVar28);
+	MemReader::Write(out, this->m_data->m_trajectoryBoneId);
+	MemReader::Write(out, this->m_data->m_characterRootBoneId);
+	MemReader::Write(out, this->m_data->m_iVar34);
+	MemReader::Write(out, this->m_data->m_iVar38);
+	MemReader::Write(out, this->m_data->m_iVar3C);
+	MemReader::Write(out, this->m_data->m_iVar40);
+	MemReader::Write(out, this->m_data->m_boneCount);
+	MemReader::Write(out, this->m_data->m_pad);
+	MemReader::Write(out, this->m_data->m_iVar4C);
+	MemReader::Write(out, this->m_data->m_iVar50);
 
 	for (size_t i = 0; i < this->m_data->m_hierarchy.size(); i++)
-		MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_hierarchy[i]);
+		MemReader::Write(out, this->m_data->m_hierarchy[i]);
 
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_boneCount);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_stringTableSize);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_stringTableAlignment);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_iVarC);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_iVar10);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_iVar14);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_iVar18);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_iVar1C);
+	MemReader::Write(out, this->m_data->m_boneList.m_boneCount);
+	MemReader::Write(out, this->m_data->m_boneList.m_stringTableSize);
+	MemReader::Write(out, this->m_data->m_boneList.m_stringTableAlignment);
+	MemReader::Write(out, this->m_data->m_boneList.m_iVarC);
+	MemReader::Write(out, this->m_data->m_boneList.m_iVar10);
+	MemReader::Write(out, this->m_data->m_boneList.m_iVar14);
+	MemReader::Write(out, this->m_data->m_boneList.m_iVar18);
+	MemReader::Write(out, this->m_data->m_boneList.m_iVar1C);
 
 	for (size_t i = 0; i < this->m_data->m_boneList.m_boneIndices.size(); i++)
-		MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_boneIndices[i]);
+		MemReader::Write(out, this->m_data->m_boneList.m_boneIndices[i]);
 
 	for (size_t i = 0; i < this->m_data->m_boneList.m_nameOffset.size(); i++)
-		MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_boneList.m_nameOffset[i]);
+		MemReader::Write(out, this->m_data->m_boneList.m_nameOffset[i]);
 
 	for (size_t i = 0; i < this->m_data->m_boneList.m_boneNames.size(); i++)
-		MemReader::WriteString(out, &this->m_data->m_boneList.m_boneNames[i]);
+		MemReader::WriteArray(out, this->m_data->m_boneList.m_boneNames[i], strlen(this->m_data->m_boneList.m_boneNames[i]));
 
-	MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_bindPose.m_elemCount);
-	MemReader::WriteQWord(out, &this->m_data->m_bindPose.m_pPosition);
-	MemReader::WriteQWord(out, &this->m_data->m_bindPose.m_pRotation);
+	MemReader::Write(out, this->m_data->m_bindPose.m_elemCount);
+	MemReader::Write(out, this->m_data->m_bindPose.m_pPosition);
+	MemReader::Write(out, this->m_data->m_bindPose.m_pRotation);
 
 	for (size_t i = 0; i < this->m_data->m_bindPose.m_positions.size(); i++)
-		MemReader::WriteDWordArray(out, (DWORD*)&this->m_data->m_bindPose.m_positions[i], 4);
+		MemReader::WriteArray(out, &this->m_data->m_bindPose.m_positions[i], 4);
 
 	for (size_t i = 0; i < this->m_data->m_bindPose.m_rotations.size(); i++)
-		MemReader::WriteDWordArray(out, (DWORD*)&this->m_data->m_bindPose.m_rotations[i], 4);
+		MemReader::WriteArray(out, &this->m_data->m_bindPose.m_rotations[i], 4);
 
 	MemReader::AlignStream(out, alignment);
 }

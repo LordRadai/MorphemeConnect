@@ -322,13 +322,11 @@
     <ClInclude Include="fromloader\umem.h" />
     <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h" />
     <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h" />
-    <ClInclude Include="FromsoftFormat\MemReader\MemReader.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h" />
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_SkeletonMap.h" />
@@ -344,6 +342,7 @@
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h" />
+    <ClInclude Include="FromsoftFormat\Utils\MemReader\MemReader.h" />
     <ClInclude Include="imgui\custom\imgui_custom_logic.h" />
     <ClInclude Include="imgui\custom\imgui_custom_widget.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -445,7 +444,6 @@
     <ClCompile Include="fromloader\umem.c" />
     <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp" />
     <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp" />
-    <ClCompile Include="FromsoftFormat\MemReader\MemReader.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
     <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />

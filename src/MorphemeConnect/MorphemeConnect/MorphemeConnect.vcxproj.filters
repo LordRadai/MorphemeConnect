@@ -195,14 +195,8 @@
     <ClInclude Include="Scene\Camera\Camera.h">
       <Filter>File di intestazione\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\MemReader\MemReader.h">
-      <Filter>File di intestazione\FromsoftReader\MemReader</Filter>
-    </ClInclude>
     <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h">
       <Filter>File di intestazione\FromsoftReader\NMBReader</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Network.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
     </ClInclude>
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h">
       <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
@@ -543,6 +537,9 @@
     <ClInclude Include="Math\Math.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="FromsoftFormat\Utils\MemReader\MemReader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imsequencer\ImSequencer.cpp">
@@ -583,9 +580,6 @@
     </ClCompile>
     <ClCompile Include="Scene\Camera\Camera.cpp">
       <Filter>File di origine\Scene\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\MemReader\MemReader.cpp">
-      <Filter>File di origine\FromsoftReader\MemReader</Filter>
     </ClCompile>
     <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp">
       <Filter>File di origine\FromsoftReader\NMBReader</Filter>

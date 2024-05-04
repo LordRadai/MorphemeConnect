@@ -2,12 +2,12 @@
 
 template <typename T> void MemReader::Read(ifstream* pStream, T* pBuf)
 {
-	pStream->read(pDst, sizeof(T));
+	pStream->read(pStream, sizeof(T));
 }
 
 template <typename T> void MemReader::ReadArray(ifstream* pStream, T* pBuf, size_t iCount)
 {
-	pStream->read(pDst, iCount * sizeof(T));
+	pStream->read(pStream, iCount * sizeof(T));
 }
 
 template <typename T> void MemReader::Write(ofstream* pStream, T v)

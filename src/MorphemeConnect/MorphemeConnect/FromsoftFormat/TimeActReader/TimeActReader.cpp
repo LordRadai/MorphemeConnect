@@ -288,6 +288,8 @@ void TimeActLookupTable::GenerateBinary(ofstream* tae)
 {
 	MemReader::Write(tae, this->m_groupCount);
 
+	MemReader::Pad(tae, 0, 4);
+
 	UINT64 offset = tae->tellp();
 	offset += 0x8;
 

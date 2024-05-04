@@ -461,7 +461,6 @@
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp" />
-    <ClCompile Include="FromsoftFormat\Utils\MemReader\MemReader.cpp" />
     <ClCompile Include="imgui\custom\imgui_custom_logic.cpp" />
     <ClCompile Include="imgui\custom\imgui_custom_widget.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />

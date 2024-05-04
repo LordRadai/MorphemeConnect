@@ -16,17 +16,17 @@ namespace MemReader
 {
 	template <typename T> void Read(ifstream* pStream, T* pBuf)
 	{
-		pStream->read(pBuf, sizeof(T));
+		pStream->read((char*)pBuf, sizeof(T));
 	}
 
 	template <typename T> void ReadArray(ifstream* pStream, T* pBuf, size_t iCount)
 	{
-		pStream->read(pBuf, iCount * sizeof(T));
+		pStream->read((char*)pBuf, iCount * sizeof(T));
 	}
 
 	template <typename T> void Write(ofstream* pStream, T v)
 	{
-		pStream->write(&v, sizeof(T));
+		pStream->write((const char*)&v, sizeof(T));
 	}
 
 	template <typename T> void WriteArray(ofstream* pStream, const T* pVal, size_t iCount)

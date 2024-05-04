@@ -1,7 +1,7 @@
 #include <filesystem>
 #include "NMBReader.h"
 #include "../../StringHelper/StringHelper.h"
-#include "TinyXML/tinyxml2.h"
+#include "ME/ME.h"
 
 NMBReader::NMBReader(PWSTR pszFilePath)
 {
@@ -696,4 +696,9 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 	}
 
 	return false;
+}
+
+bool NMBReader::NetworkExportXML(PWSTR pszOutFilePath)
+{
+
 }

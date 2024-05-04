@@ -2,22 +2,22 @@
 
 template <typename T> void MemReader::Read(ifstream* pStream, T* pBuf)
 {
-	pStream->read(pStream, sizeof(T));
+	pStream->read(pBuf, sizeof(T));
 }
 
 template <typename T> void MemReader::ReadArray(ifstream* pStream, T* pBuf, size_t iCount)
 {
-	pStream->read(pStream, iCount * sizeof(T));
+	pStream->read(pBuf, iCount * sizeof(T));
 }
 
 template <typename T> void MemReader::Write(ofstream* pStream, T v)
 {
-	pStream->write(v, sizeof(T));
+	pStream->write(&v, sizeof(T));
 }
 
 template <typename T> void MemReader::WriteArray(ofstream* pStream, T* pVal, size_t iCount)
 {
-	pStream->write(pVal, iCount * sizeof(T));
+	pStream->write(&pVal, iCount * sizeof(T));
 }
 
 void MemReader::Pad(ofstream* pStream, BYTE padVal, int iCount)
@@ -27,7 +27,7 @@ void MemReader::Pad(ofstream* pStream, BYTE padVal, int iCount)
 	for (size_t i = 0; i < iCount; i++)
 		pPaddingVal[i] = padVal;
 
-	MemReader::WriteArray<BYTE>(pStream, pPaddingVal, iCount);
+	MemReader::WriteArray(pStream, pPaddingVal, iCount);
 
 	delete[] pPaddingVal;
 }

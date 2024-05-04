@@ -17,9 +17,9 @@ TimeActEvent::EventData::EventData(int event_id)
 
 TimeActEvent::EventData::EventData(ifstream* tae)
 {
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_id);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_pad);
-	MemReader::ReadQWord(tae, &this->m_argsOffset);
+	MemReader::Read(tae, &this->m_id);
+	MemReader::Read(tae, &this->m_pad);
+	MemReader::Read(tae, &this->m_argsOffset);
 
 	this->m_args = new TimeActEventData;
 }
@@ -46,22 +46,22 @@ TimeActEvent::TimeActEvent(ifstream* tae)
 {
 	streampos start = tae->tellg();
 
-	MemReader::ReadQWord(tae, &this->m_startOffset);
-	MemReader::ReadQWord(tae, &this->m_endOffset);
-	MemReader::ReadQWord(tae, &this->m_eventDataOffset);
+	MemReader::Read(tae, &this->m_startOffset);
+	MemReader::Read(tae, &this->m_endOffset);
+	MemReader::Read(tae, &this->m_eventDataOffset);
 
 	if (m_startOffset)
 	{
 		tae->seekg(m_startOffset);
 
-		MemReader::ReadDWord(tae, (DWORD*)&this->m_start);
+		MemReader::Read(tae, &this->m_start);
 	}
 
 	if (m_endOffset)
 	{
 		tae->seekg(m_endOffset);
 
-		MemReader::ReadDWord(tae, (DWORD*)&this->m_end);
+		MemReader::Read(tae, &this->m_end);
 	}
 
 	if (m_eventDataOffset)
@@ -80,17 +80,17 @@ TimeActEvent::~TimeActEvent()
 
 void TimeActEvent::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, &this->m_startOffset);
-	MemReader::WriteQWord(tae, &this->m_endOffset);
-	MemReader::WriteQWord(tae, &this->m_eventDataOffset);
+	MemReader::Write(tae, this->m_startOffset);
+	MemReader::Write(tae, this->m_endOffset);
+	MemReader::Write(tae, this->m_eventDataOffset);
 
 	UINT64 bak = tae->tellp();
 	tae->seekp(m_eventDataOffset);
 
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventData->m_id);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventData->m_pad);
+	MemReader::Write(tae, this->m_eventData->m_id);
+	MemReader::Write(tae, this->m_eventData->m_pad);
 
-	MemReader::WriteQWord(tae, &this->m_eventData->m_argsOffset);
+	MemReader::Write(tae, this->m_eventData->m_argsOffset);
 
 	tae->seekp(this->m_eventData->m_argsOffset);
 
@@ -117,8 +117,8 @@ EventGroup::EventGroupData::EventGroupData(ifstream* tae)
 {
 	streampos bak = tae->tellg();
 
-	MemReader::ReadQWord(tae, &this->m_eventType);
-	MemReader::ReadQWord(tae, &this->m_offset);
+	MemReader::Read(tae, &this->m_eventType);
+	MemReader::Read(tae, &this->m_offset);
 }
 
 EventGroup::EventGroup() 
@@ -141,10 +141,10 @@ EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 {
 	streampos bak = tae->tellg();
 
-	MemReader::ReadQWord(tae, &this->m_count);
-	MemReader::ReadQWord(tae, &this->m_eventsOffset);
-	MemReader::ReadQWord(tae, &this->m_groupDataOffset);
-	MemReader::ReadQWord(tae, &this->m_pad);
+	MemReader::Read(tae, &this->m_count);
+	MemReader::Read(tae, &this->m_eventsOffset);
+	MemReader::Read(tae, &this->m_groupDataOffset);
+	MemReader::Read(tae, &this->m_pad);
 
 	if (this->m_count > 0)
 	{
@@ -157,7 +157,7 @@ EventGroup::EventGroup(ifstream* tae, UINT64 eventStartOffset)
 				tae->seekg(offset);
 
 				UINT64 event_offset;
-				MemReader::ReadQWord(tae, &event_offset);
+				MemReader::Read(tae, &event_offset);
 				this->m_eventOffset.push_back(event_offset);
 
 				int idx = (event_offset - eventStartOffset) / 0x18;
@@ -188,12 +188,11 @@ EventGroup::~EventGroup()
 
 void EventGroup::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, &this->m_count);
-	MemReader::WriteQWord(tae, &this->m_eventsOffset);
-	MemReader::WriteQWord(tae, &this->m_groupDataOffset);
+	MemReader::Write(tae, this->m_count);
+	MemReader::Write(tae, this->m_eventsOffset);
+	MemReader::Write(tae, this->m_groupDataOffset);
 
-	UINT64 pad0 = 0;
-	MemReader::WriteQWord(tae, &pad0);
+	MemReader::Pad(tae, 0, 8);
 
 	UINT64 bak = tae->tellp();
 
@@ -201,16 +200,15 @@ void EventGroup::GenerateBinary(ofstream* tae)
 	{
 		tae->seekp(m_groupDataOffset);
 
-		MemReader::WriteQWord(tae, &this->m_groupData->m_eventType);
-		MemReader::WriteQWord(tae, &this->m_groupData->m_offset);
+		MemReader::Write(tae, this->m_groupData->m_eventType);
+		MemReader::Write(tae, this->m_groupData->m_offset);
 
-		UINT64 pad0[2] = { 0, 0 };
-		MemReader::WriteQWordArray(tae, pad0, 2);
+		MemReader::Pad(tae, 0, 16);
 
 		tae->seekp(m_eventsOffset);
 
 		for (size_t i = 0; i < this->m_count; i++)
-			MemReader::WriteQWord(tae, &this->m_eventOffset[i]);
+			MemReader::Write(tae, this->m_eventOffset[i]);
 	}
 
 	tae->seekp(bak);

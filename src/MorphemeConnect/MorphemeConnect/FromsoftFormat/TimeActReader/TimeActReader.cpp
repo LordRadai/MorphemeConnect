@@ -17,15 +17,15 @@ AnimData::AnimData()
 
 AnimData::AnimData(ifstream* tae)
 {
-	MemReader::ReadQWord(tae, &this->m_reference);
-	MemReader::ReadQWord(tae, &this->m_nextOffsetOffset);
-	MemReader::ReadQWord(tae, &this->m_nextOffset);
-	MemReader::ReadByte(tae, &this->m_bVar18);
-	MemReader::ReadByte(tae, &this->m_fps);
-	MemReader::ReadByte(tae, &this->m_bVar1A);
-	MemReader::ReadByte(tae, &this->m_bVar1B);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_lenght);
-	MemReader::ReadQWordArray(tae, this->m_pad, 2);
+	MemReader::Read(tae, &this->m_reference);
+	MemReader::Read(tae, &this->m_nextOffsetOffset);
+	MemReader::Read(tae, &this->m_nextOffset);
+	MemReader::Read(tae, &this->m_bVar18);
+	MemReader::Read(tae, &this->m_fps);
+	MemReader::Read(tae, &this->m_bVar1A);
+	MemReader::Read(tae, &this->m_bVar1B);
+	MemReader::Read(tae, &this->m_lenght);
+	MemReader::ReadArray<UINT64>(tae, this->m_pad, 2);
 }
 
 AnimData::~AnimData()
@@ -42,15 +42,15 @@ AnimData::~AnimData()
 
 void AnimData::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, &this->m_reference);
-	MemReader::WriteQWord(tae, &this->m_nextOffsetOffset);
-	MemReader::WriteQWord(tae, &this->m_nextOffset);
-	MemReader::WriteByte(tae, &this->m_bVar18);
-	MemReader::WriteByte(tae, &this->m_fps);
-	MemReader::WriteByte(tae, &this->m_bVar1A);
-	MemReader::WriteByte(tae, &this->m_bVar1B);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_lenght);
-	MemReader::WriteQWordArray(tae, this->m_pad, 2);
+	MemReader::Write(tae, this->m_reference);
+	MemReader::Write(tae, this->m_nextOffsetOffset);
+	MemReader::Write(tae, this->m_nextOffset);
+	MemReader::Write(tae, this->m_bVar18);
+	MemReader::Write(tae, this->m_fps);
+	MemReader::Write(tae, this->m_bVar1A);
+	MemReader::Write(tae, this->m_bVar1B);
+	MemReader::Write(tae, this->m_lenght);
+	MemReader::WriteArray<UINT64>(tae, this->m_pad, 2);
 }
 
 TimeActData::TimeActData() 
@@ -74,14 +74,14 @@ TimeActData::TimeActData(int lenght)
 
 TimeActData::TimeActData(ifstream* tae)
 {
-	MemReader::ReadQWord(tae, &this->m_eventOffset);
-	MemReader::ReadQWord(tae, &this->m_eventGroupOffset);
-	MemReader::ReadQWord(tae, &this->m_timesOffset);
-	MemReader::ReadQWord(tae, &this->m_animDataOffset);
+	MemReader::Read(tae, &this->m_eventOffset);
+	MemReader::Read(tae, &this->m_eventGroupOffset);
+	MemReader::Read(tae, &this->m_timesOffset);
+	MemReader::Read(tae, &this->m_animDataOffset);
 
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_eventCount);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_eventGroupCount);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_timeCount);
+	MemReader::Read(tae, &this->m_eventCount);
+	MemReader::Read(tae, &this->m_eventGroupCount);
+	MemReader::Read(tae, &this->m_timeCount);
 
 	if (m_eventOffset)
 	{
@@ -137,16 +137,15 @@ TimeActData::~TimeActData()
 
 void TimeActData::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, &this->m_eventOffset);
-	MemReader::WriteQWord(tae, &this->m_eventGroupOffset);
-	MemReader::WriteQWord(tae, &this->m_timesOffset);
-	MemReader::WriteQWord(tae, &this->m_animDataOffset);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventCount);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_eventGroupCount);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_timeCount);
+	MemReader::Write(tae, this->m_eventOffset);
+	MemReader::Write(tae, this->m_eventGroupOffset);
+	MemReader::Write(tae, this->m_timesOffset);
+	MemReader::Write(tae, this->m_animDataOffset);
+	MemReader::Write(tae, this->m_eventCount);
+	MemReader::Write(tae, this->m_eventGroupCount);
+	MemReader::Write(tae, this->m_timeCount);
 
-	DWORD pad = 0;
-	MemReader::WriteDWord(tae, &pad);
+	MemReader::Pad(tae, 0, 4);
 
 	UINT64 bak = tae->tellp();
 
@@ -157,8 +156,8 @@ void TimeActData::GenerateBinary(ofstream* tae)
 
 	for (int i = 0; i < this->m_eventCount; i++)
 	{
-		MemReader::WriteDWord(tae, (DWORD*)&this->m_events[i].m_start);
-		MemReader::WriteDWord(tae, (DWORD*)&this->m_events[i].m_end);
+		MemReader::Write(tae, this->m_events[i].m_start);
+		MemReader::Write(tae, this->m_events[i].m_end);
 	}
 
 	tae->seekp(m_eventOffset);
@@ -191,8 +190,8 @@ TimeAct::TimeAct(int id, float lenght)
 
 TimeAct::TimeAct(ifstream* tae)
 {
-	MemReader::ReadQWord(tae, &this->m_id);
-	MemReader::ReadQWord(tae, &this->m_taeOffset);
+	MemReader::Read(tae, &this->m_id);
+	MemReader::Read(tae, &this->m_taeOffset);
 
 	streampos bak = tae->tellg();
 	tae->seekg(this->m_taeOffset);
@@ -206,8 +205,8 @@ TimeAct::~TimeAct()
 
 void TimeAct::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, &this->m_id);
-	MemReader::WriteQWord(tae, &this->m_taeOffset);
+	MemReader::Write(tae, this->m_id);
+	MemReader::Write(tae, this->m_taeOffset);
 
 	UINT64 bak = tae->tellp();
 
@@ -287,18 +286,18 @@ void TimeActLookupTable::AddGroup(int tae_id)
 
 void TimeActLookupTable::GenerateBinary(ofstream* tae)
 {
-	MemReader::WriteQWord(tae, (UINT64*)&this->m_groupCount);
+	MemReader::Write(tae, this->m_groupCount);
 
 	UINT64 offset = tae->tellp();
 	offset += 0x8;
 
-	MemReader::WriteQWord(tae, &offset);
+	MemReader::Write(tae, offset);
 
 	for (int i = 0; i < this->m_groupCount; i++)
 	{
-		MemReader::WriteDWord(tae, (DWORD*)&this->m_groups[i].m_taeStart);
-		MemReader::WriteDWord(tae, (DWORD*)&this->m_groups[i].m_taeEnd);
-		MemReader::WriteQWord(tae, &this->m_groups[i].m_offset);
+		MemReader::Write(tae, this->m_groups[i].m_taeStart);
+		MemReader::Write(tae, this->m_groups[i].m_taeEnd);
+		MemReader::Write(tae, this->m_groups[i].m_offset);
 	}
 }
 
@@ -306,85 +305,85 @@ Header::Header() {}
 
 Header::Header(ifstream* tae)
 {
-	MemReader::ReadByteArray(tae, (BYTE*)this->m_magic, 4);
-	MemReader::ReadByte(tae, &this->m_bigEndian);
-	MemReader::ReadByte(tae, &this->m_bVar5);
-	MemReader::ReadByte(tae, &this->m_bVar6);
-	MemReader::ReadByte(tae, &this->m_is64Bit); assert(this->m_is64Bit == 255 || this->m_is64Bit == 0);
+	MemReader::ReadArray(tae, this->m_magic, 4);
+	MemReader::Read(tae, &this->m_bigEndian);
+	MemReader::Read(tae, &this->m_bVar5);
+	MemReader::Read(tae, &this->m_bVar6);
+	MemReader::Read(tae, &this->m_is64Bit); assert(this->m_is64Bit == 255 || this->m_is64Bit == 0);
 
 	if (this->m_is64Bit == 0)
 		throw("32 bit TAE not supported yet\n");
 
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_version);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileSize);
-	MemReader::ReadQWord(tae, &this->m_flagsOffset);
-	MemReader::ReadQWord(tae, &this->m_isReadable);
-	MemReader::ReadQWord(tae, &this->m_fileDataOffset);
-	MemReader::ReadQWord(tae, &this->m_unkFileDataOffset);
-	MemReader::ReadQWord(tae, &this->m_iVar30);
-	MemReader::ReadQWord(tae, &this->m_iVar38);
-	MemReader::ReadByteArray(tae, this->m_flags, 16);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileID);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_taeCount);
-	MemReader::ReadQWord(tae, &this->m_taeOffset);
-	MemReader::ReadQWord(tae, &this->m_taeLookupTableOffset);
-	MemReader::ReadQWord(tae, &this->m_iVar68);
-	MemReader::ReadQWord(tae, &this->m_taeCount2);
-	MemReader::ReadQWord(tae, &this->m_taeDataOffset);
-	MemReader::ReadQWord(tae, &this->m_iVar80);
-	MemReader::ReadQWord(tae, &this->m_pVar88);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileId2);
-	MemReader::ReadDWord(tae, (DWORD*)&this->m_fileId3);
-	MemReader::ReadQWord(tae, &this->m_pVar98);
-	MemReader::ReadQWord(tae, &this->m_pVarA0);
-	MemReader::ReadQWord(tae, &this->m_pVarA8);
-	MemReader::ReadQWord(tae, &this->m_skeletonNameOffset);
-	MemReader::ReadQWord(tae, &this->m_sibNameOffset);
+	MemReader::Read(tae, &this->m_version);
+	MemReader::Read(tae, &this->m_fileSize);
+	MemReader::Read(tae, &this->m_flagsOffset);
+	MemReader::Read(tae, &this->m_isReadable);
+	MemReader::Read(tae, &this->m_fileDataOffset);
+	MemReader::Read(tae, &this->m_unkFileDataOffset);
+	MemReader::Read(tae, &this->m_iVar30);
+	MemReader::Read(tae, &this->m_iVar38);
+	MemReader::ReadArray(tae, this->m_flags, 16);
+	MemReader::Read(tae, &this->m_fileID);
+	MemReader::Read(tae, &this->m_taeCount);
+	MemReader::Read(tae, &this->m_taeOffset);
+	MemReader::Read(tae, &this->m_taeLookupTableOffset);
+	MemReader::Read(tae, &this->m_iVar68);
+	MemReader::Read(tae, &this->m_taeCount2);
+	MemReader::Read(tae, &this->m_taeDataOffset);
+	MemReader::Read(tae, &this->m_iVar80);
+	MemReader::Read(tae, &this->m_pVar88);
+	MemReader::Read(tae, &this->m_fileId2);
+	MemReader::Read(tae, &this->m_fileId3);
+	MemReader::Read(tae, &this->m_pVar98);
+	MemReader::Read(tae, &this->m_pVarA0);
+	MemReader::Read(tae, &this->m_pVarA8);
+	MemReader::Read(tae, &this->m_skeletonNameOffset);
+	MemReader::Read(tae, &this->m_sibNameOffset);
 
 	if (this->m_sibNameOffset != this->m_taeOffset)
-		MemReader::ReadByteArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
+		MemReader::ReadArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
 }
 
 void Header::GenerateBinary(ofstream* tae)
 {
 	BYTE magic[4] = {0x54, 0x41, 0x45, 0x20};
-	MemReader::WriteByteArray(tae, magic, 4);
-	MemReader::WriteByte(tae, &this->m_bigEndian);
-	MemReader::WriteByte(tae, &this->m_bVar5);
-	MemReader::WriteByte(tae, &this->m_bVar6);
-	MemReader::WriteByte(tae, &this->m_is64Bit);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_version);
+	MemReader::WriteArray(tae, magic, 4);
+	MemReader::Write(tae, this->m_bigEndian);
+	MemReader::Write(tae, this->m_bVar5);
+	MemReader::Write(tae, this->m_bVar6);
+	MemReader::Write(tae, this->m_is64Bit);
+	MemReader::Write(tae, this->m_version);
 
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileSize);
+	MemReader::Write(tae, this->m_fileSize);
 
-	MemReader::WriteQWord(tae, &this->m_flagsOffset);
-	MemReader::WriteQWord(tae, &this->m_isReadable);
-	MemReader::WriteQWord(tae, &this->m_fileDataOffset);
-	MemReader::WriteQWord(tae, &this->m_unkFileDataOffset);
-	MemReader::WriteQWord(tae, &this->m_iVar30);
-	MemReader::WriteQWord(tae, &this->m_iVar38);
+	MemReader::Write(tae, this->m_flagsOffset);
+	MemReader::Write(tae, this->m_isReadable);
+	MemReader::Write(tae, this->m_fileDataOffset);
+	MemReader::Write(tae, this->m_unkFileDataOffset);
+	MemReader::Write(tae, this->m_iVar30);
+	MemReader::Write(tae, this->m_iVar38);
 
-	MemReader::WriteByteArray(tae, this->m_flags, 16);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileID);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_taeCount);
-	MemReader::WriteQWord(tae, &this->m_taeOffset);
-	MemReader::WriteQWord(tae, &this->m_taeLookupTableOffset);
-	MemReader::WriteQWord(tae, &this->m_iVar68);
-	MemReader::WriteQWord(tae, &this->m_taeCount2);
-	MemReader::WriteQWord(tae, &this->m_taeDataOffset);
+	MemReader::WriteArray(tae, this->m_flags, 16);
+	MemReader::Write(tae, this->m_fileID);
+	MemReader::Write(tae, this->m_taeCount);
+	MemReader::Write(tae, this->m_taeOffset);
+	MemReader::Write(tae, this->m_taeLookupTableOffset);
+	MemReader::Write(tae, this->m_iVar68);
+	MemReader::Write(tae, this->m_taeCount2);
+	MemReader::Write(tae, this->m_taeDataOffset);
 
-	MemReader::WriteQWord(tae, &this->m_iVar80);
-	MemReader::WriteQWord(tae, &this->m_pVar88);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileId2);
-	MemReader::WriteDWord(tae, (DWORD*)&this->m_fileId3);
-	MemReader::WriteQWord(tae, &this->m_pVar98);
-	MemReader::WriteQWord(tae, &this->m_pVarA0);
-	MemReader::WriteQWord(tae, &this->m_pVarA8);
-	MemReader::WriteQWord(tae, &this->m_skeletonNameOffset);
-	MemReader::WriteQWord(tae, &this->m_sibNameOffset);
+	MemReader::Write(tae, this->m_iVar80);
+	MemReader::Write(tae, this->m_pVar88);
+	MemReader::Write(tae, this->m_fileId2);
+	MemReader::Write(tae, this->m_fileId3);
+	MemReader::Write(tae, this->m_pVar98);
+	MemReader::Write(tae, this->m_pVarA0);
+	MemReader::Write(tae, this->m_pVarA8);
+	MemReader::Write(tae, this->m_skeletonNameOffset);
+	MemReader::Write(tae, this->m_sibNameOffset);
 
 	if (this->m_sibNameOffset != this->m_taeOffset)
-		MemReader::WriteByteArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
+		MemReader::WriteArray(tae, this->m_sibName, this->m_taeOffset - this->m_sibNameOffset);
 }
 
 TimeActReader::TimeActReader()

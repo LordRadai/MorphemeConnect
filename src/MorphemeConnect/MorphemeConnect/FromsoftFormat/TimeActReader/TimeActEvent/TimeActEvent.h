@@ -1,5 +1,5 @@
 #include "../TimeActEvent/TimeActEventData/TimeActEventData.h"
-#include "../../MemReader/MemReader.h"
+#include "../../Utils/MemReader/MemReader.h"
 
 enum TimeActGroupType
 {

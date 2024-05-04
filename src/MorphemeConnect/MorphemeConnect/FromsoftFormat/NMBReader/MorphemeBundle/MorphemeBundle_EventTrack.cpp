@@ -81,15 +81,15 @@ void MorphemeBundle_EventTrack::WriteBinary(ofstream* out, UINT64 alignment)
 	UINT64 offset = 32;
 	MemReader::Write(out, offset);
 
-	MemReader::WriteArray(out, this->m_data->m_events.data(), 3 * this->m_data->m_numEvents);
+	MemReader::WriteArray(out, this->m_data->m_events.data(), this->m_data->m_numEvents);
 
 	int str_len = strlen(this->m_data->m_trackName);
-
-	MemReader::WriteArray(out, (BYTE*)this->m_data->m_trackName, str_len);
+	
+	MemReader::WriteArray(out, this->m_data->m_trackName, str_len);
 
 	MemReader::Pad(out, 0, 1);
 	
-	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len); assert(pad_count > -1);
+	int pad_count = this->m_dataSize - (32 + 12 * this->m_data->m_numEvents + str_len) - 1; assert(pad_count > -1);
 
 	MemReader::Pad(out, 0xCD, pad_count);
 

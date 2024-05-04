@@ -14,27 +14,27 @@ using namespace std;
 
 namespace MemReader
 {
-	template <typename T> void Read(ifstream* pStream, T* pBuf)
+	template <typename T> static void Read(ifstream* pStream, T* pBuf)
 	{
 		pStream->read((char*)pBuf, sizeof(T));
 	}
 
-	template <typename T> void ReadArray(ifstream* pStream, T* pBuf, size_t iCount)
+	template <typename T> static void ReadArray(ifstream* pStream, T* pBuf, size_t iCount)
 	{
 		pStream->read((char*)pBuf, iCount * sizeof(T));
 	}
 
-	template <typename T> void Write(ofstream* pStream, T v)
+	template <typename T> static void Write(ofstream* pStream, T v)
 	{
 		pStream->write((const char*)&v, sizeof(T));
 	}
 
-	template <typename T> void WriteArray(ofstream* pStream, const T* pVal, size_t iCount)
+	template <typename T> static void WriteArray(ofstream* pStream, T* pVal, size_t iCount)
 	{
 		pStream->write((const char*)pVal, iCount * sizeof(T));
 	}
 
-	void Pad(ofstream* pStream, BYTE padVal, int iCount)
+	static void Pad(ofstream* pStream, BYTE padVal, int iCount)
 	{
 		BYTE* pPaddingVal = new BYTE[iCount];
 
@@ -46,7 +46,7 @@ namespace MemReader
 		delete[] pPaddingVal;
 	}
 
-	void AlignStream(ofstream* pStream, UINT64 alignment)
+	static void AlignStream(ofstream* pStream, UINT64 alignment)
 	{
 		if (alignment == 0)
 			return;

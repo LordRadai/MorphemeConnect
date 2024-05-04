@@ -17,7 +17,7 @@ template <typename T> void MemReader::Write(ofstream* pStream, T v)
 
 template <typename T> void MemReader::WriteArray(ofstream* pStream, const T* pVal, size_t iCount)
 {
-	pStream->write(pVal, iCount * sizeof(T));
+	pStream->write((const char*)pVal, iCount * sizeof(T));
 }
 
 void MemReader::Pad(ofstream* pStream, BYTE padVal, int iCount)

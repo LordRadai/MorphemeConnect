@@ -1,4 +1,4 @@
-#include "../MemReader/MemReader.h"
+#include "../Utils/MemReader/MemReader.h"
 
 class BndFile
 {

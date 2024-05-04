@@ -41,15 +41,5 @@ void MemReader::AlignStream(ofstream* pStream, UINT64 alignment)
 	UINT64 remainder = current_pos % alignment;
 	UINT64 pad_amt = alignment - remainder;
 
-	if (pad_amt > 0)
-	{
-		BYTE* pad = new BYTE[pad_amt];
-
-		for (size_t i = 0; i < pad_amt; i++)
-			pad[i] = 0xCD;
-
-		MemReader::WriteArray<BYTE>(pStream, pad, pad_amt);
-
-		delete[] pad;
-	}
+	MemReader::Pad(pStream, 0xCD, pad_amt);
 }

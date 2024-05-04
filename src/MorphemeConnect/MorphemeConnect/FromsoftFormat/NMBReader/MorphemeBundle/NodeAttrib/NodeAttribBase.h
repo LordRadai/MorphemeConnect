@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <vector>
 #include <fstream>
-#include "../../../MemReader/MemReader.h"
+#include "../../../Utils/MemReader/MemReader.h"
 #include "../../../../DebugOutput/Debug.h"
 
 enum AttribType : short

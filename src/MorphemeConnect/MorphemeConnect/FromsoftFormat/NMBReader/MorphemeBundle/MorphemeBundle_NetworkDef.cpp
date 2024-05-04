@@ -276,21 +276,21 @@ bool NodeDef::LoadNodeData(NodeType type, NodeDataSet* dst, BYTE* srcNodeData, i
 
 void NodeDef::SaveToFile(ofstream* out)
 {
-    MemReader::WriteDWord(out, (DWORD*)&this->m_nodeTypeID);
-    MemReader::WriteWord(out, (WORD*)&this->m_flags1);
-    MemReader::WriteWord(out, (WORD*)&this->m_nodeID);
-    MemReader::WriteWord(out, (WORD*)&this->m_parentNodeID);
-    MemReader::WriteWord(out, (WORD*)&this->m_numChildNodeIDs);
-    MemReader::WriteWord(out, (WORD*)&this->field7_0xc);
-    MemReader::WriteByte(out, &this->m_numControlParamAndOpNodeIDs);
-    MemReader::WriteByte(out, &this->field8_0xf);
-    MemReader::WriteWord(out, &this->m_numDataSet);
-    MemReader::WriteWord(out, &this->field10_0x12);
-    MemReader::WriteDWord(out, (DWORD*)&this->padding);
-    MemReader::WriteQWord(out, &this->m_owningNetworkDef);
+    MemReader::Write(out, this->m_nodeTypeID);
+    MemReader::Write(out, this->m_flags1);
+    MemReader::Write(out, this->m_nodeID);
+    MemReader::Write(out, this->m_parentNodeID);
+    MemReader::Write(out, this->m_numChildNodeIDs);
+    MemReader::Write(out, this->field7_0xc);
+    MemReader::Write(out, this->m_numControlParamAndOpNodeIDs);
+    MemReader::Write(out, this->field8_0xf);
+    MemReader::Write(out, this->m_numDataSet);
+    MemReader::Write(out, this->field10_0x12);
+    MemReader::Write(out, this->padding);
+    MemReader::Write(out, this->m_owningNetworkDef);
 
     UINT64 offset = 0x90;
-    MemReader::WriteQWord(out, &offset);
+    MemReader::Write(out, &offset);
 
     UINT64 input_offset = 0x90 + 2 * this->m_numChildNodeIDs;
     int remainder = input_offset % 4;
@@ -298,33 +298,33 @@ void NodeDef::SaveToFile(ofstream* out)
     if (remainder != 0)
         input_offset += (4 - remainder);
 
-    MemReader::WriteQWord(out, &input_offset);
+    MemReader::Write(out, input_offset);
 
     UINT64 data_offset = input_offset + 4 * this->m_numControlParamAndOpNodeIDs;
 
-    MemReader::WriteQWord(out, &data_offset);
+    MemReader::Write(out, data_offset);
 
-    MemReader::WriteWord(out, (WORD*)&this->field16_0x38);
-    MemReader::WriteWord(out, (WORD*)&this->field17_0x3a);
-    MemReader::WriteWord(out, (WORD*)&this->field17_0x3a);
-    MemReader::WriteWord(out, (WORD*)&this->field18_0x3c);
-    MemReader::WriteQWord(out, &this->field19_0x40);
-    MemReader::WriteQWord(out, &this->field20_0x48);
-    MemReader::WriteQWord(out, &this->deleteFn);
-    MemReader::WriteQWord(out, &this->updateFn);
-    MemReader::WriteQWord(out, &this->unknownFn);
-    MemReader::WriteQWord(out, &this->initFn);
-    MemReader::WriteQWord(out, &this->transitFn);
+    MemReader::Write(out, this->field16_0x38);
+    MemReader::Write(out, this->field17_0x3a);
+    MemReader::Write(out, this->field17_0x3a);
+    MemReader::Write(out, this->field18_0x3c);
+    MemReader::Write(out, this->field19_0x40);
+    MemReader::Write(out, this->field20_0x48);
+    MemReader::Write(out, this->deleteFn);
+    MemReader::Write(out, this->updateFn);
+    MemReader::Write(out, this->unknownFn);
+    MemReader::Write(out, this->initFn);
+    MemReader::Write(out, this->transitFn);
 
     UINT64 networkNode = 0;
-    MemReader::WriteQWord(out, &networkNode);
-    MemReader::WriteByte(out, &this->field27_0x80);
-    MemReader::WriteByteArray(out, this->padding1, 7);
-    MemReader::WriteDWord(out, (DWORD*)&this->field35_0x88);
-    MemReader::WriteDWord(out, (DWORD*)&this->field36_0x8C);
+    MemReader::Write(out, networkNode);
+    MemReader::Write(out, this->field27_0x80);
+    MemReader::WriteArray(out, this->padding1, 7);
+    MemReader::Write(out, &this->field35_0x88);
+    MemReader::Write(out, &this->field36_0x8C);
 
-    MemReader::WriteWordArray(out, (WORD*)this->m_childNodeIDs.data(), this->m_numChildNodeIDs);
-    MemReader::WriteDWordArray(out, (DWORD*)this->m_controlParamAndOpNodeIDs.data(), this->m_numControlParamAndOpNodeIDs);
+    MemReader::WriteArray(out, this->m_childNodeIDs.data(), this->m_numChildNodeIDs);
+    MemReader::WriteArray(out, this->m_controlParamAndOpNodeIDs.data(), this->m_numControlParamAndOpNodeIDs);
 
     int size = 0x90 + 2 * this->m_numChildNodeIDs;
 
@@ -334,7 +334,7 @@ void NodeDef::SaveToFile(ofstream* out)
     if (remainder != 0)
     {
         size += 0x1;
-        MemReader::WriteByteArray(out, (BYTE*)&padding, 4 - remainder);
+        MemReader::WriteArray(out, (BYTE*)&padding, 4 - remainder);
     }
 
     size += 4 * this->m_numControlParamAndOpNodeIDs;
@@ -348,10 +348,10 @@ void NodeDef::SaveToFile(ofstream* out)
         if (remainder != 0)
             offset += (4 - remainder);
 
-        MemReader::WriteQWord(out, &offset);
-        MemReader::WriteQWord(out, &this->m_nodeData[i].m_size);
-        MemReader::WriteDWord(out, (DWORD*)&this->m_nodeData[i].m_alignment);
-        MemReader::WriteDWord(out, (DWORD*)&this->m_nodeData[i].m_iVar0);
+        MemReader::Write(out, &offset);
+        MemReader::Write(out, &this->m_nodeData[i].m_size);
+        MemReader::Write(out, &this->m_nodeData[i].m_alignment);
+        MemReader::Write(out, &this->m_nodeData[i].m_iVar0);
     }
 
     for (size_t i = 0; i < this->m_numDataSet; i++)
@@ -453,32 +453,32 @@ MorphemeBundle_NetworkDef::~MorphemeBundle_NetworkDef()
 
 void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
 {
-    MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-    MemReader::WriteByteArray(out, this->m_guid, 16);
+    MemReader::WriteArray(out, this->m_magic, 2);
+    MemReader::Write(out, this->m_assetType);
+    MemReader::Write(out, this->m_signature);
+    MemReader::WriteArray(out, this->m_guid, 16);
 
     this->m_dataSize = this->CalculateBundleSize();
 
-    MemReader::WriteQWord(out, &this->m_dataSize);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
+    MemReader::Write(out, this->m_dataSize);
+    MemReader::Write(out, this->m_dataAlignment);
+    MemReader::Write(out, this->m_iVar2C);
 
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->network_node_def.m_nodeTypeID);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.m_flags1);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.m_nodeID);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.m_parentNodeID);
-    MemReader::WriteWord(out, &this->m_data->network_node_def.m_numChildNodeIDs);
-    MemReader::WriteWord(out, &this->m_data->network_node_def.field7_0xc);
-    MemReader::WriteByte(out, &this->m_data->network_node_def.m_numControlParamAndOpNodeIDs);
-    MemReader::WriteByte(out, &this->m_data->network_node_def.field8_0xf);
-    MemReader::WriteWord(out, &this->m_data->network_node_def.m_numDataSet);
-    MemReader::WriteWord(out, &this->m_data->network_node_def.field10_0x12);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->network_node_def.padding);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.m_owningNetworkDef);
+    MemReader::Write(out, this->m_data->network_node_def.m_nodeTypeID);
+    MemReader::Write(out, this->m_data->network_node_def.m_flags1);
+    MemReader::Write(out, this->m_data->network_node_def.m_nodeID);
+    MemReader::Write(out, this->m_data->network_node_def.m_parentNodeID);
+    MemReader::Write(out, this->m_data->network_node_def.m_numChildNodeIDs);
+    MemReader::Write(out, this->m_data->network_node_def.field7_0xc);
+    MemReader::Write(out, this->m_data->network_node_def.m_numControlParamAndOpNodeIDs);
+    MemReader::Write(out, this->m_data->network_node_def.field8_0xf);
+    MemReader::Write(out, this->m_data->network_node_def.m_numDataSet);
+    MemReader::Write(out, this->m_data->network_node_def.field10_0x12);
+    MemReader::Write(out, this->m_data->network_node_def.padding);
+    MemReader::Write(out, this->m_data->network_node_def.m_owningNetworkDef);
 
     UINT64 offset = 0x140;
-    MemReader::WriteQWord(out, &offset);
+    MemReader::Write(out, offset);
 
     UINT64 input_offset = 0x140 + 2 * this->m_data->network_node_def.m_numChildNodeIDs;
     int remainder = input_offset % 4;
@@ -486,40 +486,40 @@ void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
     if (remainder != 0)
         input_offset += (4 - remainder);
 
-    MemReader::WriteQWord(out, &input_offset);
+    MemReader::Write(out, input_offset);
 
     UINT64 data_offset = input_offset + 4 * this->m_data->network_node_def.m_numControlParamAndOpNodeIDs;
 
-    MemReader::WriteQWord(out, &data_offset);
+    MemReader::Write(out, data_offset);
 
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.field16_0x38);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.field17_0x3a);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.field17_0x3a);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->network_node_def.field18_0x3c);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.field19_0x40);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.field20_0x48);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.deleteFn);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.updateFn);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.unknownFn);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.initFn);
-    MemReader::WriteQWord(out, &this->m_data->network_node_def.transitFn);
+    MemReader::Write(out, this->m_data->network_node_def.field16_0x38);
+    MemReader::Write(out, this->m_data->network_node_def.field17_0x3a);
+    MemReader::Write(out, this->m_data->network_node_def.field17_0x3a);
+    MemReader::Write(out, this->m_data->network_node_def.field18_0x3c);
+    MemReader::Write(out, this->m_data->network_node_def.field19_0x40);
+    MemReader::Write(out, this->m_data->network_node_def.field20_0x48);
+    MemReader::Write(out, this->m_data->network_node_def.deleteFn);
+    MemReader::Write(out, this->m_data->network_node_def.updateFn);
+    MemReader::Write(out, this->m_data->network_node_def.unknownFn);
+    MemReader::Write(out, this->m_data->network_node_def.initFn);
+    MemReader::Write(out, this->m_data->network_node_def.transitFn);
 
     UINT64 networkNode = 0;
-    MemReader::WriteQWord(out, &networkNode);
-    MemReader::WriteByte(out, &this->m_data->network_node_def.field27_0x80);
-    MemReader::WriteByteArray(out, this->m_data->network_node_def.padding1, 7);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->network_node_def.field35_0x88);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->network_node_def.field36_0x8C);
+    MemReader::Write(out, networkNode);
+    MemReader::Write(out, this->m_data->network_node_def.field27_0x80);
+    MemReader::WriteArray(out, this->m_data->network_node_def.padding1, 7);
+    MemReader::Write(out, this->m_data->network_node_def.field35_0x88);
+    MemReader::Write(out, this->m_data->network_node_def.field36_0x8C);
 
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->m_numNodes);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field2_0x94);
+    MemReader::Write(out, this->m_data->m_numNodes);
+    MemReader::Write(out, this->m_data->field2_0x94);
 
     UINT64 node_offset = 0;
     //Write Node offset
 
-    MemReader::WriteWord(out, (WORD*)&this->m_data->field4_0xa0);
-    MemReader::WriteWord(out, (WORD*)&this->m_data->field5_0xa2);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field6_0xa4);
+    MemReader::Write(out, this->m_data->field4_0xa0);
+    MemReader::Write(out, this->m_data->field5_0xa2);
+    MemReader::Write(out, this->m_data->field6_0xa4);
 
     UINT64 unkGroupOffset_1 = 0;
     //Write group offset
@@ -542,31 +542,31 @@ void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
     UINT64 pVar78 = 0;
     //Write pvar78
 
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->message_count);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field18_0xfc);
+    MemReader::Write(out, this->m_data->message_count);
+    MemReader::Write(out, this->m_data->field18_0xfc);
 
     UINT64 messageDefOffset;
     //Write offset
 
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->node_type_count);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field21_0x10c);
+    MemReader::Write(out, this->m_data->node_type_count);
+    MemReader::Write(out, this->m_data->field21_0x10c);
 
     UINT64 nodeDefOffset;
     //Write offset
 
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field23_0x118);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field24_0x11c);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field25_0x120);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field26_0x124);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field27_0x128);
-    MemReader::WriteDWord(out, (DWORD*)&this->m_data->field28_0x12c);
+    MemReader::Write(out, this->m_data->field23_0x118);
+    MemReader::Write(out, this->m_data->field24_0x11c);
+    MemReader::Write(out, this->m_data->field25_0x120);
+    MemReader::Write(out, this->m_data->field26_0x124);
+    MemReader::Write(out, this->m_data->field27_0x128);
+    MemReader::Write(out, this->m_data->field28_0x12c);
 
     UINT64 pVarB8 = 0;
     //Write offset
     UINT64 pVarC0 = 0;
     //Write offset
 
-    MemReader::WriteWordArray(out, (WORD*)this->m_data->network_node_def.m_childNodeIDs.data(), this->m_data->network_node_def.m_numChildNodeIDs);
+    MemReader::WriteArray(out, this->m_data->network_node_def.m_childNodeIDs.data(), this->m_data->network_node_def.m_numChildNodeIDs);
 }
 
 int MorphemeBundle_NetworkDef::CalculateBundleSize()

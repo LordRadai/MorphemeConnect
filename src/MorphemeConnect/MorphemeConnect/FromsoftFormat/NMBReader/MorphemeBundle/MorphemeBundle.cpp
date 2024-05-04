@@ -24,8 +24,8 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 	streampos offset = 0;
 	streampos pStart = pFile->tellg();
 
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_magic[0]); assert(this->m_magic[0] == 24);
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_magic[1]); assert(this->m_magic[1] == 10 || this->m_magic[1] == 6);
+	MemReader::Read(pFile, &this->m_magic[0]); assert(this->m_magic[0] == 24);
+	MemReader::Read(pFile, &this->m_magic[1]); assert(this->m_magic[1] == 10 || this->m_magic[1] == 6);
 
 	if (this->m_magic[1] == 6)
 	{
@@ -33,19 +33,19 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 		return;
 	}
 
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_assetType);
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_signature);
-	MemReader::ReadByteArray(pFile, this->m_guid, 16);
-	MemReader::ReadQWord(pFile, &this->m_dataSize);
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_dataAlignment);
-	MemReader::ReadDWord(pFile, (DWORD*)&this->m_iVar2C);
+	MemReader::Read(pFile, &this->m_assetType);
+	MemReader::Read(pFile, &this->m_signature);
+	MemReader::ReadArray(pFile, this->m_guid, 16);
+	MemReader::Read(pFile, &this->m_dataSize);
+	MemReader::Read(pFile, &this->m_dataAlignment);
+	MemReader::Read(pFile, &this->m_iVar2C);
 
 	streampos pDataStart = pFile->tellg();
 
 	if (this->m_dataSize > 0)
 	{
 		this->m_data = new BYTE[this->m_dataSize];
-		MemReader::ReadByteArray(pFile, this->m_data, this->m_dataSize);
+		MemReader::ReadArray(pFile, this->m_data, this->m_dataSize);
 	}
 
 	if (this->m_assetType == kAsset_Rig)
@@ -95,18 +95,18 @@ MorphemeBundle::~MorphemeBundle()
 
 void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
 {
-	MemReader::WriteDWordArray(out, (DWORD*)this->m_magic, 2);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_assetType);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_signature);
-	MemReader::WriteByteArray(out, this->m_guid, 16);
+	MemReader::WriteArray(out, this->m_magic, 2);
+	MemReader::Write(out, this->m_assetType);
+	MemReader::Write(out, this->m_signature);
+	MemReader::WriteArray(out, this->m_guid, 16);
 
 	this->m_dataSize = this->CalculateBundleSize();
 
-	MemReader::WriteQWord(out, &this->m_dataSize);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_dataAlignment);
-	MemReader::WriteDWord(out, (DWORD*)&this->m_iVar2C);
+	MemReader::Write(out, this->m_dataSize);
+	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Write(out, this->m_iVar2C);
 
-	MemReader::WriteByteArray(out, this->m_data, this->m_dataSize);
+	MemReader::WriteArray(out, this->m_data, this->m_dataSize);
 
 	MemReader::AlignStream(out, alignment);
 }

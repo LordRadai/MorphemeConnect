@@ -494,13 +494,9 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
 			}
 
-			std::wstring filename = std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\";
+			std::filesystem::path filename(this->GetSourceAnimName(anim_id));
 
-			std::filesystem::create_directories(filename);
-
-			filename += StringHelper::ToWide(this->GetSourceAnimName(anim_id)) + L".xml";
-
-			out.SaveFile(StringHelper::ToNarrow(filename.c_str()).c_str(), false);
+			ME::SaveFile(&out, StringHelper::ToNarrow((std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\").c_str()), filename.replace_extension("").string(), false);
 
 			return true;
 		}

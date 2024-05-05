@@ -1,3 +1,4 @@
+#include <filesystem>
 #include "ME.h"
 
 XMLElement* ME::NetworkDefExportXML::NetworkDefExportXML(XMLElement* pRoot, std::string guid, std::string name)
@@ -291,4 +292,13 @@ XMLElement* ME::DurationEventExportXML(XMLElement* pRoot, int eventIdx, int user
 	pEndTime->SetText(endTime);
 
 	return pEvent;
+}
+
+void ME::SaveFile(tinyxml2::XMLDocument* pDoc, std::string path, std::string filename, bool compact)
+{
+	std::filesystem::create_directories(path);
+
+	std::string full_path = path + filename + ".xml";
+
+	pDoc->SaveFile(full_path.c_str(), compact);
 }

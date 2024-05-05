@@ -25,15 +25,14 @@ namespace ME
 		XMLElement* AddElement(XMLElement* pRoot, std::string type, int index, UINT lenght, std::wstring description, BYTE* pData);
 	}
 
-	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);
-	XMLElement* ConditionExportXML(XMLElement* pRoot, UINT index, int typeId);
-
 	namespace ConditionSetExportXML
 	{
 		XMLElement* ConditionSetExportXML(XMLElement* pRoot, UINT index, int targetNodeId);
 		XMLElement* SetConditionIndices(XMLElement* pRoot, std::vector<UINT> indices);
 	}
 
+	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);
+	XMLElement* ConditionExportXML(XMLElement* pRoot, UINT index, int typeId);
 	XMLElement* TakeListXML(XMLElement* pDoc, std::string name, int version);
 	XMLElement* TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float duration, float fps, float clipStart, float clipEnd);
 	XMLElement* DiscreteEventTrackExportXML(XMLElement* pRoot, std::string name, std::string guid, int channelId, int userData);
@@ -42,4 +41,6 @@ namespace ME
 	XMLElement* CurveEventExportXML(XMLElement* pRoot, int eventIdx, int userData, float startTime, float endTime);
 	XMLElement* DurationEventTrackExportXML(XMLElement* pRoot, std::string name, std::string guid, int channelId, int userData);
 	XMLElement* DurationEventExportXML(XMLElement* pRoot, int eventIdx, int userData, float startTime, float endTime);
+
+	void SaveFile(tinyxml2::XMLDocument* pDoc, std::string path, std::string filename, bool compact = false);
 }

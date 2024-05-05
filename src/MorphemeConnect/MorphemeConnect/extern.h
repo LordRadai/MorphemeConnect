@@ -9,6 +9,7 @@ class Application;
 class Scene;
 class TaeTemplate;
 class ProcessReader;
+enum MsgLevel;
 
 extern MsgLevel g_logLevel;
 extern Application g_morphemeConnect;

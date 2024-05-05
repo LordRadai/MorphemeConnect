@@ -1,7 +1,6 @@
 #include "TimeActEventData.h"
 #include "../../../Utils/MemReader/MemReader.h"
 #include "../../../../Application/Application.h"
-#include "../../../../StringHelper/StringHelper.h"
 #include "../../../../TaeTemplate/TaeTemplate.h"
 
 void TimeActEventData::GetData(ifstream* tae, int group_id, int event_id)

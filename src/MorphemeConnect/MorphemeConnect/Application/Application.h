@@ -35,6 +35,7 @@
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
 
+#include "../extern.h"
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
 #include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"

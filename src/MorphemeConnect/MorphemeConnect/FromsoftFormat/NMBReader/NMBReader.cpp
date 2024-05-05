@@ -461,6 +461,9 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
 			NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
 
+			ME::TakeListXML(&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str());
+
+			/*
 			tinyxml2::XMLElement* pRoot = out.NewElement("TakeList");
 			pRoot->SetAttribute("sourceAnimFile", this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str());
 			pRoot->SetAttribute("version", 1);
@@ -682,6 +685,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 
 			pRoot->InsertEndChild(take);
 			out.InsertEndChild(pRoot);
+			*/
 
 			std::wstring filename = std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\";
 

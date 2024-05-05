@@ -2,7 +2,7 @@
 
 void ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UINT parent_id, UINT type_id, bool persistent, bool downstream_multiply_connected)
 {
-	XMLElement* pRoot = pRoot->InsertNewChildElement("Node");
+	XMLElement* pNode = pRoot->InsertNewChildElement("Node");
 	pRoot->SetAttribute("name", name.c_str());
 	pRoot->SetAttribute("networkID", network_id);
 	pRoot->SetAttribute("downstreamParentID", parent_id);
@@ -15,37 +15,37 @@ void ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UIN
 		pRoot->SetAttribute("downstreamMultiplyConnected", "true");
 }
 
-void ME::TakeListXML(tinyxml2::XMLDocument* pDoc, std::string name, int version)
+void ME::TakeListXML(XMLElement* pDoc, std::string name, int version)
 {
-	tinyxml2::XMLElement* pRoot = pDoc->NewElement("TakeList");
-	pRoot->SetAttribute("sourceAnimFile", name.c_str());
-	pRoot->SetAttribute("version", version);
+	XMLElement* pTakeList = pDoc->InsertNewChildElement("TakeList");
+	pTakeList->SetAttribute("sourceAnimFile", name.c_str());
+	pTakeList->SetAttribute("version", version);
 }
 
 void ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float duration, float fps, float clipStart, float clipEnd)
 {
-	XMLElement* take = pRoot->InsertNewChildElement("Take");
-	take->SetAttribute("name", name.c_str());
+	XMLElement* pTake = pRoot->InsertNewChildElement("Take");
+	pTake->SetAttribute("name", name.c_str());
 	
-	XMLElement* attributes = take->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pTake->InsertNewChildElement("Attributes");
 
-	XMLElement* pDuration = attributes->InsertNewChildElement("secondsDuration");
+	XMLElement* pDuration = pAttributes->InsertNewChildElement("secondsDuration");
 	pDuration->SetAttribute("type", "double");
 	pDuration->SetText(duration);
 
-	XMLElement* pFps = attributes->InsertNewChildElement("fps");
+	XMLElement* pFps = pAttributes->InsertNewChildElement("fps");
 	pFps->SetAttribute("type", "double");
 	pFps->SetText(30);
 
-	XMLElement* pClipStart = attributes->InsertNewChildElement("clipStart");
+	XMLElement* pClipStart = pAttributes->InsertNewChildElement("clipStart");
 	pClipStart->SetAttribute("type", "double");
 	pClipStart->SetText(clipStart);
 
-	XMLElement* pClipEnd = attributes->InsertNewChildElement("clipEnd");
+	XMLElement* pClipEnd = pAttributes->InsertNewChildElement("clipEnd");
 	pClipEnd->SetAttribute("type", "double");
 	pClipEnd->SetText(clipEnd);
 
-	XMLElement* loop = attributes->InsertNewChildElement("loop");
+	XMLElement* loop = pAttributes->InsertNewChildElement("loop");
 	loop->SetAttribute("type", "bool");
 
 	if (is_loop)

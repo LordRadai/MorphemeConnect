@@ -66,6 +66,174 @@ XMLElement* ME::NetworkDefExportXML::SetMessagePresetLibraryRef(XMLElement* pRoo
 	return pMessagePresetLibraryRef;
 }
 
+XMLElement* ME::RigExportXML::RigExportXML(XMLElement* pRoot, std::string guid, std::string name, float rigScale)
+{
+	XMLElement* pRig = pRoot->InsertNewChildElement("Rig");
+	pRig->SetAttribute("guid", guid.c_str());
+	pRig->SetAttribute("name", name.c_str());
+	pRig->SetAttribute("RigScale", rigScale);
+
+	return pRig;
+}
+
+XMLElement* ME::RigExportXML::SetHipIndex(XMLElement* pRoot, UINT index)
+{
+	XMLElement* pHipIndex = pRoot->InsertNewChildElement("hipIndex");
+	pHipIndex->SetText(index);
+
+	return pHipIndex;
+}
+
+XMLElement* ME::RigExportXML::SetTrajectoryIndex(XMLElement* pRoot, UINT index)
+{
+	XMLElement* pTrajIndex = pRoot->InsertNewChildElement("trajectoryIndex");
+	pTrajIndex->SetText(index);
+
+	return pTrajIndex;
+}
+
+XMLElement* ME::RigExportXML::SetBlendFrameOrientationQuat(XMLElement* pRoot, Quaternion orientation)
+{
+	char orientation_text[255];
+
+	sprintf_s(orientation_text, "%f, %f, %f, %f", orientation.x, orientation.y, orientation.z, orientation.w);
+
+	XMLElement* pOrientation = pRoot->InsertNewChildElement("orientationQuat");
+	pOrientation->SetText(orientation_text);
+
+	return pOrientation;
+}
+
+XMLElement* ME::RigExportXML::SetBlendFramePositionVecVec(XMLElement* pRoot, Vector3 position)
+{
+	char translation_text[255];
+
+	sprintf_s(translation_text, "%f, %f, %f", position.x, position.y, position.z);
+
+	XMLElement* pTranslation = pRoot->InsertNewChildElement("positionVec");
+	pTranslation->SetText(translation_text);
+
+	return pTranslation;
+}
+
+XMLElement* ME::RigExportXML::SetRigSourceFilename(XMLElement* pRoot, std::string filename)
+{
+	char rig_filename_ext[255];
+
+	sprintf_s(rig_filename_ext, "![CDATA[%s]]", filename.c_str());
+
+	XMLElement* pRigFilename = pRoot->InsertNewChildElement("rigSourceFileName");
+	pRigFilename->SetText(rig_filename_ext);
+
+	return pRigFilename;
+}
+
+XMLElement* ME::RigExportXML::SetRigRetargetScale(XMLElement* pRoot, float rigRetargetScale)
+{
+	XMLElement* pRigRetargetScale = pRoot->InsertNewChildElement("rigRetargetScale");
+	pRigRetargetScale->SetText(rigRetargetScale);
+
+	return pRigRetargetScale;
+}
+
+XMLElement* ME::RigExportXML::SetMirrorPlane(XMLElement* pRoot, UINT plane)
+{
+	XMLElement* pMirrorPlane = pRoot->InsertNewChildElement("mirrorPlane");
+	pMirrorPlane->SetText(plane);
+
+	return pMirrorPlane;
+}
+
+XMLElement* ME::RigExportXML::AddJointMirrorMapping(XMLElement* pRoot, UINT index, UINT first, UINT second)
+{
+	XMLElement* pJointMirror = pRoot->InsertNewChildElement("JointMirrorMapping");
+	pJointMirror->SetAttribute("index", index);
+	pJointMirror->SetAttribute("first", first);
+	pJointMirror->SetAttribute("second", second);
+
+	return pJointMirror;
+}
+
+XMLElement* ME::JointExportXML::JointExportXML(XMLElement* pRoot, UINT index, std::string name, UINT parentIdx)
+{
+	XMLElement* pJoint = pRoot->InsertNewChildElement("Joint");
+	pJoint->SetAttribute("index", index);
+	pJoint->SetAttribute("name", name.c_str());
+	pJoint->SetAttribute("parent", parentIdx);
+
+	return pJoint;
+}
+
+void ME::JointExportXML::AddBodyPlanTag(XMLElement* pRoot, std::string bodyPlanTag)
+{
+	pRoot->SetAttribute("BodyPlanTag", bodyPlanTag.c_str());
+}
+
+void ME::JointExportXML::AddRetargetTag(XMLElement* pRoot, std::string retargetTag)
+{
+	pRoot->SetAttribute("RetargetTag", retargetTag.c_str());
+}
+
+XMLElement* ME::JointExportXML::SetOrientation(XMLElement* pRoot, Quaternion rotation)
+{
+	char rotation_text[255];
+
+	sprintf_s(rotation_text, "%f, %f, %f, %f", rotation.x, rotation.y, rotation.z, rotation.w);
+
+	XMLElement* pRotation = pRoot->InsertNewChildElement("Rotation");
+	pRotation->SetText(rotation_text);
+
+	return pRotation;
+}
+
+XMLElement* ME::JointExportXML::SetTranslation(XMLElement* pRoot, Vector3 translation)
+{
+	char translation_text[255];
+
+	sprintf_s(translation_text, "%f, %f, %f", translation.x, translation.y, translation.z);
+
+	XMLElement* pTranslation = pRoot->InsertNewChildElement("Translation");
+	pTranslation->SetText(translation_text);
+
+	return pTranslation;
+}
+
+XMLElement* ME::JointExportXML::SetOrientationOffset(XMLElement* pRoot, Quaternion orientationOffset)
+{
+	char rotation_text[255];
+
+	sprintf_s(rotation_text, "%f, %f, %f, %f", orientationOffset.x, orientationOffset.y, orientationOffset.z, orientationOffset.w);
+
+	XMLElement* pOrientationOffset = pRoot->InsertNewChildElement("OrientationOffset");
+	pOrientationOffset->SetText(rotation_text);
+
+	return pOrientationOffset;
+}
+
+XMLElement* ME::JointExportXML::SetTranslationOffset(XMLElement* pRoot, Vector3 translationOffset)
+{
+	char translation_text[255];
+
+	sprintf_s(translation_text, "%f, %f, %f", translationOffset.x, translationOffset.y, translationOffset.z);
+
+	XMLElement* pTranslationOffset = pRoot->InsertNewChildElement("TranslationOffset");
+	pTranslationOffset->SetText(translation_text);
+
+	return pTranslationOffset;
+}
+
+XMLElement* ME::JointExportXML::SetPostOrientationOffset(XMLElement* pRoot, Quaternion postOrientationOffset)
+{
+	char rotation_text[255];
+
+	sprintf_s(rotation_text, "%f, %f, %f, %f", postOrientationOffset.x, postOrientationOffset.y, postOrientationOffset.z, postOrientationOffset.w);
+
+	XMLElement* pPostOrientationOffset = pRoot->InsertNewChildElement("PostOrientationOffset");
+	pPostOrientationOffset->SetText(rotation_text);
+
+	return pPostOrientationOffset;
+}
+
 XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected)
 {
 	XMLElement* pNode = pRoot->InsertNewChildElement("Node");

@@ -1,8 +1,6 @@
 #pragma once
-#include "../MorphemeBundle/MorphemeBundle_NetworkDef.h"
-#include "../MorphemeBundle/MorphemeBundle_EventTrack.h"
-#include "TinyXML/tinyxml2.h"
 #include <SimpleMath.h>
+#include "TinyXML/tinyxml2.h"
 
 using namespace DirectX::SimpleMath;
 using namespace tinyxml2;
@@ -29,6 +27,31 @@ namespace ME
 	{
 		XMLElement* ConditionSetExportXML(XMLElement* pRoot, UINT index, int targetNodeId);
 		XMLElement* SetConditionIndices(XMLElement* pRoot, std::vector<UINT> indices);
+	}
+
+	namespace RigExportXML
+	{
+		XMLElement* RigExportXML(XMLElement* pRoot, std::string guid, std::string name, float rigScale);
+		XMLElement* SetHipIndex(XMLElement* pRoot, UINT index);
+		XMLElement* SetTrajectoryIndex(XMLElement* pRoot, UINT index);
+		XMLElement* SetBlendFrameOrientationQuat(XMLElement* pRoot, Quaternion orientation);
+		XMLElement* SetBlendFramePositionVecVec(XMLElement* pRoot, Vector3 position);
+		XMLElement* SetRigSourceFilename(XMLElement* pRoot, std::string filename);
+		XMLElement* SetRigRetargetScale(XMLElement* pRoot, float rigRetargetScale);
+		XMLElement* SetMirrorPlane(XMLElement* pRoot, UINT plane);
+		XMLElement* AddJointMirrorMapping(XMLElement* pRoot, UINT index, UINT first, UINT second);
+	}
+
+	namespace JointExportXML
+	{
+		XMLElement* JointExportXML(XMLElement* pRoot, UINT index, std::string name, UINT parentIdx);
+		void AddBodyPlanTag(XMLElement* pRoot, std::string bodyPlanTag);
+		void AddRetargetTag(XMLElement* pRoot, std::string retargetTag);
+		XMLElement* SetOrientation(XMLElement* pRoot, Quaternion rotation);
+		XMLElement* SetTranslation(XMLElement* pRoot, Vector3 translation);
+		XMLElement* SetOrientationOffset(XMLElement* pRoot, Quaternion orientationOffset);
+		XMLElement* SetTranslationOffset(XMLElement* pRoot, Vector3 translationOffset);
+		XMLElement* SetPostOrientationOffset(XMLElement* pRoot, Quaternion postOrientationOffset);
 	}
 
 	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);

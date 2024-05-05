@@ -9,6 +9,7 @@
 #include <GeometricPrimitive.h>
 #include <VertexTypes.h>
 
+#include "../framework.h"
 #include "../extern.h"
 #include "DebugDraw.h"
 #include "StepTimer.h"

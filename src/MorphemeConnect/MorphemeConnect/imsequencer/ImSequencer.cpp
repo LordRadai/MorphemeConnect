@@ -26,7 +26,6 @@
 #include "ImSequencer.h"
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_internal.h"
-#include "../Math/Math.h"
 #include <cstdlib>
 #include "../Application/Application.h"
 
@@ -411,7 +410,7 @@ namespace ImSequencer
                 if (baseIndex && px > (canvas_pos.x + legendWidth))
                 {
                     char tmps[512];
-                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", Math::FrameToTime(i));
+                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", RMath::FrameToTime(i));
                     draw_list->AddText(ImVec2((float)(px + 6), canvas_pos.y), 0xFFFFFFFF, tmps);
                 }
             };
@@ -631,13 +630,13 @@ namespace ImSequencer
                 else
                     addEvent.m_duration = 0.f;
 
-                *currentFrame = Math::TimeToFrame(addEvent.m_start);
+                *currentFrame = RMath::TimeToFrame(addEvent.m_start);
 
                 ImGui::InputInt("Value", &addEvent.m_value);
 
                 if (ImGui::Button("Add Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
-                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ Math::TimeToFrame(addEvent.m_start), Math::TimeToFrame(addEvent.m_duration), addEvent.m_value});
+                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ RMath::TimeToFrame(addEvent.m_start), RMath::TimeToFrame(addEvent.m_duration), addEvent.m_value});
                     ImGui::CloseCurrentPopup();
 
                     reload = true;
@@ -650,7 +649,7 @@ namespace ImSequencer
             if (!reload)
             {
                 if (*currentFrame > 0 && !popupOpened)
-                    addEvent.m_start = Math::FrameToTime(*currentFrame);
+                    addEvent.m_start = RMath::FrameToTime(*currentFrame);
 
                 // clipping rect so items bars are not visible in the legend on the left when scrolled
 
@@ -1121,7 +1120,7 @@ namespace ImSequencer
                         draw_list->PopClipRect();
                         draw_list->PopClipRect();
 
-                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", Math::FrameToTime(*currentFrame));
+                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", RMath::FrameToTime(*currentFrame));
                         draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
 
                         draw_list->PushClipRect(childFramePos, childFramePos + childFrameSize, true);
@@ -1528,7 +1527,7 @@ namespace ImSequencer
                 if (baseIndex && px > (canvas_pos.x + legendWidth))
                 {
                     char tmps[512];
-                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", Math::FrameToTime(i, 30));
+                    ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", RMath::FrameToTime(i, 30));
                     draw_list->AddText(ImVec2((float)(px + 6), canvas_pos.y), 0xFFFFFFFF, tmps);
                 }
                 };
@@ -1740,7 +1739,7 @@ namespace ImSequencer
                 ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 30.f);
                 ImGui::InputFloat("End", &addEvent.m_end, 1.f / 30.f);
 
-                *currentFrame = Math::TimeToFrame(addEvent.m_start, 30);
+                *currentFrame = RMath::TimeToFrame(addEvent.m_start, 30);
 
                 ImGui::InputInt("Event ID", &addEvent.m_eventData->m_id);
 
@@ -1759,7 +1758,7 @@ namespace ImSequencer
             if (!reload)
             {
                 if (*currentFrame > 0 && !popupOpened)
-                    addEvent.m_start = Math::FrameToTime(*currentFrame, 30);
+                    addEvent.m_start = RMath::FrameToTime(*currentFrame, 30);
 
                 // clipping rect so items bars are not visible in the legend on the left when scrolled
 
@@ -2055,7 +2054,7 @@ namespace ImSequencer
                         draw_list->PopClipRect();
                         draw_list->PopClipRect();
 
-                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", Math::FrameToTime(*currentFrame, 30));
+                        ImFormatString(tmps, IM_ARRAYSIZE(tmps), "%.3f", RMath::FrameToTime(*currentFrame, 30));
                         draw_list->AddText(ImVec2(cursorOffset, canvas_pos.y), 0xFFFFFFFF, tmps);
 
                         draw_list->PushClipRect(childFramePos, childFramePos + childFrameSize, true);

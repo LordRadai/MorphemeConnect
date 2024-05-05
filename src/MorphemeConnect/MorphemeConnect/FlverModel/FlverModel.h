@@ -9,8 +9,7 @@
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 
-#include "../FromSoftFormat/NMBReader/NMBReader.h"
-#include "../framework.h"
+#include "../FromSoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../fromloader/fromloader.h"
 #include "fbxsdk.h"
 

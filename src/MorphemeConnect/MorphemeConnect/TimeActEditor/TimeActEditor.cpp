@@ -16,7 +16,7 @@ TimeActEditor::TimeActTrack::TimeActTrack(EventGroup* src)
 	this->m_eventGroup = src->m_groupData->m_eventType;
 
 	for (size_t i = 0; i < src->m_count; i++)
-		this->m_event.push_back(Event{ Math::TimeToFrame(src->m_event[i]->m_start, 30), Math::TimeToFrame(src->m_event[i]->m_end, 30) - Math::TimeToFrame(src->m_event[i]->m_start, 30), (int)src->m_event[i]->m_eventData->m_id,  src->m_event[i]->m_eventData->m_args });
+		this->m_event.push_back(Event{ RMath::TimeToFrame(src->m_event[i]->m_start, 30), RMath::TimeToFrame(src->m_event[i]->m_end, 30) - RMath::TimeToFrame(src->m_event[i]->m_start, 30), (int)src->m_event[i]->m_eventData->m_id,  src->m_event[i]->m_eventData->m_args });
 }
 
 void TimeActEditor::TimeActTrack::SaveTimeActTrack()
@@ -26,8 +26,8 @@ void TimeActEditor::TimeActTrack::SaveTimeActTrack()
 
 	for (size_t i = 0; i < this->m_count; i++)
 	{
-		this->m_source->m_event[i]->m_start = Math::FrameToTime(this->m_event[i].m_frameStart, 30);
-		this->m_source->m_event[i]->m_end = Math::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration, 30);
+		this->m_source->m_event[i]->m_start = RMath::FrameToTime(this->m_event[i].m_frameStart, 30);
+		this->m_source->m_event[i]->m_end = RMath::FrameToTime(this->m_event[i].m_frameStart + this->m_event[i].m_duration, 30);
 		this->m_source->m_event[i]->m_eventData->m_id = this->m_event[i].m_value;
 	}
 }
@@ -60,7 +60,7 @@ TimeActEditor::TimeActEditor()
 
 	if (reader.ParseError() < 0) 
 	{
-		Debug::Alert(Debug::LVL_ERROR, "TimeActEditor.cpp", "Failed to load timeact.ini\n");
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "TimeActEditor.cpp", "Failed to load timeact.ini\n");
 
 		this->m_colors.m_trackColor = { 0.33f, 0.33f, 0.33f, 1.f };
 		this->m_colors.m_trackColorInactive = { 0.33f, 0.33f, 0.33f, 1.f };
@@ -98,7 +98,7 @@ void TimeActEditor::AddGroup(int id)
 	this->m_source->m_taeData->m_eventGroupCount++;
 	this->m_source->m_taeData->m_groups.push_back(EventGroup(id));
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added group ID %d\n", id);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Added group ID %d\n", id);
 
 	this->m_reload = true;
 }
@@ -111,7 +111,7 @@ void TimeActEditor::DeleteGroup(int idx)
 	this->m_source->m_taeData->m_eventGroupCount--;
 	this->m_source->m_taeData->m_groups.erase(this->m_source->m_taeData->m_groups.begin() + idx);
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Removed group %d\n", idx);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Removed group %d\n", idx);
 
 	this->m_reload = true;
 }
@@ -129,7 +129,7 @@ void TimeActEditor::AddEvent(int group_idx, TimeActEvent event)
 	this->m_source->m_taeData->m_groups[group_idx].m_eventOffset.push_back(0);
 	this->m_source->m_taeData->m_groups[group_idx].m_eventIndex.push_back(this->m_source->m_taeData->m_events.size() - 1);
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Added event (%.3f, %.3f, %d)\n", event.m_start, event.m_end, event.m_eventData->m_id);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Added event (%.3f, %.3f, %d)\n", event.m_start, event.m_end, event.m_eventData->m_id);
 
 	this->m_reload = true;
 }
@@ -155,7 +155,7 @@ void TimeActEditor::DeleteEvent(int group_idx, int event_idx)
 		}
 	}
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Deleted event %d (group=%d)\n", event_idx, group_idx);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Deleted event %d (group=%d)\n", event_idx, group_idx);
 
 	this->m_reload = true;
 }
@@ -193,7 +193,7 @@ void TimeActEditor::SetEditedState(bool state)
 	if (g_morphemeConnect.m_timeActEditorFlags.m_edited.size() > this->m_taeIdx)
 		g_morphemeConnect.m_timeActEditorFlags.m_edited[this->m_taeIdx] = state;
 	else
-		Debug::Panic("TimeActEditor.cpp", "Out of bound read while setting edited state (idx=%d, size=%d)\n", this->m_taeIdx, g_morphemeConnect.m_timeActEditorFlags.m_edited.size());
+		RDebug::SystemPanic("TimeActEditor.cpp", "Out of bound read while setting edited state (idx=%d, size=%d)\n", this->m_taeIdx, g_morphemeConnect.m_timeActEditorFlags.m_edited.size());
 }
 
 void TimeActEditor::Clear()

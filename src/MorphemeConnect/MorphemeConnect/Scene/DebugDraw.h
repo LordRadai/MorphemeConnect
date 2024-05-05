@@ -34,10 +34,10 @@
 #include "WICTextureLoader.h"
 
 #include "../Application/Application.h"
-#include "../DebugOutput/Debug.h"
-#include "../Math/Math.h"
+#include "../framework.h"
+#include "../extern.h"
 #include "../fromloader/fromloader.h"
-#include "../FromsoftFormat/NMBReader/NMBReader.h"
+#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
 
 class Camera;
 

@@ -6,7 +6,6 @@
 //-------------------------------------------------------------------------------------
 #include "DebugDraw.h"
 #include "Scene.h"
-#include "../StringHelper/StringHelper.h"
 
 #include <algorithm>
 
@@ -449,7 +448,7 @@ void XM_CALLCONV DX::DrawCapsule(DirectX::PrimitiveBatch<DirectX::VertexPosition
     XMVECTOR transformed_pos;
 
     XMMATRIX rotation = XMMatrixIdentity();
-    rotation = Math::GetRotationFrom2Vectors(pointB, pointA);
+    rotation = RMath::GetRotationFrom2Vectors(pointB, pointA);
 
     Vector3 center_bot = Vector3(pointA.x, pointA.y, pointA.z);
     Vector3 center_top = Vector3(pointB.x, pointB.y, pointB.z);
@@ -689,7 +688,7 @@ void XM_CALLCONV DX::DrawCylinder(DirectX::PrimitiveBatch<DirectX::VertexPositio
     XMVECTOR transformed_pos;
 
     XMMATRIX rotation = XMMatrixIdentity();
-    rotation = Math::GetRotationFrom2Vectors(pointB, pointA);
+    rotation = RMath::GetRotationFrom2Vectors(pointB, pointA);
 
     Vector3 center_bot = Vector3(pointA.x, pointA.y, pointA.z);
     Vector3 center_top = Vector3(pointB.x, pointB.y, pointB.z);
@@ -1377,10 +1376,10 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
 
             DX::DrawLine(batch, boneA, boneB, Colors::Orange);
 
-            std::string boneB_name = StringHelper::ToNarrow(model.m_flver->bones[model.m_flver->bones[i].parentIndex].name);
+            std::string boneB_name = RString::ToNarrow(model.m_flver->bones[model.m_flver->bones[i].parentIndex].name);
         }
 
-        std::string bone_name = StringHelper::ToNarrow(model.m_flver->bones[i].name);
+        std::string bone_name = RString::ToNarrow(model.m_flver->bones[i].name);
 
         //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(model.m_flver, i)), g_preview.m_camera, Colors::White);
     }

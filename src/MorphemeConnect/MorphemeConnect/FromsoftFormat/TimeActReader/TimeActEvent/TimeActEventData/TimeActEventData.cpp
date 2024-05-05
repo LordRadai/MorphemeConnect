@@ -1,7 +1,6 @@
 #include "TimeActEventData.h"
 #include "../../../Utils/MemReader/MemReader.h"
 #include "../../../../Application/Application.h"
-#include "../../../../StringHelper/StringHelper.h"
 #include "../../../../TaeTemplate/TaeTemplate.h"
 
 void TimeActEventData::GetData(ifstream* tae, int group_id, int event_id)
@@ -138,7 +137,7 @@ std::string TimeActEventData::GetArgumentsAsString()
 		else if (arg_type.compare("u32") == 0)
 			arg_str += std::to_string(this->m_args[i].m_u32);
 		else if (arg_type.compare("f32") == 0)
-			arg_str += StringHelper::FloatToString(this->m_args[i].m_f32);
+			arg_str += RString::FloatToString(this->m_args[i].m_f32);
 		else if (arg_type.compare("s64") == 0)
 			arg_str += std::to_string(this->m_args[i].m_s64);
 		else if (arg_type.compare("u64") == 0)

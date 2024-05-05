@@ -1,5 +1,6 @@
 #include "FlverModel.h"
-#include "../StringHelper/StringHelper.h"
+#include "../framework.h"
+#include "../extern.h"
 
 FlverModel::FlverModel()
 {
@@ -347,7 +348,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 
 			FbxNode* pBoneNode = skeletonNodes[boneIndex];
 
-			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + StringHelper::ToNarrow(bone->name) + "_cluster").c_str());
+			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + RString::ToNarrow(bone->name) + "_cluster").c_str());
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
@@ -523,7 +524,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 
 FbxNode* CreateFlverBoneNode(FbxScene* pScene, FbxPose* pBindPoses, cfr::FLVER2::Bone bone, int id)
 {
-	FbxNode* pBoneNode = FbxNode::Create(pScene, StringHelper::ToNarrow(bone.name).c_str());
+	FbxNode* pBoneNode = FbxNode::Create(pScene, RString::ToNarrow(bone.name).c_str());
 
 	FbxAMatrix boneTransform = GetBoneLocalTransform(bone);
 
@@ -531,7 +532,7 @@ FbxNode* CreateFlverBoneNode(FbxScene* pScene, FbxPose* pBindPoses, cfr::FLVER2:
 	pBoneNode->LclRotation.Set(boneTransform.GetR());
 	pBoneNode->LclScaling.Set(boneTransform.GetS());
 
-	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, StringHelper::ToNarrow(bone.name).c_str());
+	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, RString::ToNarrow(bone.name).c_str());
 	pBone->SetSkeletonType(FbxSkeleton::eLimbNode);
 	pBone->Color.Set(FbxDouble3(0, 0.769, 0.769));
 	pBone->LimbLength = 0.1;
@@ -603,7 +604,7 @@ int GetBoneIndex(FlverModel* model, std::string boneName)
 {
 	for (int i = 0; i < model->m_flver->header.boneCount; i++)
 	{
-		std::string currentBoneName = StringHelper::ToNarrow(model->m_flver->bones[i].name);
+		std::string currentBoneName = RString::ToNarrow(model->m_flver->bones[i].name);
 
 		if (currentBoneName.compare(boneName) == 0)
 			return i;

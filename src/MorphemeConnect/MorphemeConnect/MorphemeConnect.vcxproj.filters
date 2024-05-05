@@ -195,24 +195,6 @@
     <ClInclude Include="Scene\Camera\Camera.h">
       <Filter>File di intestazione\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\NMBReader.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Base.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.h">
-      <Filter>File di intestazione\FromsoftReader\NMBReader\MorphemeBundle</Filter>
-    </ClInclude>
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h">
       <Filter>File di intestazione\FromsoftReader\TimeActReader</Filter>
     </ClInclude>
@@ -456,25 +438,7 @@
     <ClInclude Include="TaeTemplate\TaeTemplate.h">
       <Filter>File di intestazione\TaeTemplate</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeDataAttribUnknown.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NSAReader\NSAReader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_SkeletonMap.h">
@@ -528,22 +492,58 @@
     <ClInclude Include="FlverModel\FlverModel.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Math\Math.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="FromsoftFormat\Utils\MemReader\MemReader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\ME\TinyXML\tinyxml2.h">
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\ME\TinyXML\tinyxml2.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="FromsoftFormat\NMBReader\ME\ME.h">
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\ME\ME.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Base.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\NMBReader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Morpheme\NSAReader\NSAReader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
@@ -586,21 +586,6 @@
     </ClCompile>
     <ClCompile Include="Scene\Camera\Camera.cpp">
       <Filter>File di origine\Scene\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\NMBReader.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp">
-      <Filter>File di origine\FromsoftReader\NMBReader\MorphmeBundle</Filter>
     </ClCompile>
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp">
       <Filter>File di origine\FromsoftReader\TimeActReader</Filter>
@@ -680,24 +665,6 @@
     <ClCompile Include="TaeTemplate\TaeTemplate.cpp">
       <Filter>File di origine\TaeTemplate</Filter>
     </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NSAReader\NSAReader.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessReader\ProcessReader.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -731,19 +698,52 @@
     <ClCompile Include="FlverModel\FlverModel.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Math\Math.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\ME\TinyXML\tinyxml2.cpp">
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\ME\TinyXML\tinyxml2.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\ME\ME.cpp">
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\ME\ME.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\NMBReader.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\Morpheme\NSAReader\NSAReader.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

@@ -355,9 +355,9 @@ void ME::AttributeExportXML::SetAsDouble(XMLElement* pRoot, double value)
 	pRoot->SetText(value);
 }
 
-void ME::AttributeExportXML::SetAsDoubleArray(XMLElement* pRoot, double* values, UINT size)
+void ME::AttributeExportXML::SetAsFloatArray(XMLElement* pRoot, double* values, UINT size)
 {
-	pRoot->SetAttribute("type", "doubleArray");
+	pRoot->SetAttribute("type", "floatArray");
 	pRoot->SetAttribute("size", size);
 
 	for (size_t i = 0; i < size; i++)
@@ -452,6 +452,18 @@ void ME::AttributeExportXML::SetAsString(XMLElement* pRoot, std::string value)
 {
 	pRoot->SetAttribute("type", "string");
 	pRoot->SetText(value.c_str());
+}
+
+void ME::AttributeExportXML::SetAsStringArray(XMLElement* pRoot, std::string* values, UINT size)
+{
+	pRoot->SetAttribute("type", "stringArray");
+	pRoot->SetAttribute("size", size);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		XMLElement* pElement = pRoot->InsertNewChildElement("elem");
+		ME::AttributeExportXML::SetAsString(pElement, values[i]);
+	}
 }
 
 XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected)

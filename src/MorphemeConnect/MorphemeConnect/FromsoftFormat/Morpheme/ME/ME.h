@@ -76,7 +76,7 @@ namespace ME
 		void SetAsBool(XMLElement* pRoot, bool value);
 		void SetAsBoolArray(XMLElement* pRoot, bool* values, UINT size);
 		void SetAsDouble(XMLElement* pRoot, double value);
-		void SetAsDoubleArray(XMLElement* pRoot, double* values, UINT size);
+		void SetAsFloatArray(XMLElement* pRoot, double* values, UINT size);
 		void SetAsInt(XMLElement* pRoot, int value);
 		void SetAsIntArray(XMLElement* pRoot, int* values, UINT size);
 		void SetAsUInt(XMLElement* pRoot, UINT value);
@@ -86,6 +86,7 @@ namespace ME
 		void SetAsVector3(XMLElement* pRoot, Vector3 value);
 		void SetAsVector4(XMLElement* pRoot, Vector4 value);
 		void SetAsString(XMLElement* pRoot, std::string value);
+		void SetAsStringArray(XMLElement* pRoot, std::string* values, UINT size);
 	}
 
 	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);

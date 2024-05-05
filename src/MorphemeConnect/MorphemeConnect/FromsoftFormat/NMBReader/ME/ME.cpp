@@ -66,9 +66,6 @@ void ME::DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrac
 	XMLElement* userData = pRoot->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
 	userData->SetText(event_track->m_data->m_eventId);
-
-	for (size_t i = 0; i < event_track->m_data->m_numEvents; i++)
-		ME::DiscreteEventExportXML(discreteEventTrack, i, event_track->m_data->m_events[i].m_value, event_track->m_data->m_events[i].m_start);
 }
 
 void ME::DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time)
@@ -99,9 +96,6 @@ void ME::CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* 
 	XMLElement* userData = pRoot->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
 	userData->SetText(event_track->m_data->m_eventId);
-
-	for (size_t i = 0; i < event_track->m_data->m_numEvents; i++)
-		ME::CurveEventExportXML(discreteEventTrack, i, event_track->m_data->m_events[i].m_value, event_track->m_data->m_events[i].m_start, event_track->m_data->m_events[i].m_duration);
 }
 
 void ME::CurveEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time, float end_time)

@@ -57,7 +57,15 @@ namespace ME
 	namespace CharacterControllerExportXML
 	{
 		XMLElement* CharacterControllerExportXML(XMLElement* pRoot, std::string guid, std::string name);
-		XMLElement* SetShape(XMLElement* pRoot, std::string name);
+		XMLElement* SetShape(XMLElement* pRoot, std::string shape);
+		XMLElement* SetHeight(XMLElement* pRoot, float height);
+		XMLElement* SetRadius(XMLElement* pRoot, float radius);
+		XMLElement* SetColour(XMLElement* pRoot, Vector3 color);
+		XMLElement* SetIsVisible(XMLElement* pRoot, bool isVisible);
+		XMLElement* SetSkinWidth(XMLElement* pRoot, float skinWidth);
+		XMLElement* SetMaxPushForce(XMLElement* pRoot, float maxPushForce);
+		XMLElement* SetMaxSlopeAngle(XMLElement* pRoot, float maxSlopeAngle);
+		XMLElement* SetStepHeight(XMLElement* pRoot, float stepHeight);
 	}
 
 	XMLElement* AttributeBlockExportXML(XMLElement* pRoot);

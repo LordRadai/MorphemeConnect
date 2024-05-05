@@ -234,6 +234,87 @@ XMLElement* ME::JointExportXML::SetPostOrientationOffset(XMLElement* pRoot, Quat
 	return pPostOrientationOffset;
 }
 
+XMLElement* ME::CharacterControllerExportXML::CharacterControllerExportXML(XMLElement* pRoot, std::string guid, std::string name)
+{
+	XMLElement* pCharacterController = pRoot->InsertNewChildElement("CharacterController");
+	pCharacterController->SetAttribute("guid", guid.c_str());
+	pCharacterController->SetAttribute("name", name.c_str());
+
+	ME::AttributeBlockExportXML(pCharacterController);
+
+	return pCharacterController;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetShape(XMLElement* pRoot, std::string shape)
+{
+	XMLElement* pShape = pRoot->InsertNewChildElement("Shape");
+	ME::AttributeExportXML::SetAsString(pShape, shape);
+
+	return pShape;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetHeight(XMLElement* pRoot, float height)
+{
+	XMLElement* pHeight = pRoot->InsertNewChildElement("Height");
+	ME::AttributeExportXML::SetAsDouble(pHeight, height);
+
+	return pHeight;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetRadius(XMLElement* pRoot, float radius)
+{
+	XMLElement* pRadius = pRoot->InsertNewChildElement("Radius");
+	ME::AttributeExportXML::SetAsDouble(pRadius, radius);
+
+	return pRadius;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetColour(XMLElement* pRoot, Vector3 color)
+{
+	XMLElement* pColour = pRoot->InsertNewChildElement("Colour");
+	ME::AttributeExportXML::SetAsVector3(pColour, color);
+
+	return pColour;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetIsVisible(XMLElement* pRoot, bool isVisible)
+{
+	XMLElement* pVisible = pRoot->InsertNewChildElement("Visible");
+	ME::AttributeExportXML::SetAsBool(pVisible, isVisible);
+
+	return pVisible;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetSkinWidth(XMLElement* pRoot, float skinWidth)
+{
+	XMLElement* pShape = pRoot->InsertNewChildElement("SkinWidth");
+	ME::AttributeExportXML::SetAsDouble(pShape, skinWidth);
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetMaxPushForce(XMLElement* pRoot, float maxPushForce)
+{
+	XMLElement* pMaxPushForce = pRoot->InsertNewChildElement("MaxPushForce");
+	ME::AttributeExportXML::SetAsDouble(pMaxPushForce, maxPushForce);
+
+	return pMaxPushForce;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetMaxSlopeAngle(XMLElement* pRoot, float maxSlopeAngle)
+{
+	XMLElement* pMaxSlopeAngle = pRoot->InsertNewChildElement("MaxSlopeAngle");
+	ME::AttributeExportXML::SetAsDouble(pMaxSlopeAngle, maxSlopeAngle);
+
+	return pMaxSlopeAngle;
+}
+
+XMLElement* ME::CharacterControllerExportXML::SetStepHeight(XMLElement* pRoot, float stepHeight)
+{
+	XMLElement* pStepHeight = pRoot->InsertNewChildElement("StepHeight");
+	ME::AttributeExportXML::SetAsDouble(pStepHeight, stepHeight);
+
+	return pStepHeight;
+}
+
 XMLElement* ME::AttributeBlockExportXML(XMLElement* pRoot)
 {
 	return pRoot->InsertNewChildElement("Attributes");

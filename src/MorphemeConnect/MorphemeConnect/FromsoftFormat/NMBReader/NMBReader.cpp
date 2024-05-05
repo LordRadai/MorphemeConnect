@@ -461,7 +461,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
 			NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
 
-			XMLElement* pTakeList = ME::TakeListXML(out.RootElement(), this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
+			XMLElement* pTakeList = ME::TakeListXML((XMLElement*)&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
 			XMLElement* pTake = ME::TakeExportXML(pTakeList, this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->m_bool, source_anim->m_animLen, 30.f, source_anim->m_clipStart, source_anim->m_clipEnd);
 
 			for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)

@@ -1,6 +1,6 @@
 #include "ME.h"
 
-void ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UINT parent_id, UINT type_id, bool persistent, bool downstream_multiply_connected)
+XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UINT parent_id, UINT type_id, bool persistent, bool downstream_multiply_connected)
 {
 	XMLElement* pNode = pRoot->InsertNewChildElement("Node");
 	pRoot->SetAttribute("name", name.c_str());
@@ -13,16 +13,20 @@ void ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UIN
 
 	if (downstream_multiply_connected)
 		pRoot->SetAttribute("downstreamMultiplyConnected", "true");
+
+	return pNode;
 }
 
-void ME::TakeListXML(XMLElement* pDoc, std::string name, int version)
+XMLElement* ME::TakeListXML(XMLElement* pDoc, std::string name, int version)
 {
 	XMLElement* pTakeList = pDoc->InsertNewChildElement("TakeList");
 	pTakeList->SetAttribute("sourceAnimFile", name.c_str());
 	pTakeList->SetAttribute("version", version);
+
+	return pTakeList;
 }
 
-void ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float duration, float fps, float clipStart, float clipEnd)
+XMLElement* ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float duration, float fps, float clipStart, float clipEnd)
 {
 	XMLElement* pTake = pRoot->InsertNewChildElement("Take");
 	pTake->SetAttribute("name", name.c_str());
@@ -52,102 +56,116 @@ void ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float 
 		loop->SetText("true");
 	else
 		loop->SetText("false");
+
+	return pTake;
 }
 
-void ME::DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
 {
-	XMLElement* discreteEventTrack = pRoot->InsertNewChildElement("DiscreteEventTrack");
-	discreteEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	XMLElement* pEventTrack = pRoot->InsertNewChildElement("DiscreteEventTrack");
+	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
+	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
+	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributeET->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(event_track->m_data->m_eventId);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(event_track->m_data->m_eventId);
+
+	return pEventTrack;
 }
 
-void ME::DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time)
+XMLElement* ME::DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time)
 {
-	XMLElement* discreteEvent = pRoot->InsertNewChildElement("DiscreteEvent");
-	discreteEvent->SetAttribute("index", event_idx);
+	XMLElement* pEvent = pRoot->InsertNewChildElement("DiscreteEvent");
+	pEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(user_data);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(user_data);
 
-	XMLElement* startTime = userData->InsertNewChildElement("startTime");
-	startTime->SetAttribute("type", "double");
-	startTime->SetText(start_time);
+	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
+	pStartTime->SetAttribute("type", "double");
+	pStartTime->SetText(start_time);
+
+	return pEvent;
 }
 
-void ME::CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
 {
-	XMLElement* discreteEventTrack = pRoot->InsertNewChildElement("CurveEventTrack");
-	discreteEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	XMLElement* pEventTrack = pRoot->InsertNewChildElement("CurveEventTrack");
+	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
+	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
+	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributeET->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(event_track->m_data->m_eventId);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(event_track->m_data->m_eventId);
+
+	return pEventTrack;
 }
 
-void ME::CurveEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time, float end_time)
+XMLElement* ME::CurveEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time, float end_time)
 {
-	XMLElement* discreteEvent = pRoot->InsertNewChildElement("CurveEvent");
-	discreteEvent->SetAttribute("index", event_idx);
+	XMLElement* pEvent = pRoot->InsertNewChildElement("CurveEvent");
+	pEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(user_data);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(user_data);
 
-	XMLElement* startTime = userData->InsertNewChildElement("startTime");
-	startTime->SetAttribute("type", "double");
-	startTime->SetText(start_time);
+	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
+	pStartTime->SetAttribute("type", "double");
+	pStartTime->SetText(start_time);
 
-	XMLElement* endTime = userData->InsertNewChildElement("duration");
-	startTime->SetAttribute("type", "double");
-	startTime->SetText(end_time);
+	XMLElement* pEndTime = pAttributes->InsertNewChildElement("duration");
+	pEndTime->SetAttribute("type", "double");
+	pEndTime->SetText(end_time);
+
+	return pEvent;
 }
 
-void ME::DurationEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::DurationEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
 {
-	XMLElement* discreteEventTrack = pRoot->InsertNewChildElement("DurationEventTrack");
-	discreteEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	XMLElement* pEventTrack = pRoot->InsertNewChildElement("DurationEventTrack");
+	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
+	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
+	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributeET->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(event_track->m_data->m_eventId);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(event_track->m_data->m_eventId);
+
+	return pEventTrack;
 }
 
-void ME::DurationEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time, float end_time)
+XMLElement* ME::DurationEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time, float end_time)
 {
-	XMLElement* discreteEvent = pRoot->InsertNewChildElement("DurationEvent");
-	discreteEvent->SetAttribute("index", event_idx);
+	XMLElement* pEvent = pRoot->InsertNewChildElement("DurationEvent");
+	pEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
-	userData->SetAttribute("type", "uint");
-	userData->SetText(user_data);
+	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
+	pUserData->SetAttribute("type", "uint");
+	pUserData->SetText(user_data);
 
-	XMLElement* startTime = userData->InsertNewChildElement("startTime");
-	startTime->SetAttribute("type", "double");
-	startTime->SetText(start_time);
+	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
+	pStartTime->SetAttribute("type", "double");
+	pStartTime->SetText(start_time);
 
-	XMLElement* endTime = userData->InsertNewChildElement("duration");
-	startTime->SetAttribute("type", "double");
-	startTime->SetText(end_time);
+	XMLElement* pEndTime = pAttributes->InsertNewChildElement("duration");
+	pEndTime->SetAttribute("type", "double");
+	pEndTime->SetText(end_time);
+
+	return pEvent;
 }

@@ -461,27 +461,27 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
 			NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
 
-			ME::TakeListXML((XMLElement*)&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
-			ME::TakeExportXML(out.LastChildElement(), this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->m_bool, source_anim->m_animLen, 30.f, source_anim->m_clipStart, source_anim->m_clipEnd);
+			XMLElement* pTakeList = ME::TakeListXML((XMLElement*)&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
+			XMLElement* pTake = ME::TakeExportXML(pTakeList, this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->m_bool, source_anim->m_animLen, 30.f, source_anim->m_clipStart, source_anim->m_clipEnd);
 
 			for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
 
-				ME::DiscreteEventTrackExportXML(out.LastChildElement(), event_tracks);
+				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::DiscreteEventExportXML(out.LastChildElement(), i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start);
+					ME::DiscreteEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start);
 			}
 
 			for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
 
-				ME::CurveEventTrackExportXML(out.LastChildElement(), event_tracks);
+				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::CurveEventExportXML(out.LastChildElement(), i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+					ME::CurveEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
 			}
 
 
@@ -489,10 +489,10 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
 
-				ME::DurationEventTrackExportXML(out.LastChildElement(), event_tracks);
+				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::DurationEventExportXML(out.LastChildElement(), i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
 			}
 
 			std::wstring filename = std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\";

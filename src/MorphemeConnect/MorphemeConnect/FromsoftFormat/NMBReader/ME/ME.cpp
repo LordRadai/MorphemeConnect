@@ -234,6 +234,143 @@ XMLElement* ME::JointExportXML::SetPostOrientationOffset(XMLElement* pRoot, Quat
 	return pPostOrientationOffset;
 }
 
+XMLElement* ME::AttributeBlockExportXML(XMLElement* pRoot)
+{
+	return pRoot->InsertNewChildElement("Attributes");
+}
+
+XMLElement* ME::AttributeExportXML::AttributeExportXML(XMLElement* pRoot, std::string name)
+{
+	return pRoot->InsertNewChildElement(name.c_str());
+}
+
+void ME::AttributeExportXML::SetAsBool(XMLElement* pRoot, bool value)
+{
+	pRoot->SetAttribute("type", "bool");
+	
+	if (value)
+		pRoot->SetText("true");
+	else
+		pRoot->SetText("false");
+}
+
+void ME::AttributeExportXML::SetAsBoolArray(XMLElement* pRoot, bool* values, UINT size)
+{
+	pRoot->SetAttribute("type", "boolArray");
+	pRoot->SetAttribute("size", size);
+	
+	for (size_t i = 0; i < size; i++)
+	{
+		XMLElement* pElement = pRoot->InsertNewChildElement("elem");
+		ME::AttributeExportXML::SetAsBool(pElement, values[i]);
+	}
+}
+
+void ME::AttributeExportXML::SetAsDouble(XMLElement* pRoot, double value)
+{
+	pRoot->SetAttribute("type", "double");
+	pRoot->SetText(value);
+}
+
+void ME::AttributeExportXML::SetAsDoubleArray(XMLElement* pRoot, double* values, UINT size)
+{
+	pRoot->SetAttribute("type", "doubleArray");
+	pRoot->SetAttribute("size", size);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		XMLElement* pElement = pRoot->InsertNewChildElement("elem");
+		ME::AttributeExportXML::SetAsDouble(pElement, values[i]);
+	}
+}
+
+void ME::AttributeExportXML::SetAsInt(XMLElement* pRoot, int value)
+{
+	pRoot->SetAttribute("type", "int");
+	pRoot->SetText(value);
+}
+
+void ME::AttributeExportXML::SetAsIntArray(XMLElement* pRoot, int* values, UINT size)
+{
+	pRoot->SetAttribute("type", "intArray");
+	pRoot->SetAttribute("size", size);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		XMLElement* pElement = pRoot->InsertNewChildElement("elem");
+		ME::AttributeExportXML::SetAsInt(pElement, values[i]);
+	}
+}
+
+void ME::AttributeExportXML::SetAsUInt(XMLElement* pRoot, UINT value)
+{
+	pRoot->SetAttribute("type", "uint");
+	pRoot->SetText(value);
+}
+
+void ME::AttributeExportXML::SetAsUIntArray(XMLElement* pRoot, UINT* values, UINT size)
+{
+	pRoot->SetAttribute("type", "boolArray");
+	pRoot->SetAttribute("size", size);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		XMLElement* pElement = pRoot->InsertNewChildElement("elem");
+		ME::AttributeExportXML::SetAsUInt(pElement, values[i]);
+	}
+}
+
+void ME::AttributeExportXML::SetAsMatrix34(XMLElement* pRoot, Matrix value)
+{
+	pRoot->SetAttribute("type", "matrix34");
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		char row_name[10];
+
+		sprintf_s(row_name, "r%d", i);
+		XMLElement* pRow = pRoot->InsertNewChildElement(row_name);
+
+		ME::AttributeExportXML::SetAsVector3(pRow, Vector3(value.m[0]));
+	}
+}
+
+void ME::AttributeExportXML::SetAsQuat(XMLElement* pRoot, Quaternion value)
+{
+	char value_text[255];
+
+	sprintf_s(value_text, "%f, %f, %f, %f", value.x, value.y, value.z, value.w);
+
+	pRoot->SetAttribute("type", "quat");
+	pRoot->SetText(value_text);
+}
+
+void ME::AttributeExportXML::SetAsVector3(XMLElement* pRoot, Vector3 value)
+{
+	char value_text[255];
+
+	sprintf_s(value_text, "%f, %f, %f", value.x, value.y, value.z);
+
+	pRoot->SetAttribute("type", "vector3");
+	pRoot->SetText(value_text);
+}
+
+void ME::AttributeExportXML::SetAsVector4(XMLElement* pRoot, Vector4 value)
+{
+	char value_text[255];
+
+	sprintf_s(value_text, "%f, %f, %f, %f", value.x, value.y, value.z, value.w);
+
+	pRoot->SetAttribute("type", "vector4");
+	pRoot->SetText(value_text);
+}
+
+void ME::AttributeExportXML::SetAsString(XMLElement* pRoot, std::string value)
+{
+	pRoot->SetAttribute("type", "string");
+	pRoot->SetText(value.c_str());
+}
+
 XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected)
 {
 	XMLElement* pNode = pRoot->InsertNewChildElement("Node");
@@ -323,31 +460,22 @@ XMLElement* ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop,
 	XMLElement* pTake = pRoot->InsertNewChildElement("Take");
 	pTake->SetAttribute("name", name.c_str());
 	
-	XMLElement* pAttributes = pTake->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pTake);
 
-	XMLElement* pDuration = pAttributes->InsertNewChildElement("secondsDuration");
-	pDuration->SetAttribute("type", "double");
-	pDuration->SetText(duration);
+	XMLElement* pDuration = ME::AttributeExportXML::AttributeExportXML(pAttributes, "secondsDuration");
+	ME::AttributeExportXML::SetAsDouble(pDuration, duration);
 
-	XMLElement* pFps = pAttributes->InsertNewChildElement("fps");
-	pFps->SetAttribute("type", "double");
-	pFps->SetText(30);
+	XMLElement* pFps = ME::AttributeExportXML::AttributeExportXML(pAttributes, "fps");
+	ME::AttributeExportXML::SetAsDouble(pFps, fps);
 
-	XMLElement* pClipStart = pAttributes->InsertNewChildElement("clipStart");
-	pClipStart->SetAttribute("type", "double");
-	pClipStart->SetText(clipStart);
+	XMLElement* pClipStart = ME::AttributeExportXML::AttributeExportXML(pAttributes, "clipStart");
+	ME::AttributeExportXML::SetAsDouble(pClipStart, clipStart);
 
-	XMLElement* pClipEnd = pAttributes->InsertNewChildElement("clipEnd");
-	pClipEnd->SetAttribute("type", "double");
-	pClipEnd->SetText(clipEnd);
+	XMLElement* pClipEnd = ME::AttributeExportXML::AttributeExportXML(pAttributes, "clipEnd");
+	ME::AttributeExportXML::SetAsDouble(pClipEnd, clipEnd);
 
-	XMLElement* loop = pAttributes->InsertNewChildElement("loop");
-	loop->SetAttribute("type", "bool");
-
-	if (is_loop)
-		loop->SetText("true");
-	else
-		loop->SetText("false");
+	XMLElement* pLoop = ME::AttributeExportXML::AttributeExportXML(pAttributes, "loop");
+	ME::AttributeExportXML::SetAsBool(pLoop, is_loop);
 
 	return pTake;
 }
@@ -359,29 +487,26 @@ XMLElement* ME::DiscreteEventTrackExportXML(XMLElement* pRoot, std::string name,
 	pEventTrack->SetAttribute("guid", guid.c_str());
 	pEventTrack->SetAttribute("channelID", channelId);
 
-	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEventTrack);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
 	return pEventTrack;
 }
 
-XMLElement* ME::DiscreteEventExportXML(XMLElement* pRoot, int eventIdx, int userData, float startTime)
+XMLElement* ME::DiscreteEventExportXML(XMLElement* pRoot, UINT eventIdx, UINT userData, float startTime)
 {
 	XMLElement* pEvent = pRoot->InsertNewChildElement("DiscreteEvent");
 	pEvent->SetAttribute("index", eventIdx);
 
-	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEvent);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
-	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
-	pStartTime->SetAttribute("type", "double");
-	pStartTime->SetText(startTime);
+	XMLElement* pStartTime = ME::AttributeExportXML::AttributeExportXML(pAttributes, "startTime");
+	ME::AttributeExportXML::SetAsDouble(pStartTime, startTime);
 
 	return pEvent;
 }
@@ -393,33 +518,29 @@ XMLElement* ME::CurveEventTrackExportXML(XMLElement* pRoot, std::string name, st
 	pEventTrack->SetAttribute("guid", guid.c_str());
 	pEventTrack->SetAttribute("channelID", channelId);
 
-	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEventTrack);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
 	return pEventTrack;
 }
 
-XMLElement* ME::CurveEventExportXML(XMLElement* pRoot, int eventIdx, int userData, float startTime, float endTime)
+XMLElement* ME::CurveEventExportXML(XMLElement* pRoot, UINT eventIdx, UINT userData, float startTime, float floatVal)
 {
 	XMLElement* pEvent = pRoot->InsertNewChildElement("CurveEvent");
 	pEvent->SetAttribute("index", eventIdx);
 
-	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEvent);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
-	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
-	pStartTime->SetAttribute("type", "double");
-	pStartTime->SetText(startTime);
+	XMLElement* pStartTime = ME::AttributeExportXML::AttributeExportXML(pAttributes, "startTime");
+	ME::AttributeExportXML::SetAsDouble(pStartTime, startTime);
 
-	XMLElement* pEndTime = pAttributes->InsertNewChildElement("duration");
-	pEndTime->SetAttribute("type", "double");
-	pEndTime->SetText(endTime);
+	XMLElement* pFloatVal = ME::AttributeExportXML::AttributeExportXML(pAttributes, "floatVal");
+	ME::AttributeExportXML::SetAsDouble(pFloatVal, floatVal);
 
 	return pEvent;
 }
@@ -431,33 +552,29 @@ XMLElement* ME::DurationEventTrackExportXML(XMLElement* pRoot, std::string name,
 	pEventTrack->SetAttribute("guid", guid.c_str());
 	pEventTrack->SetAttribute("channelID", channelId);
 
-	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEventTrack);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
 	return pEventTrack;
 }
 
-XMLElement* ME::DurationEventExportXML(XMLElement* pRoot, int eventIdx, int userData, float startTime, float endTime)
+XMLElement* ME::DurationEventExportXML(XMLElement* pRoot, UINT eventIdx, UINT userData, float startTime, float duration)
 {
 	XMLElement* pEvent = pRoot->InsertNewChildElement("DurationEvent");
 	pEvent->SetAttribute("index", eventIdx);
 
-	XMLElement* pAttributes = pEvent->InsertNewChildElement("Attributes");
+	XMLElement* pAttributes = ME::AttributeBlockExportXML(pEvent);
 
-	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
-	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(userData);
+	XMLElement* pUserData = ME::AttributeExportXML::AttributeExportXML(pAttributes, "userData");
+	ME::AttributeExportXML::SetAsUInt(pUserData, userData);
 
-	XMLElement* pStartTime = pAttributes->InsertNewChildElement("startTime");
-	pStartTime->SetAttribute("type", "double");
-	pStartTime->SetText(startTime);
+	XMLElement* pStartTime = ME::AttributeExportXML::AttributeExportXML(pAttributes, "startTime");
+	ME::AttributeExportXML::SetAsDouble(pStartTime, startTime);
 
-	XMLElement* pEndTime = pAttributes->InsertNewChildElement("duration");
-	pEndTime->SetAttribute("type", "double");
-	pEndTime->SetText(endTime);
+	XMLElement* pFloatVal = ME::AttributeExportXML::AttributeExportXML(pAttributes, "duration");
+	ME::AttributeExportXML::SetAsDouble(pFloatVal, duration);
 
 	return pEvent;
 }

@@ -76,6 +76,19 @@ DirectX::SimpleMath::Vector3 MathHelper::GetLookAtVectorFromMatrix(DirectX::XMMA
 	return DirectX::SimpleMath::Vector3(transformed_pos);
 }
 
+//Converts quaternion to euler angles
+DirectX::SimpleMath::Vector3 MathHelper::ConvertQuatToEulerAngles(const DirectX::SimpleMath::Quaternion& quaternion)
+{
+	DirectX::SimpleMath::Vector3 eulerAngles;
+	DirectX::SimpleMath::Matrix rotationMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
+
+	eulerAngles.x = atan2f(rotationMatrix._32, rotationMatrix._33); // Pitch
+	eulerAngles.y = asinf(-rotationMatrix._31); // Yaw
+	eulerAngles.z = atan2f(rotationMatrix._21, rotationMatrix._11); // Roll
+
+	return eulerAngles;
+}
+
 inline float MathHelper::ConvertDegAngleToRad(float angle)
 {
 	return ((angle / 360.f) * XM_2PI);
@@ -101,4 +114,24 @@ UINT MathHelper::ConvertFloatColorToInt(DirectX::SimpleMath::Vector4 color)
 	BYTE alpha = color.w * 255;
 
 	return (alpha << 24) | (red << 16) | (green << 8) | blue;
+}
+
+//Converts floating point time value to discrete frame count
+float MathHelper::FrameToTime(int frame, int frameRate)
+{
+	return ((float)frame / (float)frameRate);
+}
+
+//Converts discrete frame count to a floating point time value
+int MathHelper::TimeToFrame(float time, int frameRate, bool round)
+{
+	float frame = (time * frameRate);
+
+	if (std::roundf(frame) == 0 && frame > 0)
+		return 1;
+
+	if (!round)
+		return frame;
+
+	return std::roundf(frame);
 }

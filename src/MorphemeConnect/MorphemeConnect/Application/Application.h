@@ -37,11 +37,11 @@
 
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
-#include "../FromsoftFormat/NMBReader/NMBReader.h"
+#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
+#include "../FromsoftFormat/Morpheme/NSAReader/NSAReader.h"
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
 #include "../FromsoftFormat/BNDReader/BNDReader.h"
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
-#include "../FromsoftFormat/NSAReader/NSAReader.h"
 #include "../fromloader/fromloader.h"
 #include "../FlverModel/FlverModel.h"
 #include "fbxsdk.h"

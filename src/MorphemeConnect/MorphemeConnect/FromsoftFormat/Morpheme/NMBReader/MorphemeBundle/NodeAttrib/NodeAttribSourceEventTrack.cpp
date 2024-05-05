@@ -3,7 +3,7 @@
 NodeAttribSourceEventTrack::NodeAttribSourceEventTrack(BYTE* data) : NodeAttribBase(data)
 {
     if (this->m_type != ATTRIB_TYPE_SOURCE_EVENT_TRACKS)
-        Debug::Panic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_type, ATTRIB_TYPE_SOURCE_EVENT_TRACKS);
+        RDebug::SystemPanic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_type, ATTRIB_TYPE_SOURCE_EVENT_TRACKS);
 
     this->m_eventTracks[0].m_trackCount = *(int*)(data + 0x10);
     this->m_eventTracks[0].padding = *(int*)(data + 0x14);

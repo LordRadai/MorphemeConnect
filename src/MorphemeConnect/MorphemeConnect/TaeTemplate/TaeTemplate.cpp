@@ -1,5 +1,6 @@
 #include "TaeTemplate.h"
-#include "../DebugOutput/Debug.h"
+#include "../framework.h"
+#include "../extern.h"
 
 TaeTemplate::Group::Event::Arg::Arg(std::string name, std::string type)
 {
@@ -86,7 +87,7 @@ void TaeTemplate::from_json()
 	}
 	catch (const std::exception& exc)
 	{
-		Debug::Alert(Debug::LVL_ERROR, "TaeTemplate.cpp", exc.what());
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "TaeTemplate.cpp", exc.what());
 		return;
 	}
 }

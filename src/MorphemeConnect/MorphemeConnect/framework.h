@@ -33,8 +33,10 @@
 #include "imgui/custom/imgui_custom_logic.h"
 #include "imgui/custom/imgui_custom_widget.h"
 
-#include "DebugOutput/Debug.h"
-
 //IniReader
 #include "inih/ini.h"
 #include "inih/INIReader.h"
+
+#include "RLog/RLog.h"
+#include "RMath/RMath.h"
+#include "RString/RString.h"

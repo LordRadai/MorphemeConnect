@@ -1,4 +1,6 @@
 #include "MorphemeBundle_Header.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 MorphemeBundle_Header::MorphemeBundle_Header()
 {

@@ -10,6 +10,7 @@ class Scene;
 class TaeTemplate;
 class ProcessReader;
 
+extern MsgLevel g_logLevel;
 extern Application g_morphemeConnect;
 extern Scene g_preview;
 extern TaeTemplate g_taeTemplate;

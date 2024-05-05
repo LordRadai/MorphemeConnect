@@ -5,8 +5,9 @@
 #include <vector>
 #include <string>
 
-#include "../FromsoftFormat/NMBReader/NMBReader.h"
-#include "../Math/Math.h"
+#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
+#include "../framework.h"
+#include "../extern.h"
 
 struct EventTrackEditor
 {

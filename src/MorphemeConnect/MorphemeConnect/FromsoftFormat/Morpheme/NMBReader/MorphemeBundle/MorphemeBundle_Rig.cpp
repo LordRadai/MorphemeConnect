@@ -1,4 +1,6 @@
 #include "MorphemeBundle_Rig.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 BoneList::BoneList(BYTE* data)
 {

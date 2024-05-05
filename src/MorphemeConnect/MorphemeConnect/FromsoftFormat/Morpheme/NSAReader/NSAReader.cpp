@@ -1,6 +1,6 @@
 #include "NSAReader.h"
-#include "../../DebugOutput/Debug.h"
-#include "../../Math/Math.h"
+#include "../../../framework.h"
+#include "../../../extern.h"
 #include <filesystem>
 
 using namespace DirectX::SimpleMath;
@@ -81,9 +81,9 @@ AnimSourceNSA::ChannelPosQuantised::ChannelPosQuantised(ifstream* nsa)
 {
 	MemReader::Read(nsa, &this->m_sample);
 
-	this->m_x = Math::ExtractBits(this->m_sample, 21, 0);
-	this->m_y = Math::ExtractBits(this->m_sample, 10, 0x7FF);
-	this->m_z = Math::ExtractBits(this->m_sample, 0, 0x3FF);
+	this->m_x = MathHelper::ExtractBits(this->m_sample, 21, 0);
+	this->m_y = MathHelper::ExtractBits(this->m_sample, 10, 0x7FF);
+	this->m_z = MathHelper::ExtractBits(this->m_sample, 0, 0x3FF);
 }
 
 //Dequantizes compressed translation
@@ -173,7 +173,7 @@ bool AnimSourceNSA::StaticSegment::Dequantize()
 	}
 	catch (const std::exception& e)
 	{
-		Debug::Alert(Debug::LVL_ERROR, "NSAReader.cpp", e.what());
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NSAReader.cpp", e.what());
 
 		return false;
 	}
@@ -307,7 +307,7 @@ bool AnimSourceNSA::DynamicSegment::Dequantize(AnimSourceNSA::VecQuantisedInfo s
 	}
 	catch (const std::exception& e)
 	{
-		Debug::Alert(Debug::LVL_ERROR, "NSAReader.cpp", e.what());
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NSAReader.cpp", e.what());
 
 		return false;
 	}
@@ -415,7 +415,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 
 	if (!std::filesystem::exists(path))
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "File %ls does not exist\n", pszFilePath);
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "File %ls does not exist\n", pszFilePath);
 		return;
 	}
 
@@ -482,7 +482,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 	}
 	catch (const std::exception& e)
 	{
-		Debug::Alert(Debug::LVL_ERROR, "NSAReader.cpp", e.what());
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NSAReader.cpp", e.what());
 		nsa.close();
 
 		return;
@@ -492,7 +492,7 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 
 	if (!this->InitKeyframes())
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to decompress animation %ls\n", this->m_fileName);
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to decompress animation %ls\n", this->m_fileName);
 		return;
 	} 
 
@@ -528,7 +528,7 @@ bool NSAReader::InitKeyframes()
 	this->m_rootMotionSegment.m_boneTransform = AnimBoneTransform(this->m_header.m_boneCount);
 
 	if (!this->Dequantize())
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Dequantization failed (file=%ls)\n", this->m_fileName.c_str());
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Dequantization failed (file=%ls)\n", this->m_fileName.c_str());
 
 	int boneOffset = this->m_header.m_boneCount - this->m_header.m_animBoneCount;
 

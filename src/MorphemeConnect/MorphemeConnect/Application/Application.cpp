@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "../extern.h"
-#include "../Math/Math.h"
-#include "../StringHelper/StringHelper.h"
+#include "../framework.h"
 #include "../Scene/Scene.h"
 
 #include <Shlwapi.h>
@@ -20,14 +19,14 @@ std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, std::ws
 
 			if (file_chr_id_str.compare(m_chrId) == 0)
 			{
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "\t%ws\n", filename.c_str());
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "\t%ws\n", filename.c_str());
 				files.push_back(entry.path());
 			}
 		}
 	}
 
 	if (files.size() == 0)
-		Debug::Alert(Debug::LVL_DEBUG, "Application.cpp", "Could not find any TimeAct files belonging to c%d in %ws\n", m_chrId, tae_path);
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Debug, "Application.cpp", "Could not find any TimeAct files belonging to c%d in %ws\n", m_chrId, tae_path);
 
 	return files;
 }
@@ -163,7 +162,7 @@ std::string getTaeCategoryTooltip(int category)
 
 	if (reader.ParseError() < 0)
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load group.ini\n");
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Failed to load group.ini\n");
 		return std::string(default_info);
 	}
 
@@ -181,7 +180,7 @@ std::string getTaeEventTooltip(int event_id)
 
 	if (reader.ParseError() < 0)
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load event.ini\n");
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to load event.ini\n");
 		return std::string(default_info);
 	}
 
@@ -199,7 +198,7 @@ std::string getEventTrackCategoryTooltip(int category)
 
 	if (reader.ParseError() < 0)
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load group.ini\n");
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to load group.ini\n");
 		return std::string(default_info);
 	}
 
@@ -217,7 +216,7 @@ std::string getEventTrackEventTooltip(int event_id)
 
 	if (reader.ParseError() < 0)
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to load event.ini\n");
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to load event.ini\n");
 		return std::string(default_info);
 	}
 
@@ -417,7 +416,7 @@ void Application::AssetsWindow()
 					for (int i = 0; i < m_tae.m_tae.size(); i++)
 						this->m_timeActEditorFlags.m_edited.push_back(false);
 
-					Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+					RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
 					this->m_eventTrackEditorFlags.m_loadTae = false;
 				}
@@ -448,7 +447,7 @@ void Application::AssetsWindow()
 
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
-						Debug::DebuggerMessage(Debug::LVL_DEBUG, "Selected TimeAct %s\n", tae_file.c_str());
+						RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Selected TimeAct %s\n", tae_file.c_str());
 
 						m_tae.m_init = false;
 						m_tae = TimeActReader(PWSTR(filepath.c_str()));
@@ -464,12 +463,12 @@ void Application::AssetsWindow()
 							for (int i = 0; i < m_tae.m_tae.size(); i++)
 								this->m_timeActEditorFlags.m_edited.push_back(false);
 
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
 							this->m_eventTrackEditorFlags.m_loadTae = false;
 						}
 						else
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Failed to load file %s\n", tae_file.c_str());
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Failed to load file %s\n", tae_file.c_str());
 
 						ImGui::CloseCurrentPopup();
 					}
@@ -606,7 +605,7 @@ void Application::AssetsWindow()
 				if (ImGui::Button("Add"))
 				{
 					if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
-						Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
+						RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
 					else
 					{
 						this->m_timeActEditorFlags.m_edited.clear();
@@ -632,10 +631,10 @@ void Application::AssetsWindow()
 					if (ImGui::Button("Add Selected"))
 					{
 						this->m_timeActFlags.m_addTimeActId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
-						this->m_timeActFlags.m_addTimeActLenght = Math::FrameToTime(this->m_eventTrackEditor.m_frameMax);
+						this->m_timeActFlags.m_addTimeActLenght = MathHelper::FrameToTime(this->m_eventTrackEditor.m_frameMax);
 
 						if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
-							Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
+							RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
 						else
 						{
 							this->m_timeActEditorFlags.m_edited.clear();
@@ -672,7 +671,7 @@ void Application::AssetsWindow()
 				if (ImGui::Button("Delete"))
 				{
 					if (this->m_tae.DeleteTimeAct(this->m_timeActFlags.m_deleteTimeActId) == false)
-						Debug::Alert(Debug::LVL_INFO, "TimeActReader.cpp", "Failed to delete TimeAct %d\n", this->m_timeActFlags.m_deleteTimeActId);
+						RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "TimeActReader.cpp", "Failed to delete TimeAct %d\n", this->m_timeActFlags.m_deleteTimeActId);
 
 					this->m_eventTrackEditorFlags.m_load = true;
 					this->m_timeActFlags.m_deleteTimeAct = false;
@@ -769,7 +768,7 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 					this->ResetEventTrackEditor();
 				}
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No animation is selected\n");
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No animation is selected\n");
 			}
 
 			ImGui::SameLine();
@@ -778,7 +777,7 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 				if (this->m_eventTrackEditor.GetTrackCount() > 0)
 					this->m_eventTrackEditorFlags.m_save = true;
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No Event Tracks are loaded\n");
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No Event Tracks are loaded\n");
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
@@ -802,8 +801,8 @@ void Application::EventTrackInfoWindow()
 		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (this->m_eventTrackEditorFlags.m_selectedTrack != -1 && this->m_eventTrackEditorFlags.m_selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (this->m_eventTrackEditorFlags.m_selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack].m_numEvents))
 		{
 			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack];
-			float startTime = Math::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
-			float endTime = Math::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float startTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float endTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
 			ImGui::Text(track->m_name);
 			ImGui::PushItemWidth(100);
@@ -862,7 +861,7 @@ void Application::TimeActWindow(int* current_frame, int* first_frame, float* zoo
 					this->ResetTimeActEditor();
 				}
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct file is currently loaded\n");
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct file is currently loaded\n");
 			}
 
 			ImGui::SameLine();
@@ -871,7 +870,7 @@ void Application::TimeActWindow(int* current_frame, int* first_frame, float* zoo
 				if (this->m_tae.m_init)
 					this->m_timeActEditorFlags.m_save = true;
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct track is currently loaded\n");
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct track is currently loaded\n");
 			}
 
 			if (this->m_timeActEditorFlags.m_taeId > -1)
@@ -895,8 +894,8 @@ void Application::TimeActInfoWindow()
 		if ((this->m_timeActEditor.GetTrackCount() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.GetTrackCount()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack];
-			float startTime = Math::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
-			float endTime = Math::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float startTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float endTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
 
 			ImGui::Text(m_timeActEditor.GetEventLabel(this->m_timeActEditorFlags.m_selectedTrack, this->m_timeActEditorFlags.m_selectedEvent, false).c_str());
 			ImGui::PushItemWidth(100);
@@ -1091,7 +1090,7 @@ void Application::CheckFlags()
 		if (this->m_nmb.IsInitialised())
 			this->SaveNmbFile();
 		else
-			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No NMB file is loaded\n");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "No NMB file is loaded\n");
 	}
 
 	if (this->m_flags.m_saveTae)
@@ -1101,7 +1100,7 @@ void Application::CheckFlags()
 		if (this->m_tae.m_init)
 			this->SaveTaeFile();
 		else
-			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "No TAE file is loaded\n");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "No TAE file is loaded\n");
 	}
 
 	if (this->m_flags.m_saveAll)
@@ -1113,9 +1112,9 @@ void Application::CheckFlags()
 			bool status = m_nmb.SaveToFile(this->m_nmb.GetFilePath());
 
 			if (status)
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 			else
-				Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "NMBReader.cpp");
+				RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Failed to generate file\n", "NMBReader.cpp");
 		}
 
 		if (this->m_tae.m_init)
@@ -1123,9 +1122,9 @@ void Application::CheckFlags()
 			bool status = m_tae.SaveFile(this->m_tae.m_filePath);
 
 			if (status)
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
 			else
-				Debug::Alert(Debug::LVL_ERROR, "Failed to generate file\n", "TimeActReader.cpp");
+				RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Failed to generate file\n", "TimeActReader.cpp");
 		}
 	}
 
@@ -1134,7 +1133,7 @@ void Application::CheckFlags()
 		this->m_flags.m_exportAll = false;
 
 		if (this->m_animFiles.size() == 0)
-			Debug::Alert(Debug::LVL_WARN, "Application.cpp", "No animations are loaded");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "Application.cpp", "No animations are loaded");
 
 		std::wstring out_path = L".//Export";
 
@@ -1148,7 +1147,7 @@ void Application::CheckFlags()
 		PWSTR export_path = (wchar_t*)out_path.c_str();
 
 		if (!this->ExportModelToFbx(export_path))
-			Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
 
 		for (int i = 0; i < this->m_animFiles.size(); i++)
 		{
@@ -1156,10 +1155,10 @@ void Application::CheckFlags()
 			std::filesystem::create_directories(anim_out.parent_path());
 
 			if (!this->ExportAnimationToFbx(anim_out, i))
-				Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to export animation %d\n", i);
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export animation %d\n", i);
 
 			if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
-				Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to export event track to XML for animation %d\n", i);
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export event track to XML for animation %d\n", i);
 		}
 	}
 
@@ -1206,7 +1205,7 @@ void Application::CheckFlags()
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = 0.f;
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = 0.f;
 
-			Debug::DebuggerMessage(Debug::LVL_DEBUG, "Performing lookup for animation ID %d\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Performing lookup for animation ID %d\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
 
 			for (int idx = 0; idx < this->m_nmb.GetNetworkDef()->m_data->m_numNodes; idx++)
 			{
@@ -1225,11 +1224,11 @@ void Application::CheckFlags()
 						{
 							found_anim = true;
 
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Animation found after %d steps\n", idx);
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
 
 							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = Math::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
-							this->m_eventTrackEditor.m_frameMax = Math::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = MathHelper::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
 
 							this->m_eventTrackEditor.m_animIdx = -1;
 
@@ -1284,8 +1283,8 @@ void Application::CheckFlags()
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
 											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 
 											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
 
@@ -1306,7 +1305,7 @@ void Application::CheckFlags()
 							}
 							else
 							{
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
 							}
 						}
 					}
@@ -1314,9 +1313,9 @@ void Application::CheckFlags()
 			}
 
 			if (!found_anim)
-				Debug::DebuggerMessage(Debug::LVL_WARN, "Animation ID %d not found\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Warn, "Animation ID %d not found\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
 
-			Debug::DebuggerMessage(Debug::LVL_DEBUG, "\n");
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "\n");
 		}
 	}
 
@@ -1349,7 +1348,7 @@ void Application::CheckFlags()
 				{
 					float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
 
-					this->m_timeActEditor.m_frameMax = Math::TimeToFrame(trackLen, 30);
+					this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
 					this->m_timeActEditor.m_frameMin = 0;
 
 					this->m_timeActEditor.SetEditedState(false);
@@ -1361,10 +1360,10 @@ void Application::CheckFlags()
 					}
 				}
 				else
-					Debug::Alert(Debug::LVL_INFO, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);
 			}
 			else
-				Debug::Alert(Debug::LVL_INFO, "Application.cpp", "No TimeAct is loaded\n");			
+				RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct is loaded\n");			
 		}
 	}
 }
@@ -1383,7 +1382,7 @@ int Application::GetChrIdFromNmbFileName(std::wstring name)
 
 	m_chrId = stoi(chr_id_str);
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Chr ID: %d\n", m_chrId);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Chr ID: %d\n", m_chrId);
 
 	return m_chrId;
 }
@@ -1399,7 +1398,7 @@ std::wstring Application::GetObjIdFromTaeFileName(std::wstring name)
 	if (obj_id.substr(0, 1).compare(L"o") != 0)
 		return L"";
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Obj ID: %s\n", obj_id);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Obj ID: %s\n", obj_id);
 
 	return obj_id;
 }
@@ -1448,7 +1447,7 @@ void Application::LoadFile()
 							
 							if (m_nmb.IsInitialised())
 							{
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
 
 								this->m_animFiles.clear();
 								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
@@ -1542,7 +1541,7 @@ void Application::LoadFile()
 
 													this->m_model = FlverModel(umem);
 
-													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
 													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
 
@@ -1552,11 +1551,11 @@ void Application::LoadFile()
 											}
 
 											if (!found_model)
-												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find model for c%04d\n", this->m_chrId);
+												RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find model for c%04d\n", this->m_chrId);
 										}
 									}
 									else
-										Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find Game folder\n");
+										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
 								}
 							}
 						}
@@ -1575,7 +1574,7 @@ void Application::LoadFile()
 								for (int i = 0; i < m_tae.m_tae.size(); i++)
 									this->m_timeActEditorFlags.m_edited.push_back(false);
 
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (len=%d)\n", m_tae.m_filePath, m_tae.m_fileSize);
 
 								bool found = false;
 
@@ -1632,7 +1631,7 @@ void Application::LoadFile()
 
 													this->m_model = FlverModel(umem);
 
-													Debug::DebuggerMessage(Debug::LVL_DEBUG, "Loaded model %s\n", filename.c_str());
+													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
 													found_model = true;
 
@@ -1643,11 +1642,11 @@ void Application::LoadFile()
 											}
 
 											if (!found_model)
-												Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find model for c%04d\n", this->m_chrId);
+												RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find model for c%04d\n", this->m_chrId);
 										}
 									}
 									else
-										Debug::DebuggerMessage(Debug::LVL_DEBUG, "Could not find Game folder\n");
+										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
 								}
 							}						
 						}
@@ -1706,18 +1705,18 @@ void Application::SaveFile()
 							bool status = m_nmb.SaveToFile(pszOutFilePath);
 
 							if (status)
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 							else
-								Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Failed to generate NMB file\n");
+								RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NMBReader.cpp", "Failed to generate NMB file\n");
 						}
 						else if (filepath.extension() == ".tae")
 						{
 							bool status = m_tae.SaveFile(pszOutFilePath);
 
 							if (status)
-								Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
 							else
-								Debug::Alert(Debug::LVL_ERROR, "TimeActReader.cpp", "Failed to generate TAE file\n");
+								RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "TimeActReader.cpp", "Failed to generate TAE file\n");
 						}
 					}
 					pItem->Release();
@@ -1772,9 +1771,9 @@ void Application::SaveNmbFile()
 						bool status = m_nmb.SaveToFile(pszOutFilePath);
 
 						if (status)
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 						else
-							Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Failed to generate NMB file\n");
+							RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NMBReader.cpp", "Failed to generate NMB file\n");
 					}
 					pItem->Release();
 				}
@@ -1828,9 +1827,9 @@ void Application::SaveTaeFile()
 						bool status = m_tae.SaveFile(pszOutFilePath);
 
 						if (status)
-							Debug::DebuggerMessage(Debug::LVL_DEBUG, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (taeCount=%d)\n", m_tae.m_outFilePath, m_tae.m_header.m_taeCount);
 						else
-							Debug::Alert(Debug::LVL_ERROR, "TimeActReader.cpp", "Failed to generate TAE file\n");
+							RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "TimeActReader.cpp", "Failed to generate TAE file\n");
 					}
 					pItem->Release();
 				}
@@ -1866,14 +1865,14 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 		{
 			if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 			{
-				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = Math::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
 			}
 		}
 
 		if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-			*current_frame_tae = Math::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, Math::FrameToTime(current_frame)), 30, false);
+			*current_frame_tae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(current_frame)), 30, false);
 	}
 }
 
@@ -1883,7 +1882,7 @@ inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorpheme
 	int boneIdx = pMorphemeRig->GetBoneIndex(boneName);
 
 	if (boneIdx == -1)
-		Debug::DebuggerMessage(Debug::LVL_DEBUG, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
 
 	return boneIdx;
 }
@@ -1927,7 +1926,7 @@ bool CreateFbxModel(Application* pApplication, FbxScene* pScene, FbxPose* pBindP
 			pMeshNodesList.push_back(pMeshNode);
 		}
 		else
-			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create MeshNode object for mesh %d (file=%s)\n", i, export_path.filename().c_str());
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create MeshNode object for mesh %d (file=%s)\n", i, export_path.filename().c_str());
 	}
 	
 	return true;
@@ -2015,7 +2014,7 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NSAReader*
 			curveTZ->KeySetValue(keyIndex, translation.z);
 			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
-			DirectX::SimpleMath::Vector3 rotationEuler = Math::CovnertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
+			DirectX::SimpleMath::Vector3 rotationEuler = MathHelper::ConvertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
 
 			keyIndex = curveRX->KeyAdd(keyTime);
 			curveRX->KeySetValue(keyIndex, rotationEuler.x);
@@ -2064,14 +2063,14 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 {
 	bool status = true;
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Exporting animation %d (%s)\n", anim_id, export_path.filename().string().c_str());
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Exporting animation %d (%s)\n", anim_id, export_path.filename().string().c_str());
 
 	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
 	pExporter->SetFileExportVersion(FBX_2014_00_COMPATIBLE);
 
 	if (!pExporter->Initialize(export_path.string().c_str(), g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()))
 	{
-		Debug::Panic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", export_path.string().c_str());
+		RDebug::SystemPanic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", export_path.string().c_str());
 
 		return false;
 	}
@@ -2089,14 +2088,14 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	{
 		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, export_path, this->m_nmb.GetRig(0), true))
 		{
-			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
 		}
 	}
 
 	if (!CreateFbxTake(pScene, pMorphemeRig, &this->m_animFiles[anim_id], this->m_nmb.GetFilenameLookupTable()->GetAnimTake(anim_id)))
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 		status = false;
 	}
 
@@ -2113,7 +2112,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 {
 	bool status = true;
 
-	Debug::DebuggerMessage(Debug::LVL_DEBUG, "Exporting model to FBX for c%04d\n", this->m_chrId);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Exporting model to FBX for c%04d\n", this->m_chrId);
 
 	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
 	pExporter->SetFileExportVersion(FBX_2014_00_COMPATIBLE);
@@ -2125,7 +2124,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	if (!pExporter->Initialize(model_out.c_str(), g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()))
 	{
-		Debug::Panic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", model_out);
+		RDebug::SystemPanic("Application.cpp", "Failed to initialise FBX exporter (file=%s)\n", model_out);
 
 		return false;
 	}
@@ -2143,7 +2142,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_nmb.GetRig(0), true))
 		{
-			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 
 			status = false;
 		}
@@ -2154,7 +2153,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 		if (!CreateFbxModel(this, pScene, pBindPoses, pFlverSkeleton, model_out, nullptr, false))
 		{
-			Debug::DebuggerMessage(Debug::LVL_ERROR, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 
 			status = false;
 		}
@@ -2171,7 +2170,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 bool Application::ExportToXMD(PWSTR export_path)
 {
-	Debug::DebuggerMessage(Debug::LVL_ERROR, "XMD export not yet implemented\n");
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "XMD export not yet implemented\n");
 
 	return false;
 }
@@ -2263,7 +2262,7 @@ bool Application::ExportToFbxTest(PWSTR export_path)
 
 	if (!export_status)
 	{
-		Debug::Alert(Debug::LVL_ERROR, "Application.cpp", "Failed to initialise FBXExporter object\n");
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to initialise FBXExporter object\n");
 		return false;
 	}
 

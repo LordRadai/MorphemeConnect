@@ -3,7 +3,7 @@
 NodeAttribSourceAnim::NodeAttribSourceAnim(BYTE* data) : NodeAttribBase(data)
 {
     if (this->m_type != ATTRIB_TYPE_SOURCE_ANIM)
-        Debug::Panic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_type, ATTRIB_TYPE_SOURCE_ANIM);
+        RDebug::SystemPanic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_type, ATTRIB_TYPE_SOURCE_ANIM);
 
     this->m_pAnimFile = *(UINT64*)(data + 0x10);
     this->m_pVar8 = *(UINT64*)(data + 0x18);

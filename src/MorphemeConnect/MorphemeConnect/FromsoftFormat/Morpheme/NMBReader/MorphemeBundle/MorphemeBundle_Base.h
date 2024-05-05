@@ -5,7 +5,7 @@
 #include <sstream>
 #include <cstdint>
 #include <cassert>
-#include "../../Utils/MemReader/MemReader.h"
+#include "../../../Utils/MemReader/MemReader.h"
 
 enum AssetType
 {

@@ -1,4 +1,6 @@
 #include "MorphemeBundle_FileNameLookupTable.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 FileNameLookupTable::FileNameLookupTable() {}
 

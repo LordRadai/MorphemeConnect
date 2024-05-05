@@ -1,6 +1,6 @@
-#include <filesystem>
+#include "../../../framework.h"
+#include "../../../extern.h"
 #include "NMBReader.h"
-#include "../../../StringHelper/StringHelper.h"
 #include "../ME/ME.h"
 
 NMBReader::NMBReader(PWSTR pszFilePath)
@@ -123,7 +123,7 @@ AnimInterface* NMBReader::GetAnimationInterface(int idx)
 {
 	if (idx > this->m_animations.size())
 	{
-		Debug::Panic("NMBReader.cpp", "Animation at index %d exceeds the animation count %d (%s.nmb)\n", idx, this->GetAnimationCount(), this->GetFileName());
+		RDebug::SystemPanic("NMBReader.cpp", "Animation at index %d exceeds the animation count %d (%s.nmb)\n", idx, this->GetAnimationCount(), this->GetFileName());
 
 		return nullptr;
 	}
@@ -136,7 +136,7 @@ MorphemeBundle* NMBReader::GetBundle(int idx)
 {
 	if (idx > this->m_bundles.size())
 	{
-		Debug::Panic("NMBReader.cpp", "Bundle at index %d exceeds the bundle count %d (%s.nmb)\n", idx, this->GetBundleCount(), this->GetFileName());
+		RDebug::SystemPanic("NMBReader.cpp", "Bundle at index %d exceeds the bundle count %d (%s.nmb)\n", idx, this->GetBundleCount(), this->GetFileName());
 
 		return nullptr;
 	}
@@ -297,7 +297,7 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		}
 		else
 		{
-			Debug::Alert(Debug::LVL_ERROR, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size()\n");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size()\n");
 			return false;
 		}
 
@@ -340,7 +340,7 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 
 	if (m_node->m_nodeTypeID != NodeType_NodeAnimSyncEvents)
 	{
-		Debug::DebuggerMessage(Debug::LVL_ERROR, "Node is not of the correct type\n");
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Node is not of the correct type\n");
 		return "";
 	}
 
@@ -364,7 +364,7 @@ MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
 			return &this->m_eventTracks[i];
 	}
 
-	Debug::DebuggerMessage(Debug::LVL_WARN, "There is no EventTrack bundle with the matching signature (signature=%d)\n", signature);
+	RDebug::DebuggerOut(g_logLevel, MsgLevel_Warn, "There is no EventTrack bundle with the matching signature (signature=%d)\n", signature);
 
 	return nullptr;
 }

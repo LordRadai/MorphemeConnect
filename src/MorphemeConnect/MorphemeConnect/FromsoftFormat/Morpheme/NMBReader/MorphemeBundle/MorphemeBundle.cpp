@@ -1,5 +1,6 @@
 #include "MorphemeBundle.h"
-#include "../../../DebugOutput/Debug.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 //define BUNDLE_DEBUG to log to console the read packets. Not recommended unless you think you're getting invalid results
 //#define BUNDLE_DEBUG 

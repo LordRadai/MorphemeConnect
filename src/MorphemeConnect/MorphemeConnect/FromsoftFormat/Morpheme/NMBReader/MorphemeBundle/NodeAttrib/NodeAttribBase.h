@@ -3,8 +3,9 @@
 #include <Windows.h>
 #include <vector>
 #include <fstream>
-#include "../../../Utils/MemReader/MemReader.h"
-#include "../../../../DebugOutput/Debug.h"
+#include "../../../../Utils/MemReader/MemReader.h"
+#include "../../../../../framework.h"
+#include "../../../../../extern.h"
 
 enum AttribType : short
 {

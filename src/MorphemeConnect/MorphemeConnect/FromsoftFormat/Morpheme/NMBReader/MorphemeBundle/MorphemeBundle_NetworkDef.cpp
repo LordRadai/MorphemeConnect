@@ -1,4 +1,6 @@
 #include "MorphemeBundle_NetworkDef.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 NodeAttribBase* NodeAttribFactory(NodeDataSet data_set, BYTE* data)
 {

@@ -1,5 +1,6 @@
 #include "FlverModel.h"
-#include "../StringHelper/StringHelper.h"
+#include "../framework.h"
+#include "../extern.h"
 
 FlverModel::FlverModel()
 {

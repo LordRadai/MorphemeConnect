@@ -25,6 +25,7 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+MsgLevel g_logLevel = MsgLevel_Debug;
 Application g_morphemeConnect;
 Scene g_preview;
 TaeTemplate g_taeTemplate;
@@ -99,7 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     catch (const std::exception& exc)
     {
-        Debug::Alert(Debug::LVL_ERROR, "MorphemeConnect.cpp", exc.what());
+        RDebug::SystemAlert(g_logLevel, MsgLevel_Debug, "MorphemeConnect.cpp", exc.what());
     }
 
     initImGui(hwnd);

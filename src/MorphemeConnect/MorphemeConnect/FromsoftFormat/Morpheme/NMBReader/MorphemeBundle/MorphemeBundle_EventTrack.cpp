@@ -1,4 +1,6 @@
 #include "MorphemeBundle_EventTrack.h"
+#include "../../../../framework.h"
+#include "../../../../extern.h"
 
 MorphemeBundle_EventTrack::MorphemeBundle_EventTrack()
 {

@@ -20,6 +20,7 @@
 #include <DirectXColors.h>
 
 #include <nlohmann/json.hpp>
+#include <fbxsdk.h>
 
 //ImGui
 #include "imgui/imgui.h"

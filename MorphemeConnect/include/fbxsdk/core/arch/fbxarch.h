@@ -220,7 +220,7 @@
 #endif
 
 #if defined(FBXSDK_ENV_WIN)
-	#define snprintf _snprintf //for stdio.h platform compatibility
+	//#define snprintf _snprintf //for stdio.h platform compatibility
 #endif
 
 #if !defined(FBXSDK_COMPILER_MSC)

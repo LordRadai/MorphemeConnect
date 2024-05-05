@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="src\fromloader\src\util\stringio\simple_sjis_table.bin">
       <Filter>File di risorse</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp">
@@ -480,6 +480,1578 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\targetver.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxalloc.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxarch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxdebug.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxnew.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxstdcompliant.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxtypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxarray.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxbitset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxcharptrset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxcontainerallocators.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxdynamicarray.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxfile.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxfolder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxhashmap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxintrusivelist.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmemorypool.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmultimap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxpair.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxredblacktree.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstatus.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstring.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstringlist.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxtime.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxtimecode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxutils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxaffinematrix.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxdualquaternion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxmath.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxmatrix.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxquaternion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxtransforms.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxvector2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxvector4.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxatomic.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxclock.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxsync.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxthread.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxclassid.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxconnectionpoint.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxdatatypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxemitter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxevent.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxeventhandler.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxlistener.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxloadingstrategy.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxmanager.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxmodule.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxobject.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxperipheral.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxplugin.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxplugincontainer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxproperty.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertydef.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertyhandle.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertypage.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertytypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxquery.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxqueryevent.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingdirectory.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingfilename.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxstream.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxsymbol.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxsystemunit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxxref.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaanimationelement.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaelement.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaiostream.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladanamespace.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladatokens.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladautils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxreadercollada14.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxwritercollada14.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxio.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx5.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx6.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx7.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx5.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx6.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx7.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxbase64coder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxcallbacks.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxexporter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxexternaldocreflistener.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxfiletokens.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxglobalcamerasettings.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxgloballightsettings.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxglobalsettings.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxgobo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbximporter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiobase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiopluginregistry.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiosettings.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiosettingspath.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxprogress.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxreader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxstatistics.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxstatisticsfbx.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxwriter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurve.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvebase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvefilters.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvenode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalclassic.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalstate.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevaluator.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimlayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimstack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimutilities.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacternodename.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacterpose.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraint.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintaim.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintcustom.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintparent.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintposition.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintrotation.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintscale.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintsinglechainik.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintutils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcontrolset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxhik2fbxcharacter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshape.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshapechannel.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcache.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcachedeffect.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamera.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamerastereo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcameraswitcher.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcluster.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxdeformer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgenericnode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometry.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometrybase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometryweightedmap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayercontainer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlight.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlimitsutilities.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxline.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlodgroup.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmarker.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmesh.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnodeattribute.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnull.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbs.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbscurve.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbssurface.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxopticalreference.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxpatch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxproceduralgeometry.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxshape.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskeleton.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskin.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdeformer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdiv.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxtrimnurbssurface.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxvertexcachedeformer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxweightedmapping.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingoperator.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingsentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtablebase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtableentry.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxconstantentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxfiletexture.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementation.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationfilter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationutils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayeredtexture.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayerentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxoperatorentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxproceduraltexture.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxpropertyentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsemanticentryview.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxshadingconventions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacelambert.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerial.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerialutils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacephong.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxtexture.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaudio.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaudiolayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaxissystem.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcollection.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcollectionexclusive.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcontainer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcontainertemplate.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdisplaylayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdocument.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdocumentinfo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxenvironment.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxgroupname.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxlibrary.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxmediaclip.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectfilter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectmetadata.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectscontainer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxpose.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxreference.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxscene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxselectionnode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxselectionset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxtakeinfo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxthumbnail.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxvideo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxclonemanager.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxdeformationsevaluator.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxembeddedfilesaccumulator.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxgeometryconverter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxmanipulators.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxmaterialconverter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxnamehandler.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessor.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorshaderdependency.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxref.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxrefuserlib.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategy.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategybase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx5.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx6.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx7.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyutilities.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrootnodeutility.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxscenecheckutility.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxusernotification.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_def.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_nsbegin.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_nsend.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_version.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\c14n.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\catalog.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\chvalid.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\debugXML.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\dict.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\DOCBparser.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\encoding.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\entities.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\globals.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\hash.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\HTMLparser.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\HTMLtree.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\list.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\nanoftp.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\nanohttp.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\parser.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\parserInternals.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\pattern.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\relaxng.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\SAX.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\SAX2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\schemasInternals.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\schematron.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\threads.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\tree.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\uri.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\valid.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xinclude.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xlink.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlautomata.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlerror.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlexports.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlIO.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlmemory.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlmodule.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlreader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlregexp.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlsave.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlschemas.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlschemastypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlstring.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlunicode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlversion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlwin32version.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlwriter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpath.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpathInternals.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpointer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\from_json.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\to_chars.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\to_json.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\binary_reader.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\input_adapters.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\json_sax.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\lexer.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\parser.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\position_t.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\internal_iterator.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iter_impl.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iteration_proxy.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iterator_traits.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\json_reverse_iterator.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\primitive_iterator.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\call_std\begin.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\call_std\end.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\cpp_future.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\detected.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\identity_tag.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\is_sax.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\std_fs.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\type_traits.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\void_t.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\binary_writer.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\output_adapters.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\serializer.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\abi_macros.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\exceptions.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\hash.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\json_pointer.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\json_ref.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\macro_scope.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\macro_unscope.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\string_concat.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\string_escape.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\value_t.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley_undef.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\adl_serializer.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\byte_container_with_subtype.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\json.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\json_fwd.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\ordered_map.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\alphaindex.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\appendable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\basictz.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\brkiter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestream.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestrie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestriebuilder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\calendar.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\caniter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\casemap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\char16ptr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\chariter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\choicfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\coleitr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\coll.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\compactdecimalformat.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\curramt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\currpinf.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\currunit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\datefmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dbbi.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dcfmtsym.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\decimfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\displayoptions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\docmain.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtfmtsym.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtintrv.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtitvfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtitvinf.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtptngen.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtrule.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\edits.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\enumset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\errorcode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fieldpos.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\filteredbrk.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fmtable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\format.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\formattednumber.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\formattedvalue.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fpositer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\gender.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\gregocal.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\icudataver.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\icuplug.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\idna.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\listformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localebuilder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localematcher.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localpointer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\locdspnm.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\locid.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measunit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measure.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\messagepattern.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\msgfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\normalizer2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\normlzr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\nounit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numberformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numberrangeformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numsys.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\parseerr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\parsepos.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\platform.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\plurfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\plurrule.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ptypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\putil.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbbi.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbnf.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbtz.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\regex.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\region.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\reldatefmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rep.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\resbund.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\schriter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\scientificnumberformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\search.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\selfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simpleformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simplenumberformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simpletz.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\smpdtfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\sortkey.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\std_string.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\strenum.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringoptions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringpiece.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringtriebuilder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stsearch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\symtable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tblcoll.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\timezone.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmunit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmutamt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmutfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\translit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tzfmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tznames.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tzrule.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tztrans.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubidi.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubiditransform.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubrk.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucal.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucasemap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucat.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uchar.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucharstrie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucharstriebuilder.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uchriter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uclean.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv_cb.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv_err.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnvsel.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucol.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucoleitr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uconfig.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucpmap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucptrie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucsdet.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucurr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udat.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udata.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udateintervalformat.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udatpg.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udisplaycontext.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udisplayoptions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uenum.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ufieldpositer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattednumber.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattedvalue.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ugender.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uidna.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uiter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uldnames.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ulistformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uloc.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ulocdata.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umachine.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umisc.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umsg.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umutablecptrie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unifilt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unifunct.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unimatch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unirepl.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uniset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unistr.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unorm.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unorm2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unum.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberoptions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberrangeformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumsys.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uobject.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\upluralrules.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uregex.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uregion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ureldatefmt.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\urename.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\urep.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ures.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uscript.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usearch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uset.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usetiter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ushape.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usimplenumberformatter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uspoof.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usprep.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustdio.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustream.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustring.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustringtrie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utext.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf_old.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf8.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf16.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf32.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utmscale.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utrace.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utrans.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utypes.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uvernum.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uversion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\vtzone.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zlib\zconf.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zlib\zlib.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

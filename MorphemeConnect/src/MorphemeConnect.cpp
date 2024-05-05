@@ -9,7 +9,6 @@
 #include "Scene/Scene.h"
 #include "TaeTemplate/TaeTemplate.h"
 #include "ProcessReader/ProcessReader.h"
-#include <fbxsdk.h>
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;

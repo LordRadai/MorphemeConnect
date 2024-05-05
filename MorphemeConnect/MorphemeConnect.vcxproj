@@ -156,7 +156,7 @@
     <IncludePath>$(ProjectDir)include\zlib;$(ProjectDir)include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(ProjectDir)lib\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)lib\Release;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)include\zlib;$(ProjectDir)include\;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)build\$(Platform)\$(Configuration)\bin\</OutDir>
     <IntDir>$(ProjectDir)build\$(Platform)\$(Configuration)\</IntDir>

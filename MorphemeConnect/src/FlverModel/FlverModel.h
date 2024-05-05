@@ -5,13 +5,13 @@
 #include <dxgi.h>
 #include <string>
 #include <vector>
+#include <fbxsdk.h>
 
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 
 #include "../FromSoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../fromloader/fromloader.h"
-#include "fbxsdk.h"
 
 using namespace cfr;
 

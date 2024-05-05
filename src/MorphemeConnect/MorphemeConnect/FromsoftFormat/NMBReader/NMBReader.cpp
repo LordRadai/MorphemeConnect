@@ -1,7 +1,7 @@
 #include <filesystem>
 #include "NMBReader.h"
 #include "../../StringHelper/StringHelper.h"
-#include "TinyXML/tinyxml2.h"
+#include "ME/ME.h"
 
 NMBReader::NMBReader(PWSTR pszFilePath)
 {
@@ -461,227 +461,38 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
 			NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
 
-			tinyxml2::XMLElement* pRoot = out.NewElement("TakeList");
-			pRoot->SetAttribute("sourceAnimFile", this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str());
-			pRoot->SetAttribute("version", 1);
+			XMLElement* pTakeList = ME::TakeListXML((XMLElement*)&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
+			XMLElement* pTake = ME::TakeExportXML(pTakeList, this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->m_bool, source_anim->m_animLen, 30.f, source_anim->m_clipStart, source_anim->m_clipEnd);
 
-			tinyxml2::XMLElement* take = out.NewElement("Take");
-			take->SetAttribute("name", this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str());
-
-			tinyxml2::XMLElement* attributes = out.NewElement("Attributes");
-			take->InsertEndChild(attributes);
-
-			tinyxml2::XMLElement* duration = out.NewElement("secondDuration");
-			duration->SetAttribute("type", "double");
-			duration->SetText(source_anim->m_animLen);
-
-			attributes->InsertEndChild(duration);
-
-			tinyxml2::XMLElement* fps = out.NewElement("fps");
-			fps->SetAttribute("type", "double");
-			fps->SetText(30);
-
-			attributes->InsertEndChild(fps);
-
-			tinyxml2::XMLElement* clipStart = out.NewElement("clipStart");
-			clipStart->SetAttribute("type", "double");
-			clipStart->SetText(source_anim->m_clipStart);
-
-			attributes->InsertEndChild(clipStart);
-
-			tinyxml2::XMLElement* clipEnd = out.NewElement("clipEnd");
-			clipEnd->SetAttribute("type", "double");
-			clipEnd->SetText(source_anim->m_clipEnd);
-
-			attributes->InsertEndChild(clipEnd);
-
-			tinyxml2::XMLElement* loop = out.NewElement("loop");
-			loop->SetAttribute("type", "bool");
-
-			if (is_loop->m_bool)
-				loop->SetText("true");
-			else
-				loop->SetText("false");
-
-			attributes->InsertEndChild(loop);
-
-			take->InsertEndChild(attributes);
-
-			int track_count = 0;
-			for (size_t i = 0; i < 3; i++)
-				track_count += event_track->m_eventTracks[i].m_trackCount;
-
-			if (track_count > 0)
+			for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
 			{
-				for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
-				{
-					MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
 
-					if (event_tracks)
-					{
-						tinyxml2::XMLElement* DiscreteEventTrack = out.NewElement("DiscreteEventTrack");
+				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
 
-						DiscreteEventTrack->SetAttribute("name", event_tracks->m_data->m_trackName);
-						DiscreteEventTrack->SetAttribute("guid", event_tracks->GetGUID().c_str());
-						DiscreteEventTrack->SetAttribute("channelID", event_tracks->m_data->m_channelId);
-
-						tinyxml2::XMLElement* attributeET = out.NewElement("Attributes");
-
-						DiscreteEventTrack->InsertEndChild(attributeET);
-
-						tinyxml2::XMLElement* userDataET = out.NewElement("userData");
-						userDataET->SetAttribute("type", "uint");
-						userDataET->SetText(event_tracks->m_data->m_eventId);
-
-						attributeET->InsertEndChild(userDataET);
-
-						for (size_t eventIdx = 0; eventIdx < event_tracks->m_data->m_numEvents; eventIdx++)
-						{
-							tinyxml2::XMLElement* discreteEvent = out.NewElement("DiscreteEvent");
-							discreteEvent->SetAttribute("index", eventIdx);
-
-							DiscreteEventTrack->InsertEndChild(discreteEvent);
-
-							tinyxml2::XMLElement* attributesEvent = out.NewElement("Attributes");
-
-							tinyxml2::XMLElement* userData = out.NewElement("userData");
-							userData->SetAttribute("type", "uint");
-							userData->SetText(event_tracks->m_data->m_events[eventIdx].m_value);
-
-							attributesEvent->InsertEndChild(userData);
-
-							tinyxml2::XMLElement* startTime = out.NewElement("startTime");
-							startTime->SetAttribute("type", "double");
-							startTime->SetText(event_tracks->m_data->m_events[eventIdx].m_start);
-
-							attributesEvent->InsertEndChild(startTime);
-
-							discreteEvent->InsertEndChild(attributesEvent);
-						}
-
-						take->InsertEndChild(DiscreteEventTrack);
-					}
-				}
-
-				for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
-				{
-					MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
-
-					if (event_tracks)
-					{
-						tinyxml2::XMLElement* CurveEventTrack = out.NewElement("CurveEventTrack");
-
-						CurveEventTrack->SetAttribute("name", event_tracks->m_data->m_trackName);
-						CurveEventTrack->SetAttribute("guid", event_tracks->GetGUID().c_str());
-						CurveEventTrack->SetAttribute("channelID", event_tracks->m_data->m_channelId);
-
-						tinyxml2::XMLElement* attributeET = out.NewElement("Attributes");
-
-						CurveEventTrack->InsertEndChild(attributeET);
-
-						tinyxml2::XMLElement* userDataET = out.NewElement("userData");
-						userDataET->SetAttribute("type", "uint");
-						userDataET->SetText(event_tracks->m_data->m_eventId);
-
-						attributeET->InsertEndChild(userDataET);
-
-						for (size_t eventIdx = 0; eventIdx < event_tracks->m_data->m_numEvents; eventIdx++)
-						{
-							tinyxml2::XMLElement* curveEvent = out.NewElement("CurveEvent");
-							curveEvent->SetAttribute("index", eventIdx);
-
-							CurveEventTrack->InsertEndChild(curveEvent);
-
-							tinyxml2::XMLElement* attributesEvent = out.NewElement("Attributes");
-
-							tinyxml2::XMLElement* userData = out.NewElement("userData");
-							userData->SetAttribute("type", "uint");
-							userData->SetText(event_tracks->m_data->m_events[eventIdx].m_value);
-
-							attributesEvent->InsertEndChild(userData);
-
-							tinyxml2::XMLElement* startTime = out.NewElement("startTime");
-							startTime->SetAttribute("type", "double");
-							startTime->SetText(event_tracks->m_data->m_events[eventIdx].m_start);
-
-							attributesEvent->InsertEndChild(startTime);
-
-							tinyxml2::XMLElement* duration = out.NewElement("duration");
-							duration->SetAttribute("type", "double");
-							duration->SetText(event_tracks->m_data->m_events[eventIdx].m_duration);
-
-							attributesEvent->InsertEndChild(duration);
-
-							curveEvent->InsertEndChild(attributesEvent);
-						}
-
-						take->InsertEndChild(CurveEventTrack);
-					}
-				}
-
-				for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
-				{
-					MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
-
-					if (event_tracks)
-					{
-						tinyxml2::XMLElement* DurationEventTrack = out.NewElement("DurationEventTrack");
-
-						DurationEventTrack->SetAttribute("name", event_tracks->m_data->m_trackName);
-						DurationEventTrack->SetAttribute("guid", event_tracks->GetGUID().c_str());
-						DurationEventTrack->SetAttribute("channelID", event_tracks->m_data->m_channelId);
-
-						tinyxml2::XMLElement* attributeET = out.NewElement("Attributes");
-
-						DurationEventTrack->InsertEndChild(attributeET);
-
-						tinyxml2::XMLElement* userDataET = out.NewElement("userData");
-						userDataET->SetAttribute("type", "uint");
-						userDataET->SetText(event_tracks->m_data->m_eventId);
-
-						attributeET->InsertEndChild(userDataET);
-
-						for (size_t eventIdx = 0; eventIdx < event_tracks->m_data->m_numEvents; eventIdx++)
-						{
-							tinyxml2::XMLElement* durationEvent = out.NewElement("DurationEvent");
-							durationEvent->SetAttribute("index", eventIdx);
-
-							DurationEventTrack->InsertEndChild(durationEvent);
-
-							tinyxml2::XMLElement* attributesEvent = out.NewElement("Attributes");
-
-							tinyxml2::XMLElement* userData = out.NewElement("userData");
-							userData->SetAttribute("type", "uint");
-							userData->SetText(event_tracks->m_data->m_events[eventIdx].m_value);
-
-							attributesEvent->InsertEndChild(userData);
-
-							tinyxml2::XMLElement* startTime = out.NewElement("startTime");
-							startTime->SetAttribute("type", "double");
-							startTime->SetText(event_tracks->m_data->m_events[eventIdx].m_start);
-
-							attributesEvent->InsertEndChild(startTime);
-
-							tinyxml2::XMLElement* duration = out.NewElement("duration");
-							duration->SetAttribute("type", "double");
-							duration->SetText(event_tracks->m_data->m_events[eventIdx].m_duration);
-
-							attributesEvent->InsertEndChild(duration);
-
-							durationEvent->InsertEndChild(attributesEvent);
-						}
-
-						take->InsertEndChild(DurationEventTrack);
-					}
-				}
-			}
-			else
-			{
-				Debug::DebuggerMessage(Debug::LVL_DEBUG, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
+				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
+					ME::DiscreteEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start);
 			}
 
-			pRoot->InsertEndChild(take);
-			out.InsertEndChild(pRoot);
+			for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
+			{
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
+
+				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
+
+				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
+					ME::CurveEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+			}
+
+			for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
+			{
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+
+				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
+
+				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
+					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+			}
 
 			std::wstring filename = std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\";
 
@@ -695,5 +506,10 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 		}
 	}
 
+	return false;
+}
+
+bool NMBReader::NetworkExportXML(PWSTR pszOutFilePath)
+{
 	return false;
 }

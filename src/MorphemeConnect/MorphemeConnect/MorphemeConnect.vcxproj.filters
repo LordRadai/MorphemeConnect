@@ -540,6 +540,12 @@
     <ClInclude Include="FromsoftFormat\Utils\MemReader\MemReader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\ME\TinyXML\tinyxml2.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\NMBReader\ME\ME.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imsequencer\ImSequencer.cpp">
@@ -722,9 +728,6 @@
     <ClCompile Include="imgui\custom\imgui_custom_widget.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="FromsoftFormat\NMBReader\TinyXML\tinyxml2.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="FlverModel\FlverModel.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -735,6 +738,12 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Math\Math.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\ME\TinyXML\tinyxml2.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\NMBReader\ME\ME.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

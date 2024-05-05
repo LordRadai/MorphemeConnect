@@ -60,18 +60,18 @@ XMLElement* ME::TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop,
 	return pTake;
 }
 
-XMLElement* ME::DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::DiscreteEventTrackExportXML(XMLElement* pRoot, std::string name, std::string guid, int channelId, int userData)
 {
 	XMLElement* pEventTrack = pRoot->InsertNewChildElement("DiscreteEventTrack");
-	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	pEventTrack->SetAttribute("name", name.c_str());
+	pEventTrack->SetAttribute("guid", guid.c_str());
+	pEventTrack->SetAttribute("channelID", channelId);
 
 	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
 	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
 	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(event_track->m_data->m_eventId);
+	pUserData->SetText(userData);
 
 	return pEventTrack;
 }
@@ -94,18 +94,18 @@ XMLElement* ME::DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int use
 	return pEvent;
 }
 
-XMLElement* ME::CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::CurveEventTrackExportXML(XMLElement* pRoot, std::string name, std::string guid, int channelId, int userData)
 {
 	XMLElement* pEventTrack = pRoot->InsertNewChildElement("CurveEventTrack");
-	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	pEventTrack->SetAttribute("name", name.c_str());
+	pEventTrack->SetAttribute("guid", guid.c_str());
+	pEventTrack->SetAttribute("channelID", channelId);
 
 	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
 	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
 	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(event_track->m_data->m_eventId);
+	pUserData->SetText(userData);
 
 	return pEventTrack;
 }
@@ -132,18 +132,18 @@ XMLElement* ME::CurveEventExportXML(XMLElement* pRoot, int event_idx, int user_d
 	return pEvent;
 }
 
-XMLElement* ME::DurationEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track)
+XMLElement* ME::DurationEventTrackExportXML(XMLElement* pRoot, std::string name, std::string guid, int channelId, int userData)
 {
 	XMLElement* pEventTrack = pRoot->InsertNewChildElement("DurationEventTrack");
-	pEventTrack->SetAttribute("name", event_track->m_data->m_trackName);
-	pEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
-	pEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
+	pEventTrack->SetAttribute("name", name.c_str());
+	pEventTrack->SetAttribute("guid", guid.c_str());
+	pEventTrack->SetAttribute("channelID", channelId);
 
 	XMLElement* pAttributes = pEventTrack->InsertNewChildElement("Attributes");
 
 	XMLElement* pUserData = pAttributes->InsertNewChildElement("userData");
 	pUserData->SetAttribute("type", "uint");
-	pUserData->SetText(event_track->m_data->m_eventId);
+	pUserData->SetText(userData);
 
 	return pEventTrack;
 }

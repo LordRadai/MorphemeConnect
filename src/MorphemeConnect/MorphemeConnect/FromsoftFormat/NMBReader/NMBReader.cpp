@@ -468,7 +468,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks);
+				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
 					ME::DiscreteEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start);
@@ -478,18 +478,17 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks);
+				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
 					ME::CurveEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
 			}
 
-
 			for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
 			{
 				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks);
+				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
 
 				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
 					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);

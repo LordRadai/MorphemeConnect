@@ -4,7 +4,7 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-DirectX::XMMATRIX MathHelper::GetRotationMatrixFromWorldMatrix(DirectX::XMMATRIX m_world)
+DirectX::XMMATRIX RMath::GetRotationMatrixFromWorldMatrix(DirectX::XMMATRIX m_world)
 {
 	DirectX::XMMATRIX rotation = m_world;
 
@@ -16,7 +16,7 @@ DirectX::XMMATRIX MathHelper::GetRotationMatrixFromWorldMatrix(DirectX::XMMATRIX
 	return rotation;
 }
 
-DirectX::XMMATRIX MathHelper::GetRotationFrom2Vectors(DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB)
+DirectX::XMMATRIX RMath::GetRotationFrom2Vectors(DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB)
 {
 	XMMATRIX result = XMMatrixIdentity();
 
@@ -53,7 +53,7 @@ DirectX::XMMATRIX MathHelper::GetRotationFrom2Vectors(DirectX::SimpleMath::Vecto
 	return result;
 }
 
-DirectX::SimpleMath::Vector3 MathHelper::GetYawPitchRollFromMatrix(DirectX::XMMATRIX m_world)
+DirectX::SimpleMath::Vector3 RMath::GetYawPitchRollFromMatrix(DirectX::XMMATRIX m_world)
 {
 	DirectX::XMVECTOR from(DirectX::XMVectorSet(m_world.r[0].m128_f32[1], m_world.r[2].m128_f32[0], 0.0f, 0.0f));
 	DirectX::XMVECTOR to(DirectX::XMVectorSet(m_world.r[1].m128_f32[1], m_world.r[2].m128_f32[2], 0.0f, 0.0f));
@@ -66,9 +66,9 @@ DirectX::SimpleMath::Vector3 MathHelper::GetYawPitchRollFromMatrix(DirectX::XMMA
 	return DirectX::SimpleMath::Vector3(roll, pitch, yaw);
 }
 
-DirectX::SimpleMath::Vector3 MathHelper::GetLookAtVectorFromMatrix(DirectX::XMMATRIX m_world)
+DirectX::SimpleMath::Vector3 RMath::GetLookAtVectorFromMatrix(DirectX::XMMATRIX m_world)
 {
-	DirectX::XMMATRIX rotation = MathHelper::GetRotationMatrixFromWorldMatrix(m_world);
+	DirectX::XMMATRIX rotation = RMath::GetRotationMatrixFromWorldMatrix(m_world);
 
 	DirectX:XMVECTOR transformed_pos = DirectX::SimpleMath::Vector3(0, 0, 1);
 	transformed_pos = DirectX::XMVector3Transform(transformed_pos, rotation);
@@ -77,7 +77,7 @@ DirectX::SimpleMath::Vector3 MathHelper::GetLookAtVectorFromMatrix(DirectX::XMMA
 }
 
 //Converts quaternion to euler angles
-DirectX::SimpleMath::Vector3 MathHelper::ConvertQuatToEulerAngles(const DirectX::SimpleMath::Quaternion& quaternion)
+DirectX::SimpleMath::Vector3 RMath::ConvertQuatToEulerAngles(const DirectX::SimpleMath::Quaternion& quaternion)
 {
 	DirectX::SimpleMath::Vector3 eulerAngles;
 	DirectX::SimpleMath::Matrix rotationMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
@@ -89,24 +89,24 @@ DirectX::SimpleMath::Vector3 MathHelper::ConvertQuatToEulerAngles(const DirectX:
 	return eulerAngles;
 }
 
-inline float MathHelper::ConvertDegAngleToRad(float angle)
+inline float RMath::ConvertDegAngleToRad(float angle)
 {
 	return ((angle / 360.f) * XM_2PI);
 }
 
-inline float MathHelper::ConvertRadAngleToDeg(float angle)
+inline float RMath::ConvertRadAngleToDeg(float angle)
 {
 	return ((angle / XM_2PI) * 360.f);
 }
 
-UINT MathHelper::ExtractBits(int value, int shiftValue, int mask)
+UINT RMath::ExtractBits(int value, int shiftValue, int mask)
 {
 	UINT extractedBits = (UINT)(value >> shiftValue) & mask;
 
 	return (int)extractedBits;
 }
 
-UINT MathHelper::ConvertFloatColorToInt(DirectX::SimpleMath::Vector4 color)
+UINT RMath::ConvertFloatColorToInt(DirectX::SimpleMath::Vector4 color)
 {
 	BYTE red = color.x * 255;
 	BYTE green = color.y * 255;
@@ -117,13 +117,13 @@ UINT MathHelper::ConvertFloatColorToInt(DirectX::SimpleMath::Vector4 color)
 }
 
 //Converts floating point time value to discrete frame count
-float MathHelper::FrameToTime(int frame, int frameRate)
+float RMath::FrameToTime(int frame, int frameRate)
 {
 	return ((float)frame / (float)frameRate);
 }
 
 //Converts discrete frame count to a floating point time value
-int MathHelper::TimeToFrame(float time, int frameRate, bool round)
+int RMath::TimeToFrame(float time, int frameRate, bool round)
 {
 	float frame = (time * frameRate);
 

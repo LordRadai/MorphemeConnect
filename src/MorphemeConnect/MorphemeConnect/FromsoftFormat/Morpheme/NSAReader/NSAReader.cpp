@@ -81,9 +81,9 @@ AnimSourceNSA::ChannelPosQuantised::ChannelPosQuantised(ifstream* nsa)
 {
 	MemReader::Read(nsa, &this->m_sample);
 
-	this->m_x = MathHelper::ExtractBits(this->m_sample, 21, 0);
-	this->m_y = MathHelper::ExtractBits(this->m_sample, 10, 0x7FF);
-	this->m_z = MathHelper::ExtractBits(this->m_sample, 0, 0x3FF);
+	this->m_x = RMath::ExtractBits(this->m_sample, 21, 0);
+	this->m_y = RMath::ExtractBits(this->m_sample, 10, 0x7FF);
+	this->m_z = RMath::ExtractBits(this->m_sample, 0, 0x3FF);
 }
 
 //Dequantizes compressed translation

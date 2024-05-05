@@ -24,7 +24,7 @@
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
 
-namespace MathHelper
+namespace RMath
 {
 	DirectX::XMMATRIX GetRotationMatrixFromWorldMatrix(DirectX::XMMATRIX m_world);
 	DirectX::XMMATRIX GetRotationFrom2Vectors(DirectX::SimpleMath::Vector3 pointA, DirectX::SimpleMath::Vector3 pointB);

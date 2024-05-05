@@ -435,7 +435,7 @@ void Application::AssetsWindow()
 			for (int i = 0; i < this->m_eventTrackEditorFlags.m_taeList.size(); i++)
 			{
 				std::filesystem::path path = this->m_eventTrackEditorFlags.m_taeList[i];
-				std::string tae_file = StringHelper::ToNarrow(path.filename().c_str());
+				std::string tae_file = RString::ToNarrow(path.filename().c_str());
 
 				bool selected = (selected_tae_file_idx == i);
 				ImGui::Selectable(tae_file.c_str(), selected);
@@ -485,7 +485,7 @@ void Application::AssetsWindow()
 		if (ImGui::BeginTabItem("NSA"))
 		{
 			if (this->m_nmb.IsInitialised())
-				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
+				ImGui::Text(RString::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
 
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
@@ -532,7 +532,7 @@ void Application::AssetsWindow()
 		if (ImGui::BeginTabItem("Source XMD"))
 		{
 			if (this->m_nmb.IsInitialised())
-				ImGui::Text(StringHelper::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
+				ImGui::Text(RString::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
 
 			static ImGuiTextFilter filter;
 			ImGui::Text("Filter:");
@@ -631,7 +631,7 @@ void Application::AssetsWindow()
 					if (ImGui::Button("Add Selected"))
 					{
 						this->m_timeActFlags.m_addTimeActId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
-						this->m_timeActFlags.m_addTimeActLenght = MathHelper::FrameToTime(this->m_eventTrackEditor.m_frameMax);
+						this->m_timeActFlags.m_addTimeActLenght = RMath::FrameToTime(this->m_eventTrackEditor.m_frameMax);
 
 						if (this->m_tae.AddTimeAct(this->m_timeActFlags.m_addTimeActId, this->m_timeActFlags.m_addTimeActLenght) == false)
 							RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "TimeActReader.cpp", "TimeAct %d already exists\n", this->m_timeActFlags.m_addTimeActId);
@@ -686,7 +686,7 @@ void Application::AssetsWindow()
 
 			if (this->m_tae.m_init)
 			{
-				ImGui::Text(StringHelper::ToNarrow(this->m_tae.m_fileName.c_str()).c_str());
+				ImGui::Text(RString::ToNarrow(this->m_tae.m_fileName.c_str()).c_str());
 
 				if (ImGui::Button("Add"))
 					this->m_timeActFlags.m_addTimeAct = true;
@@ -781,7 +781,7 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(StringHelper::RemoveExtension(m_nmb.GetAnimationInterface(this->m_eventTrackEditor.m_animIdx)->m_sourceName).c_str());
+				ImGui::Text(RString::RemoveExtension(m_nmb.GetAnimationInterface(this->m_eventTrackEditor.m_animIdx)->m_sourceName).c_str());
 			else
 				ImGui::Text("");
 
@@ -801,8 +801,8 @@ void Application::EventTrackInfoWindow()
 		if ((this->m_eventTrackEditor.m_eventTracks.size() > 0) && (this->m_eventTrackEditorFlags.m_selectedTrack != -1 && this->m_eventTrackEditorFlags.m_selectedTrack < this->m_eventTrackEditor.m_eventTracks.size()) && (this->m_eventTrackEditorFlags.m_selectedEvent != -1 && this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack].m_numEvents))
 		{
 			EventTrackEditor::EventTrack* track = &this->m_eventTrackEditor.m_eventTracks[this->m_eventTrackEditorFlags.m_selectedTrack];
-			float startTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
-			float endTime = MathHelper::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float startTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
+			float endTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
 			ImGui::Text(track->m_name);
 			ImGui::PushItemWidth(100);
@@ -894,8 +894,8 @@ void Application::TimeActInfoWindow()
 		if ((this->m_timeActEditor.GetTrackCount() > 0) && (this->m_timeActEditorFlags.m_selectedTrack != -1 && this->m_timeActEditorFlags.m_selectedTrack < this->m_timeActEditor.GetTrackCount()) && (this->m_timeActEditorFlags.m_selectedEvent != -1 && this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack].m_count))
 		{
 			TimeActEditor::TimeActTrack* track = &this->m_timeActEditor.m_tracks[this->m_timeActEditorFlags.m_selectedTrack];
-			float startTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
-			float endTime = MathHelper::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float startTime = RMath::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
+			float endTime = RMath::FrameToTime(track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_timeActEditorFlags.m_selectedEvent].m_frameStart, 30);
 
 			ImGui::Text(m_timeActEditor.GetEventLabel(this->m_timeActEditorFlags.m_selectedTrack, this->m_timeActEditorFlags.m_selectedEvent, false).c_str());
 			ImGui::PushItemWidth(100);
@@ -1151,7 +1151,7 @@ void Application::CheckFlags()
 
 		for (int i = 0; i < this->m_animFiles.size(); i++)
 		{
-			std::filesystem::path anim_out = std::filesystem::path(StringHelper::ToNarrow(export_path) + "//Animations//" + this->m_nmb.GetSourceAnimName(i)).replace_extension(".fbx");
+			std::filesystem::path anim_out = std::filesystem::path(RString::ToNarrow(export_path) + "//Animations//" + this->m_nmb.GetSourceAnimName(i)).replace_extension(".fbx");
 			std::filesystem::create_directories(anim_out.parent_path());
 
 			if (!this->ExportAnimationToFbx(anim_out, i))
@@ -1227,8 +1227,8 @@ void Application::CheckFlags()
 							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
 
 							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = MathHelper::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
-							this->m_eventTrackEditor.m_frameMax = MathHelper::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
 
 							this->m_eventTrackEditor.m_animIdx = -1;
 
@@ -1283,8 +1283,8 @@ void Application::CheckFlags()
 										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 										{
 											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 
 											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
 
@@ -1348,7 +1348,7 @@ void Application::CheckFlags()
 				{
 					float trackLen = (float)timeact->m_taeData->m_animData->m_lenght / (float)timeact->m_taeData->m_animData->m_fps;
 
-					this->m_timeActEditor.m_frameMax = MathHelper::TimeToFrame(trackLen, 30);
+					this->m_timeActEditor.m_frameMax = RMath::TimeToFrame(trackLen, 30);
 					this->m_timeActEditor.m_frameMin = 0;
 
 					this->m_timeActEditor.SetEditedState(false);
@@ -1457,7 +1457,7 @@ void Application::LoadFile()
 									std::filesystem::path gamepath = pszFilePath;
 									std::wstring parent_path = gamepath.parent_path();
 
-									std::wstring anim_name = StringHelper::ToWide(this->m_nmb.GetFilenameLookupTable()->GetAnimName(i));
+									std::wstring anim_name = RString::ToWide(this->m_nmb.GetFilenameLookupTable()->GetAnimName(i));
 
 									std::wstring anim_path_str = parent_path + L"\\" + anim_name;
 
@@ -1528,7 +1528,7 @@ void Application::LoadFile()
 
 											m_bnd = BNDReader(dcx_path);
 
-											std::string filename = "c" + StringHelper::ToNarrow(string.c_str()) + ".flv";
+											std::string filename = "c" + RString::ToNarrow(string.c_str()) + ".flv";
 
 											bool found_model = false;
 
@@ -1618,7 +1618,7 @@ void Application::LoadFile()
 
 											m_bnd = BNDReader(dcx_path);
 
-											std::string filename = StringHelper::ToNarrow(obj_id.c_str()) + ".flv";
+											std::string filename = RString::ToNarrow(obj_id.c_str()) + ".flv";
 
 											bool found_model = false;
 
@@ -1865,20 +1865,20 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 		{
 			if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 			{
-				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = MathHelper::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
 				this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
 			}
 		}
 
 		if (this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue == this->m_timeActEditorFlags.m_taeId)
-			*current_frame_tae = MathHelper::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, MathHelper::FrameToTime(current_frame)), 30, false);
+			*current_frame_tae = RMath::TimeToFrame(m_timeActEditor.m_source->CalculatePlaybackPosFromMorphemeEventTrack(this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart, this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration, RMath::FrameToTime(current_frame)), 30, false);
 	}
 }
 
 inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel, int idx)
 {
-	std::string boneName = StringHelper::ToNarrow(pFlverModel->m_flver->bones[idx].name);
+	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
 	int boneIdx = pMorphemeRig->GetBoneIndex(boneName);
 
 	if (boneIdx == -1)
@@ -2014,7 +2014,7 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NSAReader*
 			curveTZ->KeySetValue(keyIndex, translation.z);
 			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
-			DirectX::SimpleMath::Vector3 rotationEuler = MathHelper::ConvertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
+			DirectX::SimpleMath::Vector3 rotationEuler = RMath::ConvertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
 
 			keyIndex = curveRX->KeyAdd(keyTime);
 			curveRX->KeySetValue(keyIndex, rotationEuler.x);

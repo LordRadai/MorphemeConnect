@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iomanip>
 
-namespace StringHelper
+namespace RString
 {
 	std::string ToNarrow(const wchar_t* s, char dfault = '?', const std::locale& loc = std::locale());
 	std::string FloatToString(float value, int precision = 3);

@@ -1,7 +1,7 @@
 #include <filesystem>
 #include "RString.h"
 
-std::string StringHelper::ToNarrow(const wchar_t* s, char dfault,
+std::string RString::ToNarrow(const wchar_t* s, char dfault,
 	const std::locale& loc)
 {
 	std::ostringstream stm;
@@ -12,19 +12,19 @@ std::string StringHelper::ToNarrow(const wchar_t* s, char dfault,
 	return stm.str();
 }
 
-std::string StringHelper::FloatToString(float value, int precision)
+std::string RString::FloatToString(float value, int precision)
 {
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(precision) << value;
 	return ss.str();
 }
 
-std::wstring StringHelper::ToWide(const std::string& s)
+std::wstring RString::ToWide(const std::string& s)
 {
 	return std::wstring(s.begin(), s.end());
 }
 
-std::string StringHelper::RemoveExtension(std::string filename)
+std::string RString::RemoveExtension(std::string filename)
 {
 	size_t lastdot = filename.find_last_of(".");
 
@@ -33,7 +33,7 @@ std::string StringHelper::RemoveExtension(std::string filename)
 	return filename.substr(0, lastdot);
 }
 
-std::string StringHelper::Replace(std::string str, std::string substr, std::string replacement)
+std::string RString::Replace(std::string str, std::string substr, std::string replacement)
 {
 	std::string new_str;
 	size_t pos = str.find(substr);

@@ -329,7 +329,7 @@ std::string NMBReader::GetSourceAnimName(int idx)
 	std::filesystem::path filepath = this->m_fileNameLookupTable.GetXmdSourceAnimFileName(idx);
 	std::filesystem::path filename = filepath.filename();
 
-	return StringHelper::ToNarrow(filename.c_str());
+	return RString::ToNarrow(filename.c_str());
 }
 
 //Returns the anim name inside an AnimSyncEvent node
@@ -496,7 +496,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 
 			std::filesystem::path filename(this->GetSourceAnimName(anim_id));
 
-			ME::SaveFile(&out, StringHelper::ToNarrow((std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\").c_str()), filename.replace_extension("").string(), false);
+			ME::SaveFile(&out, RString::ToNarrow((std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\").c_str()), filename.replace_extension("").string(), false);
 
 			return true;
 		}

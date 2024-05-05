@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "../../framework.h"
-#include "../../Math/Math.h"
+#include "../../extern.h"
 
 using namespace DirectX;
 using namespace SimpleMath;

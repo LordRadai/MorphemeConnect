@@ -9,8 +9,8 @@ namespace ME
 {
 	void NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UINT parent_id, UINT type_id, bool persistent, bool downstream_multiply_connected);
 	
-	void TakeListXML(tinyxml2::XMLDocument* pDoc, std::string name);
-	void TakeExportXML(XMLElement* pRoot, std::string name, NodeAttribBool* is_loop, NodeAttribSourceAnim* source_anim, NodeAttribSourceEventTrack* event_track);
+	void TakeListXML(tinyxml2::XMLDocument* pDoc, std::string name, int version);
+	void TakeExportXML(XMLElement* pRoot, std::string name, bool is_loop, float duration, float fps, float clipStart, float clipEnd);
 	void DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track);
 	void DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int user_data, float start_time);
 	void CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* event_track);

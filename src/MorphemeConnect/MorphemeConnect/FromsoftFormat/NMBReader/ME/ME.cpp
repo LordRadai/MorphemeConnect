@@ -287,8 +287,10 @@ XMLElement* ME::CharacterControllerExportXML::SetIsVisible(XMLElement* pRoot, bo
 
 XMLElement* ME::CharacterControllerExportXML::SetSkinWidth(XMLElement* pRoot, float skinWidth)
 {
-	XMLElement* pShape = pRoot->InsertNewChildElement("SkinWidth");
-	ME::AttributeExportXML::SetAsDouble(pShape, skinWidth);
+	XMLElement* pSkinWidth = pRoot->InsertNewChildElement("SkinWidth");
+	ME::AttributeExportXML::SetAsDouble(pSkinWidth, skinWidth);
+
+	return pSkinWidth;
 }
 
 XMLElement* ME::CharacterControllerExportXML::SetMaxPushForce(XMLElement* pRoot, float maxPushForce)

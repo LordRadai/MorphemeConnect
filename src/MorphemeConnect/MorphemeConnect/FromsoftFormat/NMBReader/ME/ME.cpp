@@ -61,9 +61,9 @@ void ME::DiscreteEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrac
 	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
 	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = pRoot->InsertNewChildElement("userData");
+	XMLElement* userData = attributeET->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
 	userData->SetText(event_track->m_data->m_eventId);
 }
@@ -73,7 +73,7 @@ void ME::DiscreteEventExportXML(XMLElement* pRoot, int event_idx, int user_data,
 	XMLElement* discreteEvent = pRoot->InsertNewChildElement("DiscreteEvent");
 	discreteEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
 
 	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
@@ -91,9 +91,9 @@ void ME::CurveEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrack* 
 	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
 	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = pRoot->InsertNewChildElement("userData");
+	XMLElement* userData = attributeET->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
 	userData->SetText(event_track->m_data->m_eventId);
 }
@@ -103,7 +103,7 @@ void ME::CurveEventExportXML(XMLElement* pRoot, int event_idx, int user_data, fl
 	XMLElement* discreteEvent = pRoot->InsertNewChildElement("CurveEvent");
 	discreteEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
 
 	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
@@ -125,9 +125,9 @@ void ME::DurationEventTrackExportXML(XMLElement* pRoot, MorphemeBundle_EventTrac
 	discreteEventTrack->SetAttribute("guid", event_track->GetGUID().c_str());
 	discreteEventTrack->SetAttribute("channelID", event_track->m_data->m_channelId);
 
-	XMLElement* attributeET = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributeET = discreteEventTrack->InsertNewChildElement("Attributes");
 
-	XMLElement* userData = pRoot->InsertNewChildElement("userData");
+	XMLElement* userData = attributeET->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");
 	userData->SetText(event_track->m_data->m_eventId);
 }
@@ -137,7 +137,7 @@ void ME::DurationEventExportXML(XMLElement* pRoot, int event_idx, int user_data,
 	XMLElement* discreteEvent = pRoot->InsertNewChildElement("DurationEvent");
 	discreteEvent->SetAttribute("index", event_idx);
 
-	XMLElement* attributesEvent = pRoot->InsertNewChildElement("Attributes");
+	XMLElement* attributesEvent = discreteEvent->InsertNewChildElement("Attributes");
 
 	XMLElement* userData = attributesEvent->InsertNewChildElement("userData");
 	userData->SetAttribute("type", "uint");

@@ -3,16 +3,16 @@
 XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT network_id, UINT parent_id, UINT type_id, bool persistent, bool downstream_multiply_connected)
 {
 	XMLElement* pNode = pRoot->InsertNewChildElement("Node");
-	pRoot->SetAttribute("name", name.c_str());
-	pRoot->SetAttribute("networkID", network_id);
-	pRoot->SetAttribute("downstreamParentID", parent_id);
-	pRoot->SetAttribute("typeID", type_id);
+	pNode->SetAttribute("name", name.c_str());
+	pNode->SetAttribute("networkID", network_id);
+	pNode->SetAttribute("downstreamParentID", parent_id);
+	pNode->SetAttribute("typeID", type_id);
 
 	if (persistent)
-		pRoot->SetAttribute("persistent", "true");
+		pNode->SetAttribute("persistent", "true");
 
 	if (downstream_multiply_connected)
-		pRoot->SetAttribute("downstreamMultiplyConnected", "true");
+		pNode->SetAttribute("downstreamMultiplyConnected", "true");
 
 	return pNode;
 }

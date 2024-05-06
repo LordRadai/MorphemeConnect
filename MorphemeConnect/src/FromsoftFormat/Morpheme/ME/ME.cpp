@@ -568,6 +568,31 @@ void ME::AttributeExportXML::SetAsStringArray(XMLElement* pRoot, std::string* va
 	}
 }
 
+XMLElement* ME::MessagePresetLibraryExportXML(XMLElement* pRoot, std::string guid)
+{
+	XMLElement* pMessagePresetLibrary = pRoot->InsertNewChildElement("MessagePresetLibrary");
+	pMessagePresetLibrary->SetAttribute("guid", guid.c_str());
+
+	return pMessagePresetLibrary;
+}
+
+XMLElement* ME::MessagePresetListExportXML(XMLElement* pRoot, int messageType, std::string name)
+{
+	XMLElement* pMessagePresetList = pRoot->InsertNewChildElement("MessagePresets");
+	pMessagePresetList->SetAttribute("messageType", messageType);
+	pMessagePresetList->SetAttribute("messageName", name.c_str());
+
+	return pMessagePresetList;
+}
+
+XMLElement* ME::MessagePresetExportXML(XMLElement* pRoot, std::string name)
+{
+	XMLElement* pMessagePreset = pRoot->InsertNewChildElement("MessagePreset");
+	pMessagePreset->SetAttribute("name", name.c_str());
+
+	return pMessagePreset;
+}
+
 XMLElement* ME::MessageExportXML(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId)
 {
 	XMLElement* pMessage = pRoot->InsertNewChildElement("Message");

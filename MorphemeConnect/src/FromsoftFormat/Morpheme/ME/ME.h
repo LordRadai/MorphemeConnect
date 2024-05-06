@@ -124,6 +124,10 @@ namespace ME
 		void SetAsStringArray(XMLElement* pRoot, std::string* values, UINT size);
 	}
 
+	XMLElement* MessagePresetLibraryExportXML(XMLElement* pRoot, std::string guid);
+	XMLElement* MessagePresetListExportXML(XMLElement* pRoot, int messageType, std::string name);
+	XMLElement* MessagePresetExportXML(XMLElement* pRoot, std::string name);
+
 	XMLElement* MessageExportXML(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId);
 	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);
 	XMLElement* ConditionExportXML(XMLElement* pRoot, UINT index, int typeId);

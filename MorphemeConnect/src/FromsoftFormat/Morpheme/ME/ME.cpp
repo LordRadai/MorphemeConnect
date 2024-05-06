@@ -38,16 +38,6 @@ XMLElement* ME::NetworkDefExportXML::SetRootNodeNetworkID(XMLElement* pRoot, UIN
 	return pNetworkRootId;
 }
 
-XMLElement* ME::NetworkDefExportXML::AddMessage(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId)
-{
-	XMLElement* pMessage = pRoot->InsertNewChildElement("Message");
-	pMessage->SetAttribute("name", name.c_str());
-	pMessage->SetAttribute("messageTypeID", messageTypeId);
-	pMessage->SetAttribute("messageID", messageId);
-
-	return pMessage;
-}
-
 XMLElement* ME::NetworkDefExportXML::SetAnimLibraryRef(XMLElement* pRoot, std::string guid, std::string filename)
 {
 	XMLElement* pAnimLibraryRef = pRoot->InsertNewChildElement("AnimLibraryRef");
@@ -59,7 +49,7 @@ XMLElement* ME::NetworkDefExportXML::SetAnimLibraryRef(XMLElement* pRoot, std::s
 
 XMLElement* ME::NetworkDefExportXML::SetMessagePresetLibraryRef(XMLElement* pRoot, std::string guid, std::string filename)
 {
-	XMLElement* pMessagePresetLibraryRef = pRoot->InsertNewChildElement("AnimLibraryRef");
+	XMLElement* pMessagePresetLibraryRef = pRoot->InsertNewChildElement("MessagePresetLibraryRef");
 	pMessagePresetLibraryRef->SetAttribute("refGUID", guid.c_str());
 	pMessagePresetLibraryRef->SetAttribute("filename", filename.c_str());
 
@@ -466,6 +456,16 @@ void ME::AttributeExportXML::SetAsStringArray(XMLElement* pRoot, std::string* va
 	}
 }
 
+XMLElement* ME::MessageExportXML(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId)
+{
+	XMLElement* pMessage = pRoot->InsertNewChildElement("Message");
+	pMessage->SetAttribute("name", name.c_str());
+	pMessage->SetAttribute("messageTypeID", messageTypeId);
+	pMessage->SetAttribute("messageID", messageId);
+
+	return pMessage;
+}
+
 XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected)
 {
 	XMLElement* pNode = pRoot->InsertNewChildElement("Node");
@@ -483,31 +483,131 @@ XMLElement* ME::NodeExportXML(XMLElement* pRoot, std::string name, UINT networkI
 	return pNode;
 }
 
-XMLElement* ME::DataBlockExportXML::DataBlockExportXML(XMLElement* pRoot, UINT lenght, int elements)
+XMLElement* ME::DataBlockExportXML::DataBlockExportXML(XMLElement* pRoot)
 {
 	XMLElement* pDataBlock = pRoot->InsertNewChildElement("DataBlock");
-	pDataBlock->SetAttribute("lenght", lenght);
-	pDataBlock->SetAttribute("elements", elements);
+	pDataBlock->SetAttribute("lenght", 0);
+	pDataBlock->SetAttribute("elements", 0);
 
 	return pDataBlock;
 }
 
-XMLElement* ME::DataBlockExportXML::AddElement(XMLElement* pRoot, std::string type, int index, UINT lenght, std::wstring description, BYTE* pData)
+XMLElement* ME::DataBlockExportXML::AddElement(XMLElement* pRoot, void* pData, UINT lenght, std::string type, std::string description)
 {
+	int totalLen = 0;
+	int elemCount = 0;
+
+	pRoot->FindAttribute("lenght")->QueryIntValue(&totalLen);
+	pRoot->FindAttribute("elements")->QueryIntValue(&elemCount);
+
 	XMLElement* pElement = pRoot->InsertNewChildElement("DataElement");
 	pElement->SetAttribute("type", type.c_str());
-	pElement->SetAttribute("index", index);
+	pElement->SetAttribute("index", elemCount);
 	pElement->SetAttribute("bytes", lenght);
 	pElement->SetAttribute("description", description.c_str());
 
 	char data_stream[255];
 
 	for (size_t i = 0; i < lenght; i++)
-		sprintf_s(data_stream, "%02x,", pData[i]);
+		sprintf_s(data_stream, "%02x,", ((char*)pData)[i]);
 
 	pElement->SetText(data_stream);
 
+	totalLen += lenght;
+	elemCount++;
+
+	pRoot->SetAttribute("lenght", totalLen);
+	pRoot->SetAttribute("elements", elemCount);
+
 	return pElement;
+}
+
+XMLElement* ME::DataBlockExportXML::WriteBool(XMLElement* pRoot, bool value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 1, "bool", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteBoolArray(XMLElement* pRoot, bool* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, count, "bool", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteChar(XMLElement* pRoot, char value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 1, "char", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteCharArray(XMLElement* pRoot, char* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, count, "char", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteInt(XMLElement* pRoot, int value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "int", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteIntArray(XMLElement* pRoot, int* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, 4 * count, "int", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteUInt(XMLElement* pRoot, UINT value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "uint", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteUIntArray(XMLElement* pRoot, UINT* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, 4 * count, "uint", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteFloat(XMLElement* pRoot, float value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "float", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteFloatArray(XMLElement* pRoot, float* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, 4 * count, "float", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteDouble(XMLElement* pRoot, double value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 8, "double", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteDoubleArray(XMLElement* pRoot, double* values, UINT count, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, values, 8 * count, "double", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteString(XMLElement* pRoot, std::string value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, (char*)value.c_str(), value.length(), "char", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteUnicodeString(XMLElement* pRoot, std::wstring value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, (wchar_t*)value.c_str(), value.length(), "wchar", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteAnimationId(XMLElement* pRoot, UINT value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "AnimationId", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteNetworkNodeId(XMLElement* pRoot, UINT value, std::string description)
+{
+	return ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "NetworkNodeID", description);
+}
+
+XMLElement* ME::DataBlockExportXML::WriteNetworkNodeId(XMLElement* pRoot, UINT value, UINT pinIndex, std::string description)
+{
+	XMLElement* pDataElement = ME::DataBlockExportXML::AddElement(pRoot, &value, 4, "NetworkNodeID", description);
+	pDataElement->SetAttribute("pinIndex", pinIndex);
+
+	return pDataElement;
 }
 
 XMLElement* ME::ConditionExportXML(XMLElement* pRoot, UINT index, int typeId)

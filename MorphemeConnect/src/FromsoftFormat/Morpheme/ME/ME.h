@@ -12,15 +12,31 @@ namespace ME
 		XMLElement* NetworkDefExportXML(XMLElement* pRoot, std::string guid, std::string name);
 		void SetWorldOrientation(XMLElement* pRoot, Vector3 forward, Vector3 right, Vector3 up);
 		XMLElement* SetRootNodeNetworkID(XMLElement* pRoot, UINT nodeId);
-		XMLElement* AddMessage(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId);
 		XMLElement* SetAnimLibraryRef(XMLElement* pRoot, std::string guid, std::string filename);
 		XMLElement* SetMessagePresetLibraryRef(XMLElement* pRoot, std::string guid, std::string filename);
 	}
 
 	namespace DataBlockExportXML
 	{
-		XMLElement* DataBlockExportXML(XMLElement* pRoot, UINT lenght, int elements);
-		XMLElement* AddElement(XMLElement* pRoot, std::string type, int index, UINT lenght, std::wstring description, BYTE* pData);
+		XMLElement* DataBlockExportXML(XMLElement* pRoot);
+		XMLElement* AddElement(XMLElement* pRoot, void* pData, UINT lenght, std::string type, std::string description);
+		XMLElement* WriteBool(XMLElement* pRoot, bool value, std::string description);
+		XMLElement* WriteBoolArray(XMLElement* pRoot, bool* values, UINT count, std::string description);
+		XMLElement* WriteChar(XMLElement* pRoot, char value, std::string description);
+		XMLElement* WriteCharArray(XMLElement* pRoot, char* values, UINT count, std::string description);
+		XMLElement* WriteInt(XMLElement* pRoot, int value, std::string description);
+		XMLElement* WriteIntArray(XMLElement* pRoot, int* values, UINT count, std::string description);
+		XMLElement* WriteUInt(XMLElement* pRoot, UINT value, std::string description);
+		XMLElement* WriteUIntArray(XMLElement* pRoot, UINT* values, UINT count, std::string description);
+		XMLElement* WriteFloat(XMLElement* pRoot, float value, std::string description);
+		XMLElement* WriteFloatArray(XMLElement* pRoot, float* values, UINT count, std::string description);
+		XMLElement* WriteDouble(XMLElement* pRoot, double value, std::string description);
+		XMLElement* WriteDoubleArray(XMLElement* pRoot, double* values, UINT count, std::string description);
+		XMLElement* WriteString(XMLElement* pRoot, std::string value, std::string description);
+		XMLElement* WriteUnicodeString(XMLElement* pRoot, std::wstring value, std::string description);
+		XMLElement* WriteAnimationId(XMLElement* pRoot, UINT value, std::string description);
+		XMLElement* WriteNetworkNodeId(XMLElement* pRoot, UINT value, std::string description);
+		XMLElement* WriteNetworkNodeId(XMLElement* pRoot, UINT value, UINT pinIndex, std::string description);
 	}
 
 	namespace ConditionSetExportXML
@@ -89,6 +105,7 @@ namespace ME
 		void SetAsStringArray(XMLElement* pRoot, std::string* values, UINT size);
 	}
 
+	XMLElement* MessageExportXML(XMLElement* pRoot, std::string name, UINT messageTypeId, UINT messageId);
 	XMLElement* NodeExportXML(XMLElement* pRoot, std::string name, UINT networkId, UINT parentId, UINT typeId, bool persistent, bool downstreamMultiplyConnected);
 	XMLElement* ConditionExportXML(XMLElement* pRoot, UINT index, int typeId);
 	XMLElement* TakeListXML(XMLElement* pDoc, std::string name, int version);

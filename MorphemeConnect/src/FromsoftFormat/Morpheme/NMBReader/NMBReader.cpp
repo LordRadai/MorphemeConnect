@@ -503,7 +503,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 	return false;
 }
 
-bool NMBReader::NetworkExportXML(PWSTR pszOutFilePath)
+bool NMBReader::ExportNetworkDefToXML(PWSTR pszOutFilePath)
 {
 	return false;
 }

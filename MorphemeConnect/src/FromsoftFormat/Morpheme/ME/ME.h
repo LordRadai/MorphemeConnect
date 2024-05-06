@@ -7,6 +7,25 @@ using namespace tinyxml2;
 
 namespace ME
 {
+	XMLElement* AnimationLibraryXML(XMLElement* pRoot, std::string guid);
+
+	namespace AnimationSetExportXML
+	{
+		XMLElement* AnimationSetExportXML(XMLElement* pRoot, int index, std::string name);
+		XMLElement* SetCharacterController(XMLElement* pRoot, std::string guid, std::string filename);
+		XMLElement* SetRig(XMLElement* pRoot, std::string guid, std::string filename);
+		XMLElement* SetPhysicsRig(XMLElement* pRoot, std::string guid, std::string filename);
+	}
+
+	namespace AnimationEntryExportXML
+	{
+		XMLElement* AnimationEntryExportXML(XMLElement* pRoot, UINT index, std::string format, std::string options);
+		XMLElement* SetAnimFile(XMLElement* pRoot, std::string animFile);
+		XMLElement* SetTakeFile(XMLElement* pRoot, std::string takeFile);
+		XMLElement* SetTake(XMLElement* pRoot, std::string take);
+		XMLElement* SetSyncTrack(XMLElement* pRoot, std::string syncTrack);
+	}
+
 	namespace NetworkDefExportXML
 	{
 		XMLElement* NetworkDefExportXML(XMLElement* pRoot, std::string guid, std::string name);

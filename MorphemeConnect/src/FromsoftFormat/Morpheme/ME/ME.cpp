@@ -1,6 +1,108 @@
 #include <filesystem>
 #include "ME.h"
 
+XMLElement* ME::AnimationLibraryXML(XMLElement* pRoot, std::string guid)
+{
+	XMLElement* pAnimLibrary = pRoot->InsertNewChildElement("AnimationLibrary");
+	pAnimLibrary->SetAttribute("guid", guid.c_str());
+	pAnimLibrary->SetAttribute("name", "ConnectLibary");
+
+	return pAnimLibrary;
+}
+
+XMLElement* ME::AnimationSetExportXML::AnimationSetExportXML(XMLElement* pRoot, int index, std::string name)
+{
+	XMLElement* pAnimSet = pRoot->InsertNewChildElement("AnimationSet");
+	pAnimSet->SetAttribute("index", index);
+	pAnimSet->SetAttribute("name", name.c_str());
+
+	return pAnimSet;
+}
+
+XMLElement* ME::AnimationSetExportXML::SetCharacterController(XMLElement* pRoot, std::string guid, std::string filename)
+{
+	XMLElement* pOld = pRoot->FirstChildElement("CharacterControllerRef");
+
+	if (pOld != nullptr)
+		pRoot->DeleteChild(pOld);
+
+	XMLElement* pCharacterControllerRef = pRoot->InsertNewChildElement("CharacterControllerRef");
+	pCharacterControllerRef->SetAttribute("refGUID", guid.c_str());
+	pCharacterControllerRef->SetAttribute("filename", filename.c_str());
+
+	return pCharacterControllerRef;
+}
+
+XMLElement* ME::AnimationSetExportXML::SetRig(XMLElement* pRoot, std::string guid, std::string filename)
+{
+	XMLElement* pOld = pRoot->FirstChildElement("RigRef");
+
+	if (pOld != nullptr)
+		pRoot->DeleteChild(pOld);
+
+	XMLElement* pRigRef = pRoot->InsertNewChildElement("RigRef");
+	pRigRef->SetAttribute("refGUID", guid.c_str());
+	pRigRef->SetAttribute("filename", filename.c_str());
+
+	return pRigRef;
+}
+
+XMLElement* ME::AnimationSetExportXML::SetPhysicsRig(XMLElement* pRoot, std::string guid, std::string filename)
+{
+	XMLElement* pOld = pRoot->FirstChildElement("PhysicsRigRef");
+
+	if (pOld != nullptr)
+		pRoot->DeleteChild(pOld);
+
+	XMLElement* pRigRef = pRoot->InsertNewChildElement("PhysicsRigRef");
+	pRigRef->SetAttribute("refGUID", guid.c_str());
+	pRigRef->SetAttribute("filename", filename.c_str());
+
+	return pRigRef;
+}
+
+XMLElement* ME::AnimationEntryExportXML::AnimationEntryExportXML(XMLElement* pRoot, UINT index, std::string format, std::string options)
+{
+	XMLElement* pAnimEntry = pRoot->InsertNewChildElement("AnimationEntry");
+	pAnimEntry->SetAttribute("index", index);
+	pAnimEntry->SetAttribute("format", format.c_str());
+	pAnimEntry->SetAttribute("options", options.c_str());
+
+	return pAnimEntry;
+}
+
+XMLElement* ME::AnimationEntryExportXML::SetAnimFile(XMLElement* pRoot, std::string animFile)
+{
+	XMLElement* pAnimFile = pRoot->InsertNewChildElement("animFile");
+	pAnimFile->SetText(animFile.c_str());
+
+	return pAnimFile;
+}
+
+XMLElement* ME::AnimationEntryExportXML::SetTakeFile(XMLElement* pRoot, std::string takeFile)
+{
+	XMLElement* pTakeFile = pRoot->InsertNewChildElement("takeFile");
+	pTakeFile->SetText(takeFile.c_str());
+
+	return pTakeFile;
+}
+
+XMLElement* ME::AnimationEntryExportXML::SetTake(XMLElement* pRoot, std::string take)
+{
+	XMLElement* pTake = pRoot->InsertNewChildElement("take");
+	pTake->SetText(take.c_str());
+
+	return pTake;
+}
+
+XMLElement* ME::AnimationEntryExportXML::SetSyncTrack(XMLElement* pRoot, std::string syncTrack)
+{
+	XMLElement* pSyncTrack = pRoot->InsertNewChildElement("syncTrack");
+	pSyncTrack->SetText(syncTrack.c_str());
+
+	return pSyncTrack;
+}
+
 XMLElement* ME::NetworkDefExportXML::NetworkDefExportXML(XMLElement* pRoot, std::string guid, std::string name)
 {
 	XMLElement* pNetworkDef = pRoot->InsertNewChildElement("NetworkDefinition");
@@ -40,6 +142,11 @@ XMLElement* ME::NetworkDefExportXML::SetRootNodeNetworkID(XMLElement* pRoot, UIN
 
 XMLElement* ME::NetworkDefExportXML::SetAnimLibraryRef(XMLElement* pRoot, std::string guid, std::string filename)
 {
+	XMLElement* pOld = pRoot->FirstChildElement("AnimLibraryRef");
+
+	if (pOld != nullptr)
+		pRoot->DeleteChild(pOld);
+
 	XMLElement* pAnimLibraryRef = pRoot->InsertNewChildElement("AnimLibraryRef");
 	pAnimLibraryRef->SetAttribute("refGUID", guid.c_str());
 	pAnimLibraryRef->SetAttribute("filename", filename.c_str());
@@ -49,6 +156,11 @@ XMLElement* ME::NetworkDefExportXML::SetAnimLibraryRef(XMLElement* pRoot, std::s
 
 XMLElement* ME::NetworkDefExportXML::SetMessagePresetLibraryRef(XMLElement* pRoot, std::string guid, std::string filename)
 {
+	XMLElement* pOld = pRoot->FirstChildElement("MessagePresetLibraryRef");
+
+	if (pOld != nullptr)
+		pRoot->DeleteChild(pOld);
+
 	XMLElement* pMessagePresetLibraryRef = pRoot->InsertNewChildElement("MessagePresetLibraryRef");
 	pMessagePresetLibraryRef->SetAttribute("refGUID", guid.c_str());
 	pMessagePresetLibraryRef->SetAttribute("filename", filename.c_str());

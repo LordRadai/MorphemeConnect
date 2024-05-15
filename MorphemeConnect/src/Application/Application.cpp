@@ -804,7 +804,7 @@ void Application::EventTrackInfoWindow()
 			float startTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 			float endTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
-			ImGui::Text(track->m_name);
+			ImGui::Text(track->m_name.c_str());
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event ID", &track->m_eventId, 1, 0);
 			if (ImGui::IsItemHovered())

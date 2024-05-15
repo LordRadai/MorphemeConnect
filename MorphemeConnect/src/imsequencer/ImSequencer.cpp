@@ -178,7 +178,7 @@ namespace ImSequencer
         static char addTrackName[50] = "MyTrack";
         static bool addTrackIsDuration = false;
 
-        static MorphemeBundle_EventTrack::BundleData_EventTrack::Event addEvent;
+        static EventTrack::Event addEvent;
 
         bool delEvent = false;
 
@@ -460,7 +460,7 @@ namespace ImSequencer
                 if (sequenceOptions & EDITOR_EVENT_ADD)
                     labelEndPos.x -= ItemHeight;
 
-                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), labelEndPos, eventTrackEditor->GetTrackName(i));
+                bool overLabel = SequencerAddTrackLabel(draw_list, ImVec2(tpos.x, tpos.y), labelEndPos, (char*)eventTrackEditor->GetTrackName(i).c_str());
 
                 if (sequenceOptions & EDITOR_TRACK_ADD)
                 {                    
@@ -569,7 +569,7 @@ namespace ImSequencer
                 ImGui::Text(header.c_str());
                 ImGui::Separator();
 
-                ImGui::InputText("Name", eventTrackEditor->m_eventTracks[*selectedTrack].m_name, 50);
+                ImGui::InputText("Name", (char*)eventTrackEditor->m_eventTracks[*selectedTrack].m_name.c_str(), 50);
 
                 if (GetAsyncKeyState(VK_RETURN))
                     ImGui::CloseCurrentPopup();
@@ -617,7 +617,7 @@ namespace ImSequencer
             {
                 addTrack = false;
 
-                ImGui::Text(eventTrackEditor->m_eventTracks[*selectedTrack].m_name);
+                ImGui::Text((char*)eventTrackEditor->m_eventTracks[*selectedTrack].m_name.c_str());
                 ImGui::Separator();
 
                 ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
@@ -632,11 +632,11 @@ namespace ImSequencer
 
                 *currentFrame = RMath::TimeToFrame(addEvent.m_start);
 
-                ImGui::InputInt("Value", &addEvent.m_value);
+                ImGui::InputInt("Value", &addEvent.m_userData);
 
                 if (ImGui::Button("Add Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
-                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ RMath::TimeToFrame(addEvent.m_start), RMath::TimeToFrame(addEvent.m_duration), addEvent.m_value});
+                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ RMath::TimeToFrame(addEvent.m_start), RMath::TimeToFrame(addEvent.m_duration), addEvent.m_userData});
                     ImGui::CloseCurrentPopup();
 
                     reload = true;

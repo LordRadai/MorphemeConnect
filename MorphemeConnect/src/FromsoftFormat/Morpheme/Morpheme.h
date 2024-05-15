@@ -179,10 +179,22 @@ namespace Morpheme4
         AttributeDataBase(BYTE* pData);
         ~AttributeDataBase();
 
-    private:
+        virtual void Load(BYTE* pData);
+    protected:
         UINT64 m_iVar0;
         short m_sVar1;
         AttribType m_attribTypeID;
+    };
+
+    class AttributeDataUnknown : public AttributeDataBase
+    {
+    public:
+        AttributeDataUnknown();
+        ~AttributeDataUnknown();
+
+        void Load(BYTE* pData, int size);
+    private:
+        std::vector<BYTE> m_data;
     };
 
     class Attribute

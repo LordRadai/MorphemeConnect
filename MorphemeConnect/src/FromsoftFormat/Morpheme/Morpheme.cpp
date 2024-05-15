@@ -6,17 +6,43 @@ using namespace Morpheme4;
 
 AttributeDataBase::AttributeDataBase()
 {
+	this->m_attribTypeID = ATTRIB_TYPE_BOOL;
+	this->m_iVar0 = 0;
+	this->m_sVar1 = -1;
 }
 
 AttributeDataBase::AttributeDataBase(BYTE* pData)
+{
+	this->Load(pData);
+}
+
+AttributeDataBase::~AttributeDataBase()
+{
+}
+
+void AttributeDataBase::Load(BYTE* pData)
 {
 	this->m_iVar0 = *(UINT64*)(pData);
 	this->m_sVar1 = *(short*)(pData + 0x8);
 	this->m_attribTypeID = *(AttribType*)(pData + 0xA);
 }
 
-AttributeDataBase::~AttributeDataBase()
+AttributeDataUnknown::AttributeDataUnknown()
 {
+}
+
+AttributeDataUnknown::~AttributeDataUnknown()
+{
+	this->m_data.clear();
+}
+
+void AttributeDataUnknown::Load(BYTE* pData, int size)
+{
+	AttributeDataBase::Load(pData);
+
+	this->m_data.reserve(size);
+	for (size_t i = 0; i < size; i++)
+		this->m_data.push_back(pData[i]);
 }
 
 Attribute::Attribute()

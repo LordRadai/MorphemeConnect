@@ -75,5 +75,5 @@ std::string StringTable::GetString(int id)
 
 int StringTable::GetMemoryRequirement()
 {
-	int req = 32 + this->m_numEntries * 8 + this->m_dataLenght;
+	return 32 + this->m_numEntries * 8 + this->m_dataLenght;
 }

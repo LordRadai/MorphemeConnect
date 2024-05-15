@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cassert>
 #include "../../../Utils/MemReader/MemReader.h"
+#include "../../Morpheme.h"
 
 enum AssetType
 {

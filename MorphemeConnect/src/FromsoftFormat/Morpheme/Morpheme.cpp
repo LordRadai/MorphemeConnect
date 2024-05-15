@@ -451,7 +451,7 @@ NetworkDef::NetworkDef(BYTE* pData)
 
 	this->m_nodeTypeDefs.reserve(this->m_numNodeTypes);
 	for (size_t i = 0; i < this->m_numNodeTypes; i++)
-		this->m_nodeTypeDefs.push_back(new NodeTypeDef(pNodeTypeDefs[i]));
+		this->m_nodeTypeDefs.push_back(new NodeTypeDef(pData + (UINT64)pNodeTypeDefs[i]));
 
 	this->m_boneCount = *(int*)(pData + 0x118);
 	this->m_iVar19 = *(int*)(pData + 0x11C);

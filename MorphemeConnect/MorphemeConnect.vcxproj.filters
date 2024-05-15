@@ -201,21 +201,6 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\NodeDef\NodeDef.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -2052,21 +2037,6 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\MR.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBase.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribBool.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceAnim.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribSourceEventTrack.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\NodeAttrib\NodeAttribUnknown.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.h">

@@ -1,9 +1,9 @@
 #pragma once
 #include "MorphemeBundle.h"
-#include "NodeAttrib/NodeAttribUnknown.h"
-#include "NodeAttrib/NodeAttribBool.h"
-#include "NodeAttrib/NodeAttribSourceAnim.h"
-#include "NodeAttrib/NodeAttribSourceEventTrack.h"
+//#include "NodeAttrib/NodeAttribUnknown.h"
+//#include "NodeAttrib/NodeAttribBool.h"
+//#include "NodeAttrib/NodeAttribSourceAnim.h"
+//#include "NodeAttrib/NodeAttribSourceEventTrack.h"
 
 class MorphemeBundle_NetworkDef : public MorphemeBundle_Base
 {

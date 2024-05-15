@@ -6,7 +6,7 @@ namespace Morpheme4
 {
     enum MessageType
     {
-        MessageType_Invalid = 0,
+        MessageType_Invalid = -1,
         MessageType_Request = 10,
         MessageType_RetargetOffset = 102,
         MessageType_RetargetCharacterScale = 103,
@@ -15,7 +15,7 @@ namespace Morpheme4
 
     enum NodeType
     {
-        NodeType_Invalid = 0,
+        NodeType_Invalid = -1,
         NodeType_NetworkInstance = 9,
         NodeType_StateMachine = 10,
         NodeType_ControlParameterFloat = 20,

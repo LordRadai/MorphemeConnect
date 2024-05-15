@@ -45,7 +45,7 @@ Attribute::~Attribute()
 
 NodeDef::NodeDef()
 {
-	this->m_typeID = NodeType_NetworkInstance;
+	this->m_typeID = NodeType_Invalid;
 	this->m_flags = 0;
 	this->m_nodeID = 0;
 	this->m_parentID = -1;
@@ -164,7 +164,7 @@ NodeGroup::~NodeGroup()
 	this->m_nodes.clear();
 }
 
-UnkNetworkArray::UnkNetworkArray()
+UnkNodeData::UnkNodeData()
 {
 	this->m_iVar0 = 0;
 	this->m_iVar1 = 0;
@@ -172,7 +172,7 @@ UnkNetworkArray::UnkNetworkArray()
 	this->m_count = 0;
 }
 
-UnkNetworkArray::UnkNetworkArray(BYTE* pData)
+UnkNodeData::UnkNodeData(BYTE* pData)
 {
 	this->m_iVar0 = *(UINT64*)(pData);
 	this->m_iVar1 = *(UINT64*)(pData + 0x8);
@@ -187,7 +187,33 @@ UnkNetworkArray::UnkNetworkArray(BYTE* pData)
 		this->m_data.push_back(pData[i]);
 }
 
-UnkNetworkArray::~UnkNetworkArray()
+UnkNodeData::~UnkNodeData()
+{
+	this->m_data.clear();
+}
+
+NodeTypeDef::NodeTypeDef()
+{
+	this->m_typeID = NodeType_Invalid;
+	this->m_bVar1 = false;
+	this->m_size = 0;
+}
+
+NodeTypeDef::NodeTypeDef(BYTE* pData)
+{
+	this->m_typeID = *(NodeType*)(pData);
+	this->m_bVar1 = *(bool*)(pData + 0x4);
+	this->m_size = *(short*)(pData + 0x6);
+	UINT64 offset = *(UINT64*)(pData + 0x8);
+
+	BYTE* pUnkData = (BYTE*)(pData + offset);
+
+	this->m_data.reserve(this->m_size);
+	for (size_t i = 0; i < this->m_size; i++)
+		this->m_data.push_back(pUnkData[i]);
+}
+
+NodeTypeDef::~NodeTypeDef()
 {
 	this->m_data.clear();
 }
@@ -196,6 +222,87 @@ StringTable::StringTable()
 {
 	this->m_numEntries = 0;
 	this->m_dataLenght = 0;
+}
+
+FunctionDef::FunctionDef()
+{
+}
+
+FunctionDef::FunctionDef(UINT64* pData, int count)
+{
+	this->m_data.reserve(count);
+	for (size_t i = 0; i < count; i++)
+		this->m_data.push_back(pData[i]);
+}
+
+FunctionDef::~FunctionDef()
+{
+	this->m_data.clear();
+}
+
+FunctionDefList::FunctionDefList()
+{
+	this->m_numFunctions = 0;
+	this->m_arraySize = 0;
+}
+
+FunctionDefList::FunctionDefList(BYTE* pData)
+{
+	this->m_numFunctions = *(int*)(pData);
+	this->m_arraySize = *(int*)(pData + 0x4);
+	UINT64 offsetsOffset = *(UINT64*)(pData + 0x8);
+
+	UINT64* pOffsets = (UINT64*)(pData + offsetsOffset);
+
+	this->m_offsets.reserve(this->m_numFunctions);
+	for (size_t i = 0; i < this->m_numFunctions; i++)
+		this->m_offsets.push_back(pOffsets[i]);
+
+	this->m_functionDefs.reserve(this->m_numFunctions);
+	for (size_t i = 0; i < this->m_numFunctions; i++)
+	{
+		UINT64* pDef = (UINT64*)(pData + this->m_offsets[i]);
+		this->m_functionDefs.push_back(FunctionDef(pDef, this->m_arraySize));
+	}
+}
+
+FunctionDefList::~FunctionDefList()
+{
+	this->m_offsets.clear();
+	this->m_functionDefs.clear();
+}
+
+MessageDef::MessageDef()
+{
+	this->m_id = 0;
+	this->m_type = MessageType_Invalid;
+	this->m_validNodeCount = 0;
+	this->m_iVar0 = 0;
+	this->m_iVar1 = 0;
+	this->m_pVar2 = 0;
+	this->m_pVar3 = 0;
+}
+
+MessageDef::MessageDef(BYTE* pData)
+{
+	this->m_id = *(int*)(pData);
+	this->m_type = *(MessageType*)(pData + 0x4);
+	this->m_validNodeCount = *(int*)(pData + 0x8);
+	this->m_iVar0 = *(UINT64*)(pData + 0x10);
+	this->m_iVar1 = *(int*)(pData + 0x18);
+	this->m_pVar2 = *(UINT64*)(pData + 0x20);
+	this->m_pVar3 = *(UINT64*)(pData + 0x28);
+
+	short* pNodes = (short*)(pData + 0x30);
+
+	this->m_validNodeIDs.reserve(this->m_validNodeCount);
+	for (size_t i = 0; i < this->m_validNodeCount; i++)
+		this->m_validNodeIDs.push_back(pNodes[i]);
+}
+
+MessageDef::~MessageDef()
+{
+	this->m_validNodeIDs.clear();
 }
 
 StringTable::StringTable(BYTE* pData)
@@ -237,4 +344,125 @@ std::string StringTable::GetString(int id)
 		return "";
 
 	return std::string(&this->m_data[this->m_offsets[id]]);
+}
+
+RigIndices::RigIndices()
+{
+}
+
+RigIndices::RigIndices(int* pData, int count)
+{
+	this->m_indices.reserve(count);
+	for (size_t i = 0; i < count; i++)
+		this->m_indices.push_back(pData[i]);
+}
+
+RigIndices::~RigIndices()
+{
+	this->m_indices.clear();
+}
+
+RigData::RigData()
+{
+}
+
+RigData::RigData(BYTE* pBase, UINT64* pData, int rigCount, int boneCount)
+{
+	this->m_offsets.reserve(rigCount);
+	for (size_t i = 0; i < rigCount; i++)
+		this->m_offsets.push_back(pData[i]);
+
+	for (size_t i = 0; i < rigCount; i++)
+	{
+		int* pIndices = (int*)(pBase + this->m_offsets[i]);
+		this->m_rigIndices.push_back(RigIndices(pIndices, boneCount));
+	}
+}
+
+RigData::~RigData()
+{
+	this->m_offsets.clear();
+	this->m_rigIndices.clear();
+}
+
+NetworkDef::NetworkDef()
+{
+}
+
+NetworkDef::NetworkDef(BYTE* pData)
+{
+	this->m_networkInstance = NodeDef(pData);
+	this->m_numNodes = *(int*)(pData + 0x90);
+
+	UINT64 nodesOffset = *(UINT64*)(pData + 0x98);
+	UINT64* pNodes = (UINT64*)(pData + nodesOffset);
+
+	this->m_nodes.reserve(this->m_numNodes);
+	for (size_t i = 0; i < this->m_numNodes; i++)
+		this->m_nodes.push_back(new NodeDef(pData + pNodes[i]));
+
+	this->m_numAnimSets = *(short*)(pData + 0xA0);
+
+	UINT64 nodeGroup1Offset = *(UINT64*)(pData + 0xA8);
+	this->m_nodeGroup1 = NodeGroup(pData + nodeGroup1Offset);
+
+	UINT64 stateMachineGroupOffset = *(UINT64*)(pData + 0xB0);
+	this->m_stateMachineNodeGroup = NodeGroup(pData + stateMachineGroupOffset);
+
+	UINT64 emitRequestGroupOffset = *(UINT64*)(pData + 0xB8);
+	this->m_emitRequestNodeGroup = NodeGroup(pData + emitRequestGroupOffset);
+
+	UINT64 nodeGroup2Offset = *(UINT64*)(pData + 0xC0);
+	this->m_nodeGroup2 = NodeGroup(pData + nodeGroup2Offset);
+
+	UINT64 nodeIDNamesTableOffset = *(UINT64*)(pData + 0xC8);
+	this->m_nodeIDNamesTable = StringTable(pData + nodeIDNamesTableOffset);
+
+	UINT64 requestIDNamesTableOffset = *(UINT64*)(pData + 0xD0);
+	this->m_requestIDNamesTable = StringTable(pData + requestIDNamesTableOffset);
+
+	UINT64 eventTrackIDNamesTableOffset = *(UINT64*)(pData + 0xD8);
+	this->m_eventTrackIDNamesTable = StringTable(pData + eventTrackIDNamesTableOffset);
+
+	UINT64 unkNodeDataOffset = *(UINT64*)(pData + 0xE0);
+	this->m_unkNodeData = UnkNodeData(pData + unkNodeDataOffset);
+
+	UINT64 funDefList1Offset = *(UINT64*)(pData + 0xE8);
+	this->m_functionDefList1 = FunctionDefList(pData + funDefList1Offset);
+
+	UINT64 funDefList2Offset = *(UINT64*)(pData + 0xF0);
+	this->m_functionDefList2 = FunctionDefList(pData + funDefList2Offset);
+
+	this->m_numRequests = *(int*)(pData + 0xF8);
+
+	UINT64 messageDefsOffset = *(UINT64*)(pData + 0x100);
+	BYTE** pMessageDefs = (BYTE**)(pData + messageDefsOffset);
+
+	this->m_messageDefs.reserve(this->m_numRequests);
+	for (size_t i = 0; i < this->m_numRequests; i++)
+		this->m_messageDefs.push_back(new MessageDef(pMessageDefs[i]));
+
+	this->m_numNodeTypes = *(int*)(pData + 0x108);
+	UINT64 nodeTypeDefsOffset = *(UINT64*)(pData + 0x110);
+	BYTE** pNodeTypeDefs = (BYTE**)(pData + nodeTypeDefsOffset);
+
+	this->m_nodeTypeDefs.reserve(this->m_numNodeTypes);
+	for (size_t i = 0; i < this->m_numNodeTypes; i++)
+		this->m_nodeTypeDefs.push_back(new NodeTypeDef(pNodeTypeDefs[i]));
+
+	this->m_boneCount = *(int*)(pData + 0x118);
+	this->m_iVar19 = *(int*)(pData + 0x11C);
+	this->m_sVar20 = *(short*)(pData + 0x120);
+	this->m_iVar21 = *(int*)(pData + 0x124);
+	this->m_pVar22 = *(UINT64*)(pData + 0x128);
+
+	UINT64 rigDataOffset = *(UINT64*)(pData + 0x130);
+	this->m_rigData = new RigData(pData, (UINT64*)(pData + rigDataOffset), this->m_numAnimSets, this->m_boneCount);
+
+	UINT64 mirroredRigDataOffset = *(UINT64*)(pData + 0x138);
+	this->m_mirroredRigData = new RigData(pData, (UINT64*)(pData + mirroredRigDataOffset), this->m_numAnimSets, this->m_boneCount);
+}
+
+NetworkDef::~NetworkDef()
+{
 }

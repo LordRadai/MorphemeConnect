@@ -9,8 +9,7 @@ EventTrackEditor::EventTrack::EventTrack(int signature, int numEvents, int event
     this->m_numEvents = numEvents;
     this->m_eventId = eventId;
 
-    this->m_name = new char[50];
-    strcpy(this->m_name, name);
+    this->m_name = name;
 
     this->m_discrete = is_discrete;
 
@@ -28,19 +27,19 @@ EventTrackEditor::EventTrack::EventTrack(MorphemeBundle_EventTrack* src, float l
 {
     this->m_source = src;
     this->m_signature = src->m_signature;
-    this->m_numEvents = src->m_data->m_numEvents;
-    this->m_eventId = src->m_data->m_eventId;
-    this->m_name = src->m_data->m_trackName;
+    this->m_numEvents = src->m_data->GetNumEvents();
+    this->m_eventId = src->m_data->GetUserData();
+    this->m_name = src->m_data->GetTrackName();
 
     this->m_discrete = discrete;
 
     this->m_event = new Event[this->m_numEvents];
 
-    for (size_t i = 0; i < src->m_data->m_numEvents; i++)
+    for (size_t i = 0; i < src->m_data->GetNumEvents(); i++)
     {
-        this->m_event[i].m_frameStart = RMath::TimeToFrame(src->m_data->m_events[i].m_start * len);
-        this->m_event[i].m_duration = RMath::TimeToFrame(src->m_data->m_events[i].m_duration * len);
-        this->m_event[i].m_value = src->m_data->m_events[i].m_value;
+        this->m_event[i].m_frameStart = RMath::TimeToFrame(src->m_data->GetEvent(i)->m_start * len);
+        this->m_event[i].m_duration = RMath::TimeToFrame(src->m_data->GetEvent(i)->m_duration * len);
+        this->m_event[i].m_value = src->m_data->GetEvent(i)->m_userData;
     }
 }
 
@@ -53,14 +52,13 @@ void EventTrackEditor::EventTrack::SaveEventTrackData(float len)
         return;
     }
 
-    this->m_source->m_data->m_numEvents = this->m_numEvents;
-    this->m_source->m_data->m_eventId = this->m_eventId;
+    this->m_source->m_data->SetUserData(this->m_eventId);
     
     for (int i = 0; i < this->m_numEvents; i++)
     {
-        this->m_source->m_data->m_events[i].m_start = RMath::FrameToTime(this->m_event[i].m_frameStart) / len;
-        this->m_source->m_data->m_events[i].m_duration = RMath::FrameToTime(this->m_event[i].m_duration) / len;
-        this->m_source->m_data->m_events[i].m_value = this->m_event[i].m_value;
+        this->m_source->m_data->GetEvent(i)->m_start = RMath::FrameToTime(this->m_event[i].m_frameStart) / len;
+        this->m_source->m_data->GetEvent(i)->m_duration = RMath::FrameToTime(this->m_event[i].m_duration) / len;
+        this->m_source->m_data->GetEvent(i)->m_userData = this->m_event[i].m_value;
     }
 }
 
@@ -93,7 +91,7 @@ int EventTrackEditor::GetFrameMax() const
 
 int EventTrackEditor::GetTrackCount() const { return (int)m_eventTracks.size(); }
 
-char* EventTrackEditor::GetTrackName(int idx) const { return m_eventTracks[idx].m_name; }
+std::string EventTrackEditor::GetTrackName(int idx) const { return this->m_eventTracks[idx].m_name; }
 
 std::string EventTrackEditor::GetEventLabel(int track_idx, int event_idx) const
 {
@@ -156,8 +154,7 @@ void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
 {
     EventTrack* track = &this->m_eventTracks[track_idx];
 
-    track->m_source->m_data->m_numEvents++;
-    track->m_source->m_data->m_events.push_back(MorphemeBundle_EventTrack::BundleData_EventTrack::Event{RMath::FrameToTime(event.m_frameStart) / RMath::FrameToTime(this->m_frameMax), RMath::FrameToTime(event.m_duration) / RMath::FrameToTime(this->m_frameMax), event.m_value});
+    track->m_source->m_data->AddEvent(RMath::FrameToTime(event.m_frameStart) / RMath::FrameToTime(this->m_frameMax), RMath::FrameToTime(event.m_duration) / RMath::FrameToTime(this->m_frameMax), event.m_value);
         
     this->m_reload = true;
 
@@ -170,8 +167,7 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 {
     EventTrack* track = &this->m_eventTracks[track_idx];
 
-    track->m_source->m_data->m_numEvents--;
-    track->m_source->m_data->m_events.erase(track->m_source->m_data->m_events.begin() + event_idx);
+    track->m_source->m_data->DeleteEvent(event_idx);
 
     RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Deleted event %d from Track %d (node=%d)\n", event_idx, track->m_signature, this->m_nodeSource->m_nodeID);
 

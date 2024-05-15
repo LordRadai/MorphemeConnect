@@ -127,7 +127,6 @@ namespace MR
         NetworkDef(BYTE* pData);
         ~NetworkDef();
 
-    private:
         NodeDef m_networkInstance;
         int m_numNodes;
         std::vector<NodeDef*> m_nodes;

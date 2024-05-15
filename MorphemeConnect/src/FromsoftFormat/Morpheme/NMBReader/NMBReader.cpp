@@ -378,9 +378,9 @@ MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
 }
 
 //Returns all the EventTrackList objects with references to the specified signature
-std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signature)
+std::vector<EventTrack*> NMBReader::GetEventTrackListBySignature(int signature)
 {
-	std::vector<EventTrackList*> track_lists;
+	std::vector<EventTrack*> track_lists;
 
 	/*
 	for (int i = 0; i < this->m_networkDef.m_data->m_numNodes; i++)

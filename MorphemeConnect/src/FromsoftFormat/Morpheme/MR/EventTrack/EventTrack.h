@@ -15,6 +15,7 @@ namespace MR
 
 			Event();
 			Event(BYTE* pData);
+			Event(float start, float duration, int userData);
 			~Event();
 		};
 
@@ -30,7 +31,11 @@ namespace MR
 		int GetUserData();
 		Event* GetEvent(int idx);
 
+		void SetUserData(int userData);
+
 		int GetMemoryRequirements();
+		void AddEvent(float start, float end, int userData);
+		void DeleteEvent(int idx);
 	private:
 		int m_numEvents;
 		int m_index;

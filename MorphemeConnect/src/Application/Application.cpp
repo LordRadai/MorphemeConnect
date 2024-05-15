@@ -495,7 +495,7 @@ void Application::AssetsWindow()
 			{
 				ImGui::BeginChild("NSA");
 				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 					{
 						std::string anim_name = "";
 
@@ -542,7 +542,7 @@ void Application::AssetsWindow()
 			{
 				ImGui::BeginChild("XMD");
 				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdTable->GetNumEntries(); i++)
 					{
 						std::string anim_name = m_nmb.GetAnimationInterface(i)->m_sourceName;
 
@@ -1213,9 +1213,10 @@ void Application::CheckFlags()
 
 				NodeDef* node = networkDef->m_data->m_nodes[idx];
 
-				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+				if (node->m_typeID == NodeType_NodeAnimSyncEvents)
 				{
-					if (networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
+					/*
+					if (networkDef->m_data->m_nodes[idx]->m_attributes[1] != NULL)
 					{
 						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
 						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
@@ -1309,6 +1310,7 @@ void Application::CheckFlags()
 							}
 						}
 					}
+					*/
 				}
 			}
 
@@ -1450,9 +1452,9 @@ void Application::LoadFile()
 								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
 
 								this->m_animFiles.clear();
-								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
+								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
 
-								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 								{
 									std::filesystem::path gamepath = pszFilePath;
 									std::wstring parent_path = gamepath.parent_path();
@@ -1470,9 +1472,9 @@ void Application::LoadFile()
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 
 								this->m_eventTrackEditorFlags.m_edited.clear();
-								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
+								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
 
-								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 									this->m_eventTrackEditorFlags.m_edited.push_back(false);
 
 								this->m_chrId = GetChrIdFromNmbFileName(m_nmb.GetFilePath());

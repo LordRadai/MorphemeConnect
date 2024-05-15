@@ -15,6 +15,13 @@ EventTrack::Event::Event(BYTE* pData)
 	this->m_userData = *(int*)(pData + 0x8);
 }
 
+EventTrack::Event::Event(float start, float duration, int userData)
+{
+	this->m_start = start;
+	this->m_duration = duration;
+	this->m_userData = userData;
+}
+
 EventTrack::Event::~Event()
 {
 
@@ -93,7 +100,24 @@ EventTrack::Event* EventTrack::GetEvent(int idx)
 	return &this->m_events[idx];
 }
 
+void EventTrack::SetUserData(int userData)
+{
+	this->m_userData = userData;
+}
+
 int EventTrack::GetMemoryRequirements()
 {
 	return 32 + 12 * this->m_numEvents + this->m_trackName.length();
+}
+
+void EventTrack::AddEvent(float start, float end, int userData)
+{
+	this->m_numEvents++;
+	this->m_events.push_back(Event(start, end, userData));
+}
+
+void EventTrack::DeleteEvent(int idx)
+{
+	this->m_numEvents--;
+	this->m_events.erase(this->m_events.begin() + idx);
 }

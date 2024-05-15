@@ -55,6 +55,6 @@ namespace MemReader
 		UINT64 remainder = current_pos % alignment;
 		UINT64 pad_amt = alignment - remainder;
 
-		Pad(pStream, 0xCD, pad_amt);
+		pStream->seekp(current_pos + (streampos)pad_amt);
 	}
 }

@@ -42,7 +42,7 @@ void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
 {
 }
 
-int MorphemeBundle_NetworkDef::CalculateBundleSize()
+int MorphemeBundle_NetworkDef::GetMemoryRequirements()
 {
     return this->m_dataSize;
 }

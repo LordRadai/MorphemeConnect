@@ -445,9 +445,9 @@ bool compareAnimInterface(AnimInterface a, AnimInterface b)
 //Sorts the animation list from the filename lookup table and stores them into a vector of AnimationInterface objects
 void NMBReader::SortAnimList()
 {
-	this->m_animations.reserve(this->m_fileNameLookupTable.m_data->m_animList.m_elemCount);
+	this->m_animations.reserve(this->m_fileNameLookupTable.m_data->m_animTable->GetNumEntries());
 
-	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_animTable->GetNumEntries(); i++)
 		this->m_animations.push_back(AnimInterface{ this->GetFilenameLookupTable()->GetAnimName(i), this->GetSourceAnimName(i), i });
 
 	std::sort(this->m_animations.begin(), this->m_animations.end(), compareAnimInterface);

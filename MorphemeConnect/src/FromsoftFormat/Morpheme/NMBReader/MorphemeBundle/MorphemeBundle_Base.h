@@ -34,7 +34,7 @@ public:
 	UINT m_iVar2C;
 
 	virtual void WriteBinary(ofstream* out, UINT64 alignment) { return; }
-	virtual int CalculateBundleSize() { return this->m_dataSize; }
+	virtual int GetMemoryRequirements() { return this->m_dataSize; }
 
 	std::string GetGUID()
 	{

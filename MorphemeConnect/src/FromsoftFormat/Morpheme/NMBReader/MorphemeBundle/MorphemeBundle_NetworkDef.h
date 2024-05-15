@@ -5,8 +5,6 @@
 #include "NodeAttrib/NodeAttribSourceAnim.h"
 #include "NodeAttrib/NodeAttribSourceEventTrack.h"
 
-using namespace Morpheme4;
-
 class MorphemeBundle_NetworkDef : public MorphemeBundle_Base
 {
 public:
@@ -17,5 +15,5 @@ public:
     ~MorphemeBundle_NetworkDef();
 
     void WriteBinary(ofstream* out);
-    int CalculateBundleSize();
+    int GetMemoryRequirements();
 };

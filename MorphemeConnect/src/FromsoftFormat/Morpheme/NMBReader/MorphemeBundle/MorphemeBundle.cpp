@@ -101,7 +101,7 @@ void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
 	MemReader::Write(out, this->m_signature);
 	MemReader::WriteArray(out, this->m_guid, 16);
 
-	this->m_dataSize = this->CalculateBundleSize();
+	this->m_dataSize = this->GetMemoryRequirements();
 
 	MemReader::Write(out, this->m_dataSize);
 	MemReader::Write(out, this->m_dataAlignment);
@@ -112,7 +112,7 @@ void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
 	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle::CalculateBundleSize()
+int MorphemeBundle::GetMemoryRequirements()
 {
 	return this->m_dataSize;
 }

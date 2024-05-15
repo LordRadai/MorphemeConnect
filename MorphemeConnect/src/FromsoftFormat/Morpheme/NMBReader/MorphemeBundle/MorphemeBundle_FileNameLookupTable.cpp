@@ -2,96 +2,24 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
-FileNameLookupTable::FileNameLookupTable() {}
-
-FileNameLookupTable::FileNameLookupTable(BYTE* data)
-{
-	this->m_elemCount = *(int*)(data);
-	this->m_stringSize = *(int*)(data + 0x4);
-	this->m_idxOffset = *(UINT64*)(data + 0x8);
-	this->m_localOffsetsOffset = *(UINT64*)(data + 0x10);
-	this->m_stringsOffset = *(UINT64*)(data + 0x18);
-
-	if (this->m_elemCount > 0)
-	{
-		int* idx_list = (int*)(data + this->m_idxOffset);
-
-		this->m_idx.reserve(this->m_elemCount);
-		for (size_t i = 0; i < this->m_elemCount; i++)
-			this->m_idx.push_back(idx_list[i]);
-
-		int* offset_list = (int*)(data + this->m_localOffsetsOffset);
-
-		this->m_localOffsets.reserve(this->m_elemCount);
-		for (size_t i = 0; i < this->m_elemCount; i++)
-			this->m_localOffsets.push_back(offset_list[i]);
-
-		char* string_list = (char*)(data + this->m_stringsOffset);
-
-		this->m_strings.reserve(this->m_stringSize);
-		for (size_t i = 0; i < this->m_stringSize; i++)
-			this->m_strings.push_back(string_list[i]);
-	}
-}
-
-FileNameLookupTable::~FileNameLookupTable()
-{
-	if (this->m_elemCount > 0)
-	{
-		this->m_idx.clear();
-		this->m_localOffsets.clear();
-		this->m_strings.clear();
-	}
-}
-
-void FileNameLookupTable::WriteToBinary(ofstream* out)
-{
-	MemReader::Write(out, this->m_elemCount);
-	MemReader::Write(out, this->m_stringSize);
-	MemReader::Write(out, this->m_idxOffset);
-	MemReader::Write(out, this->m_localOffsetsOffset);
-	MemReader::Write(out, this->m_stringsOffset);
-
-	MemReader::WriteArray(out, this->m_idx.data(), this->m_elemCount);
-	MemReader::WriteArray(out, this->m_localOffsets.data(), this->m_elemCount);
-
-	for (int i = 0; i < this->m_elemCount; i++)
-	{
-		int string_len = strlen(&this->m_strings[this->m_localOffsets[i]]) + 1;
-
-		MemReader::WriteArray(out, &this->m_strings.data()[this->m_localOffsets[i]], string_len);
-	}
-
-	UINT64 pos = out->tellp();
-
-	int remainder = pos % 4;
-
-	if (remainder != 0)
-	{
-		int pad_count = 4 - remainder;
-
-		MemReader::Pad(out, 0xCD, pad_count);
-	}
-}
-
 MorphemeBundle_FileNameLookupTable::BundleData_FileNameLookupTable::BundleData_FileNameLookupTable(BYTE* data)
 {
-	this->m_animTableOffset = *(UINT64*)(data);
-	this->m_formatTableOffset = *(UINT64*)(data + 0x8);
-	this->m_sourceTableOffset = *(UINT64*)(data + 0x10);
-	this->m_tagTableOffset = *(UINT64*)(data + 0x18);
-	this->m_hashOffset = *(UINT64*)(data + 0x20);
+	UINT64 animTableOffset = *(UINT64*)(data);
+	UINT64 formatTableOffset = *(UINT64*)(data + 0x8);
+	UINT64 sourceTableOffset = *(UINT64*)(data + 0x10);
+	UINT64 takeTableOffset = *(UINT64*)(data + 0x18);
+	UINT64 hashOffset = *(UINT64*)(data + 0x20);
 
-	this->m_animList = FileNameLookupTable(data + this->m_animTableOffset);
-	this->m_animFormat = FileNameLookupTable(data + this->m_formatTableOffset);
-	this->m_sourceXmdList = FileNameLookupTable(data + this->m_sourceTableOffset);
-	this->m_tagList = FileNameLookupTable(data + this->m_tagTableOffset);
+	this->m_animTable = new StringTable(data + animTableOffset);
+	this->m_animFormatTable = new StringTable(data + formatTableOffset);
+	this->m_sourceXmdTable = new StringTable(data + sourceTableOffset);
+	this->m_animTakeTable = new StringTable(data + takeTableOffset);
 
-	int* hash_list = (int*)(data + this->m_hashOffset);
+	int* hash_list = (int*)(data + hashOffset);
 
-	this->m_hash.reserve(this->m_animList.m_elemCount);
-	for (size_t i = 0; i < this->m_animList.m_elemCount; i++)
-		this->m_hash.push_back(hash_list[i]);
+	this->m_hashes.reserve(this->m_animTable->GetNumEntries());
+	for (size_t i = 0; i < this->m_animTable->GetNumEntries(); i++)
+		this->m_hashes.push_back(hash_list[i]);
 }
 
 MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
@@ -128,69 +56,103 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 
 MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
 {
+	if (this->m_data->m_animTable != nullptr)
+		delete this->m_data->m_animTable;
+
+	if (this->m_data->m_animFormatTable != nullptr)
+		delete this->m_data->m_animFormatTable;
+
+	if (this->m_data->m_sourceXmdTable != nullptr)
+		delete this->m_data->m_sourceXmdTable;
+
+	if (this->m_data->m_animTakeTable != nullptr)
+		delete this->m_data->m_animTakeTable;
+
+	this->m_data->m_hashes.clear();
 }
 
-void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 alignmnent)
+void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 alignment)
 {
 	MemReader::WriteArray(out, this->m_magic, 2);
 	MemReader::Write(out, this->m_assetType);
 	MemReader::Write(out, this->m_signature);
 	MemReader::WriteArray(out, this->m_guid, 16);
 
-	this->m_dataSize = this->CalculateBundleSize();
-
-	MemReader::Write(out, this->m_dataSize);
+	MemReader::Write(out, this->GetMemoryRequirements());
 	MemReader::Write(out, this->m_dataAlignment);
 	MemReader::Write(out, this->m_iVar2C);
 
 	UINT64 pos = out->tellp();
 
-	MemReader::Write(out, this->m_data->m_animTableOffset);
-	MemReader::Write(out, this->m_data->m_formatTableOffset);
-	MemReader::Write(out, this->m_data->m_sourceTableOffset);
-	MemReader::Write(out, this->m_data->m_tagTableOffset);
-	MemReader::Write(out, this->m_data->m_hashOffset);
+	//TODO: Write offsets
 
-	this->m_data->m_animList.WriteToBinary(out);
-	this->m_data->m_animFormat.WriteToBinary(out);
-	this->m_data->m_sourceXmdList.WriteToBinary(out);
-	this->m_data->m_tagList.WriteToBinary(out);
+	ME::ExportStringTable(out, alignment, this->m_data->m_animTable);
+	ME::ExportStringTable(out, alignment, this->m_data->m_animFormatTable);
+	ME::ExportStringTable(out, alignment, this->m_data->m_sourceXmdTable);
+	ME::ExportStringTable(out, alignment, this->m_data->m_animTakeTable);
 
-	out->seekp(pos + this->m_data->m_hashOffset);
-
-	MemReader::WriteArray(out, this->m_data->m_hash.data(), this->m_data->m_animFormat.m_elemCount);
+	MemReader::WriteArray(out, this->m_data->m_hashes.data(), this->m_data->m_animTable->GetNumEntries());
 
 	WORD endFile = 0;
 	MemReader::Write(out, endFile);
 
-	MemReader::AlignStream(out, alignmnent);
+	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle_FileNameLookupTable::CalculateBundleSize()
+int MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
+	int animTableSize = this->m_data->m_animTable->GetMemoryRequirement();
+	
+	int remainder = animTableSize % this->m_dataAlignment;
+	
+	if (remainder)
+		animTableSize += this->m_dataAlignment - remainder;
+
+	this->m_dataSize += animTableSize;
+
+	int formatTableSize = this->m_data->m_animFormatTable->GetMemoryRequirement();
+
+	remainder = formatTableSize % this->m_dataAlignment;
+
+	if (remainder)
+		formatTableSize += this->m_dataAlignment - remainder;
+
+	this->m_dataSize += formatTableSize;
+
+	int xmdTableSize = this->m_data->m_sourceXmdTable->GetMemoryRequirement();
+
+	remainder = xmdTableSize % this->m_dataAlignment;
+
+	if (remainder)
+		xmdTableSize += this->m_dataAlignment - remainder;
+
+	this->m_dataSize += xmdTableSize;
+
+	int takeTableSize = this->m_data->m_animTakeTable->GetMemoryRequirement();
+
+	remainder = takeTableSize % this->m_dataAlignment;
+
+	if (remainder)
+		takeTableSize += this->m_dataAlignment - remainder;
+
+	this->m_dataSize += takeTableSize;
+
+	this->m_dataSize += 4 * this->m_data->m_hashes.size();
+
 	return this->m_dataSize;
-}
+} 
 
 std::string MorphemeBundle_FileNameLookupTable::GetAnimName(int anim_id)
 {
-	if (anim_id > this->m_data->m_animList.m_elemCount)
-		return "";
-
-	return std::string(&this->m_data->m_animList.m_strings[this->m_data->m_animList.m_localOffsets[anim_id]]);
+	return this->m_data->m_animTable->GetString(anim_id);
 }
 
 std::string MorphemeBundle_FileNameLookupTable::GetXmdSourceAnimFileName(int anim_id)
 {
-	if (anim_id > this->m_data->m_sourceXmdList.m_elemCount)
-		return "";
-
-	return std::string(&this->m_data->m_sourceXmdList.m_strings[this->m_data->m_sourceXmdList.m_localOffsets[anim_id]]);
+	return this->m_data->m_sourceXmdTable->GetString(anim_id);
 }
 
 std::string MorphemeBundle_FileNameLookupTable::GetAnimTake(int anim_id)
 {
-	if (anim_id > this->m_data->m_tagList.m_elemCount)
-		return "";
-
-	return std::string(&this->m_data->m_tagList.m_strings[this->m_data->m_tagList.m_localOffsets[anim_id]]);
+	return this->m_data->m_animTakeTable->GetString(anim_id);
 }

@@ -182,11 +182,11 @@ UnkNodeData::UnkNodeData(BYTE* pData)
 	this->m_sVar3 = *(short*)(pData + 0x18);
 	this->m_count = *(short*)(pData + 0x1A);
 
-	short* pData = (short*)(pData + dataOffset);
+	short* pUnkData = (short*)(pData + dataOffset);
 
 	this->m_data.reserve(this->m_count);
 	for (size_t i = 0; i < this->m_count; i++)
-		this->m_data.push_back(pData[i]);
+		this->m_data.push_back(pUnkData[i]);
 }
 
 UnkNodeData::~UnkNodeData()

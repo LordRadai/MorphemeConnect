@@ -123,11 +123,12 @@ NodeDef::NodeDef(BYTE* pData)
 	this->m_pDeleteFn = *(UINT64*)(pData + 0x48);
 	this->m_pUpdateFn = *(UINT64*)(pData + 0x50);
 	this->m_pUnkFn = *(UINT64*)(pData + 0x58);
-	this->m_pTransitFn = *(UINT64*)(pData + 0x60);
-	this->m_pNodeTypeDef = *(UINT64*)(pData + 0x68);
-	this->m_pVar24 = *(UINT64*)(pData + 0x70);
-	this->m_bVar25 = *(bool*)(pData + 0x78);
-	this->m_pVar26 = *(UINT64*)(pData + 0x80);
+	this->m_pInitFn = *(UINT64*)(pData + 0x60);
+	this->m_pTransitFn = *(UINT64*)(pData + 0x68);
+	this->m_pNodeTypeDef = *(UINT64*)(pData + 0x70);
+	this->m_pVar24 = *(UINT64*)(pData + 0x78);
+	this->m_bVar25 = *(bool*)(pData + 0x80);
+	this->m_pVar26 = *(UINT64*)(pData + 0x88);
 }
 
 NodeDef::~NodeDef()
@@ -442,7 +443,7 @@ NetworkDef::NetworkDef(BYTE* pData)
 
 	this->m_messageDefs.reserve(this->m_numRequests);
 	for (size_t i = 0; i < this->m_numRequests; i++)
-		this->m_messageDefs.push_back(new MessageDef(pMessageDefs[i]));
+		this->m_messageDefs.push_back(new MessageDef(pData + (UINT64)pMessageDefs[i]));
 
 	this->m_numNodeTypes = *(int*)(pData + 0x108);
 	UINT64 nodeTypeDefsOffset = *(UINT64*)(pData + 0x110);

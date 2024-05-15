@@ -191,7 +191,7 @@ void MorphemeBundle_Rig::WriteBinary(ofstream* out, UINT64 alignment)
 	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle_Rig::GetMemoryRequirements()
+UINT64 MorphemeBundle_Rig::GetMemoryRequirements()
 {
 	return this->m_dataSize;
 }

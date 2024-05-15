@@ -15,5 +15,5 @@ public:
     ~MorphemeBundle_NetworkDef();
 
     void WriteBinary(ofstream* out);
-    int GetMemoryRequirements();
+    UINT64 GetMemoryRequirements();
 };

@@ -18,5 +18,5 @@ public:
 	MorphemeBundle_Header(MorphemeBundle* bundle);
 	
 	void WriteBinary(ofstream* out, UINT64 alignment);
-	int GetMemoryRequirements();
+	UINT64 GetMemoryRequirements();
 };

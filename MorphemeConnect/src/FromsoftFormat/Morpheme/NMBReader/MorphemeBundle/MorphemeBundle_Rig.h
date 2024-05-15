@@ -74,7 +74,7 @@ public:
 	~MorphemeBundle_Rig();
 
 	void WriteBinary(ofstream* out, UINT64 alignment);
-	int GetMemoryRequirements();
+	UINT64 GetMemoryRequirements();
 
 	Matrix GetBoneBindPose(int idx);
 	int GetBoneIndex(std::string name);

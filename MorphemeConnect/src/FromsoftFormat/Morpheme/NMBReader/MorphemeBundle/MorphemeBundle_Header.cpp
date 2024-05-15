@@ -54,7 +54,7 @@ void MorphemeBundle_Header::WriteBinary(ofstream* out, UINT64 alignment)
 	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle_Header::GetMemoryRequirements()
+UINT64 MorphemeBundle_Header::GetMemoryRequirements()
 {
 	return 32;
 }

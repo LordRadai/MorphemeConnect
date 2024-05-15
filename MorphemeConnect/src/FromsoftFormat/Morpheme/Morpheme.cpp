@@ -4,18 +4,18 @@
 
 using namespace Morpheme4;
 
-AttributeData::AttributeData()
+AttributeDataBase::AttributeDataBase()
 {
 }
 
-AttributeData::AttributeData(BYTE* pData)
+AttributeDataBase::AttributeDataBase(BYTE* pData)
 {
 	this->m_iVar0 = *(UINT64*)(pData);
 	this->m_sVar1 = *(short*)(pData + 0x8);
 	this->m_attribTypeID = *(AttribType*)(pData + 0xA);
 }
 
-AttributeData::~AttributeData()
+AttributeDataBase::~AttributeDataBase()
 {
 }
 
@@ -32,7 +32,7 @@ Attribute::Attribute(BYTE* pData, UINT64 pBase)
 	BYTE* pOffset = *(BYTE**)(pData) + pBase;
 
 	if (pOffset != nullptr)
-		this->m_data = new AttributeData(pOffset);
+		this->m_data = new AttributeDataBase(pOffset);
 
 	this->m_dataSize = *(UINT64*)(pData + 0x8);
 	this->m_dataAlignment = *(int*)(pData + 0x10);

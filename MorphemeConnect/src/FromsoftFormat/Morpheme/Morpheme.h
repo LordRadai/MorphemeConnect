@@ -172,12 +172,12 @@ namespace Morpheme4
         ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS = 94,
     };
 
-    class AttributeData
+    class AttributeDataBase
     {
     public:
-        AttributeData();
-        AttributeData(BYTE* pData);
-        ~AttributeData();
+        AttributeDataBase();
+        AttributeDataBase(BYTE* pData);
+        ~AttributeDataBase();
 
     private:
         UINT64 m_iVar0;
@@ -193,7 +193,7 @@ namespace Morpheme4
         ~Attribute();
 
     private:
-        AttributeData* m_data;
+        AttributeDataBase* m_data;
         UINT64 m_dataSize;
         int m_dataAlignment;
         int m_iVar0;

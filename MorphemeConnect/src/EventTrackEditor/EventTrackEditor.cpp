@@ -109,6 +109,7 @@ void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 
 void EventTrackEditor::DeleteTrack(int idx)
 {
+    /*
     int delete_signature = this->m_eventTracks[idx].m_signature;
     char delete_name[50];
 
@@ -117,8 +118,8 @@ void EventTrackEditor::DeleteTrack(int idx)
     while (this->m_eventTracks[idx].m_numEvents > 0)
         this->DeleteEvent(idx, 0);
 
-    NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nodeSource->m_nodeData[1].m_attrib;
-    NodeAttribSourceEventTrack* event_tracks = (NodeAttribSourceEventTrack*)this->m_nodeSource->m_nodeData[2].m_attrib;
+    NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)this->m_nodeSource->m_attributes[1].m_data;
+    NodeAttribSourceEventTrack* event_tracks = (NodeAttribSourceEventTrack*)this->m_nodeSource->m_attributes[2].m_data;
 
     if (this->m_eventTracks[idx].m_discrete)
     {
@@ -148,6 +149,7 @@ void EventTrackEditor::DeleteTrack(int idx)
     this->m_reload = true;
 
     RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Deleted track %d (%s) (node=%d)\n", delete_signature, delete_name, this->m_nodeSource->m_nodeID);
+    */
 }
 
 void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
@@ -180,6 +182,7 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
 void EventTrackEditor::ReloadTracks()
 {
+    /*
     this->m_eventTracks.clear();
     this->SetEditedState(false);
 
@@ -217,6 +220,7 @@ void EventTrackEditor::ReloadTracks()
             }
         }
     }
+    */
 }
 
 EventTrackEditor::EventTrackEditor() 

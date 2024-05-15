@@ -206,7 +206,6 @@ namespace Morpheme4
         NodeDef(BYTE* pData);
         ~NodeDef();
 
-    private:
         NodeType m_typeID = NodeType_NetworkInstance;
         short m_flags = 0;
         short m_nodeID = 0;

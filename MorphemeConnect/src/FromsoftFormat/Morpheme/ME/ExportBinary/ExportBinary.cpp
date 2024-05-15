@@ -5,7 +5,9 @@ using namespace ME;
 
 void ME::ExportEvent(ofstream* out, int alignment, EventTrack::Event* event)
 {
-
+	MemReader::Write(out, event->m_start);
+	MemReader::Write(out, event->m_duration);
+	MemReader::Write(out, event->m_userData);
 }
 
 void ME::ExportEventTrack(ofstream* out, int alignment, EventTrack* eventTrack)

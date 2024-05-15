@@ -24,7 +24,7 @@ public:
 	~MorphemeBundle_FileNameLookupTable();
 
 	void WriteBinary(ofstream* out, UINT64 alignmnent);
-	int GetMemoryRequirements();
+	UINT64 GetMemoryRequirements();
 
 	std::string GetAnimName(int anim_id);											//Returns the anim name from its index from the string table 
 	std::string GetXmdSourceAnimFileName(int anim_id);								//Returns the XMD source anim name from its index from the string table 

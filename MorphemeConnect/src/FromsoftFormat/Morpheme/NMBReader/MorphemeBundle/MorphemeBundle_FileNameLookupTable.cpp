@@ -26,7 +26,7 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
 {
 	this->m_magic[0] = 0;
 	this->m_magic[1] = 0;
-	this->m_assetType = kAsset_Header;
+	this->m_assetType = kAsset_SimpleAnimruntimeIDtoFilenameLookup;
 	this->m_signature = 0;
 
 	for (size_t i = 0; i < 16; i++)
@@ -56,19 +56,6 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeB
 
 MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
 {
-	if (this->m_data->m_animTable != nullptr)
-		delete this->m_data->m_animTable;
-
-	if (this->m_data->m_animFormatTable != nullptr)
-		delete this->m_data->m_animFormatTable;
-
-	if (this->m_data->m_sourceXmdTable != nullptr)
-		delete this->m_data->m_sourceXmdTable;
-
-	if (this->m_data->m_animTakeTable != nullptr)
-		delete this->m_data->m_animTakeTable;
-
-	this->m_data->m_hashes.clear();
 }
 
 void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 alignment)
@@ -99,7 +86,7 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 align
 	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
+UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
 	int animTableSize = this->m_data->m_animTable->GetMemoryRequirement();
 	

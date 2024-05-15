@@ -54,7 +54,7 @@ void MorphemeBundle_EventTrack::WriteBinary(ofstream* out, UINT64 alignment)
 	MemReader::AlignStream(out, alignment);
 }
 
-int MorphemeBundle_EventTrack::GetMemoryRequirements()
+UINT64 MorphemeBundle_EventTrack::GetMemoryRequirements()
 {
 	int size = this->m_data->GetMemoryRequirements();
 

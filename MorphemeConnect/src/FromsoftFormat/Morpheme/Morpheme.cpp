@@ -2,6 +2,8 @@
 #include "../Utils/MemReader/MemReader.h"
 #include <assert.h>
 
+using namespace Morpheme4;
+
 AttributeData::AttributeData()
 {
 }

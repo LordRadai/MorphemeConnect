@@ -177,6 +177,7 @@ MorphemeBundle_Rig* NMBReader::GetRig(int idx)
 
 MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration)
 {
+	/*
 	int signature = rand();
 	bool valid = true;
 
@@ -257,6 +258,9 @@ MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int ev
 	}
 
 	return &this->m_eventTracks.back();
+	*/
+
+	return nullptr;
 }
 
 bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
@@ -335,6 +339,7 @@ std::string NMBReader::GetSourceAnimName(int idx)
 //Returns the anim name inside an AnimSyncEvent node
 std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 {
+	/*
 	if (this->m_init == false)
 		return "";
 
@@ -350,6 +355,9 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 		return "";
 
 	return this->GetSourceAnimName(source_anim->m_animIdx);
+	*/
+
+	return "";
 }
 
 //Returns the event track bundle with the matching m_signature parameter
@@ -374,6 +382,7 @@ std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signatu
 {
 	std::vector<EventTrackList*> track_lists;
 
+	/*
 	for (int i = 0; i < this->m_networkDef.m_data->m_numNodes; i++)
 	{
 		NodeDef* node = this->m_networkDef.m_data->m_nodes[i];
@@ -401,6 +410,7 @@ std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signatu
 			}
 		}
 	}
+	*/
 
 	return track_lists;
 }
@@ -409,6 +419,7 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 {
 	std::vector<NodeDef*> nodes;
 
+	/*
 	for (int i = 0; i < this->m_networkDef.m_data->m_numNodes; i++)
 	{
 		NodeDef* node = this->m_networkDef.m_data->m_nodes[i];
@@ -421,6 +432,7 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 				nodes.push_back(node);
 		}
 	}
+	*/
 
 	return nodes;
 }
@@ -444,6 +456,7 @@ void NMBReader::SortAnimList()
 //Exports EventTrack to XML morphemeMarkup format for morphemeConnect 3.6.2
 bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 {
+	/*
 	std::vector<NodeDef*> nodes = this->GetNodesByAnimReference(anim_id);
 
 	if (nodes.size() < 1)
@@ -499,6 +512,7 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 			return true;
 		}
 	}
+	*/
 
 	return false;
 }

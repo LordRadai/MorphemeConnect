@@ -119,7 +119,7 @@ struct NodeDef {
     uint64_t field36_0x8C = 0;
 
     NodeDef() {}
-    NodeDef(BYTE* data);
+    NodeDef(void* data);
 
     bool LoadNodeData(NodeType type, NodeDataSet* dst, BYTE* srcNodeData, int setCount);
     void SaveToFile(ofstream* out);

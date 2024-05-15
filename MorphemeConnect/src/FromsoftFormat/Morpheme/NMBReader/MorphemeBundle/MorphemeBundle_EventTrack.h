@@ -14,10 +14,10 @@ public:
 		};
 
 		int m_numEvents;
-		int m_channelId;
+		int m_index;
 		char* m_trackName;
 		int m_eventId;
-		int m_index;
+		int m_channelId;
 		std::vector<Event> m_events;
 	};
 

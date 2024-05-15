@@ -222,6 +222,9 @@
     <ClCompile Include="src\MorphemeConnect.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\Morpheme.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -2052,6 +2055,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="include\fbxsdk.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\Morpheme.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

@@ -327,6 +327,7 @@
     <ClCompile Include="src\FromsoftFormat\FlverReader\FlverReader.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\ME\ME.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\ME\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\Morpheme.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />
@@ -933,6 +934,7 @@
     <ClInclude Include="src\FromsoftFormat\FlverReader\FlverReader.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\ME\ME.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\ME\TinyXML\tinyxml2.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\Morpheme.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />

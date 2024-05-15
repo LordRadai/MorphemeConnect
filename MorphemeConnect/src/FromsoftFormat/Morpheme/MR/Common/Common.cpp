@@ -73,7 +73,7 @@ std::string StringTable::GetString(int id)
 	return std::string(&this->m_data[this->m_offsets[id]]);
 }
 
-int StringTable::GetMemoryRequirement()
+UINT64 StringTable::GetMemoryRequirement()
 {
 	return 32 + this->m_numEntries * 8 + this->m_dataLenght;
 }

@@ -107,7 +107,7 @@ void EventTrack::SetUserData(int userData)
 
 int EventTrack::GetMemoryRequirements()
 {
-	return 32 + 12 * this->m_numEvents + this->m_trackName.length();
+	return 32 + 12 * this->m_numEvents + this->m_trackName.length() + 1;
 }
 
 void EventTrack::AddEvent(float start, float end, int userData)

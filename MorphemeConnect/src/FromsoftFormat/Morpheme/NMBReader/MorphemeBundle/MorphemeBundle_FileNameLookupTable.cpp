@@ -71,11 +71,47 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 align
 
 	UINT64 pos = out->tellp();
 
-	//TODO: Write offsets
+	UINT64 offset = 40;
+
+	MemReader::Write(out, offset);
+
+	offset += this->m_data->m_animTable->GetMemoryRequirement();
+	UINT64 remainder = offset % this->m_dataAlignment;
+
+	if (remainder > 0)
+		offset += this->m_dataAlignment - remainder;
+
+	MemReader::Write(out, offset);
+
+	offset += this->m_data->m_animFormatTable->GetMemoryRequirement();
+	remainder = offset % this->m_dataAlignment;
+
+	if (remainder > 0)
+		offset += this->m_dataAlignment - remainder;
+
+	MemReader::Write(out, offset);
+
+	offset += this->m_data->m_sourceXmdTable->GetMemoryRequirement();
+	remainder = offset % this->m_dataAlignment;
+
+	if (remainder > 0)
+		offset += this->m_dataAlignment - remainder;
+
+	MemReader::Write(out, offset);
+
+	offset += this->m_data->m_animTakeTable->GetMemoryRequirement();
+
+	MemReader::Write(out, offset);
 
 	ME::ExportStringTable(out, alignment, this->m_data->m_animTable);
+	MemReader::AlignStream(out, alignment);
+
 	ME::ExportStringTable(out, alignment, this->m_data->m_animFormatTable);
+	MemReader::AlignStream(out, alignment);
+
 	ME::ExportStringTable(out, alignment, this->m_data->m_sourceXmdTable);
+	MemReader::AlignStream(out, alignment);
+
 	ME::ExportStringTable(out, alignment, this->m_data->m_animTakeTable);
 
 	MemReader::WriteArray(out, this->m_data->m_hashes.data(), this->m_data->m_animTable->GetNumEntries());
@@ -88,11 +124,13 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 align
 
 UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
+	this->m_dataSize = 40;
+
 	int animTableSize = this->m_data->m_animTable->GetMemoryRequirement();
 	
 	int remainder = animTableSize % this->m_dataAlignment;
 	
-	if (remainder)
+	if (remainder > 0)
 		animTableSize += this->m_dataAlignment - remainder;
 
 	this->m_dataSize += animTableSize;
@@ -117,14 +155,15 @@ UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 
 	int takeTableSize = this->m_data->m_animTakeTable->GetMemoryRequirement();
 
-	remainder = takeTableSize % this->m_dataAlignment;
-
-	if (remainder)
-		takeTableSize += this->m_dataAlignment - remainder;
-
 	this->m_dataSize += takeTableSize;
 
-	this->m_dataSize += 4 * this->m_data->m_hashes.size();
+	int hashSize = 4 * this->m_data->m_hashes.size();
+	remainder = hashSize % this->m_dataAlignment;
+
+	if (remainder)
+		hashSize += this->m_dataAlignment - remainder;
+
+	this->m_dataSize += hashSize;
 
 	return this->m_dataSize;
 } 

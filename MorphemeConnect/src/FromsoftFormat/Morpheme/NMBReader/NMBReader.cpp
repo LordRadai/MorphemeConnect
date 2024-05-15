@@ -287,13 +287,13 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 
 	try
 	{
-		this->m_header.WriteBinary(&nmb_out, 0);
+		this->m_header.WriteBinary(&nmb_out, this->m_header.m_dataAlignment);
 
 		if (this->m_characterControllerDef.size() == this->m_rig.size())
 		{
 			for (size_t i = 0; i < this->m_characterControllerDef.size(); i++)
 			{
-				this->m_characterControllerDef[i].WriteBinary(&nmb_out, 0);
+				this->m_characterControllerDef[i].WriteBinary(&nmb_out, this->m_characterControllerDef[i].m_dataAlignment);
 
 				//this->m_rig[i].WriteBinary(&nmb_out, 0);
 				this->m_rigRaw[i].WriteBinary(&nmb_out, 16);
@@ -306,14 +306,14 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		}
 
 		for (int i = 0; i < this->m_eventTracks.size(); i++)
-			this->m_eventTracks[i].WriteBinary(&nmb_out, 0);
+			this->m_eventTracks[i].WriteBinary(&nmb_out, this->m_eventTracks[i].m_dataAlignment);
 
 		for (int i = 0; i < this->m_rigToAnimMap.size(); i++)
-			this->m_rigToAnimMap[i].WriteBinary(&nmb_out, 0);
+			this->m_rigToAnimMap[i].WriteBinary(&nmb_out, this->m_rigToAnimMap[i].m_dataAlignment);
 
 		//this->m_network.WriteBinary(&nmb_out);
-		this->m_networkRaw.WriteBinary(&nmb_out, 0);
-		this->m_fileNameLookupTable.WriteBinary(&nmb_out, 0);
+		this->m_networkRaw.WriteBinary(&nmb_out, this->m_networkRaw.m_dataAlignment);
+		this->m_fileNameLookupTable.WriteBinary(&nmb_out, this->m_fileNameLookupTable.m_dataAlignment);
 	}
 	catch (const std::exception&)
 	{

@@ -16,7 +16,7 @@ public:
     int GetID(int id);
     UINT GetOffset(int id);
     std::string GetString(int id);
-    int GetMemoryRequirement();
+    UINT64 GetMemoryRequirement();
 private:
     int m_numEntries;
     int m_dataLenght;

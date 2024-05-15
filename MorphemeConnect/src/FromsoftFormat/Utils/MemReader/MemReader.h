@@ -53,8 +53,12 @@ namespace MemReader
 
 		streampos current_pos = pStream->tellp();
 		UINT64 remainder = current_pos % alignment;
-		UINT64 pad_amt = alignment - remainder;
 
-		pStream->seekp(current_pos + (streampos)pad_amt);
+		if (remainder > 0)
+		{
+			UINT64 pad_amt = alignment - remainder;
+
+			Pad(pStream, 0xCD, pad_amt);
+		}
 	}
 }

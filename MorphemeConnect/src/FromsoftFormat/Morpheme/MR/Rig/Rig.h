@@ -42,6 +42,7 @@ namespace MR
 		BindPose(BYTE* pData);
 		~BindPose();
 
+		Orientation* GetOrientation();
 	private:
 		int m_flags;
 		UINT64 m_dataSize;
@@ -71,6 +72,12 @@ namespace MR
 		Rig(BYTE* pData);
 		~Rig();
 
+		int GetBoneCount();
+		Hierarchy* GetHierarchy();
+		int GetTrajectoryBoneID();
+		int GetRootBoneID();
+		BindPose* GetBindPose();
+		std::string GetBoneName(int id);
 	private:
 		UINT64 m_version;
 		int m_iVar1;

@@ -100,6 +100,11 @@ BindPose::~BindPose()
 {
 }
 
+BindPose::Orientation* BindPose::GetOrientation()
+{
+	return this->m_pOrientation;
+}
+
 Rig::Hierarchy::Hierarchy()
 {
 	this->m_boneCount = 0;
@@ -147,4 +152,34 @@ Rig::Rig(BYTE* pData)
 
 Rig::~Rig()
 {
+}
+
+int Rig::GetBoneCount()
+{
+	return this->m_pHierarchy->m_boneCount;
+}
+
+Rig::Hierarchy* Rig::GetHierarchy()
+{
+	return this->m_pHierarchy;
+}
+
+int Rig::GetTrajectoryBoneID()
+{
+	return this->m_trajectoryBoneId;
+}
+
+int Rig::GetRootBoneID()
+{
+	return this->m_characterRootBoneId;
+}
+
+BindPose* Rig::GetBindPose()
+{
+	return this->m_pBindPose;
+}
+
+std::string Rig::GetBoneName(int id)
+{
+	return this->m_pBoneIDNamesTable->GetString(id);
 }

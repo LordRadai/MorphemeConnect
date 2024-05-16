@@ -1,6 +1,10 @@
 #pragma once
 #include "../Common/Common.h"
-#include "../MR.h"
+#include "../AttribData/AttribData.h"
+#include "../AttribData/AttribDataUnknown.h"
+#include "../AttribData/AttribDataBool.h"
+#include "../AttribData/AttribDataSourceAnim.h"
+#include "../AttribData/AttribDataSourceEventTrack.h"
 
 enum NodeType
 {

@@ -43,26 +43,3 @@ UINT64 MorphemeBundle_Rig::GetMemoryRequirements()
 {
 	return this->m_dataSize;
 }
-
-Matrix MorphemeBundle_Rig::GetBoneBindPose(int idx)
-{
-	Quaternion rot = this->m_data->GetBindPose()->GetOrientation()->m_rotation[idx];
-	Vector4 translation = this->m_data->GetBindPose()->GetOrientation()->m_position[idx];
-
-	DirectX::XMMATRIX world = DirectX::XMMatrixScaling(1.0, 1.0, 1.0);
-	world *= DirectX::XMMatrixRotationQuaternion(rot);
-	world *= DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z);
-
-	return world;
-}
-
-int MorphemeBundle_Rig::GetBoneIndex(std::string name)
-{
-	for (int i = 0; i < this->m_data->GetBoneCount(); i++)
-	{
-		if (std::strcmp(this->m_data->GetBoneName(i).c_str(), name.c_str()) == 0)
-			return i;
-	}
-
-	return -1;
-}

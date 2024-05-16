@@ -183,3 +183,26 @@ std::string Rig::GetBoneName(int id)
 {
 	return this->m_pBoneIDNamesTable->GetString(id);
 }
+
+Matrix Rig::GetBoneBindPose(int idx)
+{
+	Quaternion rot = this->m_pBindPose->GetOrientation()->m_rotation[idx];
+	Vector4 translation = this->m_pBindPose->GetOrientation()->m_position[idx];
+
+	DirectX::XMMATRIX world = DirectX::XMMatrixScaling(1.0, 1.0, 1.0);
+	world *= DirectX::XMMatrixRotationQuaternion(rot);
+	world *= DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z);
+
+	return world;
+}
+
+int Rig::GetBoneIndex(std::string name)
+{
+	for (int i = 0; i < this->m_pHierarchy->m_boneCount; i++)
+	{
+		if (std::strcmp(this->m_pBoneIDNamesTable->GetString(i).c_str(), name.c_str()) == 0)
+			return i;
+	}
+
+	return -1;
+}

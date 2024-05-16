@@ -13,7 +13,4 @@ public:
 
 	void WriteBinary(ofstream* out, UINT64 alignment);
 	UINT64 GetMemoryRequirements();
-
-	Matrix GetBoneBindPose(int idx);
-	int GetBoneIndex(std::string name);
 };

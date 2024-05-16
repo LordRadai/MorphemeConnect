@@ -78,6 +78,9 @@ namespace MR
 		int GetRootBoneID();
 		BindPose* GetBindPose();
 		std::string GetBoneName(int id);
+
+		Matrix GetBoneBindPose(int idx);
+		int GetBoneIndex(std::string name);
 	private:
 		UINT64 m_version;
 		int m_iVar1;

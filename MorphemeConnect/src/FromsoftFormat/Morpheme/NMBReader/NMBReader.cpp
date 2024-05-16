@@ -375,42 +375,6 @@ MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
 	return nullptr;
 }
 
-//Returns all the EventTrack objects with references to the specified signature
-std::vector<EventTrackSet*> NMBReader::GetEventTrackListBySignature(int signature)
-{
-	std::vector<EventTrackSet*> track_lists;
-
-	for (int i = 0; i < this->m_networkDef.m_data->m_numNodes; i++)
-	{
-		NodeDef* node = this->m_networkDef.m_data->m_nodes[i];
-
-		if (node->m_typeID == NodeType_NodeAnimSyncEvents)
-		{
-			MR::AttribDataSourceEventTrack* source_event_track = (MR::AttribDataSourceEventTrack*)node->m_attributes[2]->GetAttribData();
-
-			for (int j = 0; j < source_event_track->GetDiscreteEventTrackSet().m_trackCount; j++)
-			{
-				if (source_event_track->GetDiscreteEventTrackSet().m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->GetDiscreteEventTrackSet());
-			}
-
-			for (int j = 0; j < source_event_track->GetCurveEventTrackSet().m_trackCount; j++)
-			{
-				if (source_event_track->GetCurveEventTrackSet().m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->GetCurveEventTrackSet());
-			}
-
-			for (int j = 0; j < source_event_track->GetDurationEventTrackSet().m_trackCount; j++)
-			{
-				if (source_event_track->GetDurationEventTrackSet().m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->GetDurationEventTrackSet());
-			}
-		}
-	}
-
-	return track_lists;
-}
-
 std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 {
 	std::vector<NodeDef*> nodes;

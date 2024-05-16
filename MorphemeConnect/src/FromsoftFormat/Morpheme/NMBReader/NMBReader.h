@@ -65,7 +65,6 @@ public:
 
 	std::string GetSourceAnimName(int idx);										
 	std::string GetAnimNameFromAnimNode(NodeDef* m_node);						
-	std::vector<EventTrackSet*> GetEventTrackListBySignature(int signature);
 	std::vector<NodeDef*> GetNodesByAnimReference(int anim_idx);				
 	bool ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id);
 	bool ExportNetworkDefToXML(PWSTR pszOutFilePath);

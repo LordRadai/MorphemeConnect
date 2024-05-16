@@ -5,7 +5,7 @@
 class MorphemeBundle_Rig : public MorphemeBundle_Base
 {
 public:
-	Rig* m_data;
+	MR::Rig* m_data;
 
 	MorphemeBundle_Rig();
 	MorphemeBundle_Rig(MorphemeBundle* bundle);

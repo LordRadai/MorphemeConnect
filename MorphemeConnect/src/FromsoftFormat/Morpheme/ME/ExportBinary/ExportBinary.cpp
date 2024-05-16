@@ -105,10 +105,12 @@ void ME::ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose)
 	MemReader::Pad(out, 0xCD, 8);
 	MemReader::Write(out, bindPose->GetFlags());
 	MemReader::AlignStream(out, alignment);
+	MemReader::Write(out, (UINT64)32);
+	MemReader::AlignStream(out, alignment);
 
 	UINT64 startPos = out->tellp();
 
-	int dataSize = bindPose->GetMemoryRequirements() + 7;
+	UINT64 dataSize = bindPose->GetMemoryRequirements() + 7;
 	
 	dataSize = RMath::AlignValue(startPos + dataSize, 16) - startPos;
 
@@ -152,6 +154,8 @@ void ME::ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose)
 	MemReader::Write(out, positionOffset);
 
 	UINT64 rotationOffset = positionOffset + 48 + bindPose->GetOrientation()->m_position.size() * 16;
+
+	MemReader::Write(out, rotationOffset);
 
 	MemReader::WriteArray(out, bindPose->GetOrientation()->m_position.data(), bindPose->GetBoneCount());
 

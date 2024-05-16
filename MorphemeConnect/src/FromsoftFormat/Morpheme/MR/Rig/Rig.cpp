@@ -29,15 +29,15 @@ BindPose::Orientation::Orientation()
 BindPose::Orientation::Orientation(BYTE* pData, BYTE* pBase, int boneCount)
 {
 	UINT64 ppPosition = *(UINT64*)(pData);
-	UINT64 ppRotation = *(UINT64*)(pData);
+	UINT64 ppRotation = *(UINT64*)(pData + 0x8);
 
-	Vector4* pPosition = (Vector4*)(pData + ppPosition);
+	Vector4* pPosition = (Vector4*)(pBase + ppPosition);
 
 	this->m_position.reserve(boneCount);
 	for (size_t i = 0; i < boneCount; i++)
 		this->m_position.push_back(pPosition[i]);
 
-	Vector4* pRotation = (Vector4*)(pData + ppRotation);
+	Vector4* pRotation = (Vector4*)(pBase + ppRotation);
 
 	this->m_rotation.reserve(boneCount);
 	for (size_t i = 0; i < boneCount; i++)

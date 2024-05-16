@@ -177,7 +177,6 @@ MorphemeBundle_Rig* NMBReader::GetRig(int idx)
 
 MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration)
 {
-	/*
 	int signature = rand();
 	bool valid = true;
 
@@ -195,72 +194,33 @@ MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int ev
 
 	} while (valid == false);
 
-	MorphemeBundle_EventTrack new_bundle;
-
-	new_bundle.m_magic[0] = 24;
-	new_bundle.m_magic[1] = 10;
-
-	if (!duration)
-		new_bundle.m_assetType = kAsset_EventTrackDiscrete;
-	else
-		new_bundle.m_assetType = kAsset_EventTrackDuration;
-
-	new_bundle.m_signature = signature;
-
-	for (size_t i = 0; i < 16; i++)
-		new_bundle.m_guid[i] = 0;
-
-	new_bundle.m_dataSize = 0;
-	new_bundle.m_dataAlignment = 16;
-	new_bundle.m_iVar2C = 0;
-
-	new_bundle.m_data = new MorphemeBundle_EventTrack::BundleData_EventTrack;
-
-	new_bundle.m_data->m_numEvents = 0;
-	new_bundle.m_data->GetChannelID() = 0;
-
-	new_bundle.m_data->m_trackName = new char[50];
-	strcpy(new_bundle.m_data->m_trackName, name);
-
-	new_bundle.m_data->GetUserData() = event_id;
-	new_bundle.m_data->m_index = 0;
-
-	new_bundle.CalculateBundleSize();
+	MorphemeBundle_EventTrack new_bundle(signature, duration, 0, name, event_id, 0);
 
 	this->m_eventTracks.push_back(new_bundle);
 
-	NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node_source->m_nodeData[1].m_attrib;
-	MR::AttribDataSourceEventTrack* event_tracks = (MR::AttribDataSourceEventTrack*)node_source->m_nodeData[2].m_attrib;
+	MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)node_source->m_attributes[1]->GetAttribData();
+	MR::AttribDataSourceEventTrack* event_tracks = (MR::AttribDataSourceEventTrack*)node_source->m_attributes[2]->GetAttribData();
 
 	if (!duration)
-	{
-		event_tracks->GetDiscreteEventTrackSet().m_trackCount++;
-		event_tracks->GetDiscreteEventTrackSet().m_trackSignatures.push_back(new_bundle.m_signature);
-	}
+		event_tracks->GetDiscreteEventTrackSet().AddEventTrack(new_bundle.m_signature);
 	else
-	{
-		event_tracks->GetDurationEventTrackSet().m_trackCount++;
-		event_tracks->GetDurationEventTrackSet().m_trackSignatures.push_back(new_bundle.m_signature);
-	}
+		event_tracks->GetDurationEventTrackSet().AddEventTrack(new_bundle.m_signature);
 
-	std::vector<NodeDef*> nodes = this->GetNodesByAnimReference(source_anim->m_animIdx);
+	std::vector<NodeDef*> nodes = this->GetNodesByAnimReference(source_anim->GetAnimID());
 
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		if (nodes[i] != node_source)
 		{
-			MR::AttribDataSourceEventTrack* event_tracks_new = (MR::AttribDataSourceEventTrack*)nodes[i]->m_nodeData[2].m_attrib;
+			MR::AttribDataSourceEventTrack* event_tracks_new = (MR::AttribDataSourceEventTrack*)nodes[i]->m_attributes[2]->GetAttribData();
 
-			event_tracks_new->GetDiscreteEventTrackSet() = event_tracks->GetDiscreteEventTrackSet();
-			event_tracks_new->GetCurveEventTrackSet() = event_tracks->GetCurveEventTrackSet();
-			event_tracks_new->GetDurationEventTrackSet() = event_tracks->GetDurationEventTrackSet();
+			event_tracks_new->SetDiscreteEventTrackSet(event_tracks->GetDiscreteEventTrackSet());
+			event_tracks_new->SetCurveEventTrackSet(event_tracks->GetCurveEventTrackSet());
+			event_tracks_new->SetDurationEventTrackSet(event_tracks->GetDurationEventTrackSet());
 		}
 	}
 
 	return &this->m_eventTracks.back();
-	*/
-
-	return nullptr;
 }
 
 bool NMBReader::SaveToFile(PWSTR pszOutFilePath)

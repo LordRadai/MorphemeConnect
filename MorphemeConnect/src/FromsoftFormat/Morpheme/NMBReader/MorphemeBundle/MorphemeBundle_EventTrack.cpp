@@ -4,8 +4,8 @@
 
 MorphemeBundle_EventTrack::MorphemeBundle_EventTrack()
 {
-	this->m_magic[0] = 0;
-	this->m_magic[1] = 0;
+	this->m_magic[0] = 24;
+	this->m_magic[1] = 10;
 	this->m_assetType = kAsset_EventTrackDiscrete;
 	this->m_signature = 0;
 
@@ -15,7 +15,26 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack()
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 0;
 	this->m_iVar2C = 0;
-	this->m_data = NULL;
+	this->m_data = nullptr;
+}
+
+MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(int signature, bool is_duration, int index, char* trackName, int userData, int channelID)
+{
+	this->m_magic[0] = 24;
+	this->m_magic[1] = 10;
+	this->m_assetType = kAsset_EventTrackDiscrete;
+
+	if (is_duration)
+		this->m_assetType = kAsset_EventTrackDuration;
+
+	this->m_signature = signature;
+
+	CoCreateGuid((GUID*)this->m_guid);
+
+	this->m_dataSize = 0;
+	this->m_dataAlignment = 16;
+	this->m_iVar2C = 0;
+	this->m_data = new EventTrack(index, trackName, userData, channelID);
 }
 
 MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)

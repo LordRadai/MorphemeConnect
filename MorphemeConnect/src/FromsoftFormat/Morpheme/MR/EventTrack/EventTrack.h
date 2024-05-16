@@ -36,6 +36,7 @@ namespace MR
 		int GetMemoryRequirements();
 		void AddEvent(float start, float end, int userData);
 		void DeleteEvent(int idx);
+
 	private:
 		int m_numEvents;
 		int m_index;

@@ -101,22 +101,11 @@ namespace MR
         AttribData();
         AttribData(BYTE* pData);
         ~AttribData();
-
-        virtual void Load(BYTE* pData);
+        
+        AttribType GetAttribType();
     protected:
         UINT64 m_iVar0;
         short m_sVar1;
         AttribType m_attribTypeID;
-    };
-
-    class AttribDataUnknown : public AttribData
-    {
-    public:
-        AttribDataUnknown();
-        ~AttribDataUnknown();
-
-        void Load(BYTE* pData, int size);
-    private:
-        std::vector<BYTE> m_data;
     };
 }

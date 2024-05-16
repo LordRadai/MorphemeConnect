@@ -1215,35 +1215,32 @@ void Application::CheckFlags()
 
 				if (node->m_typeID == NodeType_NodeAnimSyncEvents)
 				{
-					/*
 					if (networkDef->m_data->m_nodes[idx]->m_attributes[1] != NULL)
 					{
-						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
-						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
+						MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)networkDef->m_data->m_nodes[idx]->m_attributes[1]->GetAttribData();
+						MR::AttribDataSourceEventTrack* event_track = (MR::AttribDataSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_attributes[2]->GetAttribData();
 
-						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
+						if (source_anim->GetAnimID() == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
 							found_anim = true;
 
 							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
 
 							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
-							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->GetClipStart() * source_anim->GetAnimLen());
+							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->GetClipEnd() * source_anim->GetAnimLen());
 
 							this->m_eventTrackEditor.m_animIdx = -1;
 
 							for (int i = 0; i < this->m_nmb.GetAnimationCount(); i++)
 							{
-								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->m_animIdx)
+								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->GetAnimID())
 									this->m_eventTrackEditor.m_animIdx = i;
 							}
 
-							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / (source_anim->m_clipEnd - source_anim->m_clipStart);
+							this->m_eventTrackEditorFlags.m_lenMult = source_anim->GetAnimLen() / (source_anim->GetClipEnd() - source_anim->GetClipStart());
 
-							int track_count = 0;
-							for (size_t i = 0; i < 3; i++)
-								track_count += event_track->m_eventTracks[i].m_trackCount;
+							int track_count = event_track->GetDiscreteEventTrackSet().m_trackCount + event_track->GetCurveEventTrackSet().m_trackCount + event_track->GetDurationEventTrackSet().m_trackCount;
 
 							this->m_eventTrackEditor.m_eventTracks.reserve(track_count);
 
@@ -1251,25 +1248,25 @@ void Application::CheckFlags()
 							{
 								found_et = true;
 
-								for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetDiscreteEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDiscreteEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
 								}
 
-								for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetCurveEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetCurveEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 								}
 
-								for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetDurationEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDurationEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
@@ -1306,11 +1303,10 @@ void Application::CheckFlags()
 							}
 							else
 							{
-								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->GetAnimID());
 							}
 						}
 					}
-					*/
 				}
 			}
 

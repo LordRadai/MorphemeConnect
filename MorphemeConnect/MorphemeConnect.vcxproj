@@ -329,6 +329,10 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\ME\ExportXML\ExportXML.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\ME\ExportXML\TinyXML\tinyxml2.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribData.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\Common\Common.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\EventTrack\EventTrack.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\NetworkDef\NetworkDef.cpp" />
@@ -939,6 +943,10 @@
     <ClInclude Include="src\FromsoftFormat\Morpheme\ME\TinyXML\tinyxml2.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\Morpheme.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribData.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\Common\Common.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\EventTrack\EventTrack.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\MR.h" />

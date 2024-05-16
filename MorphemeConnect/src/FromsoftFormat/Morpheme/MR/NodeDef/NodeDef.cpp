@@ -29,6 +29,11 @@ Attribute::~Attribute()
 		delete this->m_data;
 }
 
+AttribData* Attribute::GetAttribData()
+{
+	return this->m_data;
+}
+
 NodeDef::NodeDef()
 {
 	this->m_typeID = NodeType_Invalid;

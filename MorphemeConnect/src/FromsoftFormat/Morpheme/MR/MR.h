@@ -1,3 +1,7 @@
 #include "AttribData/AttribData.h"
+#include "AttribData/AttribDataUnknown.h"
+#include "AttribData/AttribDataBool.h"
+#include "AttribData/AttribDataSourceAnim.h"
+#include "AttribData/AttribDataSourceEventTrack.h"
 #include "NetworkDef/NetworkDef.h"
 #include "EventTrack/EventTrack.h"

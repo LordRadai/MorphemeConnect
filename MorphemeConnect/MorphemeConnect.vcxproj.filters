@@ -225,6 +225,18 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\NSAReader\NSAReader.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -2070,6 +2082,18 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\ME\ME.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

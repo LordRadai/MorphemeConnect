@@ -72,30 +72,17 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 align
 	UINT64 pos = out->tellp();
 
 	UINT64 offset = 40;
+	MemReader::Write(out, offset);
+
+	offset = RMath::AlignValue(offset + this->m_data->m_animTable->GetMemoryRequirement(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
-	offset += this->m_data->m_animTable->GetMemoryRequirement();
-	UINT64 remainder = offset % this->m_dataAlignment;
-
-	if (remainder > 0)
-		offset += this->m_dataAlignment - remainder;
+	offset = RMath::AlignValue(offset + this->m_data->m_animFormatTable->GetMemoryRequirement(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
-	offset += this->m_data->m_animFormatTable->GetMemoryRequirement();
-	remainder = offset % this->m_dataAlignment;
-
-	if (remainder > 0)
-		offset += this->m_dataAlignment - remainder;
-
-	MemReader::Write(out, offset);
-
-	offset += this->m_data->m_sourceXmdTable->GetMemoryRequirement();
-	remainder = offset % this->m_dataAlignment;
-
-	if (remainder > 0)
-		offset += this->m_dataAlignment - remainder;
+	offset = RMath::AlignValue(offset + this->m_data->m_sourceXmdTable->GetMemoryRequirement(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
@@ -116,9 +103,6 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 align
 
 	MemReader::WriteArray(out, this->m_data->m_hashes.data(), this->m_data->m_animTable->GetNumEntries());
 
-	WORD endFile = 0;
-	MemReader::Write(out, endFile);
-
 	MemReader::AlignStream(out, alignment);
 }
 
@@ -126,44 +110,7 @@ UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
 	this->m_dataSize = 40;
 
-	int animTableSize = this->m_data->m_animTable->GetMemoryRequirement();
-	
-	int remainder = animTableSize % this->m_dataAlignment;
-	
-	if (remainder > 0)
-		animTableSize += this->m_dataAlignment - remainder;
-
-	this->m_dataSize += animTableSize;
-
-	int formatTableSize = this->m_data->m_animFormatTable->GetMemoryRequirement();
-
-	remainder = formatTableSize % this->m_dataAlignment;
-
-	if (remainder)
-		formatTableSize += this->m_dataAlignment - remainder;
-
-	this->m_dataSize += formatTableSize;
-
-	int xmdTableSize = this->m_data->m_sourceXmdTable->GetMemoryRequirement();
-
-	remainder = xmdTableSize % this->m_dataAlignment;
-
-	if (remainder)
-		xmdTableSize += this->m_dataAlignment - remainder;
-
-	this->m_dataSize += xmdTableSize;
-
-	int takeTableSize = this->m_data->m_animTakeTable->GetMemoryRequirement();
-
-	this->m_dataSize += takeTableSize;
-
-	int hashSize = 4 * this->m_data->m_hashes.size();
-	remainder = hashSize % this->m_dataAlignment;
-
-	if (remainder)
-		hashSize += this->m_dataAlignment - remainder;
-
-	this->m_dataSize += hashSize;
+	this->m_dataSize += RMath::AlignValue(this->m_data->m_animTable->GetMemoryRequirement(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_animFormatTable->GetMemoryRequirement(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_sourceXmdTable->GetMemoryRequirement(), this->m_dataAlignment) + this->m_data->m_animTakeTable->GetMemoryRequirement() + RMath::AlignValue(4 * this->m_data->m_hashes.size(), this->m_dataAlignment);
 
 	return this->m_dataSize;
 } 

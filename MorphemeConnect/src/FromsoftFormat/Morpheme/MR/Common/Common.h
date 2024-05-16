@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <assert.h>
+#include "../../../../RLog/RLog.h"
 
 class StringTable
 {

@@ -78,6 +78,7 @@ namespace MR
         Attribute(BYTE* pData, UINT64 pBase);
         ~Attribute();
 
+        AttribData* GetAttribData();
     private:
         MR::AttribData* m_data;
         UINT64 m_dataSize;

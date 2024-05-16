@@ -135,3 +135,14 @@ int RMath::TimeToFrame(float time, int frameRate, bool round)
 
 	return std::roundf(frame);
 }
+
+//Returns aligned value to the specified alignment
+int RMath::AlignValue(int value, int alignment)
+{
+	int remainder = value % alignment;
+
+	if (remainder > 0)
+		return value + alignment - remainder;
+
+	return value;
+}

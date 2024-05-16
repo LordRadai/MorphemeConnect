@@ -1877,7 +1877,7 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-	int boneIdx = pMorphemeRig->GetBoneIndex(boneName);
+	int boneIdx = pMorphemeRig->m_data->GetBoneIndex(boneName);
 
 	if (boneIdx == -1)
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());

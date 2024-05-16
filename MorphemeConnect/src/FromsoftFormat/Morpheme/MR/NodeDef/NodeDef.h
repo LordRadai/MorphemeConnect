@@ -1,6 +1,6 @@
 #pragma once
 #include "../Common/Common.h"
-#include "../AttribData/AttribData.h"
+#include "../MR.h"
 
 enum NodeType
 {
@@ -84,6 +84,8 @@ namespace MR
         UINT64 m_dataSize;
         int m_dataAlignment;
         int m_iVar0;
+
+        AttribData* AttribDataFactory(BYTE* pData);
     };
 
     class NodeDef

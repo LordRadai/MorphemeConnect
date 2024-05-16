@@ -13,10 +13,10 @@ Attribute::Attribute()
 
 Attribute::Attribute(BYTE* pData, UINT64 pBase)
 {
-	BYTE* pOffset = *(BYTE**)(pData)+pBase;
+	BYTE* pOffset = *(BYTE**)(pData) + pBase;
 
 	if (pOffset != nullptr)
-		this->m_data = new AttribData(pOffset);
+		this->m_data = AttribDataFactory(pData);
 
 	this->m_dataSize = *(UINT64*)(pData + 0x8);
 	this->m_dataAlignment = *(int*)(pData + 0x10);
@@ -25,13 +25,196 @@ Attribute::Attribute(BYTE* pData, UINT64 pBase)
 
 Attribute::~Attribute()
 {
-	if (this->m_data)
-		delete this->m_data;
 }
 
 AttribData* Attribute::GetAttribData()
 {
 	return this->m_data;
+}
+
+AttribData* Attribute::AttribDataFactory(BYTE* pData)
+{
+	switch (this->m_data->GetAttribType())
+	{
+	case ATTRIB_TYPE_BOOL:
+		return new AttribDataBool(pData);
+	case ATTRIB_TYPE_UINT:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_INT:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_FLOAT:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_VECTOR3:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_VECTOR4:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BOOL_ARRAY:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_UINT_ARRAY:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_INT_ARRAY:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_FLOAT_ARRAY:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_UPDATE_PLAYBACK_POS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PLAYBACK_POS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_UPDATE_SYNC_EVENT_PLAYBACK_POS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRANSFORM_BUFFER:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRAJECTORY_DELTA_TRANSFORM:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRANSFORM:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_VELOCITY:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SYNC_EVENT_TRACK:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SAMPLED_EVENTS_BUFFER:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_DURATION_EVENT_TRACK_SET:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RIG:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SOURCE_ANIM:
+		return new AttribDataSourceAnim(pData);
+	case ATTRIB_TYPE_SOURCE_EVENT_TRACKS:
+		return new AttribDataSourceEventTrack(pData);
+	case ATTRIB_TYPE_HEAD_LOOK_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_HEAD_LOOK_CHAIN:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_GUN_AIM_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_GUN_AIM_IK_CHAIN:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TWO_BONE_IK_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TWO_BONE_IK_CHAIN:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_LOCK_FOOT_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_LOCK_FOOT_CHAIN:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_LOCK_FOOT_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_HIPS_IK_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_HIPS_IK_ANIM_SET_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_CLOSEST_ANIM_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_CLOSEST_ANIM_DEF_ANIM_SET:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_CLOSEST_ANIM_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_STATE_MACHINE_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_STATE_MACHINE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_CHARACTER_PROPERTIES:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_CHARACTER_CONTROLLER_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_SETUP_ANIM_SET:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_INITIALISATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_GROUPER_CONFIG:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_FLOAT_OPERATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_2_FLOAT_OPERATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SMOOTH_FLOAT_OPERATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RATE_OF_CHANGE_OPERATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RANDOM_FLOAT_OPERATION:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RANDOM_FLOAT_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_NOISE_GEN_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SWITCH_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RAY_CAST_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRANSIT_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRANSIT_SYNC_EVENTS_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_TRANSIT_SYNC_EVENTS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_DEAD_BLEND_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_DEAD_BLEND_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BLEND_NXM_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_ANIM_MIRRORED_MAPPING:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PLAYBACK_POS_INIT:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_EMITTED_MESSAGE_MAP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_SETUP:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_FOOT_LIFTING_TARGET:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_IK_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BASIC_UNEVEN_TERRAIN_CHAIN:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_IK_PREDICTION_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_FOOT_LIFTING_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PREDICTIVE_UNEVEN_TERRAIN_PREDICTION_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SCATTER_BLEND_ANALYSIS_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SCATTER_BLEND_1D_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SCATTER_BLEND_2D_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_EMIT_MESSAGE_ON_CP_VALUE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_PHYSICS_INFO_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_JOINT_LIMITS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BLEND_FLAGS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_BLEND_WEIGHTS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_FEATHER_BLEND2_CHANNEL_ALPHAS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RETARGET_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RIG_RETARGET_MAPPING:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_SCALECHARACTER_STATE:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_RETARGET_STORAGE_STATS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_C_C_OVERRIDE_PROPERTIES_DEF:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	case ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	default:
+		return new AttribDataUnknown(pData, this->m_dataSize);
+	}
 }
 
 NodeDef::NodeDef()
@@ -122,14 +305,4 @@ NodeDef::NodeDef(BYTE* pData)
 
 NodeDef::~NodeDef()
 {
-	this->m_childNodeIDs.clear();
-	this->m_controlParamAndOpNodeIDs.clear();
-
-	for (size_t i = 0; i < this->m_numAttributes; i++)
-	{
-		if (this->m_attributes[i] != nullptr)
-			delete this->m_attributes[i];
-	}
-
-	this->m_attributes.clear();
 }

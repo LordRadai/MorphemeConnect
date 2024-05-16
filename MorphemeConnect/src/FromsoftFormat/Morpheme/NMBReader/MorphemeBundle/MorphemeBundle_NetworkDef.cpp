@@ -40,6 +40,7 @@ MorphemeBundle_NetworkDef::~MorphemeBundle_NetworkDef()
 
 void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
 {
+	MorphemeBundle_Base::WriteBinary(out);
 }
 
 UINT64 MorphemeBundle_NetworkDef::GetMemoryRequirements()

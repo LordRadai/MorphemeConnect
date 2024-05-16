@@ -22,6 +22,11 @@ BindPose::UnkRigData::UnkRigData(BYTE* pData)
 	this->m_iVar5 = *(int*)(pData + 0x14);
 }
 
+int BindPose::UnkRigData::GetMemoryRequirements()
+{
+	return 24;
+}
+
 BindPose::Orientation::Orientation()
 {
 }
@@ -44,6 +49,11 @@ BindPose::Orientation::Orientation(BYTE* pData, BYTE* pBase, int boneCount)
 		this->m_rotation.push_back(pRotation[i]);
 }
 
+int BindPose::Orientation::GetMemoryRequirements()
+{
+	return this->m_position.size() * 16 + this->m_rotation.size() * 16 + 96;
+}
+
 BindPose::DeformationInfo::DeformationInfo()
 {
 	this->m_boneCount = 0;
@@ -60,6 +70,11 @@ BindPose::DeformationInfo::DeformationInfo(BYTE* pData)
 	this->m_flags.reserve(this->m_bitsetSize);
 	for (size_t i = 0; i < this->m_bitsetSize; i++)
 		this->m_flags.push_back(pFlags[i]);
+}
+
+int BindPose::DeformationInfo::GetMemoryRequirements()
+{
+	return 8 + this->m_bitsetSize * 4;
 }
 
 BindPose::BindPose()
@@ -105,6 +120,41 @@ BindPose::Orientation* BindPose::GetOrientation()
 	return this->m_pOrientation;
 }
 
+int BindPose::GetMemoryRequirements()
+{
+	return 56 + this->m_pDeformationInfo->GetMemoryRequirements() + this->m_pUnkRigData->GetMemoryRequirements() + 8;
+}
+
+int BindPose::GetFlags()
+{
+	return this->m_flags;
+}
+
+int BindPose::GetBoneCount()
+{
+	return this->m_boneCount;
+}
+
+bool BindPose::GetIsFull()
+{
+	return this->m_full;
+}
+
+int BindPose::GetElemType()
+{
+	return this->m_elemType;
+}
+
+BindPose::UnkRigData* BindPose::GetUnkRigData()
+{
+	return this->m_pUnkRigData;
+}
+
+BindPose::DeformationInfo* BindPose::GetDeformationInfo()
+{
+	return this->m_pDeformationInfo;
+}
+
 Rig::Hierarchy::Hierarchy()
 {
 	this->m_boneCount = 0;
@@ -121,6 +171,11 @@ Rig::Hierarchy::Hierarchy(BYTE* pData)
 	this->m_parentIDs.reserve(this->m_boneCount);
 	for (size_t i = 0; i < this->m_boneCount; i++)
 		this->m_parentIDs.push_back(parents[i]);
+}
+
+int Rig::Hierarchy::GetMemoryRequirements()
+{
+	return 16 + this->m_boneCount * 4;
 }
 
 Rig::Rig()
@@ -172,6 +227,11 @@ int Rig::GetTrajectoryBoneID()
 int Rig::GetRootBoneID()
 {
 	return this->m_characterRootBoneId;
+}
+
+StringTable* Rig::GetBoneIDNamesTable()
+{
+	return this->m_pBoneIDNamesTable;
 }
 
 BindPose* Rig::GetBindPose()

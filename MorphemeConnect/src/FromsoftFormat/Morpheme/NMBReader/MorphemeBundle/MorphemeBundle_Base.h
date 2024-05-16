@@ -33,7 +33,22 @@ public:
 	UINT m_dataAlignment;					//I've only seen this be equal to 4 or 16
 	UINT m_iVar2C;
 
-	virtual void WriteBinary(ofstream* out, UINT64 alignment) { return; }
+	virtual void WriteBinary(ofstream* out)
+	{
+		MemReader::WriteArray(out, this->m_magic, 2);
+		MemReader::Write(out, this->m_assetType);
+		MemReader::Write(out, this->m_signature);
+		MemReader::WriteArray(out, this->m_guid, 16);
+
+		this->m_dataSize = this->GetMemoryRequirements();
+
+		MemReader::Write(out, this->m_dataSize);
+		MemReader::Write(out, this->m_dataAlignment);
+		MemReader::Write(out, this->m_iVar2C);
+
+		MemReader::AlignStream(out, this->m_dataAlignment);
+	}
+
 	virtual UINT64 GetMemoryRequirements() { return this->m_dataSize; }
 
 	std::string GetGUID()

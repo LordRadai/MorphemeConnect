@@ -11,6 +11,6 @@ public:
 	MorphemeBundle_EventTrack(MorphemeBundle* bundle);
 	~MorphemeBundle_EventTrack();
 
-	void WriteBinary(ofstream* out, UINT64 alignment);
+	void WriteBinary(ofstream* out);
 	UINT64 GetMemoryRequirements();
 };

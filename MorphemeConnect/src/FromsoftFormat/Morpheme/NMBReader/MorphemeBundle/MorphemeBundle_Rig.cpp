@@ -27,16 +27,11 @@ MorphemeBundle_Rig::~MorphemeBundle_Rig()
 {
 }
 
-void MorphemeBundle_Rig::WriteBinary(ofstream* out, UINT64 alignment)
+void MorphemeBundle_Rig::WriteBinary(ofstream* out)
 {
-	MemReader::WriteArray(out, this->m_magic, 2);
-	MemReader::Write(out, this->m_assetType);
-	MemReader::Write(out, this->m_signature);
-	MemReader::WriteArray(out, this->m_guid, 16);
+	MorphemeBundle_Base::WriteBinary(out);
 
-	this->m_dataSize = this->GetMemoryRequirements();
-
-	MemReader::AlignStream(out, alignment);
+	ME::ExportRig(out, this->m_dataAlignment, this->m_data);
 }
 
 UINT64 MorphemeBundle_Rig::GetMemoryRequirements()

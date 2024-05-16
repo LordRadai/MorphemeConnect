@@ -11,6 +11,6 @@ public:
 	MorphemeBundle_Rig(MorphemeBundle* bundle);
 	~MorphemeBundle_Rig();
 
-	void WriteBinary(ofstream* out, UINT64 alignment);
+	void WriteBinary(ofstream* out);
 	UINT64 GetMemoryRequirements();
 };

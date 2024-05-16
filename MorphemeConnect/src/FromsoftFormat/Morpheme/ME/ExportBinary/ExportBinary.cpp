@@ -1,5 +1,6 @@
 #include "ExportBinary.h"
 #include "../../../Utils/MemReader/MemReader.h"
+#include "../../../../RMath/RMath.h"
 
 using namespace ME;
 
@@ -60,4 +61,103 @@ void ME::ExportStringTable(ofstream* out, int alignment, StringTable* table)
 
 	for (size_t i = 0; i < table->GetNumEntries(); i++)
 		MemReader::WriteArray(out, table->GetString(i).c_str(), table->GetString(i).length() + 1);
+}
+
+void ME::ExportRig(ofstream* out, int alignment, Rig* rig)
+{
+	UINT64 offset = 64;
+
+	MemReader::Write(out, (UINT64)0);
+	MemReader::Write(out, 0);
+	MemReader::Write(out, 1.f);
+	MemReader::Write(out, 0);
+	MemReader::Write(out, 0);
+	MemReader::Write(out, 0);
+	MemReader::Write(out, 0);
+	MemReader::Write(out, offset);
+	MemReader::Write(out, rig->GetTrajectoryBoneID());
+	MemReader::Write(out, rig->GetRootBoneID());
+
+	Rig::Hierarchy* hierarchy = rig->GetHierarchy();
+	offset += hierarchy->GetMemoryRequirements();
+	MemReader::Write(out, offset);
+
+	StringTable* stringTable = rig->GetBoneIDNamesTable();
+	offset += stringTable->GetMemoryRequirements();
+	offset = RMath::AlignValue(offset, alignment);
+
+	MemReader::Write(out, offset);
+
+	MemReader::Write(out, hierarchy->m_boneCount);
+	MemReader::AlignStream(out, 8);
+	MemReader::Write(out, hierarchy->m_pVar1);
+	MemReader::WriteArray(out, hierarchy->m_parentIDs.data(), hierarchy->m_boneCount);
+
+	ME::ExportStringTable(out, alignment, stringTable);
+
+	MemReader::AlignStream(out, alignment);
+
+	ME::ExportRigBindPose(out, alignment, rig->GetBindPose());
+}
+
+void ME::ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose)
+{
+	MemReader::Pad(out, 0xCD, 8);
+	MemReader::Write(out, bindPose->GetFlags());
+	MemReader::AlignStream(out, alignment);
+
+	UINT64 startPos = out->tellp();
+
+	int dataSize = bindPose->GetMemoryRequirements() + 7;
+	
+	dataSize = RMath::AlignValue(startPos + dataSize, 16) - startPos;
+
+	dataSize += bindPose->GetOrientation()->GetMemoryRequirements();
+
+	MemReader::Write(out, dataSize);
+	MemReader::Write(out, (UINT64)16);
+	MemReader::Write(out, bindPose->GetBoneCount());
+	MemReader::Write(out, bindPose->GetIsFull());
+	MemReader::AlignStream(out, 4);
+	MemReader::Write(out, bindPose->GetElemType());
+	MemReader::AlignStream(out, 8);
+
+	UINT64 deformationOffset = 56;
+	UINT64 unkRigOffset = deformationOffset + bindPose->GetDeformationInfo()->GetMemoryRequirements();
+	UINT64 orientationOffset = unkRigOffset + bindPose->GetUnkRigData()->GetMemoryRequirements();
+
+	MemReader::Write(out, unkRigOffset);
+	MemReader::Write(out, orientationOffset);
+	MemReader::Write(out, deformationOffset);
+
+	BindPose::DeformationInfo* deformationInfo = bindPose->GetDeformationInfo();
+
+	MemReader::Write(out, deformationInfo->m_boneCount);
+	MemReader::Write(out, deformationInfo->m_bitsetSize);
+	MemReader::WriteArray(out, deformationInfo->m_flags.data(), deformationInfo->m_bitsetSize);
+
+	BindPose::UnkRigData* unkRigData = bindPose->GetUnkRigData();
+
+	MemReader::Write(out, unkRigData->m_iVar0);
+	MemReader::Write(out, unkRigData->m_iVar1);
+	MemReader::Write(out, unkRigData->m_iVar2);
+	MemReader::Write(out, unkRigData->m_iVar3);
+	MemReader::Write(out, unkRigData->m_iVar4);
+	MemReader::Write(out, unkRigData->m_iVar5);
+
+	UINT64 positionOffset = orientationOffset + 16;
+
+	positionOffset = RMath::AlignValue(startPos + positionOffset, 16) - startPos;
+
+	MemReader::Write(out, positionOffset);
+
+	UINT64 rotationOffset = positionOffset + 48 + bindPose->GetOrientation()->m_position.size() * 16;
+
+	MemReader::WriteArray(out, bindPose->GetOrientation()->m_position.data(), bindPose->GetBoneCount());
+
+	out->seekp(out->tellp() + (streampos)48);
+
+	MemReader::WriteArray(out, bindPose->GetOrientation()->m_rotation.data(), bindPose->GetBoneCount());
+
+	out->seekp(out->tellp() + (streampos)48);
 }

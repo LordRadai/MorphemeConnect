@@ -58,59 +58,50 @@ MorphemeBundle_FileNameLookupTable::~MorphemeBundle_FileNameLookupTable()
 {
 }
 
-void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out, UINT64 alignment)
+void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out)
 {
-	MemReader::WriteArray(out, this->m_magic, 2);
-	MemReader::Write(out, this->m_assetType);
-	MemReader::Write(out, this->m_signature);
-	MemReader::WriteArray(out, this->m_guid, 16);
-
-	MemReader::Write(out, this->GetMemoryRequirements());
-	MemReader::Write(out, this->m_dataAlignment);
-	MemReader::Write(out, this->m_iVar2C);
-
-	UINT64 pos = out->tellp();
+	MorphemeBundle_Base::WriteBinary(out);
 
 	UINT64 offset = 40;
 	MemReader::Write(out, offset);
 
-	offset = RMath::AlignValue(offset + this->m_data->m_animTable->GetMemoryRequirement(), this->m_dataAlignment);
+	offset = RMath::AlignValue(offset + this->m_data->m_animTable->GetMemoryRequirements(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
-	offset = RMath::AlignValue(offset + this->m_data->m_animFormatTable->GetMemoryRequirement(), this->m_dataAlignment);
+	offset = RMath::AlignValue(offset + this->m_data->m_animFormatTable->GetMemoryRequirements(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
-	offset = RMath::AlignValue(offset + this->m_data->m_sourceXmdTable->GetMemoryRequirement(), this->m_dataAlignment);
+	offset = RMath::AlignValue(offset + this->m_data->m_sourceXmdTable->GetMemoryRequirements(), this->m_dataAlignment);
 
 	MemReader::Write(out, offset);
 
-	offset += this->m_data->m_animTakeTable->GetMemoryRequirement();
+	offset += this->m_data->m_animTakeTable->GetMemoryRequirements();
 
 	MemReader::Write(out, offset);
 
-	ME::ExportStringTable(out, alignment, this->m_data->m_animTable);
-	MemReader::AlignStream(out, alignment);
+	ME::ExportStringTable(out, this->m_dataAlignment, this->m_data->m_animTable);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 
-	ME::ExportStringTable(out, alignment, this->m_data->m_animFormatTable);
-	MemReader::AlignStream(out, alignment);
+	ME::ExportStringTable(out, this->m_dataAlignment, this->m_data->m_animFormatTable);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 
-	ME::ExportStringTable(out, alignment, this->m_data->m_sourceXmdTable);
-	MemReader::AlignStream(out, alignment);
+	ME::ExportStringTable(out, this->m_dataAlignment, this->m_data->m_sourceXmdTable);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 
-	ME::ExportStringTable(out, alignment, this->m_data->m_animTakeTable);
+	ME::ExportStringTable(out, this->m_dataAlignment, this->m_data->m_animTakeTable);
 
 	MemReader::WriteArray(out, this->m_data->m_hashes.data(), this->m_data->m_animTable->GetNumEntries());
 
-	MemReader::AlignStream(out, alignment);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 }
 
 UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
 	this->m_dataSize = 40;
 
-	this->m_dataSize += RMath::AlignValue(this->m_data->m_animTable->GetMemoryRequirement(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_animFormatTable->GetMemoryRequirement(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_sourceXmdTable->GetMemoryRequirement(), this->m_dataAlignment) + this->m_data->m_animTakeTable->GetMemoryRequirement() + RMath::AlignValue(4 * this->m_data->m_hashes.size(), this->m_dataAlignment);
+	this->m_dataSize += RMath::AlignValue(this->m_data->m_animTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_animFormatTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_sourceXmdTable->GetMemoryRequirements(), this->m_dataAlignment) + this->m_data->m_animTakeTable->GetMemoryRequirements() + RMath::AlignValue(4 * this->m_data->m_hashes.size(), this->m_dataAlignment);
 
 	return this->m_dataSize;
 } 

@@ -59,20 +59,13 @@ MorphemeBundle_EventTrack::~MorphemeBundle_EventTrack()
 {
 }
 
-void MorphemeBundle_EventTrack::WriteBinary(ofstream* out, UINT64 alignment)
+void MorphemeBundle_EventTrack::WriteBinary(ofstream* out)
 {
-	MemReader::WriteArray(out, this->m_magic, 2);
-	MemReader::Write(out, this->m_assetType);
-	MemReader::Write(out, this->m_signature);
-	MemReader::WriteArray(out, this->m_guid, 16);
+	MorphemeBundle_Base::WriteBinary(out);
 
-	MemReader::Write(out, this->GetMemoryRequirements());
-	MemReader::Write(out, this->m_dataAlignment);
-	MemReader::Write(out, this->m_iVar2C);
+	ME::ExportEventTrack(out, this->m_dataAlignment, this->m_data);
 
-	ME::ExportEventTrack(out, alignment, this->m_data);
-
-	MemReader::AlignStream(out, alignment);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 }
 
 UINT64 MorphemeBundle_EventTrack::GetMemoryRequirements()

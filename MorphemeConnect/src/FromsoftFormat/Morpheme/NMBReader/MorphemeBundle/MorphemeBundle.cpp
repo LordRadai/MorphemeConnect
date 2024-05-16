@@ -56,7 +56,7 @@ MorphemeBundle::~MorphemeBundle()
 {
 }
 
-void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
+void MorphemeBundle::WriteBinary(ofstream* out)
 {
 	MemReader::WriteArray(out, this->m_magic, 2);
 	MemReader::Write(out, this->m_assetType);
@@ -71,7 +71,7 @@ void MorphemeBundle::WriteBinary(ofstream* out, UINT64 alignment)
 
 	MemReader::WriteArray(out, this->m_data, this->m_dataSize);
 
-	MemReader::AlignStream(out, alignment);
+	MemReader::AlignStream(out, this->m_dataAlignment);
 }
 
 UINT64 MorphemeBundle::GetMemoryRequirements()

@@ -5,6 +5,7 @@ namespace MR
 {
 	class BindPose
 	{
+	public:
 		struct UnkRigData
 		{
 			int m_iVar0;
@@ -16,6 +17,8 @@ namespace MR
 
 			UnkRigData();
 			UnkRigData(BYTE* pData);
+
+			int GetMemoryRequirements();
 		};
 
 		struct Orientation
@@ -25,6 +28,8 @@ namespace MR
 
 			Orientation();
 			Orientation(BYTE* pData, BYTE* pBase, int boneCount);
+
+			int GetMemoryRequirements();
 		};
 
 		struct DeformationInfo
@@ -35,14 +40,24 @@ namespace MR
 
 			DeformationInfo();
 			DeformationInfo(BYTE* pData);
+
+			int GetMemoryRequirements();
 		};
 
-	public:
 		BindPose();
 		BindPose(BYTE* pData);
 		~BindPose();
 
+		int GetMemoryRequirements();
+
+		int GetFlags();
+		int GetBoneCount();
+		bool GetIsFull();
+		int GetElemType();
+		UnkRigData* GetUnkRigData();
 		Orientation* GetOrientation();
+		DeformationInfo* GetDeformationInfo();
+
 	private:
 		int m_flags;
 		UINT64 m_dataSize;
@@ -57,6 +72,7 @@ namespace MR
 
 	class Rig
 	{
+	public:
 		struct Hierarchy
 		{
 			int m_boneCount;
@@ -65,9 +81,10 @@ namespace MR
 
 			Hierarchy();
 			Hierarchy(BYTE* pData);
+
+			int GetMemoryRequirements();
 		};
 
-	public:
 		Rig();
 		Rig(BYTE* pData);
 		~Rig();
@@ -76,6 +93,7 @@ namespace MR
 		Hierarchy* GetHierarchy();
 		int GetTrajectoryBoneID();
 		int GetRootBoneID();
+		StringTable* GetBoneIDNamesTable();
 		BindPose* GetBindPose();
 		std::string GetBoneName(int id);
 

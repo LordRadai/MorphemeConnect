@@ -170,6 +170,7 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 
 void EventTrackEditor::ReloadTracks()
 {
+    this->m_reload = false;
     this->m_eventTracks.clear();
     this->SetEditedState(false);
 

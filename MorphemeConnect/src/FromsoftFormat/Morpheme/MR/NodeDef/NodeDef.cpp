@@ -16,7 +16,7 @@ Attribute::Attribute(BYTE* pData, UINT64 pBase)
 	BYTE* pOffset = *(BYTE**)(pData) + pBase;
 
 	if (pOffset != nullptr)
-		this->m_data = AttribDataFactory(pData);
+		this->m_data = AttribDataFactory(pOffset);
 
 	this->m_dataSize = *(UINT64*)(pData + 0x8);
 	this->m_dataAlignment = *(int*)(pData + 0x10);
@@ -34,6 +34,8 @@ AttribData* Attribute::GetAttribData()
 
 AttribData* Attribute::AttribDataFactory(BYTE* pData)
 {
+	this->m_data = new AttribData(pData);
+
 	switch (this->m_data->GetAttribType())
 	{
 	case ATTRIB_TYPE_BOOL:

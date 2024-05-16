@@ -35,6 +35,8 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(int signature, bool is_dura
 	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
 	this->m_data = new EventTrack(index, trackName, userData, channelID);
+
+	this->m_dataSize = this->GetMemoryRequirements();
 }
 
 MorphemeBundle_EventTrack::MorphemeBundle_EventTrack(MorphemeBundle* bundle)

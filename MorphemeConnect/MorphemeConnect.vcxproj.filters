@@ -237,6 +237,9 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\Rig\Rig.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -2094,6 +2097,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\Rig\Rig.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

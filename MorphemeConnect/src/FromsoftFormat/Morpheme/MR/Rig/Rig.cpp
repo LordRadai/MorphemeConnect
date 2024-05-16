@@ -1,0 +1,150 @@
+#include "Rig.h"
+
+using namespace MR;
+
+BindPose::UnkRigData::UnkRigData()
+{
+	this->m_iVar0 = 0;
+	this->m_iVar1 = 0;
+	this->m_iVar2 = 0;
+	this->m_iVar3 = 0;
+	this->m_iVar4 = 0;
+	this->m_iVar5 = 0;
+}
+
+BindPose::UnkRigData::UnkRigData(BYTE* pData)
+{
+	this->m_iVar0 = *(int*)(pData);
+	this->m_iVar1 = *(int*)(pData + 0x4);
+	this->m_iVar2 = *(int*)(pData + 0x8);
+	this->m_iVar3 = *(int*)(pData + 0xC);
+	this->m_iVar4 = *(int*)(pData + 0x10);
+	this->m_iVar5 = *(int*)(pData + 0x14);
+}
+
+BindPose::Orientation::Orientation()
+{
+}
+
+BindPose::Orientation::Orientation(BYTE* pData, BYTE* pBase, int boneCount)
+{
+	UINT64 ppPosition = *(UINT64*)(pData);
+	UINT64 ppRotation = *(UINT64*)(pData);
+
+	Vector4* pPosition = (Vector4*)(pData + ppPosition);
+
+	this->m_position.reserve(boneCount);
+	for (size_t i = 0; i < boneCount; i++)
+		this->m_position.push_back(pPosition[i]);
+
+	Vector4* pRotation = (Vector4*)(pData + ppRotation);
+
+	this->m_rotation.reserve(boneCount);
+	for (size_t i = 0; i < boneCount; i++)
+		this->m_rotation.push_back(pRotation[i]);
+}
+
+BindPose::DeformationInfo::DeformationInfo()
+{
+	this->m_boneCount = 0;
+	this->m_bitsetSize = 0;
+}
+
+BindPose::DeformationInfo::DeformationInfo(BYTE* pData)
+{
+	this->m_boneCount = *(int*)(pData);
+	this->m_bitsetSize = *(int*)(pData + 0x4);
+
+	int* pFlags = (int*)(pData + 0x8);
+
+	this->m_flags.reserve(this->m_bitsetSize);
+	for (size_t i = 0; i < this->m_bitsetSize; i++)
+		this->m_flags.push_back(pFlags[i]);
+}
+
+BindPose::BindPose()
+{
+	this->m_dataSize = 0;
+	this->m_dataAlignment = 0;
+	this->m_boneCount = 0;
+	this->m_full = false;
+	this->m_elemType = 0;
+	this->m_pUnkRigData = nullptr;
+	this->m_pOrientation = nullptr;
+	this->m_pDeformationInfo = nullptr;
+}
+
+BindPose::BindPose(BYTE* pData)
+{
+	this->m_flags = *(int*)(pData + 0x8);
+	UINT64 offset = *(UINT64*)(pData + 0x10);
+
+	pData += offset;
+
+	this->m_dataSize = *(UINT64*)(pData);
+	this->m_dataAlignment = *(UINT64*)(pData + 0x8);
+	this->m_boneCount = *(int*)(pData + 0x10);
+	this->m_full = *(bool*)(pData + 0x14);
+	this->m_elemType = *(int*)(pData + 0x18);
+
+	UINT64 pUnkRigData = *(UINT64*)(pData + 0x20);
+	UINT64 pOrientationData = *(UINT64*)(pData + 0x28);
+	UINT64 pDeformationInfo = *(UINT64*)(pData + 0x30);
+
+	this->m_pUnkRigData = new UnkRigData(pData + pUnkRigData);
+	this->m_pOrientation = new Orientation(pData + pOrientationData, pData, this->m_boneCount);
+	this->m_pDeformationInfo = new DeformationInfo(pData + pDeformationInfo);
+}
+
+BindPose::~BindPose()
+{
+}
+
+Rig::Hierarchy::Hierarchy()
+{
+	this->m_boneCount = 0;
+	this->m_pVar1 = 0;
+}
+
+Rig::Hierarchy::Hierarchy(BYTE* pData)
+{
+	this->m_boneCount = *(BYTE*)(pData);
+	this->m_pVar1 = *(UINT64*)(pData + 0x8);
+
+	int* parents = (int*)(pData + 0x10);
+
+	this->m_parentIDs.reserve(this->m_boneCount);
+	for (size_t i = 0; i < this->m_boneCount; i++)
+		this->m_parentIDs.push_back(parents[i]);
+}
+
+Rig::Rig()
+{
+}
+
+Rig::Rig(BYTE* pData)
+{
+	this->m_version = *(UINT64*)(pData);
+	this->m_iVar1 = *(int*)(pData + 0x8);
+	this->m_fVar2 = *(float*)(pData + 0xC);
+	this->m_iVar3 = *(int*)(pData + 0x10);
+	this->m_iVar4 = *(int*)(pData + 0x14);
+	this->m_iVar5 = *(int*)(pData + 0x18);
+	this->m_iVar6 = *(int*)(pData + 0x1C);
+
+	UINT64 hierarchyOffset = *(UINT64*)(pData + 0x20);
+	this->m_pHierarchy = new Hierarchy(pData + hierarchyOffset);
+
+	this->m_trajectoryBoneId = *(int*)(pData + 0x28);
+	this->m_characterRootBoneId = *(int*)(pData + 0x2C);
+
+	UINT64 boneIDNamesTableOffset = *(UINT64*)(pData + 0x30);
+	this->m_pBoneIDNamesTable = new StringTable(pData + boneIDNamesTableOffset);
+
+	UINT64 bindPoseOffset = *(UINT64*)(pData + 0x38);
+	this->m_pBindPose = new BindPose(pData + bindPoseOffset);
+}
+
+Rig::~Rig()
+{
+}

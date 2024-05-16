@@ -5,3 +5,4 @@
 #include "AttribData/AttribDataSourceEventTrack.h"
 #include "NetworkDef/NetworkDef.h"
 #include "EventTrack/EventTrack.h"
+#include "Rig/Rig.h"

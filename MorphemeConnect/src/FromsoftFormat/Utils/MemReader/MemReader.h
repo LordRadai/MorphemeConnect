@@ -46,6 +46,22 @@ namespace MemReader
 		delete[] pPaddingVal;
 	}
 
+	static void AlignStream(ifstream* pStream, UINT64 alignment)
+	{
+		if (alignment == 0)
+			return;
+
+		streampos current_pos = pStream->tellg();
+		UINT64 remainder = current_pos % alignment;
+
+		if (remainder > 0)
+		{
+			UINT64 pad_amt = alignment - remainder;
+
+			pStream->seekg(current_pos + (streampos)pad_amt);
+		}
+	}
+
 	static void AlignStream(ofstream* pStream, UINT64 alignment)
 	{
 		if (alignment == 0)

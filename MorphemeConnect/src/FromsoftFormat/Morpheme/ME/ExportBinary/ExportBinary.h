@@ -9,5 +9,8 @@ namespace ME
 {
 	void ExportEvent(ofstream* out, int alignment, EventTrack::Event* event);
 	void ExportEventTrack(ofstream* out, int alignment, EventTrack* eventTrack);
+	void ExportAttribute(ofstream* out, int alignment, Attribute* attribute);
+	void ExportNodeDef(ofstream* out, int alignment, NodeDef* nodeDef);
+	void ExportNetworkDef(ofstream* out, int alignment, NetworkDef* networkDef);
 	void ExportStringTable(ofstream* out, int alignment, StringTable* table);
 }

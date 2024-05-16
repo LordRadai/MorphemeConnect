@@ -337,6 +337,7 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\EventTrack\EventTrack.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\NetworkDef\NetworkDef.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\NodeDef\NodeDef.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\Rig\Rig.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />
@@ -952,6 +953,7 @@
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\MR.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\NetworkDef\NetworkDef.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\NodeDef\NodeDef.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\Rig\Rig.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />

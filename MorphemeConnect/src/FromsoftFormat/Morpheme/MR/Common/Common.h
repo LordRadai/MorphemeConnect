@@ -3,7 +3,10 @@
 #include <vector>
 #include <string>
 #include <assert.h>
+#include <SimpleMath.h>
 #include "../../../../RLog/RLog.h"
+
+using namespace DirectX::SimpleMath;
 
 class StringTable
 {

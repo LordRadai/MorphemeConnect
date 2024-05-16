@@ -89,6 +89,8 @@ namespace MR
 		Rig(BYTE* pData);
 		~Rig();
 
+		int GetMemoryRequirements();
+
 		int GetBoneCount();
 		Hierarchy* GetHierarchy();
 		int GetTrajectoryBoneID();

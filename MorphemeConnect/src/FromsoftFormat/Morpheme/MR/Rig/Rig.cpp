@@ -51,7 +51,7 @@ BindPose::Orientation::Orientation(BYTE* pData, BYTE* pBase, int boneCount)
 
 int BindPose::Orientation::GetMemoryRequirements()
 {
-	return this->m_position.size() * 16 + this->m_rotation.size() * 16 + 96;
+	return this->m_position.size() * 16 + this->m_rotation.size() * 16;
 }
 
 BindPose::DeformationInfo::DeformationInfo()
@@ -122,7 +122,7 @@ BindPose::Orientation* BindPose::GetOrientation()
 
 int BindPose::GetMemoryRequirements()
 {
-	return 56 + this->m_pDeformationInfo->GetMemoryRequirements() + this->m_pUnkRigData->GetMemoryRequirements() + 8;
+	return 72 + this->m_pDeformationInfo->GetMemoryRequirements() + this->m_pUnkRigData->GetMemoryRequirements() + this->m_pOrientation->GetMemoryRequirements();
 }
 
 int BindPose::GetFlags()
@@ -207,6 +207,11 @@ Rig::Rig(BYTE* pData)
 
 Rig::~Rig()
 {
+}
+
+int Rig::GetMemoryRequirements()
+{
+	return 96 + this->m_pHierarchy->GetMemoryRequirements() + this->m_pBoneIDNamesTable->GetMemoryRequirements() + this->m_pBindPose->GetMemoryRequirements();
 }
 
 int Rig::GetBoneCount()

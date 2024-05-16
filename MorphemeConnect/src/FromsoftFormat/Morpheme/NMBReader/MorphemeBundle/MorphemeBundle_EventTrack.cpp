@@ -61,7 +61,18 @@ MorphemeBundle_EventTrack::~MorphemeBundle_EventTrack()
 
 void MorphemeBundle_EventTrack::WriteBinary(ofstream* out)
 {
-	MorphemeBundle_Base::WriteBinary(out);
+	MemReader::WriteArray(out, this->m_magic, 2);
+	MemReader::Write(out, this->m_assetType);
+	MemReader::Write(out, this->m_signature);
+	MemReader::WriteArray(out, this->m_guid, 16);
+
+	this->m_dataSize = this->GetMemoryRequirements();
+
+	MemReader::Write(out, this->m_dataSize);
+	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Write(out, this->m_iVar2C);
+
+	MemReader::AlignStream(out, this->m_dataAlignment);
 
 	ME::ExportEventTrack(out, this->m_dataAlignment, this->m_data);
 
@@ -70,14 +81,7 @@ void MorphemeBundle_EventTrack::WriteBinary(ofstream* out)
 
 UINT64 MorphemeBundle_EventTrack::GetMemoryRequirements()
 {
-	int size = this->m_data->GetMemoryRequirements();
-
-	int remainder = size % this->m_dataAlignment;
-
-	if (remainder != 0)
-		size += this->m_dataAlignment - remainder;
-
-	this->m_dataSize = size;
+	this->m_dataSize = RMath::AlignValue(this->m_data->GetMemoryRequirements(), this->m_dataAlignment);
 
 	return this->m_dataSize;
 }

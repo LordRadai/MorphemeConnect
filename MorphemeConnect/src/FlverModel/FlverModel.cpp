@@ -468,11 +468,11 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 
 			FbxNode* pBoneNode = skeletonNodes[boneIndex];
 
-			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + pMorphemeRig->m_data->m_boneList.GetBoneName(boneIndex) + "_cluster").c_str());
+			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + pMorphemeRig->m_data->GetBoneName(boneIndex) + "_cluster").c_str());
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
-			pCluster->SetTransformLinkMatrix(CreateFbxMatrixFromDXMatrix(pMorphemeRig->GetBoneBindPose(boneIndex)).Inverse());
+			pCluster->SetTransformLinkMatrix(CreateFbxMatrixFromDXMatrix(pMorphemeRig->m_data->GetBoneBindPose(boneIndex)).Inverse());
 
 			for (int vertexIndex = 0; vertexIndex < vertices.size(); vertexIndex++)
 			{
@@ -545,9 +545,9 @@ FbxNode* CreateFlverBoneNode(FbxScene* pScene, FbxPose* pBindPoses, cfr::FLVER2:
 
 FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MorphemeBundle_Rig* pRig, int id)
 {
-	FbxNode* pBoneNode = FbxNode::Create(pScene, pRig->m_data->m_boneList.GetBoneName(id).c_str());
+	FbxNode* pBoneNode = FbxNode::Create(pScene, pRig->m_data->GetBoneName(id).c_str());
 
-	FbxAMatrix boneTransform = CreateFbxMatrixFromDXMatrix(pRig->GetBoneBindPose(id));
+	FbxAMatrix boneTransform = CreateFbxMatrixFromDXMatrix(pRig->m_data->GetBoneBindPose(id));
 	FbxAMatrix rotationMatrix = CreateFbxMatrixFromDXMatrix(DirectX::XMMatrixRotationX(-DirectX::XM_PIDIV2) * DirectX::XMMatrixRotationY(DirectX::XM_PI));
 
 	if (id == 0)
@@ -557,7 +557,7 @@ FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MorphemeB
 	pBoneNode->LclRotation.Set(boneTransform.GetR());
 	pBoneNode->LclScaling.Set(FbxDouble3(1.0, 1.0, 1.0));
 
-	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, pRig->m_data->m_boneList.GetBoneName(id).c_str());
+	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, pRig->m_data->GetBoneName(id).c_str());
 	pBone->SetSkeletonType(FbxSkeleton::eLimbNode);
 	pBone->Color.Set(FbxDouble3(1.0, 0.66, 0.0));
 	pBone->LimbLength = 0.1;
@@ -645,21 +645,19 @@ std::vector<FbxNode*> FlverModel::CreateFbxFlverSkeleton(FbxScene* pScene, FbxPo
 
 std::vector<FbxNode*> FlverModel::CreateFbxMorphemeSkeleton(FbxScene* pScene, FbxPose* pBindPoses, MorphemeBundle_Rig* pRig)
 {
-	BoneList rigBoneList = pRig->m_data->m_boneList;
-
 	std::vector<FbxNode*> pMorphemeBoneList;
-	pMorphemeBoneList.reserve(rigBoneList.m_boneCount);
+	pMorphemeBoneList.reserve(pRig->m_data->GetBoneCount());
 
-	for (int i = 0; i < rigBoneList.m_boneCount; i++)
+	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
 	{
 		FbxNode* pMorphemeBoneNode = CreateMorphemeBoneNode(pScene, pBindPoses, pRig, i);
 
 		pMorphemeBoneList.push_back(pMorphemeBoneNode);
 	}
 
-	for (int i = 0; i < pRig->m_data->m_boneCount; i++)
+	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
 	{
-		int boneParentIdx = pRig->m_data->m_hierarchy[i];
+		int boneParentIdx = pRig->m_data->GetHierarchy()->m_parentIDs[i];
 
 		if (boneParentIdx != -1)
 			pMorphemeBoneList[boneParentIdx]->AddChild(pMorphemeBoneList[i]);
@@ -680,21 +678,19 @@ std::vector<FbxNode*> ConvertFbxSkeletonToFbxRig(FbxScene* pScene, FbxPose* pBin
 	for (int i = 0; i < pBindPoses->GetCount(); i++)
 		pBindPoses->Remove(i);
 
-	BoneList rigBoneList = pRig->m_data->m_boneList;
-
 	std::vector<FbxNode*> pMorphemeBoneList;
-	pMorphemeBoneList.reserve(rigBoneList.m_boneCount);
+	pMorphemeBoneList.reserve(pRig->m_data->GetBoneCount());
 
-	for (int i = 0; i < rigBoneList.m_boneCount; i++)
+	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
 	{
 		FbxNode* pMorphemeBoneNode = CreateMorphemeBoneNode(pScene, pBindPoses, pRig, i);
 
 		pMorphemeBoneList.push_back(pMorphemeBoneNode);
 	}
 
-	for (int i = 0; i < pRig->m_data->m_boneCount; i++)
+	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
 	{
-		int boneParentIdx = pRig->m_data->m_hierarchy[i];
+		int boneParentIdx = pRig->m_data->GetHierarchy()->m_parentIDs[i];
 
 		if (boneParentIdx != -1)
 			pMorphemeBoneList[boneParentIdx]->AddChild(pMorphemeBoneList[i]);

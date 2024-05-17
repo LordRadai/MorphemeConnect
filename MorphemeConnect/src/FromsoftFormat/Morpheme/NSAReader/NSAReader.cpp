@@ -256,6 +256,8 @@ AnimSourceNSA::DynamicSegment::DynamicSegment(ifstream* nsa)
 
 bool AnimSourceNSA::DynamicSegment::Dequantize(AnimSourceNSA::VecQuantisedInfo startPosFactor, std::vector<VecQuantisedInfo> translationFactors, std::vector<VecQuantisedInfo> rotationFactors)
 {
+	return false;
+
 	try
 	{
 		if (this->m_translationBoneCount > 0)
@@ -490,11 +492,13 @@ NSAReader::NSAReader(PWSTR pszFilePath)
 	
 	nsa.close();
 
+	/*
 	if (!this->InitKeyframes())
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to decompress animation %ls\n", this->m_fileName);
 		return;
-	} 
+	}
+	*/
 
 	this->m_init = true;
 }
@@ -514,7 +518,7 @@ bool NSAReader::Dequantize()
 }
 
 //Initialises the keyframes arrays and then fills them in
-bool NSAReader::InitKeyframes()
+bool NSAReader::InitKeyframes(MR::RigToAnimMap* rigToAnimMap)
 {
 	int frameCount = this->m_header.m_duration * this->m_header.m_fps;
 
@@ -548,6 +552,7 @@ bool NSAReader::InitKeyframes()
 	for (int i = 0; i < this->m_staticSegment.m_rotationBoneCount; i++)
 	{
 		int boneIdx = this->m_staticRotationIndices.m_indices[i];
+
 		this->m_staticSegment.m_boneTransforms[boneIdx].m_frames[0].m_rotation = this->m_staticSegment.m_rotations[i];
 	}
 

@@ -1,4 +1,5 @@
 #include "../../Utils/MemReader/MemReader.h"
+#include "../Morpheme.h"
 #include <windows.h>
 #include <SimpleMath.h>
 
@@ -201,5 +202,5 @@ public:
 	~NSAReader();
 
 	bool Dequantize();
-	bool InitKeyframes();
+	bool InitKeyframes(MR::RigToAnimMap* rigToAnimMap);
 };

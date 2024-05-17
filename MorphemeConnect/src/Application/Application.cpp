@@ -1936,7 +1936,7 @@ inline double GetTimeByAnimFrame(float animLenght, float fps, int frameNum)
 }
 
 //Creates FBX animation take from an NSA file input
-bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NSAReader* pAnimFile, std::string name)
+bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader* pNMB, NSAReader* pAnimFile, std::string name)
 {
 	if (!pAnimFile->m_init)
 		return false;
@@ -1961,7 +1961,7 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NSAReader*
 	pAnimStack->SetLocalTimeSpan(timeSpan);
 
 	int keyframeCount = pAnimFile->m_header.m_fps * animDuration;
-	int boneCount = std::min<int>(pSkeleton.size(), pAnimFile->m_header.m_boneCount);
+	int boneCount = pSkeleton.size();
 
 	for (int boneIdx = 0; boneIdx < boneCount; boneIdx++)
 	{
@@ -2091,7 +2091,9 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 		}
 	}
 
-	if (!CreateFbxTake(pScene, pMorphemeRig, &this->m_animFiles[anim_id], this->m_nmb.GetFilenameLookupTable()->GetAnimTake(anim_id)))
+	this->m_animFiles[anim_id].InitKeyframes(this->m_nmb.GetRigToAnimMap(0)->m_data);
+
+	if (!CreateFbxTake(pScene, pMorphemeRig, &this->m_nmb, &this->m_animFiles[anim_id], this->m_nmb.GetFilenameLookupTable()->GetAnimTake(anim_id)))
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 		status = false;

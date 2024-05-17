@@ -104,7 +104,6 @@ namespace MR
         RigIndices(int* pData, int count);
         ~RigIndices();
 
-    private:
         std::vector<int> m_indices;
     };
 
@@ -115,7 +114,6 @@ namespace MR
         RigData(BYTE* pBase, UINT64* pData, int rigCount, int boneCount);
         ~RigData();
 
-    private:
         std::vector<UINT64> m_offsets;
         std::vector<RigIndices> m_rigIndices;
     };

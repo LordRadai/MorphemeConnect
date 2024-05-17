@@ -163,5 +163,5 @@ public:
 	void ResetEventTrackEditor();
 	void ResetTimeActEditor();
 
-	void CreateMorphemeRigBoneToFlverBoneMap(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel);
+	void CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, FlverModel* pFlverModel);
 };

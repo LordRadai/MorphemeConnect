@@ -1541,7 +1541,7 @@ void Application::LoadFile()
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
 
 													found_model = true;
 													break;
@@ -1633,7 +1633,7 @@ void Application::LoadFile()
 
 													found_model = true;
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
 
 													break;
 												}
@@ -1874,10 +1874,10 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 	}
 }
 
-inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel, int idx)
+inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::Rig* pRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-	int boneIdx = pMorphemeRig->m_data->GetBoneIndex(boneName);
+	int boneIdx = pRig->GetBoneIndex(boneName);
 
 	if (boneIdx == -1)
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
@@ -1886,7 +1886,7 @@ inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorpheme
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
-void Application::CreateMorphemeRigBoneToFlverBoneMap(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel)
+void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, FlverModel* pFlverModel)
 {
 	this->m_flverToMorphemeBoneMap.clear();
 	this->m_flverToMorphemeBoneMap.reserve(pFlverModel->m_flver->header.boneCount);

@@ -1408,7 +1408,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 2].position, transf), model.m_verts[i + 2].color);;
 
             batch->DrawTriangle(v1, v2, v3);
-            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f));
+            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].color.w));
         }
     }
 }

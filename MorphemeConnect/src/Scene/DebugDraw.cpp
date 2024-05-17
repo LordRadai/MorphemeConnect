@@ -1382,7 +1382,7 @@ Vector3 CalculateBonePosition(MR::Rig* rig, int bone_id)
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
     DirectX::XMMATRIX world, FlverModel model, MR::Rig* rig)
 {
-    constexpr float scale = 1.f;
+    constexpr float scale = 1.5f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
      
     for (size_t i = 0; i < rig->GetBoneCount(); i++)
@@ -1395,7 +1395,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             Vector3 boneB = CalculateBonePosition(rig, rig->GetHierarchy()->m_parentIDs[i]);
             boneB = Vector3::Transform(boneB, transf);
 
-            DX::DrawLine(batch, boneA, boneB, Colors::BlueViolet);
+            DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);
         }
     }
 
@@ -1403,8 +1403,12 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
     {
         if (i + 1 < model.m_verts.size() && i + 2 < model.m_verts.size())
         {
-            batch->DrawTriangle(model.m_verts[i], model.m_verts[i + 1], model.m_verts[i + 2]);
-            DX::DrawTriangle(batch, Vector3(model.m_verts[i].position), Vector3(model.m_verts[i + 1].position), Vector3(model.m_verts[i + 2].position), Vector4(0.f, 0.f, 0.f, 0.5f));
+            VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model.m_verts[i].position, transf), model.m_verts[i].color);
+            VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 1].position, transf), model.m_verts[i + 1].color);;
+            VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 2].position, transf), model.m_verts[i + 2].color);;
+
+            batch->DrawTriangle(v1, v2, v3);
+            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f));
         }
     }
 }

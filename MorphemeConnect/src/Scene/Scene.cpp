@@ -268,7 +268,7 @@ void Scene::Render()
 
         m_batch->Begin();
 
-        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::White);
+        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::Gray);
         
         DX::DrawOriginMarker(this->m_batch.get(), Matrix::Identity, 0.5f, Colors::DarkCyan);
         
@@ -279,7 +279,8 @@ void Scene::Render()
             if (g_morphemeConnect.m_nmb.GetRigCount() > 0)
                 pRig = g_morphemeConnect.m_nmb.GetRig(0);
 
-            DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, pRig->m_data);
+            if (pRig != nullptr)
+                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, pRig->m_data);
         }
 
         m_batch->End();

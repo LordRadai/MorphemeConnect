@@ -704,6 +704,8 @@ std::vector<FbxNode*> ConvertFbxSkeletonToFbxRig(FbxScene* pScene, FbxPose* pBin
 //Gets all the model vertices for all the meshes and stores them into m_verts
 void FlverModel::GetModelVertices()
 {
+	this->m_verts.clear();
+
 	if (m_flver == nullptr)
 		return;
 

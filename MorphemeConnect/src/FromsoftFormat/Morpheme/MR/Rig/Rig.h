@@ -101,6 +101,7 @@ namespace MR
 
 		Matrix GetBoneBindPose(int idx);
 		int GetBoneIndex(std::string name);
+		int GetBoneParent(int id);
 	private:
 		UINT64 m_version;
 		int m_iVar1;

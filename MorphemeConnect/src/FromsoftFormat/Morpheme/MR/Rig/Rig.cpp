@@ -271,3 +271,11 @@ int Rig::GetBoneIndex(std::string name)
 
 	return -1;
 }
+
+int Rig::GetBoneParent(int id)
+{
+	if (id > this->m_pHierarchy->m_boneCount)
+		return -1;
+
+	return this->m_pHierarchy->m_parentIDs[id];
+}

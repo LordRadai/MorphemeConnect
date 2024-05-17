@@ -38,6 +38,7 @@
 #include "../extern.h"
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
+#include "../FromsoftFormat/Morpheme/Morpheme.h"
 #include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../FromsoftFormat/Morpheme/NSAReader/NSAReader.h"
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"

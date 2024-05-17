@@ -1359,7 +1359,7 @@ Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel model, MorphemeBundle_Rig* rig)
+    DirectX::XMMATRIX world, FlverModel model, MR::Rig* rig)
 {
     constexpr float scale = 1.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);

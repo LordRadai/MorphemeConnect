@@ -1338,7 +1338,7 @@ XMMATRIX GetFlverBoneTransform(cfr::FLVER2* flver, int bone_id)
     return transform;
 }
 
-Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
+Vector3 CalculateBonePosition(cfr::FLVER2* flver, int bone_id)
 {
     XMMATRIX boneLocalTransform = GetFlverBoneTransform(flver, bone_id);
 
@@ -1358,30 +1358,45 @@ Vector3 calculateBonePosition(cfr::FLVER2* flver, int bone_id)
     return position;
 }
 
+Vector3 CalculateBonePosition(MR::Rig* rig, int bone_id)
+{
+    XMMATRIX boneLocalTransform = rig->GetBoneBindPose(bone_id);
+
+    int parentIdx = rig->GetBoneParent(bone_id);
+
+    while (parentIdx != -1)
+    {
+        XMMATRIX parentBoneTransform = rig->GetBoneBindPose(parentIdx);
+        boneLocalTransform *= parentBoneTransform;
+
+        parentIdx = rig->GetBoneParent(parentIdx);
+    }
+
+    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+
+    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
+
+    return position;
+}
+
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel model, MorphemeBundle_Rig* rig)
+    DirectX::XMMATRIX world, FlverModel model, MR::Rig* rig)
 {
     constexpr float scale = 1.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
-    
-    for (size_t i = 0; i < model.m_flver->header.boneCount; i++)
+     
+    for (size_t i = 0; i < rig->GetBoneCount(); i++)
     {
-        if (model.m_flver->bones[i].parentIndex != -1)
+        if (rig->GetHierarchy()->m_parentIDs[i] != -1)
         {
-            Vector3 boneA = calculateBonePosition(model.m_flver, i);
+            Vector3 boneA = CalculateBonePosition(rig, i);
             boneA = Vector3::Transform(boneA, transf);
 
-            Vector3 boneB = calculateBonePosition(model.m_flver, model.m_flver->bones[i].parentIndex);
+            Vector3 boneB = CalculateBonePosition(rig, rig->GetHierarchy()->m_parentIDs[i]);
             boneB = Vector3::Transform(boneB, transf);
 
-            DX::DrawLine(batch, boneA, boneB, Colors::Orange);
-
-            std::string boneB_name = RString::ToNarrow(model.m_flver->bones[model.m_flver->bones[i].parentIndex].name);
+            DX::DrawLine(batch, boneA, boneB, Colors::BlueViolet);
         }
-
-        std::string bone_name = RString::ToNarrow(model.m_flver->bones[i].name);
-
-        //DX::AddWorldSpaceText(g_preview.m_sprite.get(), g_preview.m_font.get(), bone_name, Vector3::Zero, XMMatrixTranslationFromVector(calculateBonePosition(model.m_flver, i)), g_preview.m_camera, Colors::White);
     }
 
     for (int i = 0; i < model.m_verts.size(); i += 3)

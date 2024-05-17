@@ -47,17 +47,17 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 			break;
 		case kAsset_Rig:
 			this->m_rig.push_back(&this->m_bundles[i]);
-			this->m_rigRaw.push_back(this->m_bundles[i]);
 			break;
 		case kAsset_RigToAnimMap:
-			this->m_rigToAnimMap.push_back(this->m_bundles[i]);
+			this->m_rigToAnimMap.push_back(&this->m_bundles[i]);
 			break;
 		case kAsset_EventTrackDiscrete:
 		case kAsset_EventTrackDuration:
+		case kAsset_EventTrackCurve:
 			this->m_eventTracks.push_back(&this->m_bundles[i]);
 			break;
 		case kAsset_CharacterControllerDef:
-			this->m_characterControllerDef.push_back(this->m_bundles[i]);
+			this->m_characterControllerDef.push_back(MorphemeBundle_CharacterControllerDef(&this->m_bundles[i]));
 			break;
 		case kAsset_NetworkDef:
 			this->m_networkDef = MorphemeBundle_NetworkDef(&this->m_bundles[i]);
@@ -166,13 +166,22 @@ MorphemeBundle_FileNameLookupTable* NMBReader::GetFilenameLookupTable()
 	return &this->m_fileNameLookupTable;
 }
 
-//Returns the rig bundle at the given index
+//Returns the Rig bundle at the given index
 MorphemeBundle_Rig* NMBReader::GetRig(int idx)
 {
 	if (idx > this->m_rig.size() - 1)
 		return nullptr;
 
 	return &this->m_rig[idx];
+}
+
+//Returns the RigToAnimMap bundle at the given index
+MorphemeBundle_RigToAnimMap* NMBReader::GetRigToAnimMap(int idx)
+{
+	if (idx > this->m_rigToAnimMap.size() - 1)
+		return nullptr;
+
+	return &this->m_rigToAnimMap[idx];
 }
 
 MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration)
@@ -194,65 +203,29 @@ MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int ev
 
 	} while (valid == false);
 
-	MorphemeBundle_EventTrack new_bundle;
-
-	new_bundle.m_magic[0] = 24;
-	new_bundle.m_magic[1] = 10;
-
-	if (!duration)
-		new_bundle.m_assetType = kAsset_EventTrackDiscrete;
-	else
-		new_bundle.m_assetType = kAsset_EventTrackDuration;
-
-	new_bundle.m_signature = signature;
-
-	for (size_t i = 0; i < 16; i++)
-		new_bundle.m_guid[i] = 0;
-
-	new_bundle.m_dataSize = 0;
-	new_bundle.m_dataAlignment = 16;
-	new_bundle.m_iVar2C = 0;
-
-	new_bundle.m_data = new MorphemeBundle_EventTrack::BundleData_EventTrack;
-
-	new_bundle.m_data->m_numEvents = 0;
-	new_bundle.m_data->m_channelId = 0;
-
-	new_bundle.m_data->m_trackName = new char[50];
-	strcpy(new_bundle.m_data->m_trackName, name);
-
-	new_bundle.m_data->m_eventId = event_id;
-	new_bundle.m_data->m_index = 0;
-
-	new_bundle.CalculateBundleSize();
+	MorphemeBundle_EventTrack new_bundle(signature, duration, 0, name, event_id, 0);
 
 	this->m_eventTracks.push_back(new_bundle);
 
-	NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node_source->m_nodeData[1].m_attrib;
-	NodeAttribSourceEventTrack* event_tracks = (NodeAttribSourceEventTrack*)node_source->m_nodeData[2].m_attrib;
+	MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)node_source->m_attributes[1]->GetAttribData();
+	MR::AttribDataSourceEventTrack* event_tracks = (MR::AttribDataSourceEventTrack*)node_source->m_attributes[2]->GetAttribData();
 
 	if (!duration)
-	{
-		event_tracks->m_eventTracks[0].m_trackCount++;
-		event_tracks->m_eventTracks[0].m_trackSignatures.push_back(new_bundle.m_signature);
-	}
+		event_tracks->GetDiscreteEventTrackSet().AddEventTrack(new_bundle.m_signature);
 	else
-	{
-		event_tracks->m_eventTracks[2].m_trackCount++;
-		event_tracks->m_eventTracks[2].m_trackSignatures.push_back(new_bundle.m_signature);
-	}
+		event_tracks->GetDurationEventTrackSet().AddEventTrack(new_bundle.m_signature);
 
-	std::vector<NodeDef*> nodes = this->GetNodesByAnimReference(source_anim->m_animIdx);
+	std::vector<NodeDef*> nodes = this->GetNodesByAnimReference(source_anim->GetAnimID());
 
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		if (nodes[i] != node_source)
 		{
-			NodeAttribSourceEventTrack* event_tracks_new = (NodeAttribSourceEventTrack*)nodes[i]->m_nodeData[2].m_attrib;
+			MR::AttribDataSourceEventTrack* event_tracks_new = (MR::AttribDataSourceEventTrack*)nodes[i]->m_attributes[2]->GetAttribData();
 
-			event_tracks_new->m_eventTracks[0] = event_tracks->m_eventTracks[0];
-			event_tracks_new->m_eventTracks[1] = event_tracks->m_eventTracks[1];
-			event_tracks_new->m_eventTracks[2] = event_tracks->m_eventTracks[2];
+			event_tracks_new->SetDiscreteEventTrackSet(event_tracks->GetDiscreteEventTrackSet());
+			event_tracks_new->SetCurveEventTrackSet(event_tracks->GetCurveEventTrackSet());
+			event_tracks_new->SetDurationEventTrackSet(event_tracks->GetDurationEventTrackSet());
 		}
 	}
 
@@ -283,33 +256,32 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 
 	try
 	{
-		this->m_header.WriteBinary(&nmb_out, 0);
+		this->m_header.WriteBinary(&nmb_out);
 
 		if (this->m_characterControllerDef.size() == this->m_rig.size())
 		{
 			for (size_t i = 0; i < this->m_characterControllerDef.size(); i++)
 			{
-				this->m_characterControllerDef[i].WriteBinary(&nmb_out, 0);
+				this->m_characterControllerDef[i].WriteBinary(&nmb_out);
 
-				//this->m_rig[i].WriteBinary(&nmb_out, 0);
-				this->m_rigRaw[i].WriteBinary(&nmb_out, 16);
+				this->m_rig[i].WriteBinary(&nmb_out);
 			}
 		}
 		else
 		{
-			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size()\n");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size())\n");
 			return false;
 		}
 
 		for (int i = 0; i < this->m_eventTracks.size(); i++)
-			this->m_eventTracks[i].WriteBinary(&nmb_out, 0);
+			this->m_eventTracks[i].WriteBinary(&nmb_out);
 
 		for (int i = 0; i < this->m_rigToAnimMap.size(); i++)
-			this->m_rigToAnimMap[i].WriteBinary(&nmb_out, 0);
+			this->m_rigToAnimMap[i].WriteBinary(&nmb_out);
 
 		//this->m_network.WriteBinary(&nmb_out);
-		this->m_networkRaw.WriteBinary(&nmb_out, 0);
-		this->m_fileNameLookupTable.WriteBinary(&nmb_out, 0);
+		this->m_networkRaw.WriteBinary(&nmb_out);
+		this->m_fileNameLookupTable.WriteBinary(&nmb_out);
 	}
 	catch (const std::exception&)
 	{
@@ -338,18 +310,20 @@ std::string NMBReader::GetAnimNameFromAnimNode(NodeDef* m_node)
 	if (this->m_init == false)
 		return "";
 
-	if (m_node->m_nodeTypeID != NodeType_NodeAnimSyncEvents)
+	if (m_node->m_typeID != NodeType_NodeAnimSyncEvents)
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Node is not of the correct type\n");
 		return "";
 	}
 
-	NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)m_node->m_nodeData[1].m_attrib;
+	MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)m_node->m_attributes[1]->GetAttribData();
 
-	if (source_anim->m_animIdx > this->m_fileNameLookupTable.m_data->m_sourceXmdList.m_elemCount)
+	if (source_anim->GetAnimID() > this->m_fileNameLookupTable.m_data->m_sourceXmdTable->GetNumEntries())
 		return "";
 
-	return this->GetSourceAnimName(source_anim->m_animIdx);
+	return this->GetSourceAnimName(source_anim->GetAnimID());
+
+	return "";
 }
 
 //Returns the event track bundle with the matching m_signature parameter
@@ -369,42 +343,6 @@ MorphemeBundle_EventTrack* NMBReader::GetEventTrackBundle(int signature)
 	return nullptr;
 }
 
-//Returns all the EventTrackList objects with references to the specified signature
-std::vector<EventTrackList*> NMBReader::GetEventTrackListBySignature(int signature)
-{
-	std::vector<EventTrackList*> track_lists;
-
-	for (int i = 0; i < this->m_networkDef.m_data->m_numNodes; i++)
-	{
-		NodeDef* node = this->m_networkDef.m_data->m_nodes[i];
-
-		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
-		{
-			NodeAttribSourceEventTrack* source_event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
-
-			for (int j = 0; j < source_event_track->m_eventTracks[0].m_trackCount; j++)
-			{
-				if (source_event_track->m_eventTracks[0].m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->m_eventTracks[0]);
-			}
-
-			for (int j = 0; j < source_event_track->m_eventTracks[1].m_trackCount; j++)
-			{
-				if (source_event_track->m_eventTracks[1].m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->m_eventTracks[1]);
-			}
-
-			for (int j = 0; j < source_event_track->m_eventTracks[2].m_trackCount; j++)
-			{
-				if (source_event_track->m_eventTracks[2].m_trackSignatures[j] == signature)
-					track_lists.push_back(&source_event_track->m_eventTracks[2]);
-			}
-		}
-	}
-
-	return track_lists;
-}
-
 std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 {
 	std::vector<NodeDef*> nodes;
@@ -413,11 +351,11 @@ std::vector<NodeDef*> NMBReader::GetNodesByAnimReference(int anim_idx)
 	{
 		NodeDef* node = this->m_networkDef.m_data->m_nodes[i];
 
-		if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+		if (node->m_typeID == NodeType_NodeAnimSyncEvents)
 		{
-			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
+			MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)node->m_attributes[1]->GetAttribData();
 
-			if (source_anim->m_animIdx == anim_idx)
+			if (source_anim->GetAnimID() == anim_idx)
 				nodes.push_back(node);
 		}
 	}
@@ -433,9 +371,9 @@ bool compareAnimInterface(AnimInterface a, AnimInterface b)
 //Sorts the animation list from the filename lookup table and stores them into a vector of AnimationInterface objects
 void NMBReader::SortAnimList()
 {
-	this->m_animations.reserve(this->m_fileNameLookupTable.m_data->m_animList.m_elemCount);
+	this->m_animations.reserve(this->m_fileNameLookupTable.m_data->m_animTable->GetNumEntries());
 
-	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_animList.m_elemCount; i++)
+	for (int i = 0; i < this->m_fileNameLookupTable.m_data->m_animTable->GetNumEntries(); i++)
 		this->m_animations.push_back(AnimInterface{ this->GetFilenameLookupTable()->GetAnimName(i), this->GetSourceAnimName(i), i });
 
 	std::sort(this->m_animations.begin(), this->m_animations.end(), compareAnimInterface);
@@ -451,47 +389,47 @@ bool NMBReader::ExportEventTrackToXML(PWSTR pszOutFilePath, int anim_id)
 
 	NodeDef* node = nodes[0];
 
-	if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+	if (node->m_typeID == NodeType_NodeAnimSyncEvents)
 	{
-		if (node->m_nodeData[1].m_attrib != NULL)
+		if (node->m_attributes[1] != nullptr)
 		{
 			tinyxml2::XMLDocument out;
 
-			NodeAttribBool* is_loop = (NodeAttribBool*)node->m_nodeData[0].m_attrib;
-			NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)node->m_nodeData[1].m_attrib;
-			NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)node->m_nodeData[2].m_attrib;
+			MR::AttribDataBool* is_loop = (MR::AttribDataBool*)node->m_attributes[0]->GetAttribData();
+			MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)node->m_attributes[1]->GetAttribData();
+			MR::AttribDataSourceEventTrack* event_track = (MR::AttribDataSourceEventTrack*)node->m_attributes[2]->GetAttribData();
 
 			XMLElement* pTakeList = ME::TakeListXML((XMLElement*)&out, this->m_fileNameLookupTable.GetXmdSourceAnimFileName(anim_id).c_str(), 1);
-			XMLElement* pTake = ME::TakeExportXML(pTakeList, this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->m_bool, source_anim->m_animLen, 30.f, source_anim->m_clipStart, source_anim->m_clipEnd);
+			XMLElement* pTake = ME::TakeExportXML(pTakeList, this->m_fileNameLookupTable.GetAnimTake(anim_id).c_str(), is_loop->Get(), source_anim->GetAnimLen(), 30.f, source_anim->GetClipStart(), source_anim->GetClipEnd());
 
-			for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
+			for (int i = 0; i < event_track->GetDiscreteEventTrackSet().m_trackCount; i++)
 			{
-				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->GetDiscreteEventTrackSet().m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
+				XMLElement* pEventTrack = ME::DiscreteEventTrackExportXML(pTake, event_tracks->m_data->GetTrackName(), event_tracks->GetGUID(), event_tracks->m_data->GetChannelID(), event_tracks->m_data->GetUserData());
 
-				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::DiscreteEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start);
+				for (size_t i = 0; i < event_tracks->m_data->GetNumEvents(); i++)
+					ME::DiscreteEventExportXML(pEventTrack, i, event_tracks->m_data->GetEvent(i)->m_userData, event_tracks->m_data->GetEvent(i)->m_start);
 			}
 
-			for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
+			for (int i = 0; i < event_track->GetCurveEventTrackSet().m_trackCount; i++)
 			{
-				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->GetCurveEventTrackSet().m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
+				XMLElement* pEventTrack = ME::CurveEventTrackExportXML(pTake, event_tracks->m_data->GetTrackName(), event_tracks->GetGUID(), event_tracks->m_data->GetChannelID(), event_tracks->m_data->GetUserData());
 
-				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::CurveEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+				for (size_t i = 0; i < event_tracks->m_data->GetNumEvents(); i++)
+					ME::CurveEventExportXML(pEventTrack, i, event_tracks->m_data->GetEvent(i)->m_userData, event_tracks->m_data->GetEvent(i)->m_start, event_tracks->m_data->GetEvent(i)->m_duration);
 			}
 
-			for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
+			for (int i = 0; i < event_track->GetDurationEventTrackSet().m_trackCount; i++)
 			{
-				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+				MorphemeBundle_EventTrack* event_tracks = GetEventTrackBundle(event_track->GetDurationEventTrackSet().m_trackSignatures[i]);
 
-				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks->m_data->m_trackName, event_tracks->GetGUID(), event_tracks->m_data->m_channelId, event_tracks->m_data->m_eventId);
+				XMLElement* pEventTrack = ME::DurationEventTrackExportXML(pTake, event_tracks->m_data->GetTrackName(), event_tracks->GetGUID(), event_tracks->m_data->GetChannelID(), event_tracks->m_data->GetUserData());
 
-				for (size_t i = 0; i < event_tracks->m_data->m_numEvents; i++)
-					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->m_events[i].m_value, event_tracks->m_data->m_events[i].m_start, event_tracks->m_data->m_events[i].m_duration);
+				for (size_t i = 0; i < event_tracks->m_data->GetNumEvents(); i++)
+					ME::DurationEventExportXML(pEventTrack, i, event_tracks->m_data->GetEvent(i)->m_userData, event_tracks->m_data->GetEvent(i)->m_start, event_tracks->m_data->GetEvent(i)->m_duration);
 			}
 
 			ME::SaveFile(&out, RString::ToNarrow((std::wstring(pszOutFilePath) + L"\\morphemeMarkup\\").c_str()), this->GetSourceAnimName(anim_id), false);

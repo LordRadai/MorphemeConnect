@@ -1,13 +1,7 @@
 #pragma once
+#include "../Common/Common.h"
 
-#include <Windows.h>
-#include <vector>
-#include <fstream>
-#include "../../../../Utils/MemReader/MemReader.h"
-#include "../../../../../framework.h"
-#include "../../../../../extern.h"
-
-enum AttribType : short
+enum AttribType : USHORT
 {
     ATTRIB_TYPE_BOOL = 0,
     ATTRIB_TYPE_UINT = 1,
@@ -99,16 +93,19 @@ enum AttribType : short
     ATTRIB_TYPE_C_C_OVERRIDE_CONDITIONS = 94,
 };
 
-class NodeAttribBase
+namespace MR
 {
-public:
-    int field0_0x0;
-    int field1_0x4;
-    short field2_0x8;
-    AttribType m_type;
-    int padding;
-
-    NodeAttribBase() {}
-    NodeAttribBase(BYTE* data);
-    virtual void GenerateBinary(std::ofstream* out) { return; }
-};
+    class AttribData
+    {
+    public:
+        AttribData();
+        AttribData(BYTE* pData);
+        ~AttribData();
+        
+        AttribType GetAttribType();
+    protected:
+        UINT64 m_iVar0;
+        short m_sVar1;
+        AttribType m_attribTypeID;
+    };
+}

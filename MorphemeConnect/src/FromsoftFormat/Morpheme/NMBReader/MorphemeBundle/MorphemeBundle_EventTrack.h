@@ -1,32 +1,19 @@
 #pragma once
 #include "MorphemeBundle.h"
 
-class MorphemeBundle_EventTrack : public MorphemeBundle_Base
+namespace NMB
 {
-public:
-	struct BundleData_EventTrack
+	class MorphemeBundle_EventTrack : public MorphemeBundle_Base
 	{
-		struct Event
-		{
-			float m_start;
-			float m_duration;
-			int m_value;
-		};
+	public:
+		MR::EventTrack* m_data;
 
-		int m_numEvents;
-		int m_channelId;
-		char* m_trackName;
-		int m_eventId;
-		int m_index;
-		std::vector<Event> m_events;
+		MorphemeBundle_EventTrack();
+		MorphemeBundle_EventTrack(int signature, bool is_duration, int index, char* trackName, int userData, int channelID);
+		MorphemeBundle_EventTrack(MorphemeBundle* bundle);
+		~MorphemeBundle_EventTrack();
+
+		void WriteBinary(ofstream* out);
+		UINT64 GetMemoryRequirements();
 	};
-
-	BundleData_EventTrack* m_data;
-
-	MorphemeBundle_EventTrack();
-	MorphemeBundle_EventTrack(MorphemeBundle* bundle);
-	~MorphemeBundle_EventTrack();
-
-	void WriteBinary(ofstream* out, UINT64 alignment);
-	int CalculateBundleSize();
-};
+}

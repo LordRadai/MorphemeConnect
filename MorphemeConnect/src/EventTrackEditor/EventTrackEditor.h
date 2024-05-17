@@ -26,7 +26,7 @@ struct EventTrackEditor
         int m_numEvents;
         int m_eventId;
         Event* m_event;
-        char* m_name;
+        std::string m_name;
         bool m_discrete;
 
         EventTrack(int signature, int numEvents, int eventId, Event* event, char* name, bool is_discrete);
@@ -63,7 +63,7 @@ struct EventTrackEditor
     int GetFrameMax() const;
     int GetTrackCount() const;
 
-    char* GetTrackName(int idx) const;
+    std::string GetTrackName(int idx) const;
     std::string GetEventLabel(int track_idx, int event_idx) const;
 
     void AddTrack(int event_id, char* name, bool duration);

@@ -495,7 +495,7 @@ void Application::AssetsWindow()
 			{
 				ImGui::BeginChild("NSA");
 				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 					{
 						std::string anim_name = "";
 
@@ -542,7 +542,7 @@ void Application::AssetsWindow()
 			{
 				ImGui::BeginChild("XMD");
 				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdList.m_elemCount; i++)
+					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdTable->GetNumEntries(); i++)
 					{
 						std::string anim_name = m_nmb.GetAnimationInterface(i)->m_sourceName;
 
@@ -804,7 +804,7 @@ void Application::EventTrackInfoWindow()
 			float startTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 			float endTime = RMath::FrameToTime(track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_duration + track->m_event[this->m_eventTrackEditorFlags.m_selectedEvent].m_frameStart);
 
-			ImGui::Text(track->m_name);
+			ImGui::Text(track->m_name.c_str());
 			ImGui::PushItemWidth(100);
 			ImGui::InputInt("Event ID", &track->m_eventId, 1, 0);
 			if (ImGui::IsItemHovered())
@@ -1213,36 +1213,34 @@ void Application::CheckFlags()
 
 				NodeDef* node = networkDef->m_data->m_nodes[idx];
 
-				if (node->m_nodeTypeID == NodeType_NodeAnimSyncEvents)
+				if (node->m_typeID == NodeType_NodeAnimSyncEvents)
 				{
-					if (networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib != NULL)
+					if (networkDef->m_data->m_nodes[idx]->m_attributes[1] != NULL)
 					{
-						NodeAttribSourceAnim* source_anim = (NodeAttribSourceAnim*)networkDef->m_data->m_nodes[idx]->m_nodeData[1].m_attrib;
-						NodeAttribSourceEventTrack* event_track = (NodeAttribSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_nodeData[2].m_attrib;
+						MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)networkDef->m_data->m_nodes[idx]->m_attributes[1]->GetAttribData();
+						MR::AttribDataSourceEventTrack* event_track = (MR::AttribDataSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_attributes[2]->GetAttribData();
 
-						if (source_anim->m_animIdx == this->m_eventTrackEditorFlags.m_targetAnimIdx)
+						if (source_anim->GetAnimID() == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 						{
 							found_anim = true;
 
 							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
 
 							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->m_clipStart * source_anim->m_animLen);
-							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->m_clipEnd * source_anim->m_animLen);
+							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->GetClipStart() * source_anim->GetAnimLen());
+							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->GetClipEnd() * source_anim->GetAnimLen());
 
 							this->m_eventTrackEditor.m_animIdx = -1;
 
 							for (int i = 0; i < this->m_nmb.GetAnimationCount(); i++)
 							{
-								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->m_animIdx)
+								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->GetAnimID())
 									this->m_eventTrackEditor.m_animIdx = i;
 							}
 
-							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_animLen / (source_anim->m_clipEnd - source_anim->m_clipStart);
+							this->m_eventTrackEditorFlags.m_lenMult = source_anim->GetAnimLen() / (source_anim->GetClipEnd() - source_anim->GetClipStart());
 
-							int track_count = 0;
-							for (size_t i = 0; i < 3; i++)
-								track_count += event_track->m_eventTracks[i].m_trackCount;
+							int track_count = event_track->GetDiscreteEventTrackSet().m_trackCount + event_track->GetCurveEventTrackSet().m_trackCount + event_track->GetDurationEventTrackSet().m_trackCount;
 
 							this->m_eventTrackEditor.m_eventTracks.reserve(track_count);
 
@@ -1250,25 +1248,25 @@ void Application::CheckFlags()
 							{
 								found_et = true;
 
-								for (int i = 0; i < event_track->m_eventTracks[0].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetDiscreteEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[0].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDiscreteEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
 								}
 
-								for (int i = 0; i < event_track->m_eventTracks[1].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetCurveEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[1].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetCurveEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
 								}
 
-								for (int i = 0; i < event_track->m_eventTracks[2].m_trackCount; i++)
+								for (int i = 0; i < event_track->GetDurationEventTrackSet().m_trackCount; i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->m_eventTracks[2].m_trackSignatures[i]);
+									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDurationEventTrackSet().m_trackSignatures[i]);
 
 									if (event_tracks)
 										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
@@ -1305,7 +1303,7 @@ void Application::CheckFlags()
 							}
 							else
 							{
-								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->m_animIdx);
+								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->GetAnimID());
 							}
 						}
 					}
@@ -1450,9 +1448,9 @@ void Application::LoadFile()
 								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
 
 								this->m_animFiles.clear();
-								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
+								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
 
-								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 								{
 									std::filesystem::path gamepath = pszFilePath;
 									std::wstring parent_path = gamepath.parent_path();
@@ -1470,9 +1468,9 @@ void Application::LoadFile()
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 
 								this->m_eventTrackEditorFlags.m_edited.clear();
-								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount);
+								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
 
-								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animList.m_elemCount; i++)
+								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
 									this->m_eventTrackEditorFlags.m_edited.push_back(false);
 
 								this->m_chrId = GetChrIdFromNmbFileName(m_nmb.GetFilePath());
@@ -1543,7 +1541,7 @@ void Application::LoadFile()
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
 
 													found_model = true;
 													break;
@@ -1635,7 +1633,7 @@ void Application::LoadFile()
 
 													found_model = true;
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0), &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
 
 													break;
 												}
@@ -1876,10 +1874,10 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 	}
 }
 
-inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel, int idx)
+inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::Rig* pRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-	int boneIdx = pMorphemeRig->GetBoneIndex(boneName);
+	int boneIdx = pRig->GetBoneIndex(boneName);
 
 	if (boneIdx == -1)
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
@@ -1888,7 +1886,7 @@ inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MorphemeBundle_Rig* pMorpheme
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
-void Application::CreateMorphemeRigBoneToFlverBoneMap(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel)
+void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, FlverModel* pFlverModel)
 {
 	this->m_flverToMorphemeBoneMap.clear();
 	this->m_flverToMorphemeBoneMap.reserve(pFlverModel->m_flver->header.boneCount);

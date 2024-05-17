@@ -38,6 +38,7 @@
 #include "../extern.h"
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
+#include "../FromsoftFormat/Morpheme/Morpheme.h"
 #include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../FromsoftFormat/Morpheme/NSAReader/NSAReader.h"
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
@@ -163,5 +164,5 @@ public:
 	void ResetEventTrackEditor();
 	void ResetTimeActEditor();
 
-	void CreateMorphemeRigBoneToFlverBoneMap(MorphemeBundle_Rig* pMorphemeRig, FlverModel* pFlverModel);
+	void CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, FlverModel* pFlverModel);
 };

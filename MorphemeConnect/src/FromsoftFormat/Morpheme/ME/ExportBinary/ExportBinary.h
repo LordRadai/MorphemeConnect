@@ -16,4 +16,5 @@ namespace ME
 	void ExportRig(ofstream* out, int alignment, Rig* rig);
 	void ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose);
 	void ExportCharacterController(ofstream* out, int alignment, CharacterController* characterController);
+	void ExportRigToAnimMap(ofstream* out, int alignment, RigToAnimMap* rigToAnimMap);
 }

@@ -8,23 +8,38 @@
 
 using namespace DirectX::SimpleMath;
 
-class StringTable
+namespace MR
 {
-public:
-    StringTable();
-    StringTable(BYTE* pData);
-    ~StringTable();
+    struct BoneDeformationInfo
+    {
+        int m_boneCount;
+        int m_bitsetSize;
+        std::vector<int> m_flags;
 
-    int GetNumEntries();
-    int GetDataLenght();
-    int GetID(int id);
-    UINT GetOffset(int id);
-    std::string GetString(int id);
-    UINT64 GetMemoryRequirements();
-private:
-    int m_numEntries;
-    int m_dataLenght;
-    std::vector<int> m_IDs;
-    std::vector<UINT> m_offsets;
-    std::vector<char> m_data;
-};
+        BoneDeformationInfo();
+        BoneDeformationInfo(BYTE* pData);
+
+        int GetMemoryRequirements();
+    };
+
+    class StringTable
+    {
+    public:
+        StringTable();
+        StringTable(BYTE* pData);
+        ~StringTable();
+
+        int GetNumEntries();
+        int GetDataLenght();
+        int GetID(int id);
+        UINT GetOffset(int id);
+        std::string GetString(int id);
+        UINT64 GetMemoryRequirements();
+    private:
+        int m_numEntries;
+        int m_dataLenght;
+        std::vector<int> m_IDs;
+        std::vector<UINT> m_offsets;
+        std::vector<char> m_data;
+    };
+}

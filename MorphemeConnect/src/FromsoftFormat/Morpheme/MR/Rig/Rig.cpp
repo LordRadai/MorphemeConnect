@@ -54,29 +54,6 @@ int BindPose::Orientation::GetMemoryRequirements()
 	return this->m_position.size() * 16 + this->m_rotation.size() * 16;
 }
 
-BindPose::DeformationInfo::DeformationInfo()
-{
-	this->m_boneCount = 0;
-	this->m_bitsetSize = 0;
-}
-
-BindPose::DeformationInfo::DeformationInfo(BYTE* pData)
-{
-	this->m_boneCount = *(int*)(pData);
-	this->m_bitsetSize = *(int*)(pData + 0x4);
-
-	int* pFlags = (int*)(pData + 0x8);
-
-	this->m_flags.reserve(this->m_bitsetSize);
-	for (size_t i = 0; i < this->m_bitsetSize; i++)
-		this->m_flags.push_back(pFlags[i]);
-}
-
-int BindPose::DeformationInfo::GetMemoryRequirements()
-{
-	return 8 + this->m_bitsetSize * 4;
-}
-
 BindPose::BindPose()
 {
 	this->m_dataSize = 0;
@@ -108,7 +85,7 @@ BindPose::BindPose(BYTE* pData)
 
 	this->m_pUnkRigData = new UnkRigData(pData + pUnkRigData);
 	this->m_pOrientation = new Orientation(pData + pOrientationData, pData, this->m_boneCount);
-	this->m_pDeformationInfo = new DeformationInfo(pData + pDeformationInfo);
+	this->m_pDeformationInfo = new BoneDeformationInfo(pData + pDeformationInfo);
 }
 
 BindPose::~BindPose()
@@ -150,7 +127,7 @@ BindPose::UnkRigData* BindPose::GetUnkRigData()
 	return this->m_pUnkRigData;
 }
 
-BindPose::DeformationInfo* BindPose::GetDeformationInfo()
+BoneDeformationInfo* BindPose::GetDeformationInfo()
 {
 	return this->m_pDeformationInfo;
 }

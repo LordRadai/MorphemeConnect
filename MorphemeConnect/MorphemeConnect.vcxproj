@@ -347,6 +347,7 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\NMBReader.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\NSAReader\NSAReader.cpp" />
     <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
@@ -967,6 +968,7 @@
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\NMBReader.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\NSAReader\NSAReader.h" />
     <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />

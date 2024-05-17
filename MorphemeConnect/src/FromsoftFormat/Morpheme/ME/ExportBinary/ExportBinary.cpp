@@ -127,7 +127,7 @@ void ME::ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose)
 	MemReader::Write(out, orientationOffset);
 	MemReader::Write(out, deformationOffset);
 
-	BindPose::DeformationInfo* deformationInfo = bindPose->GetDeformationInfo();
+	BoneDeformationInfo* deformationInfo = bindPose->GetDeformationInfo();
 
 	MemReader::Write(out, deformationInfo->m_boneCount);
 	MemReader::Write(out, deformationInfo->m_bitsetSize);
@@ -165,4 +165,34 @@ void ME::ExportCharacterController(ofstream* out, int alignment, CharacterContro
 	MemReader::Write(out, characterController->GetMaxSlopeAngle());
 	MemReader::Write(out, characterController->GetFlags());
 	MemReader::Write(out, characterController->IsVisible());
+}
+
+void ME::ExportRigToAnimMap(ofstream* out, int alignment, RigToAnimMap* rigToAnimMap)
+{
+	MemReader::Write(out, (UINT64)1);
+
+	UINT64 deformationInfoOffset = 40;
+	MemReader::Write(out, deformationInfoOffset);
+
+	UINT64 dataSize = RMath::AlignValue(rigToAnimMap->GetRigToAnimMapIndices()->GetMemoryRequirements(), 4);
+	MemReader::Write(out, dataSize);
+	MemReader::Write(out, (UINT64)4);
+
+	UINT64 rigToAnimMapOffset = deformationInfoOffset + rigToAnimMap->GetBoneDeformationInfo()->GetMemoryRequirements();
+	MemReader::Write(out, rigToAnimMapOffset);
+
+	BoneDeformationInfo* deformationInfo = rigToAnimMap->GetBoneDeformationInfo();
+
+	MemReader::Write(out, deformationInfo->m_boneCount);
+	MemReader::Write(out, deformationInfo->m_bitsetSize);
+	MemReader::WriteArray(out, deformationInfo->m_flags.data(), deformationInfo->m_bitsetSize);
+
+	RigToAnimMap::RigToAnimMapIndices* rigToAnimMapIndices = rigToAnimMap->GetRigToAnimMapIndices();
+
+	MemReader::Write(out, rigToAnimMapIndices->m_animatedBoneCount);
+	MemReader::Write(out, (short)rigToAnimMapIndices->m_animatedBoneCount);
+	MemReader::Write(out, (short)rigToAnimMapIndices->m_animatedBoneCount);
+	MemReader::Write(out, (UINT64)18);
+	MemReader::Write(out, rigToAnimMapIndices->m_characterWorldSpaceTMID);
+	MemReader::WriteArray(out, rigToAnimMapIndices->m_boneIndices.data(), rigToAnimMapIndices->m_animatedBoneCount);
 }

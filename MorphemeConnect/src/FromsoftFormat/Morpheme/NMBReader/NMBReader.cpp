@@ -47,13 +47,13 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 			break;
 		case kAsset_Rig:
 			this->m_rig.push_back(&this->m_bundles[i]);
-			this->m_rigRaw.push_back(this->m_bundles[i]);
 			break;
 		case kAsset_RigToAnimMap:
-			this->m_rigToAnimMap.push_back(this->m_bundles[i]);
+			this->m_rigToAnimMap.push_back(&this->m_bundles[i]);
 			break;
 		case kAsset_EventTrackDiscrete:
 		case kAsset_EventTrackDuration:
+		case kAsset_EventTrackCurve:
 			this->m_eventTracks.push_back(&this->m_bundles[i]);
 			break;
 		case kAsset_CharacterControllerDef:
@@ -166,13 +166,22 @@ MorphemeBundle_FileNameLookupTable* NMBReader::GetFilenameLookupTable()
 	return &this->m_fileNameLookupTable;
 }
 
-//Returns the rig bundle at the given index
+//Returns the Rig bundle at the given index
 MorphemeBundle_Rig* NMBReader::GetRig(int idx)
 {
 	if (idx > this->m_rig.size() - 1)
 		return nullptr;
 
 	return &this->m_rig[idx];
+}
+
+//Returns the RigToAnimMap bundle at the given index
+MorphemeBundle_RigToAnimMap* NMBReader::GetRigToAnimMap(int idx)
+{
+	if (idx > this->m_rigToAnimMap.size() - 1)
+		return nullptr;
+
+	return &this->m_rigToAnimMap[idx];
 }
 
 MorphemeBundle_EventTrack* NMBReader::AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration)
@@ -256,12 +265,11 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 				this->m_characterControllerDef[i].WriteBinary(&nmb_out);
 
 				this->m_rig[i].WriteBinary(&nmb_out);
-				//this->m_rigRaw[i].WriteBinary(&nmb_out);
 			}
 		}
 		else
 		{
-			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size()\n");
+			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "NMBReader.cpp", "Incompatible array size (m_characterControllerDef.size() != m_rig.size())\n");
 			return false;
 		}
 

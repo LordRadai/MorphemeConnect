@@ -1,5 +1,30 @@
 #include "Common.h"
 
+using namespace MR;
+
+BoneDeformationInfo::BoneDeformationInfo()
+{
+	this->m_boneCount = 0;
+	this->m_bitsetSize = 0;
+}
+
+BoneDeformationInfo::BoneDeformationInfo(BYTE* pData)
+{
+	this->m_boneCount = *(int*)(pData);
+	this->m_bitsetSize = *(int*)(pData + 0x4);
+
+	int* pFlags = (int*)(pData + 0x8);
+
+	this->m_flags.reserve(this->m_bitsetSize);
+	for (size_t i = 0; i < this->m_bitsetSize; i++)
+		this->m_flags.push_back(pFlags[i]);
+}
+
+int BoneDeformationInfo::GetMemoryRequirements()
+{
+	return 8 + this->m_bitsetSize * 4;
+}
+
 StringTable::StringTable()
 {
 	this->m_numEntries = 0;

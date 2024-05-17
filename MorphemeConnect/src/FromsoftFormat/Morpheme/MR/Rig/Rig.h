@@ -32,18 +32,6 @@ namespace MR
 			int GetMemoryRequirements();
 		};
 
-		struct DeformationInfo
-		{
-			int m_boneCount;
-			int m_bitsetSize;
-			std::vector<int> m_flags;
-
-			DeformationInfo();
-			DeformationInfo(BYTE* pData);
-
-			int GetMemoryRequirements();
-		};
-
 		BindPose();
 		BindPose(BYTE* pData);
 		~BindPose();
@@ -56,7 +44,7 @@ namespace MR
 		int GetElemType();
 		UnkRigData* GetUnkRigData();
 		Orientation* GetOrientation();
-		DeformationInfo* GetDeformationInfo();
+		BoneDeformationInfo* GetDeformationInfo();
 
 	private:
 		int m_flags;
@@ -67,7 +55,7 @@ namespace MR
 		int m_elemType;
 		UnkRigData* m_pUnkRigData;
 		Orientation* m_pOrientation;
-		DeformationInfo* m_pDeformationInfo;
+		BoneDeformationInfo* m_pDeformationInfo;
 	};
 
 	class Rig

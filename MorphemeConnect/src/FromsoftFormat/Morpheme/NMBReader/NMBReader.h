@@ -6,6 +6,7 @@
 #include "MorphemeBundle/MorphemeBundle_FileNameLookupTable.h"
 #include "MorphemeBundle/MorphemeBundle_Rig.h"
 #include "MorphemeBundle/MorphemeBundle_CharacterControllerDef.h"
+#include "MorphemeBundle/MorphemeBundle_RigToAnimMap.h"
 
 using namespace NMB;
 
@@ -31,9 +32,8 @@ private:
 
 	std::vector<MorphemeBundle> m_bundles;
 
-	std::vector<MorphemeBundle> m_rigRaw;
 	std::vector<MorphemeBundle_Rig> m_rig;
-	std::vector<MorphemeBundle> m_rigToAnimMap;
+	std::vector<MorphemeBundle_RigToAnimMap> m_rigToAnimMap;
 	std::vector<MorphemeBundle_EventTrack> m_eventTracks;
 	std::vector<MorphemeBundle_CharacterControllerDef> m_characterControllerDef;
 	MorphemeBundle_NetworkDef m_networkDef;
@@ -61,7 +61,8 @@ public:
 	MorphemeBundle* GetBundle(int idx);											
 	MorphemeBundle_NetworkDef* GetNetworkDef();									
 	MorphemeBundle_FileNameLookupTable* GetFilenameLookupTable();				
-	MorphemeBundle_Rig* GetRig(int idx);								
+	MorphemeBundle_Rig* GetRig(int idx);
+	MorphemeBundle_RigToAnimMap* GetRigToAnimMap(int idx);
 	MorphemeBundle_EventTrack* GetEventTrackBundle(int signature);				
 
 	MorphemeBundle_EventTrack* AddEventTrack(NodeDef* node_source, int event_id, char* name, bool duration);

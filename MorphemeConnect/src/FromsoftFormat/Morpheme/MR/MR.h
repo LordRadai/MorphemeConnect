@@ -7,3 +7,4 @@
 #include "EventTrack/EventTrack.h"
 #include "Rig/Rig.h"
 #include "CharacterController/CharacterController.h"
+#include "RigToAnimMap/RigToAnimMap.h"

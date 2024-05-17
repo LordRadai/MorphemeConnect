@@ -1384,7 +1384,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
 {
     constexpr float scale = 1.f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
-    
+     
     for (size_t i = 0; i < rig->GetBoneCount(); i++)
     {
         if (rig->GetHierarchy()->m_parentIDs[i] != -1)

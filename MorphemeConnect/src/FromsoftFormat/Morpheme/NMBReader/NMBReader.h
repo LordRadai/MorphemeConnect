@@ -7,6 +7,8 @@
 #include "MorphemeBundle/MorphemeBundle_Rig.h"
 #include "MorphemeBundle/MorphemeBundle_CharacterControllerDef.h"
 
+using namespace NMB;
+
 struct AnimInterface
 {
 	std::string m_name;

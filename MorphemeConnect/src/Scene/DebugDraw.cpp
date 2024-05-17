@@ -1372,7 +1372,7 @@ Vector3 CalculateBonePosition(MR::Rig* rig, int bone_id)
         parentIdx = rig->GetBoneParent(parentIdx);
     }
 
-    boneLocalTransform *= XMMatrixRotationY(XM_PI);
+    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
 
     Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
 
@@ -1395,7 +1395,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             Vector3 boneB = CalculateBonePosition(rig, rig->GetHierarchy()->m_parentIDs[i]);
             boneB = Vector3::Transform(boneB, transf);
 
-            DX::DrawLine(batch, boneA, boneB, Colors::Orange);
+            DX::DrawLine(batch, boneA, boneB, Colors::BlueViolet);
         }
     }
 

@@ -17,5 +17,5 @@ AttribDataStateMachine::~AttribDataStateMachine()
 
 int AttribDataStateMachine::GetMemoryRequirements()
 {
-
+	return 48;
 }

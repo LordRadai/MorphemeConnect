@@ -16,3 +16,8 @@ AttribDataUnknown::AttribDataUnknown(BYTE* pData, int size) : AttribData(pData)
 AttribDataUnknown::~AttribDataUnknown()
 {
 }
+
+int AttribDataUnknown::GetMemoryRequirements()
+{
+	return 24 + this->m_data.size();
+}

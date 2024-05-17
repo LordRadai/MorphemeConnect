@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "../../../../RMath/RMath.h"
 
 using namespace MR;
 
@@ -59,9 +60,6 @@ StringTable::StringTable(BYTE* pData)
 
 StringTable::~StringTable()
 {
-	this->m_IDs.clear();
-	this->m_offsets.clear();
-	this->m_data.clear();
 }
 
 int StringTable::GetNumEntries()
@@ -100,5 +98,5 @@ std::string StringTable::GetString(int id)
 
 UINT64 StringTable::GetMemoryRequirements()
 {
-	return 32 + this->m_numEntries * 8 + this->m_dataLenght;
+	return RMath::AlignValue(32 + this->m_numEntries * 8 + this->m_dataLenght, 4);
 }

@@ -15,12 +15,12 @@ Attribute::Attribute(BYTE* pData, UINT64 pBase)
 {
 	BYTE* pOffset = *(BYTE**)(pData) + pBase;
 
-	if (pOffset != nullptr)
-		this->m_data = AttribDataFactory(pOffset);
-
 	this->m_dataSize = *(UINT64*)(pData + 0x8);
 	this->m_dataAlignment = *(int*)(pData + 0x10);
 	this->m_iVar0 = *(int*)(pData + 0x14);
+
+	if (pOffset != nullptr)
+		this->m_data = AttribDataFactory(pOffset);
 }
 
 Attribute::~Attribute()
@@ -30,6 +30,11 @@ Attribute::~Attribute()
 AttribData* Attribute::GetAttribData()
 {
 	return this->m_data;
+}
+
+int Attribute::GetMemoryRequirements()
+{
+	return 16 + this->m_data->GetMemoryRequirements();
 }
 
 AttribData* Attribute::AttribDataFactory(BYTE* pData)
@@ -307,4 +312,14 @@ NodeDef::NodeDef(BYTE* pData)
 
 NodeDef::~NodeDef()
 {
+}
+
+int NodeDef::GetMemoryRequirements()
+{
+	int size = 144 + this->m_numChildNodeIDs * 2 + this->m_numControlParamAndOpNodeIDs * 4;
+	
+	for (size_t i = 0; i < this->m_numAttributes; i++)
+		size += this->m_attributes[i]->GetMemoryRequirements();
+
+	return size;
 }

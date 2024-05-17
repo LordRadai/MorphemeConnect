@@ -10,6 +10,8 @@ namespace MR
         AttribDataSourceAnim(BYTE* pData);
 		~AttribDataSourceAnim();
 
+        int GetMemoryRequirements();
+
         int GetAnimID();
         int GetRigToAnimMapBundleID();
         float GetClipStart();

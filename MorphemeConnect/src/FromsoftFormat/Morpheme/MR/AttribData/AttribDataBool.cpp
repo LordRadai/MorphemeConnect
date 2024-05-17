@@ -18,6 +18,11 @@ AttribDataBool::~AttribDataBool()
 {
 }
 
+int AttribDataBool::GetMemoryRequirements()
+{
+	return 16 + 1;
+}
+
 bool AttribDataBool::Get()
 {
 	return this->m_value;

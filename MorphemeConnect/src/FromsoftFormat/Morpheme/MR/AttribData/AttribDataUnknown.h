@@ -10,6 +10,8 @@ namespace MR
         AttribDataUnknown(BYTE* pData, int size);
         ~AttribDataUnknown();
 
+        int GetMemoryRequirements();
+
     private:
         std::vector<BYTE> m_data;
     };

@@ -1,5 +1,6 @@
 #include "NetworkDef.h"
 #include "../../../Utils/MemReader/MemReader.h"
+#include "../../../../RMath/RMath.h"
 
 using namespace MR;
 
@@ -22,7 +23,11 @@ NodeGroup::NodeGroup(BYTE* pData)
 
 NodeGroup::~NodeGroup()
 {
-	this->m_nodes.clear();
+}
+
+int NodeGroup::GetMemoryRequirements()
+{
+	return 16 + this->m_count * 2;
 }
 
 UnkNodeData::UnkNodeData()
@@ -50,7 +55,11 @@ UnkNodeData::UnkNodeData(BYTE* pData)
 
 UnkNodeData::~UnkNodeData()
 {
-	this->m_data.clear();
+}
+
+int UnkNodeData::GetMemoryRequirements()
+{
+	return 32 + this->m_count * 2;
 }
 
 NodeTypeDef::NodeTypeDef()
@@ -76,7 +85,11 @@ NodeTypeDef::NodeTypeDef(BYTE* pData)
 
 NodeTypeDef::~NodeTypeDef()
 {
-	this->m_data.clear();
+}
+
+int NodeTypeDef::GetMemoryRequirements()
+{
+	return RMath::AlignValue(8 + 16 + this->m_size, 4);
 }
 
 FunctionDef::FunctionDef()
@@ -92,7 +105,6 @@ FunctionDef::FunctionDef(UINT64* pData, int count)
 
 FunctionDef::~FunctionDef()
 {
-	this->m_data.clear();
 }
 
 FunctionDefList::FunctionDefList()
@@ -109,22 +121,21 @@ FunctionDefList::FunctionDefList(BYTE* pData)
 
 	UINT64* pOffsets = (UINT64*)(pData + offsetsOffset);
 
-	this->m_offsets.reserve(this->m_numFunctions);
-	for (size_t i = 0; i < this->m_numFunctions; i++)
-		this->m_offsets.push_back(pOffsets[i]);
-
 	this->m_functionDefs.reserve(this->m_numFunctions);
 	for (size_t i = 0; i < this->m_numFunctions; i++)
 	{
-		UINT64* pDef = (UINT64*)(pData + this->m_offsets[i]);
+		UINT64* pDef = (UINT64*)(pData + pOffsets[i]);
 		this->m_functionDefs.push_back(FunctionDef(pDef, this->m_arraySize));
 	}
 }
 
 FunctionDefList::~FunctionDefList()
 {
-	this->m_offsets.clear();
-	this->m_functionDefs.clear();
+}
+
+int FunctionDefList::GetMemoryRequirements()
+{
+	return 16 + this->m_numFunctions * 8 + this->m_numFunctions * this->m_arraySize * 8;
 }
 
 MessageDef::MessageDef()
@@ -157,7 +168,11 @@ MessageDef::MessageDef(BYTE* pData)
 
 MessageDef::~MessageDef()
 {
-	this->m_validNodeIDs.clear();
+}
+
+int MessageDef::GetMemoryRequirements()
+{
+	return 8 + 16 + this->m_validNodeCount * 2;
 }
 
 RigIndices::RigIndices()
@@ -182,21 +197,28 @@ RigData::RigData()
 
 RigData::RigData(BYTE* pBase, UINT64* pData, int rigCount, int boneCount)
 {
-	this->m_offsets.reserve(rigCount);
+	std::vector<UINT64> offsets;
+	offsets.reserve(rigCount);
 	for (size_t i = 0; i < rigCount; i++)
-		this->m_offsets.push_back(pData[i]);
+		offsets.push_back(pData[i]);
 
 	for (size_t i = 0; i < rigCount; i++)
 	{
-		int* pIndices = (int*)(pBase + this->m_offsets[i]);
+		int* pIndices = (int*)(pBase + offsets[i]);
 		this->m_rigIndices.push_back(RigIndices(pIndices, boneCount));
 	}
 }
 
 RigData::~RigData()
 {
-	this->m_offsets.clear();
-	this->m_rigIndices.clear();
+}
+
+int RigData::GetMemoryRequirements()
+{
+	int count = this->m_rigIndices.size();
+	int boneCount = this->m_rigIndices[0].m_indices.size();
+
+	return count * 8 + boneCount * 4;
 }
 
 NetworkDef::NetworkDef()
@@ -291,9 +313,26 @@ NetworkDef::NetworkDef(BYTE* pData)
 
 NetworkDef::~NetworkDef()
 {
-	if (this->m_rigData != nullptr)
-		delete this->m_rigData;
+}
 
-	if (this->m_mirroredRigData != nullptr)
-		delete this->m_mirroredRigData;
+int NetworkDef::GetMemoryRequirements()
+{
+	int size = 168;
+
+	for (size_t i = 0; i < this->m_numNodes; i++)
+		size += this->m_nodes[i]->GetMemoryRequirements();
+
+	size += this->m_nodeGroup1.GetMemoryRequirements() + this->m_nodeGroup2.GetMemoryRequirements() + this->m_stateMachineNodeGroup.GetMemoryRequirements() + this->m_emitRequestNodeGroup.GetMemoryRequirements();
+	size += this->m_eventTrackIDNamesTable.GetMemoryRequirements() + this->m_nodeIDNamesTable.GetMemoryRequirements() + this->m_requestIDNamesTable.GetMemoryRequirements();
+	size += this->m_functionDefList1.GetMemoryRequirements() + this->m_functionDefList2.GetMemoryRequirements();
+	
+	for (size_t i = 0; i < this->m_numRequests; i++)
+		size += this->m_messageDefs[i]->GetMemoryRequirements();
+
+	for (size_t i = 0; i < this->m_numNodeTypes; i++)
+		size += this->m_nodeTypeDefs[i]->GetMemoryRequirements();
+
+	size += this->m_rigData->GetMemoryRequirements() + this->m_mirroredRigData->GetMemoryRequirements();
+
+	return size;
 }

@@ -2,6 +2,10 @@
 
 using namespace MR;
 
+int EventTrackSet::GetMemoryRequirements()
+{
+    return 24 + this->m_trackCount * 8 + this->m_trackCount * 4;
+}
 
 void EventTrackSet::DeleteEventTrack(int idx)
 {
@@ -84,6 +88,11 @@ AttribDataSourceEventTrack::AttribDataSourceEventTrack(BYTE* pData) : AttribData
 
 AttribDataSourceEventTrack::~AttribDataSourceEventTrack()
 {
+}
+
+int AttribDataSourceEventTrack::GetMemoryRequirements()
+{
+    return 16 + this->m_discreteEventTrackSet.GetMemoryRequirements() + this->m_curveEventTrackSet.GetMemoryRequirements() + this->m_durationEventTrackSet.GetMemoryRequirements();
 }
 
 EventTrackSet AttribDataSourceEventTrack::GetDiscreteEventTrackSet()

@@ -10,6 +10,8 @@ namespace MR
 		AttribDataBool(BYTE* pData);
 		~AttribDataBool();
 
+		int GetMemoryRequirements();
+
 		bool Get();
 	private:
 		bool m_value;

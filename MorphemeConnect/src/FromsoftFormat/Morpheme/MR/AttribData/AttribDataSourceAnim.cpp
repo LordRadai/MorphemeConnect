@@ -43,6 +43,11 @@ AttribDataSourceAnim::~AttribDataSourceAnim()
 {
 }
 
+int AttribDataSourceAnim::GetMemoryRequirements()
+{
+    return 16 + 144;
+}
+
 int AttribDataSourceAnim::GetAnimID()
 {
     return this->m_animIdx;

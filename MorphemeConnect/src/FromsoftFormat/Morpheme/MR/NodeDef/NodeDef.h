@@ -83,6 +83,7 @@ namespace MR
         ~Attribute();
 
         AttribData* GetAttribData();
+        int GetMemoryRequirements();
     private:
         MR::AttribData* m_data;
         UINT64 m_dataSize;
@@ -98,6 +99,8 @@ namespace MR
         NodeDef();
         NodeDef(BYTE* pData);
         ~NodeDef();
+
+        int GetMemoryRequirements();
 
         NodeType m_typeID = NodeType_NetworkInstance;
         short m_flags = 0;

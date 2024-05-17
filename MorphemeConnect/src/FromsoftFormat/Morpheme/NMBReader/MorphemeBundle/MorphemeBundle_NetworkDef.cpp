@@ -54,6 +54,8 @@ void MorphemeBundle_NetworkDef::WriteBinary(ofstream* out)
 	MemReader::Write(out, this->m_iVar2C);
 
 	MemReader::AlignStream(out, this->m_dataAlignment);
+
+	int size = this->m_data->GetMemoryRequirements();
 }
 
 UINT64 MorphemeBundle_NetworkDef::GetMemoryRequirements()

@@ -20,6 +20,7 @@ namespace MR
         NodeGroup(BYTE* pData);
         ~NodeGroup();
 
+        int GetMemoryRequirements();
     private:
         int m_count;
         std::vector<short> m_nodes;
@@ -31,6 +32,8 @@ namespace MR
         UnkNodeData();
         UnkNodeData(BYTE* pData);
         ~UnkNodeData();
+
+        int GetMemoryRequirements();
 
     private:
         UINT64 m_iVar0;
@@ -58,10 +61,10 @@ namespace MR
         FunctionDefList(BYTE* pData);
         ~FunctionDefList();
 
+        int GetMemoryRequirements();
     private:
         int m_numFunctions;
         int m_arraySize;
-        std::vector<UINT64> m_offsets;
         std::vector<FunctionDef> m_functionDefs;
     };
 
@@ -71,6 +74,8 @@ namespace MR
         MessageDef();
         MessageDef(BYTE* pData);
         ~MessageDef();
+
+        int GetMemoryRequirements();
 
     private:
         int m_id;
@@ -89,6 +94,8 @@ namespace MR
         NodeTypeDef();
         NodeTypeDef(BYTE* pData);
         ~NodeTypeDef();
+
+        int GetMemoryRequirements();
 
     private:
         NodeType m_typeID;
@@ -114,7 +121,8 @@ namespace MR
         RigData(BYTE* pBase, UINT64* pData, int rigCount, int boneCount);
         ~RigData();
 
-        std::vector<UINT64> m_offsets;
+        int GetMemoryRequirements();
+
         std::vector<RigIndices> m_rigIndices;
     };
 
@@ -124,6 +132,8 @@ namespace MR
         NetworkDef();
         NetworkDef(BYTE* pData);
         ~NetworkDef();
+
+        int GetMemoryRequirements();
 
         NodeDef m_networkInstance;
         int m_numNodes;

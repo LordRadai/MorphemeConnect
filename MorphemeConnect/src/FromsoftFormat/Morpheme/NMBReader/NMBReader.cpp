@@ -279,8 +279,8 @@ bool NMBReader::SaveToFile(PWSTR pszOutFilePath)
 		for (int i = 0; i < this->m_rigToAnimMap.size(); i++)
 			this->m_rigToAnimMap[i].WriteBinary(&nmb_out);
 
-		//this->m_network.WriteBinary(&nmb_out);
-		this->m_networkRaw.WriteBinary(&nmb_out);
+		this->m_networkDef.WriteBinary(&nmb_out);
+		//this->m_networkRaw.WriteBinary(&nmb_out);
 		this->m_fileNameLookupTable.WriteBinary(&nmb_out);
 	}
 	catch (const std::exception&)

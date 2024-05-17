@@ -7,6 +7,8 @@ struct EventTrackSet
 	std::vector<int> m_trackSignatures;
 	std::vector<int> m_trackSize;
 
+	int GetMemoryRequirements();
+
 	void DeleteEventTrack(int idx);
 	void AddEventTrack(int signature);
 };
@@ -19,6 +21,8 @@ namespace MR
 		AttribDataSourceEventTrack();
 		AttribDataSourceEventTrack(BYTE* pData);
 		~AttribDataSourceEventTrack();
+
+		int GetMemoryRequirements();
 
 		EventTrackSet GetDiscreteEventTrackSet();
 		EventTrackSet GetCurveEventTrackSet();

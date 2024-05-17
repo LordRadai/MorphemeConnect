@@ -17,7 +17,7 @@ MorphemeBundle_NetworkDef::MorphemeBundle_NetworkDef()
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
-	this->m_data = NULL;
+	this->m_data = nullptr;
 }
 
 MorphemeBundle_NetworkDef::MorphemeBundle_NetworkDef(MorphemeBundle* bundle)

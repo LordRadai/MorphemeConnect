@@ -37,7 +37,7 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
-	this->m_data = NULL;
+	this->m_data = nullptr;
 }
 
 MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable(MorphemeBundle* bundle)

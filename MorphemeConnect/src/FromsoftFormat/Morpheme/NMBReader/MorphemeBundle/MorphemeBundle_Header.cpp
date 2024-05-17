@@ -17,7 +17,7 @@ MorphemeBundle_Header::MorphemeBundle_Header()
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 4;
 	this->m_iVar2C = 0;
-	this->m_data = NULL;
+	this->m_data = nullptr;
 }
 
 MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)

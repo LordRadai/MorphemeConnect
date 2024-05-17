@@ -57,6 +57,8 @@ void MorphemeBundle_RigToAnimMap::WriteBinary(ofstream* out)
 	MemReader::AlignStream(out, this->m_dataAlignment);
 
 	ME::ExportRigToAnimMap(out, this->m_dataAlignment, this->m_data);
+
+	MemReader::AlignStream(out, this->m_dataAlignment);
 }
 
 UINT64 MorphemeBundle_RigToAnimMap::GetMemoryRequirements()

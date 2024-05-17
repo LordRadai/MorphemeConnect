@@ -5,6 +5,7 @@
 #include "MorphemeBundle/MorphemeBundle_NetworkDef.h"
 #include "MorphemeBundle/MorphemeBundle_FileNameLookupTable.h"
 #include "MorphemeBundle/MorphemeBundle_Rig.h"
+#include "MorphemeBundle/MorphemeBundle_CharacterControllerDef.h"
 
 struct AnimInterface
 {
@@ -32,7 +33,7 @@ private:
 	std::vector<MorphemeBundle_Rig> m_rig;
 	std::vector<MorphemeBundle> m_rigToAnimMap;
 	std::vector<MorphemeBundle_EventTrack> m_eventTracks;
-	std::vector<MorphemeBundle> m_characterControllerDef;
+	std::vector<MorphemeBundle_CharacterControllerDef> m_characterControllerDef;
 	MorphemeBundle_NetworkDef m_networkDef;
 	MorphemeBundle_Header m_header;
 	MorphemeBundle_FileNameLookupTable m_fileNameLookupTable;

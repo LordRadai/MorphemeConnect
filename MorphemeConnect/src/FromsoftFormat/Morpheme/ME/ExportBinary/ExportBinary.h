@@ -15,4 +15,5 @@ namespace ME
 	void ExportStringTable(ofstream* out, int alignment, StringTable* table);
 	void ExportRig(ofstream* out, int alignment, Rig* rig);
 	void ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose);
+	void ExportCharacterController(ofstream* out, int alignment, CharacterController* characterController);
 }

@@ -2,6 +2,8 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
+using namespace NMB;
+
 MorphemeBundle::MorphemeBundle()
 {
 	this->m_magic[0] = 0;

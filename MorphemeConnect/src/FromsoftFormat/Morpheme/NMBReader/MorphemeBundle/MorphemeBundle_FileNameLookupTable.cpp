@@ -2,6 +2,8 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
+using namespace NMB;
+
 MorphemeBundle_FileNameLookupTable::BundleData_FileNameLookupTable::BundleData_FileNameLookupTable(BYTE* data)
 {
 	UINT64 animTableOffset = *(UINT64*)(data);
@@ -33,7 +35,7 @@ MorphemeBundle_FileNameLookupTable::MorphemeBundle_FileNameLookupTable()
 		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
-	this->m_dataAlignment = 0;
+	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
 	this->m_data = NULL;
 }
@@ -110,9 +112,7 @@ void MorphemeBundle_FileNameLookupTable::WriteBinary(ofstream* out)
 
 UINT64 MorphemeBundle_FileNameLookupTable::GetMemoryRequirements()
 {
-	this->m_dataSize = 40;
-
-	this->m_dataSize += RMath::AlignValue(this->m_data->m_animTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_animFormatTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_sourceXmdTable->GetMemoryRequirements(), this->m_dataAlignment) + this->m_data->m_animTakeTable->GetMemoryRequirements() + RMath::AlignValue(4 * this->m_data->m_hashes.size(), this->m_dataAlignment);
+	this->m_dataSize = 40 + RMath::AlignValue(this->m_data->m_animTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_animFormatTable->GetMemoryRequirements(), this->m_dataAlignment) + RMath::AlignValue(this->m_data->m_sourceXmdTable->GetMemoryRequirements(), this->m_dataAlignment) + this->m_data->m_animTakeTable->GetMemoryRequirements() + RMath::AlignValue(4 * this->m_data->m_hashes.size(), this->m_dataAlignment);
 
 	return this->m_dataSize;
 } 

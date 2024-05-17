@@ -57,7 +57,7 @@ NMBReader::NMBReader(PWSTR pszFilePath)
 			this->m_eventTracks.push_back(&this->m_bundles[i]);
 			break;
 		case kAsset_CharacterControllerDef:
-			this->m_characterControllerDef.push_back(this->m_bundles[i]);
+			this->m_characterControllerDef.push_back(MorphemeBundle_CharacterControllerDef(&this->m_bundles[i]));
 			break;
 		case kAsset_NetworkDef:
 			this->m_networkDef = MorphemeBundle_NetworkDef(&this->m_bundles[i]);

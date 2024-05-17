@@ -151,3 +151,18 @@ void ME::ExportRigBindPose(ofstream* out, int alignment, BindPose* bindPose)
 	MemReader::WriteArray(out, bindPose->GetOrientation()->m_position.data(), bindPose->GetBoneCount());
 	MemReader::WriteArray(out, bindPose->GetOrientation()->m_rotation.data(), bindPose->GetBoneCount());
 }
+
+void ME::ExportCharacterController(ofstream* out, int alignment, CharacterController* characterController)
+{
+	MemReader::Write(out, 1);
+	MemReader::Write(out, characterController->GetHeight());
+	MemReader::Write(out, characterController->GetWidth());
+	MemReader::Write(out, characterController->GetDepth());
+	MemReader::Write(out, characterController->GetRadius());
+	MemReader::Write(out, characterController->GetSkinWidth());
+	MemReader::Write(out, characterController->GetStepHeight());
+	MemReader::Write(out, characterController->GetMaxPushForce());
+	MemReader::Write(out, characterController->GetMaxSlopeAngle());
+	MemReader::Write(out, characterController->GetFlags());
+	MemReader::Write(out, characterController->IsVisible());
+}

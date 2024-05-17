@@ -6,3 +6,4 @@
 #include "NetworkDef/NetworkDef.h"
 #include "EventTrack/EventTrack.h"
 #include "Rig/Rig.h"
+#include "CharacterController/CharacterController.h"

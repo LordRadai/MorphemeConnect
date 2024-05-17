@@ -2,6 +2,8 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
+using namespace NMB;
+
 MorphemeBundle_NetworkDef::MorphemeBundle_NetworkDef()
 {
 	this->m_magic[0] = 0;
@@ -13,7 +15,7 @@ MorphemeBundle_NetworkDef::MorphemeBundle_NetworkDef()
 		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
-	this->m_dataAlignment = 0;
+	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
 	this->m_data = NULL;
 }

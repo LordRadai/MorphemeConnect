@@ -2,6 +2,8 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
+using namespace NMB;
+
 MorphemeBundle_EventTrack::MorphemeBundle_EventTrack()
 {
 	this->m_magic[0] = 24;
@@ -13,7 +15,7 @@ MorphemeBundle_EventTrack::MorphemeBundle_EventTrack()
 		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
-	this->m_dataAlignment = 0;
+	this->m_dataAlignment = 16;
 	this->m_iVar2C = 0;
 	this->m_data = nullptr;
 }

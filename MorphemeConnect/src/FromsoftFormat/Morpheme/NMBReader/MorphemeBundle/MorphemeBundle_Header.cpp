@@ -2,6 +2,8 @@
 #include "../../../../framework.h"
 #include "../../../../extern.h"
 
+using namespace NMB;
+
 MorphemeBundle_Header::MorphemeBundle_Header()
 {
 	this->m_magic[0] = 0;
@@ -13,7 +15,7 @@ MorphemeBundle_Header::MorphemeBundle_Header()
 		this->m_guid[i] = 0;
 
 	this->m_dataSize = 0;
-	this->m_dataAlignment = 0;
+	this->m_dataAlignment = 4;
 	this->m_iVar2C = 0;
 	this->m_data = NULL;
 }
@@ -59,5 +61,7 @@ void MorphemeBundle_Header::WriteBinary(ofstream* out)
 
 UINT64 MorphemeBundle_Header::GetMemoryRequirements()
 {
-	return 32;
+	this->m_dataSize = 32;
+
+	return this->m_dataSize;
 }

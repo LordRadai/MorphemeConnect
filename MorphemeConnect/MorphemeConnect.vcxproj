@@ -332,6 +332,7 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\Common\Common.cpp" />
@@ -951,6 +952,7 @@
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\Common\Common.h" />

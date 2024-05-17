@@ -252,6 +252,9 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -2124,6 +2127,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

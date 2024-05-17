@@ -51,11 +51,6 @@ RigToAnimMap::~RigToAnimMap()
 {
 }
 
-int RigToAnimMap::GetMemoryRequirements()
-{
-	return 40 + RMath::AlignValue(this->m_pRigToAnimMapIndices->GetMemoryRequirements(), this->m_dataAlignment) + this->m_pBoneDeformationInfo->GetMemoryRequirements();
-}
-
 BoneDeformationInfo* RigToAnimMap::GetBoneDeformationInfo()
 {
 	return this->m_pBoneDeformationInfo;
@@ -64,4 +59,9 @@ BoneDeformationInfo* RigToAnimMap::GetBoneDeformationInfo()
 RigToAnimMap::RigToAnimMapIndices* RigToAnimMap::GetRigToAnimMapIndices()
 {
 	return this->m_pRigToAnimMapIndices;
+}
+
+int RigToAnimMap::GetMemoryRequirements()
+{
+	return 40 + RMath::AlignValue(this->m_pRigToAnimMapIndices->GetMemoryRequirements(), this->m_dataAlignment) + this->m_pBoneDeformationInfo->GetMemoryRequirements();
 }

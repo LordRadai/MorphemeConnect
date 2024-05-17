@@ -22,10 +22,10 @@ namespace MR
 		RigToAnimMap(BYTE* pData);
 		~RigToAnimMap();
 
-		int GetMemoryRequirements();
-
 		BoneDeformationInfo* GetBoneDeformationInfo();
 		RigToAnimMapIndices* GetRigToAnimMapIndices();
+
+		int GetMemoryRequirements();
 	private:
 		BoneDeformationInfo* m_pBoneDeformationInfo;
 		UINT64 m_dataSize;

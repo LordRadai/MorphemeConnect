@@ -118,7 +118,7 @@ AttribData* Attribute::AttribDataFactory(BYTE* pData)
 	case ATTRIB_TYPE_CLOSEST_ANIM_STATE:
 		return new AttribDataUnknown(pData, this->m_dataSize);
 	case ATTRIB_TYPE_STATE_MACHINE_DEF:
-		return new AttribDataUnknown(pData, this->m_dataSize);
+		return new AttribDataStateMachine(pData);
 	case ATTRIB_TYPE_STATE_MACHINE:
 		return new AttribDataUnknown(pData, this->m_dataSize);
 	case ATTRIB_TYPE_CHARACTER_PROPERTIES:

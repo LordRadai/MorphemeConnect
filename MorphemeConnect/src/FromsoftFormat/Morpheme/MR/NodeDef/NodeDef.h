@@ -5,6 +5,7 @@
 #include "../AttribData/AttribDataBool.h"
 #include "../AttribData/AttribDataSourceAnim.h"
 #include "../AttribData/AttribDataSourceEventTrack.h"
+#include "../AttribData/AttribDataStateMachine.h"
 
 enum NodeType
 {

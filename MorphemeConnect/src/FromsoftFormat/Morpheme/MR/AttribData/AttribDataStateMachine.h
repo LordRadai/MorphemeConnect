@@ -1,20 +1,25 @@
 #pragma once
 #include "AttribData.h"
+#include "TransitConditionDef/TransitConditionDef.h"
 
 namespace MR
 {
 	struct SMChildNodeInfo
 	{
-		short m_id;
-		short m_sVar0;
-		short m_transitConditionCount;
-		UINT64 m_pVar3;
+		short m_nodeID;
+		short m_numTransitConditions;
+		std::vector<int> m_conditionIndices;
+		short m_numChildTransitConditions;
+		std::vector<short> m_childTransitConditionIndices;
 		short m_sVar4;
-		short m_sVar5;
-		UINT64 m_pVar6;
+		short m_numChildTransits;
+		std::vector<short> m_childTransitIndices;
+
+		SMChildNodeInfo();
+		SMChildNodeInfo(BYTE* pData);
 	};
 
-	class AttribDataStateMachine
+	class AttribDataStateMachine : public AttribData
 	{
 	public:
 		AttribDataStateMachine();
@@ -23,10 +28,12 @@ namespace MR
 
 		int GetMemoryRequirements();
 	private:
-		int m_sVar0;
-		int m_totalChildCount;
+		short m_defaultStateIndex;
+		short m_numChildStates;
+		std::vector<SMChildNodeInfo*> m_childNodesInfo;
+		SMChildNodeInfo* m_childActiveStateInfo;
 		bool m_bVar1;
-		short m_childTransitConditionCount;
-
+		short m_numChildTransitConditions;
+		std::vector<TransitConditionDef*> m_transitConditions;
 	};
 }

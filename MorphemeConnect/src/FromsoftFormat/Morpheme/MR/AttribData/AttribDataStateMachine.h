@@ -30,7 +30,7 @@ namespace MR
 	private:
 		short m_defaultStateIndex;
 		short m_numChildStates;
-		std::vector<SMChildNodeInfo*> m_childNodesInfo;
+		std::vector<SMChildNodeInfo> m_childNodesInfo;
 		SMChildNodeInfo* m_childActiveStateInfo;
 		bool m_bVar1;
 		short m_numChildTransitConditions;

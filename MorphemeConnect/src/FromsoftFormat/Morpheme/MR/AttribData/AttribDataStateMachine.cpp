@@ -71,11 +71,9 @@ AttribDataStateMachine::AttribDataStateMachine(BYTE* pData) : AttribData(pData)
 	this->m_numChildTransitConditions = *(short*)(pData + 0x2A);
 	UINT64 childTransitConditionDefOffset = *(UINT64*)(pData + 0x30);
 
-	SMChildNodeInfo* pChildNodes = (SMChildNodeInfo*)(pData + childNodeOffset);
-
 	this->m_childNodesInfo.reserve(this->m_numChildStates);
 	for (size_t i = 0; i < this->m_numChildStates; i++)
-		this->m_childNodesInfo.push_back(new SMChildNodeInfo(pChildNodes[i]));
+		this->m_childNodesInfo.push_back(SMChildNodeInfo(pData + childNodeOffset + 0x30 * i));
 
 	this->m_childActiveStateInfo = new SMChildNodeInfo(pData + activeStateNodeOffset);
 

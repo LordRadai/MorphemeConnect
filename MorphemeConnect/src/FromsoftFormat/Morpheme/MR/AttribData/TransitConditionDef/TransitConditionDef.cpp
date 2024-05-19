@@ -4,7 +4,7 @@ using namespace MR;
 
 TransitConditionDef::TransitConditionDef()
 {
-	this->m_typeID = TransitConditionDefFalse;
+	this->m_typeID = TransitConditionType_False;
 	this->m_bVar0 = false;
 }
 

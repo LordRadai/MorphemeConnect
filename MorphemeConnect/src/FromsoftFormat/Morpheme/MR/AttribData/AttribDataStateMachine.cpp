@@ -60,13 +60,16 @@ AttribDataStateMachine::AttribDataStateMachine()
 
 AttribDataStateMachine::AttribDataStateMachine(BYTE* pData)
 {
-	this->m_defaultStateIndex = *(short*)(pData);
-	this->m_numChildStates = *(short*)(pData + 0x2);
-	UINT64 childNodeOffset = *(UINT64*)(pData + 0x8);
-	UINT64 activeStateNodeOffset = *(UINT64*)(pData + 0x10);
-	this->m_bVar1 = *(bool*)(pData + 0x18);
-	this->m_numChildTransitConditions = *(short*)(pData + 0x1A);
-	UINT64 childTransitConditionDefOffset = *(UINT64*)(pData + 0x20);
+	if (this->m_attribTypeID != ATTRIB_TYPE_STATE_MACHINE_DEF)
+		RDebug::SystemPanic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_attribTypeID, ATTRIB_TYPE_SOURCE_ANIM);
+
+	this->m_defaultStateIndex = *(short*)(pData + 0x10);
+	this->m_numChildStates = *(short*)(pData + 0x12);
+	UINT64 childNodeOffset = *(UINT64*)(pData + 0x18);
+	UINT64 activeStateNodeOffset = *(UINT64*)(pData + 0x20);
+	this->m_bVar1 = *(bool*)(pData + 0x28);
+	this->m_numChildTransitConditions = *(short*)(pData + 0x2A);
+	UINT64 childTransitConditionDefOffset = *(UINT64*)(pData + 0x30);
 
 	SMChildNodeInfo* pChildNodes = (SMChildNodeInfo*)(pData + childNodeOffset);
 

@@ -336,6 +336,7 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDef.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntLess.cpp" />
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefOnRequest.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.cpp" />
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\Common\Common.cpp" />
@@ -959,6 +960,7 @@
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDef.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntLess.h" />
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefOnRequest.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.h" />
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\Common\Common.h" />

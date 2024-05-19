@@ -118,7 +118,7 @@ TransitConditionDef* AttribDataStateMachine::TransitConditionDefFactory(BYTE* pD
 	case TransitConditionType_OnRequest:
 		return new TransitConditionDefOnRequest(pData);
 	case TransitConditionType_DiscreteEventTriggered:
-		return pTransitConditionType;
+		return new TransitConditionDefDiscreteEventTriggered(pData);
 	case TransitConditionType_CrossedDurationFraction:
 		return pTransitConditionType;
 	case TransitConditionType_ControlParamFloatGreater:

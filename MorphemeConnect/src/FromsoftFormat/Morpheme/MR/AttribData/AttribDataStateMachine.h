@@ -3,6 +3,7 @@
 #include "TransitConditionDef/TransitConditionDef.h"
 #include "TransitConditionDef/TransitConditionDefOnRequest.h"
 #include "TransitConditionDef/TransitConditionDefControlParameterIntLess.h"
+#include "TransitConditionDef/TransitConditionDefDiscreteEventTriggered.h"
 
 namespace MR
 {

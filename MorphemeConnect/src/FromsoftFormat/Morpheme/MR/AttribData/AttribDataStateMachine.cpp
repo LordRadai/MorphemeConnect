@@ -58,7 +58,7 @@ AttribDataStateMachine::AttribDataStateMachine()
 	this->m_numChildTransitConditions = 0;
 }
 
-AttribDataStateMachine::AttribDataStateMachine(BYTE* pData)
+AttribDataStateMachine::AttribDataStateMachine(BYTE* pData) : AttribData(pData)
 {
 	if (this->m_attribTypeID != ATTRIB_TYPE_STATE_MACHINE_DEF)
 		RDebug::SystemPanic("NodeAttribSourceAnim.cpp", "Node type is of the wrong type (type=%d, expected=%d)\n", this->m_attribTypeID, ATTRIB_TYPE_SOURCE_ANIM);

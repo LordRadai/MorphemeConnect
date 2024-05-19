@@ -3,26 +3,26 @@
 
 enum TransitConditionType : short
 {
-    TransitConditionDefOnRequest = 601,
-    TransitConditionDefDiscreteEventTriggered = 602,
-    TransitConditionDefCrossedDurationFraction = 603,
-    TransitConditionDefControlParamFloatGreater = 606,
-    TransitConditionDefFalse = 607,
-    TransitConditionDefControlParamFloatLess = 608,
-    TransitConditionDefCrossedDurationEventFraction = 610,
-    TransitConditionDefInSyncEventRange = 611,
-    TransitConditionDefPhysicsAvailable = 612,
-    TransitConditionDefPhysicsInUse = 613,
-    TransitConditionDefGroundContact = 614,
-    TransitConditionDefRayHit = 615,
-    TransitConditionDefInSubState = 617,
-    TransitConditionDefInDurationEvent = 618,
-    TransitConditionDefPhysicsMoving = 619,
-    TransitConditionDefSKDeviation = 620,
-    TransitConditionDefControlParamIntGreater = 623,
-    TransitConditionDefControlParamIntLess = 624,
-    TransitConditionDefControlParameterIntInRange = 625,
-    TransitConditionDefControlParamFloatInRange = 627,
+    TransitConditionType_OnRequest = 601,
+    TransitConditionType_DiscreteEventTriggered = 602,
+    TransitConditionType_CrossedDurationFraction = 603,
+    TransitConditionType_ControlParamFloatGreater = 606,
+    TransitConditionType_False = 607,
+    TransitConditionType_ControlParamFloatLess = 608,
+    TransitConditionType_CrossedDurationEventFraction = 610,
+    TransitConditionType_InSyncEventRange = 611,
+    TransitConditionType_PhysicsAvailable = 612,
+    TransitConditionType_PhysicsInUse = 613,
+    TransitConditionType_GroundContact = 614,
+    TransitConditionType_RayHit = 615,
+    TransitConditionType_InSubState = 617,
+    TransitConditionType_InDurationEvent = 618,
+    TransitConditionType_PhysicsMoving = 619,
+    TransitConditionType_SKDeviation = 620,
+    TransitConditionType_ControlParamIntGreater = 623,
+    TransitConditionType_ControlParamIntLess = 624,
+    TransitConditionType_ControlParameterIntInRange = 625,
+    TransitConditionType_ControlParamFloatInRange = 627,
 };
 
 namespace MR
@@ -34,6 +34,8 @@ namespace MR
         TransitConditionDef(BYTE* pData);
 		~TransitConditionDef();
 
+        virtual int GetMemoryRequirements() { return 76; }
+        TransitConditionType GetType();
 	private:
         TransitConditionType m_typeID;
         bool m_bVar0;

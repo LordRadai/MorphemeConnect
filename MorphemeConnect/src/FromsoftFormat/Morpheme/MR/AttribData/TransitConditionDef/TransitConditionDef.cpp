@@ -17,3 +17,8 @@ TransitConditionDef::TransitConditionDef(BYTE* pData)
 TransitConditionDef::~TransitConditionDef()
 {
 }
+
+TransitConditionType TransitConditionDef::GetType()
+{
+	return this->m_typeID;
+}

@@ -1,4 +1,5 @@
 #include "AttribDataStateMachine.h"
+#include "../../../../RMath/RMath.h"
 
 using namespace MR;
 
@@ -50,12 +51,18 @@ SMChildNodeInfo::SMChildNodeInfo(BYTE* pData)
 	}
 }
 
+int SMChildNodeInfo::GetMemoryRequirements()
+{
+	return 48 + RMath::AlignValue(this->m_numChildTransitConditions * 2, 4) + RMath::AlignValue(this->m_numChildTransits * 2, 4) + RMath::AlignValue(this->m_numTransitConditions * 2, 4);
+}
+
 AttribDataStateMachine::AttribDataStateMachine()
 {
 	this->m_defaultStateIndex = 0;
 	this->m_numChildStates = 0;
 	this->m_bVar1 = false;
 	this->m_numChildTransitConditions = 0;
+	this->m_childActiveStateInfo = nullptr;
 }
 
 AttribDataStateMachine::AttribDataStateMachine(BYTE* pData) : AttribData(pData)
@@ -73,15 +80,14 @@ AttribDataStateMachine::AttribDataStateMachine(BYTE* pData) : AttribData(pData)
 
 	this->m_childNodesInfo.reserve(this->m_numChildStates);
 	for (size_t i = 0; i < this->m_numChildStates; i++)
-		this->m_childNodesInfo.push_back(SMChildNodeInfo(pData + childNodeOffset + 0x30 * i));
+		this->m_childNodesInfo.push_back(new SMChildNodeInfo(pData + childNodeOffset + 0x30 * i));
 
 	this->m_childActiveStateInfo = new SMChildNodeInfo(pData + activeStateNodeOffset);
 
-	TransitConditionDef* pTransitConditions = (TransitConditionDef*)(pData + childTransitConditionDefOffset);
-
+	UINT64* pTransitConditions = (UINT64*)(pData + childTransitConditionDefOffset);
 	this->m_transitConditions.reserve(this->m_numChildTransitConditions);
 	for (size_t i = 0; i < this->m_numChildTransitConditions; i++)
-		this->m_transitConditions.push_back(new TransitConditionDef(pTransitConditions[i]));
+		this->m_transitConditions.push_back(this->TransitConditionDefFactory(pData + pTransitConditions[i]));
 }
 
 AttribDataStateMachine::~AttribDataStateMachine()
@@ -90,5 +96,66 @@ AttribDataStateMachine::~AttribDataStateMachine()
 
 int AttribDataStateMachine::GetMemoryRequirements()
 {
-	return 48;
+	int size = 48;
+
+	for (size_t i = 0; i < this->m_numChildStates; i++)
+		size += this->m_childNodesInfo[i]->GetMemoryRequirements();
+
+	size += this->m_childActiveStateInfo->GetMemoryRequirements();
+
+	for (size_t i = 0; i < this->m_numChildTransitConditions; i++)
+		size += this->m_transitConditions[i]->GetMemoryRequirements();
+
+	return size;
+}
+
+TransitConditionDef* AttribDataStateMachine::TransitConditionDefFactory(BYTE* pData)
+{
+	TransitConditionDef* pTransitConditionType = new TransitConditionDef(pData);
+
+	switch (pTransitConditionType->GetType())
+	{
+	case TransitConditionType_OnRequest:
+		return new TransitConditionDef(pData);
+	case TransitConditionType_DiscreteEventTriggered:
+		return pTransitConditionType;
+	case TransitConditionType_CrossedDurationFraction:
+		return pTransitConditionType;
+	case TransitConditionType_ControlParamFloatGreater:
+		return pTransitConditionType;
+	case TransitConditionType_False:
+		return pTransitConditionType;
+	case TransitConditionType_ControlParamFloatLess:
+		return pTransitConditionType;
+	case TransitConditionType_CrossedDurationEventFraction:
+		return pTransitConditionType;
+	case TransitConditionType_InSyncEventRange:
+		return pTransitConditionType;
+	case TransitConditionType_PhysicsAvailable:
+		return pTransitConditionType;
+	case TransitConditionType_PhysicsInUse:
+		return pTransitConditionType;
+	case TransitConditionType_GroundContact:
+		return pTransitConditionType;
+	case TransitConditionType_RayHit:
+		return pTransitConditionType;
+	case TransitConditionType_InSubState:
+		return pTransitConditionType;
+	case TransitConditionType_InDurationEvent:
+		return pTransitConditionType;
+	case TransitConditionType_PhysicsMoving:
+		return pTransitConditionType;
+	case TransitConditionType_SKDeviation:
+		return pTransitConditionType;
+	case TransitConditionType_ControlParamIntGreater:
+		return pTransitConditionType;
+	case TransitConditionType_ControlParamIntLess:
+		return new TransitConditionDefControlParameterIntLess(pData);
+	case TransitConditionType_ControlParameterIntInRange:
+		return pTransitConditionType;
+	case TransitConditionType_ControlParamFloatInRange:
+		return pTransitConditionType;
+	default:
+		return pTransitConditionType;
+	}
 }

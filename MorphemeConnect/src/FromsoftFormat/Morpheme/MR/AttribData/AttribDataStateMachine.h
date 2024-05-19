@@ -1,6 +1,8 @@
 #pragma once
 #include "AttribData.h"
 #include "TransitConditionDef/TransitConditionDef.h"
+#include "TransitConditionDef/TransitConditionDefOnRequest.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterIntLess.h"
 
 namespace MR
 {
@@ -17,6 +19,8 @@ namespace MR
 
 		SMChildNodeInfo();
 		SMChildNodeInfo(BYTE* pData);
+
+		int GetMemoryRequirements();
 	};
 
 	class AttribDataStateMachine : public AttribData
@@ -30,10 +34,12 @@ namespace MR
 	private:
 		short m_defaultStateIndex;
 		short m_numChildStates;
-		std::vector<SMChildNodeInfo> m_childNodesInfo;
+		std::vector<SMChildNodeInfo*> m_childNodesInfo;
 		SMChildNodeInfo* m_childActiveStateInfo;
 		bool m_bVar1;
 		short m_numChildTransitConditions;
 		std::vector<TransitConditionDef*> m_transitConditions;
+
+		TransitConditionDef* TransitConditionDefFactory(BYTE* pData);
 	};
 }

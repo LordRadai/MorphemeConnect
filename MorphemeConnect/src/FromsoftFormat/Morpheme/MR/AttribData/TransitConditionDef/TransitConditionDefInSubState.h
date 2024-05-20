@@ -13,7 +13,7 @@ namespace MR
 
 		int GetMemoryRequirements();
 	private:
-		int m_nodeID;
+		short m_nodeID;
 	};
 
 

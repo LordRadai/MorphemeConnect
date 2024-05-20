@@ -27,7 +27,7 @@ NodeGroup::~NodeGroup()
 
 int NodeGroup::GetMemoryRequirements()
 {
-	return 16 + this->m_count * 2;
+	return 16 + RMath::AlignValue(this->m_count * 2, 4);
 }
 
 UnkNodeData::UnkNodeData()
@@ -59,7 +59,7 @@ UnkNodeData::~UnkNodeData()
 
 int UnkNodeData::GetMemoryRequirements()
 {
-	return 32 + this->m_count * 2;
+	return 32 + RMath::AlignValue(this->m_count * 2, 4);
 }
 
 NodeTypeDef::NodeTypeDef()
@@ -319,11 +319,13 @@ int NetworkDef::GetMemoryRequirements()
 {
 	int size = 168;
 
+	size += this->m_numNodes * 8;
 	for (size_t i = 0; i < this->m_numNodes; i++)
 		size += this->m_nodes[i]->GetMemoryRequirements();
 
 	size += this->m_nodeGroup1.GetMemoryRequirements() + this->m_nodeGroup2.GetMemoryRequirements() + this->m_stateMachineNodeGroup.GetMemoryRequirements() + this->m_emitRequestNodeGroup.GetMemoryRequirements();
 	size += this->m_eventTrackIDNamesTable.GetMemoryRequirements() + this->m_nodeIDNamesTable.GetMemoryRequirements() + this->m_requestIDNamesTable.GetMemoryRequirements();
+	size += this->m_unkNodeData.GetMemoryRequirements();
 	size += this->m_functionDefList1.GetMemoryRequirements() + this->m_functionDefList2.GetMemoryRequirements();
 	
 	for (size_t i = 0; i < this->m_numRequests; i++)

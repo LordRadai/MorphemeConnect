@@ -28,5 +28,5 @@ TransitConditionDefDiscreteEventTriggered::~TransitConditionDefDiscreteEventTrig
 
 int TransitConditionDefDiscreteEventTriggered::GetMemoryRequirements()
 {
-	return 96;
+	return 88;
 }

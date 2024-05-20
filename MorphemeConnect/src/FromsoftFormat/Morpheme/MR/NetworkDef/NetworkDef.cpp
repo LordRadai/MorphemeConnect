@@ -326,7 +326,7 @@ int NetworkDef::GetMemoryRequirements()
 	size += this->m_nodeGroup1.GetMemoryRequirements() + this->m_nodeGroup2.GetMemoryRequirements() + this->m_stateMachineNodeGroup.GetMemoryRequirements() + this->m_emitRequestNodeGroup.GetMemoryRequirements();
 	size += this->m_eventTrackIDNamesTable.GetMemoryRequirements() + this->m_nodeIDNamesTable.GetMemoryRequirements() + this->m_requestIDNamesTable.GetMemoryRequirements();
 	size += this->m_unkNodeData.GetMemoryRequirements();
-	size += this->m_functionDefList1.GetMemoryRequirements() + this->m_functionDefList2.GetMemoryRequirements();
+	size += RMath::AlignValue(this->m_functionDefList1.GetMemoryRequirements() + this->m_functionDefList2.GetMemoryRequirements(), 16);
 	
 	size += 8 * this->m_numRequests;
 	for (size_t i = 0; i < this->m_numRequests; i++)

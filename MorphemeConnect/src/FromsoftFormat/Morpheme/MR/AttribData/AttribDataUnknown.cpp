@@ -8,11 +8,12 @@ AttribDataUnknown::AttribDataUnknown()
 
 AttribDataUnknown::AttribDataUnknown(BYTE* pData, int size) : AttribData(pData)
 {
-	pData += 0x10;
+	if (size == 0)
+		return;
 
 	this->m_data.reserve(size - 16);
 	for (size_t i = 0; i < size - 16; i++)
-		this->m_data.push_back(pData[i]);
+		this->m_data.push_back(pData[i] + 0x10);
 }
 
 AttribDataUnknown::~AttribDataUnknown()

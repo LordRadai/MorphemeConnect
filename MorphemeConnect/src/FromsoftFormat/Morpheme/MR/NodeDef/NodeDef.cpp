@@ -14,13 +14,16 @@ Attribute::Attribute()
 
 Attribute::Attribute(BYTE* pData, UINT64 pBase)
 {
-	BYTE* pOffset = *(BYTE**)(pData) + pBase;
+	UINT64 dataOffset = *(UINT64*)(pData);
 
+	BYTE* pOffset = (BYTE*)dataOffset + pBase;
+
+	this->m_data = nullptr;
 	this->m_dataSize = *(UINT64*)(pData + 0x8);
 	this->m_dataAlignment = *(int*)(pData + 0x10);
 	this->m_iVar0 = *(int*)(pData + 0x14);
 
-	if (pOffset != nullptr)
+	if (this->m_dataSize > 0)
 		this->m_data = AttribDataFactory(pOffset);
 }
 
@@ -35,7 +38,10 @@ AttribData* Attribute::GetAttribData()
 
 int Attribute::GetMemoryRequirements()
 {
-	return RMath::AlignValue(24 + this->m_data->GetMemoryRequirements(), this->m_dataAlignment);
+	if (this->m_data == nullptr)
+		return 24;
+
+	return 24 + RMath::AlignValue(this->m_data->GetMemoryRequirements(), this->m_dataAlignment);
 }
 
 AttribData* Attribute::AttribDataFactory(BYTE* pData)

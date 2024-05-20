@@ -1,5 +1,6 @@
 #include "NodeDef.h"
 #include "../../../Utils/MemReader/MemReader.h"
+#include "../../../../RMath/RMath.h"
 
 using namespace MR;
 
@@ -34,7 +35,7 @@ AttribData* Attribute::GetAttribData()
 
 int Attribute::GetMemoryRequirements()
 {
-	return 24 + this->m_data->GetMemoryRequirements();
+	return RMath::AlignValue(24 + this->m_data->GetMemoryRequirements(), this->m_dataAlignment);
 }
 
 AttribData* Attribute::AttribDataFactory(BYTE* pData)

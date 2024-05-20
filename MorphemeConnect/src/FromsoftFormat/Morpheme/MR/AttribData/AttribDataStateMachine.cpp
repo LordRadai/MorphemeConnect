@@ -120,17 +120,17 @@ TransitConditionDef* AttribDataStateMachine::TransitConditionDefFactory(BYTE* pD
 	case TransitConditionType_DiscreteEventTriggered:
 		return new TransitConditionDefDiscreteEventTriggered(pData);
 	case TransitConditionType_CrossedDurationFraction:
-		return pTransitConditionType;
+		return new TransitConditionDefCrossedDurationFraction(pData);
 	case TransitConditionType_ControlParamFloatGreater:
-		return pTransitConditionType;
+		return new TransitConditionDefControlParameterFloatGreater(pData);
 	case TransitConditionType_False:
-		return pTransitConditionType;
+		return new TransitConditionDefFalse(pData);
 	case TransitConditionType_ControlParamFloatLess:
-		return pTransitConditionType;
+		return new TransitConditionDefControlParameterFloatLess(pData);
 	case TransitConditionType_CrossedDurationEventFraction:
-		return pTransitConditionType;
+		return new TransitConditionDefCrossedDurationEventFraction(pData);
 	case TransitConditionType_InSyncEventRange:
-		return pTransitConditionType;
+		return new TransitConditionDefInSyncEventRange(pData);
 	case TransitConditionType_PhysicsAvailable:
 		return pTransitConditionType;
 	case TransitConditionType_PhysicsInUse:
@@ -140,21 +140,21 @@ TransitConditionDef* AttribDataStateMachine::TransitConditionDefFactory(BYTE* pD
 	case TransitConditionType_RayHit:
 		return pTransitConditionType;
 	case TransitConditionType_InSubState:
-		return pTransitConditionType;
+		return new TransitConditionDefInSubState(pData);
 	case TransitConditionType_InDurationEvent:
-		return pTransitConditionType;
+		return new TransitConditionDefInDurationEvent(pData);
 	case TransitConditionType_PhysicsMoving:
 		return pTransitConditionType;
 	case TransitConditionType_SKDeviation:
 		return pTransitConditionType;
 	case TransitConditionType_ControlParamIntGreater:
-		return pTransitConditionType;
+		return new TransitConditionDefControlParameterIntGreater(pData);
 	case TransitConditionType_ControlParamIntLess:
 		return new TransitConditionDefControlParameterIntLess(pData);
 	case TransitConditionType_ControlParameterIntInRange:
-		return pTransitConditionType;
+		return new TransitConditionDefControlParameterIntInRange(pData);
 	case TransitConditionType_ControlParamFloatInRange:
-		return pTransitConditionType;
+		return new TransitConditionDefControlParameterFloatInRange(pData);
 	default:
 		return pTransitConditionType;
 	}

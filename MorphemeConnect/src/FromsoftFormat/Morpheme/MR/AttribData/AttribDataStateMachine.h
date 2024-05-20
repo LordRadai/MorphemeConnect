@@ -1,9 +1,20 @@
 #pragma once
 #include "AttribData.h"
 #include "TransitConditionDef/TransitConditionDef.h"
-#include "TransitConditionDef/TransitConditionDefOnRequest.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterFloatGreater.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterFloatInRange.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterFloatLess.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterIntGreater.h"
+#include "TransitConditionDef/TransitConditionDefControlParameterIntInRange.h"
 #include "TransitConditionDef/TransitConditionDefControlParameterIntLess.h"
+#include "TransitConditionDef/TransitConditionDefCrossedDurationEventFraction.h"
+#include "TransitConditionDef/TransitConditionDefCrossedDurationFraction.h"
 #include "TransitConditionDef/TransitConditionDefDiscreteEventTriggered.h"
+#include "TransitConditionDef/TransitConditionDefFalse.h"
+#include "TransitConditionDef/TransitConditionDefInDurationEvent.h"
+#include "TransitConditionDef/TransitConditionDefInSubState.h"
+#include "TransitConditionDef/TransitConditionDefInSyncEventRange.h"
+#include "TransitConditionDef/TransitConditionDefOnRequest.h"
 
 namespace MR
 {

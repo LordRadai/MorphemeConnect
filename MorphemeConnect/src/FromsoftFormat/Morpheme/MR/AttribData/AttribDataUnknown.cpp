@@ -19,5 +19,5 @@ AttribDataUnknown::~AttribDataUnknown()
 
 int AttribDataUnknown::GetMemoryRequirements()
 {
-	return 24 + this->m_data.size();
+	return 16 + this->m_data.size();
 }

@@ -34,7 +34,7 @@ namespace MR
         TransitConditionDef(BYTE* pData);
 		~TransitConditionDef();
 
-        virtual int GetMemoryRequirements() { return 76; }
+        virtual int GetMemoryRequirements() { return 72; }
         TransitConditionType GetType();
 	private:
         TransitConditionType m_typeID;

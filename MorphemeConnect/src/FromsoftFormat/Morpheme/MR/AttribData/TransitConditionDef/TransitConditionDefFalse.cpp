@@ -16,5 +16,5 @@ TransitConditionDefFalse::~TransitConditionDefFalse()
 
 int TransitConditionDefFalse::GetMemoryRequirements()
 {
-	return 80;
+	return 72;
 }

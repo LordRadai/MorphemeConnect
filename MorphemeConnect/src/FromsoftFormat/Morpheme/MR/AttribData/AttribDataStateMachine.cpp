@@ -103,6 +103,8 @@ int AttribDataStateMachine::GetMemoryRequirements()
 
 	size += this->m_childActiveStateInfo->GetMemoryRequirements();
 
+	size += this->m_numChildTransitConditions * 8;
+
 	for (size_t i = 0; i < this->m_numChildTransitConditions; i++)
 		size += this->m_transitConditions[i]->GetMemoryRequirements();
 

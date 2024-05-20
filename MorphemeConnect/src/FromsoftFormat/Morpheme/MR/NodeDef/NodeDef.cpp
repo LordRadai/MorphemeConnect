@@ -317,7 +317,7 @@ NodeDef::~NodeDef()
 
 int NodeDef::GetMemoryRequirements()
 {
-	int size = 144 + this->m_numChildNodeIDs * 2 + this->m_numControlParamAndOpNodeIDs * 4;
+	int size = 144 + RMath::AlignValue(this->m_numChildNodeIDs * 2, 4) + this->m_numControlParamAndOpNodeIDs * 4;
 	
 	for (size_t i = 0; i < this->m_numAttributes; i++)
 		size += this->m_attributes[i]->GetMemoryRequirements();

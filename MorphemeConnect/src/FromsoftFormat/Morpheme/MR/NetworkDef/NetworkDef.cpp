@@ -218,7 +218,7 @@ int RigData::GetMemoryRequirements()
 	int count = this->m_rigIndices.size();
 	int boneCount = this->m_rigIndices[0].m_indices.size();
 
-	return count * 8 + boneCount * 4;
+	return count * 8 + count * boneCount * 4;
 }
 
 NetworkDef::NetworkDef()

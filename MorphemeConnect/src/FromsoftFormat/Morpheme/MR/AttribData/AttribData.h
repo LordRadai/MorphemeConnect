@@ -103,7 +103,7 @@ namespace MR
         ~AttribData();
         
         AttribType GetAttribType();
-        virtual int GetMemoryRequirements() { return 24; }
+        virtual int GetMemoryRequirements() { return 16; }
     protected:
         UINT64 m_iVar0;
         short m_sVar1;

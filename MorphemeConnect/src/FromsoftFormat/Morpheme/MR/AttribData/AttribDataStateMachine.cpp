@@ -96,7 +96,7 @@ AttribDataStateMachine::~AttribDataStateMachine()
 
 int AttribDataStateMachine::GetMemoryRequirements()
 {
-	int size = 16;
+	int size = 48;
 
 	for (size_t i = 0; i < this->m_numChildStates; i++)
 		size += this->m_childNodesInfo[i]->GetMemoryRequirements();

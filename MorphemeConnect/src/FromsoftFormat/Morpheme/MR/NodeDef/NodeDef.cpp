@@ -34,7 +34,7 @@ AttribData* Attribute::GetAttribData()
 
 int Attribute::GetMemoryRequirements()
 {
-	return 16 + this->m_data->GetMemoryRequirements();
+	return 24 + this->m_data->GetMemoryRequirements();
 }
 
 AttribData* Attribute::AttribDataFactory(BYTE* pData)

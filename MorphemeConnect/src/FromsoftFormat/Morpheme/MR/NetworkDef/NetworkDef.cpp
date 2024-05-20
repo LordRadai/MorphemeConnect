@@ -89,7 +89,7 @@ NodeTypeDef::~NodeTypeDef()
 
 int NodeTypeDef::GetMemoryRequirements()
 {
-	return RMath::AlignValue(8 + 16 + this->m_size, 4);
+	return 16 + RMath::AlignValue(this->m_size, 4);
 }
 
 FunctionDef::FunctionDef()
@@ -172,7 +172,7 @@ MessageDef::~MessageDef()
 
 int MessageDef::GetMemoryRequirements()
 {
-	return 8 + 16 + this->m_validNodeCount * 2;
+	return 48 + RMath::AlignValue(this->m_validNodeCount * 2, 4);
 }
 
 RigIndices::RigIndices()
@@ -328,9 +328,11 @@ int NetworkDef::GetMemoryRequirements()
 	size += this->m_unkNodeData.GetMemoryRequirements();
 	size += this->m_functionDefList1.GetMemoryRequirements() + this->m_functionDefList2.GetMemoryRequirements();
 	
+	size += 8 * this->m_numRequests;
 	for (size_t i = 0; i < this->m_numRequests; i++)
 		size += this->m_messageDefs[i]->GetMemoryRequirements();
 
+	size += 8 * this->m_numNodeTypes;
 	for (size_t i = 0; i < this->m_numNodeTypes; i++)
 		size += this->m_nodeTypeDefs[i]->GetMemoryRequirements();
 

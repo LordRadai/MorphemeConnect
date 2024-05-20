@@ -267,6 +267,39 @@
     <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInDurationEvent.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatInRange.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntInRange.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatGreater.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSubState.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationEventFraction.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatLess.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntGreater.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationFraction.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefFalse.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSyncEventRange.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -2154,6 +2187,39 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInDurationEvent.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatInRange.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntInRange.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatGreater.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSubState.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationEventFraction.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatLess.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntGreater.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationFraction.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefFalse.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSyncEventRange.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

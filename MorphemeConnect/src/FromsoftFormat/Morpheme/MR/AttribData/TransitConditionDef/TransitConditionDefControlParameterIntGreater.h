@@ -4,12 +4,12 @@
 
 namespace MR
 {
-	class TransitConditionDefControlParameterIntLess : public TransitConditionDef
+	class TransitConditionDefControlParameterIntGreater : public TransitConditionDef
 	{
 	public:
-		TransitConditionDefControlParameterIntLess();
-		TransitConditionDefControlParameterIntLess(BYTE* pData);
-		~TransitConditionDefControlParameterIntLess();
+		TransitConditionDefControlParameterIntGreater();
+		TransitConditionDefControlParameterIntGreater(BYTE* pData);
+		~TransitConditionDefControlParameterIntGreater();
 
 		int GetMemoryRequirements();
 	private:

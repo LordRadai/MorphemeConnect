@@ -9,7 +9,7 @@ TransitConditionDefInSubState::TransitConditionDefInSubState()
 
 TransitConditionDefInSubState::TransitConditionDefInSubState(BYTE* pData) : TransitConditionDef(pData)
 {
-	this->m_nodeID = *(int*)(pData + 0x48);
+	this->m_nodeID = *(short*)(pData + 0x48);
 }
 
 TransitConditionDefInSubState::~TransitConditionDefInSubState()

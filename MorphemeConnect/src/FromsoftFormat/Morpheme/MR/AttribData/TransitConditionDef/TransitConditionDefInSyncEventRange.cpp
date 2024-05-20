@@ -25,10 +25,10 @@ TransitConditionDefInSyncEventRange::TransitConditionDefInSyncEventRange(BYTE* p
 	this->m_sVar3 = *(short*)(pData + 0x4C);
 	this->m_sVar4 = *(short*)(pData + 0x4E);
 	this->m_sourceNodeflags = *(int*)(pData + 0x50);
-	this->m_dstNodeID = *(short*)(pData + 0x52);
-	this->m_sVar7 = *(short*)(pData + 0x54);
-	this->m_sVar8 = *(short*)(pData + 0x56);
-	this->m_sVar9 = *(short*)(pData + 0x58);
+	this->m_dstNodeID = *(short*)(pData + 0x54);
+	this->m_sVar7 = *(short*)(pData + 0x56);
+	this->m_sVar8 = *(short*)(pData + 0x58);
+	this->m_sVar9 = *(short*)(pData + 0x5A);
 	this->m_dstNodeflags = *(int*)(pData + 0x5C);
 	this->m_sourceEventFraction = *(float*)(pData + 0x60);
 	this->m_dstEventFraction = *(float*)(pData + 0x64);

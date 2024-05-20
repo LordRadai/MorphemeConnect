@@ -32,5 +32,5 @@ TransitConditionDefCrossedDurationEventFraction::~TransitConditionDefCrossedDura
 
 int TransitConditionDefCrossedDurationEventFraction::GetMemoryRequirements()
 {
-	return 104;
+	return 96;
 }

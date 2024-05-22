@@ -16,7 +16,6 @@ MorphemeBundle::MorphemeBundle()
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 0;
-	this->m_iVar2C = 0;;
 }
 
 MorphemeBundle::MorphemeBundle(ifstream* pFile)
@@ -38,7 +37,6 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 	MemReader::ReadArray(pFile, this->m_guid, 16);
 	MemReader::Read(pFile, &this->m_dataSize);
 	MemReader::Read(pFile, &this->m_dataAlignment);
-	MemReader::Read(pFile, &this->m_iVar2C);
 
 	MemReader::AlignStream(pFile, this->m_dataAlignment);
 	streampos pDataStart = pFile->tellg();
@@ -69,7 +67,6 @@ void MorphemeBundle::WriteBinary(ofstream* out)
 
 	MemReader::Write(out, this->m_dataSize);
 	MemReader::Write(out, this->m_dataAlignment);
-	MemReader::Write(out, this->m_iVar2C);
 
 	MemReader::WriteArray(out, this->m_data, this->m_dataSize);
 

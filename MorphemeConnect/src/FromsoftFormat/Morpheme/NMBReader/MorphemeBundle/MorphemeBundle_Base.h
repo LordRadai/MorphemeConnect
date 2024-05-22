@@ -31,9 +31,8 @@ namespace NMB
 		AssetType m_assetType;					//Enumerator used to determine what kind of data the packet holds
 		UINT m_signature;						//Signature that can be used by a packet to reference another one
 		BYTE m_guid[16];
-		UINT64 m_dataSize;
-		UINT m_dataAlignment;					//I've only seen this be equal to 4 or 16
-		UINT m_iVar2C;
+		size_t m_dataSize;
+		size_t m_dataAlignment;					//I've only seen this be equal to 4 or 16
 
 		virtual void WriteBinary(ofstream* out) { return; }
 

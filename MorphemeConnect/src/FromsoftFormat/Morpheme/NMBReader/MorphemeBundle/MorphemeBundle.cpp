@@ -38,6 +38,8 @@ MorphemeBundle::MorphemeBundle(ifstream* pFile)
 	MemReader::Read(pFile, &this->m_dataSize);
 	MemReader::Read(pFile, &this->m_dataAlignment);
 
+	pFile->seekg(pFile->tellg() + (streampos)4);
+
 	MemReader::AlignStream(pFile, this->m_dataAlignment);
 	streampos pDataStart = pFile->tellg();
 

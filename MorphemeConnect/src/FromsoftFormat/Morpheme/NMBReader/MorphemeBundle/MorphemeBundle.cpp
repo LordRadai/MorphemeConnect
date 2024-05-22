@@ -67,6 +67,7 @@ void MorphemeBundle::WriteBinary(ofstream* out)
 
 	MemReader::Write(out, this->m_dataSize);
 	MemReader::Write(out, this->m_dataAlignment);
+	MemReader::Pad(out, 0, 4);
 
 	MemReader::WriteArray(out, this->m_data, this->m_dataSize);
 

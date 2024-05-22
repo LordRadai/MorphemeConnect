@@ -16,7 +16,6 @@ MorphemeBundle_Rig::MorphemeBundle_Rig()
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 16;
-	this->m_iVar2C = 0;
 	this->m_data = nullptr;
 }
 
@@ -32,7 +31,6 @@ MorphemeBundle_Rig::MorphemeBundle_Rig(MorphemeBundle* bundle)
 
 	this->m_dataSize = bundle->m_dataSize;
 	this->m_dataAlignment = bundle->m_dataAlignment;
-	this->m_iVar2C = bundle->m_iVar2C;
 
 	this->m_data = new Rig(bundle->m_data);
 }
@@ -52,7 +50,7 @@ void MorphemeBundle_Rig::WriteBinary(ofstream* out)
 
 	MemReader::Write(out, this->m_dataSize);
 	MemReader::Write(out, this->m_dataAlignment);
-	MemReader::Write(out, this->m_iVar2C);
+	MemReader::Pad(out, 0, 4);
 
 	MemReader::AlignStream(out, this->m_dataAlignment);
 

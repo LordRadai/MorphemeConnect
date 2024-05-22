@@ -32,7 +32,7 @@ namespace NMB
 		UINT m_signature;						//Signature that can be used by a packet to reference another one
 		BYTE m_guid[16];
 		size_t m_dataSize;
-		size_t m_dataAlignment;					//I've only seen this be equal to 4 or 16
+		int m_dataAlignment;					//I've only seen this be equal to 4 or 16
 
 		virtual void WriteBinary(ofstream* out) { return; }
 

@@ -16,7 +16,6 @@ MorphemeBundle_Header::MorphemeBundle_Header()
 
 	this->m_dataSize = 0;
 	this->m_dataAlignment = 4;
-	this->m_iVar2C = 0;
 	this->m_data = nullptr;
 }
 
@@ -32,7 +31,6 @@ MorphemeBundle_Header::MorphemeBundle_Header(MorphemeBundle* bundle)
 
 	this->m_dataSize = bundle->m_dataSize;
 	this->m_dataAlignment = bundle->m_dataAlignment;
-	this->m_iVar2C = bundle->m_iVar2C;
 	this->m_data = (BundleData_Header*)bundle->m_data;
 }
 
@@ -47,7 +45,7 @@ void MorphemeBundle_Header::WriteBinary(ofstream* out)
 
 	MemReader::Write(out, this->m_dataSize);
 	MemReader::Write(out, this->m_dataAlignment);
-	MemReader::Write(out, this->m_iVar2C);
+	MemReader::Pad(out, 0, 4);
 
 	MemReader::AlignStream(out, this->m_dataAlignment);
 

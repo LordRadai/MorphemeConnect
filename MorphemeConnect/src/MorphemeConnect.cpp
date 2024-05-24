@@ -99,6 +99,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     initImGui(hwnd);
+    g_morphemeConnect.Init();
     g_preview.Initialise(hwnd, g_pSwapChain, g_pd3dDevice, g_pd3dDeviceContext, nullptr);
     g_pFbxManager = FbxManager::Create();
 

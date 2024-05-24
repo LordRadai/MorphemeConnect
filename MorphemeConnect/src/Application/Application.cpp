@@ -146,7 +146,7 @@ void Application::GUIStyle()
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-void Application::Init()
+void Application::Initialise()
 {
 	this->m_morphemeSystem.initMorpheme();
 }

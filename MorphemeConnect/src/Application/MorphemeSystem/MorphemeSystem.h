@@ -6,11 +6,11 @@ class MorphemeSystem
 {
 public:
 
-	MorphemeSystem() {};
-	~MorphemeSystem() {};
+	MorphemeSystem() {}
+	~MorphemeSystem() {}
 
 	//----------------------------
-	// Initialise function for Game::CharacterManager. Any core morpheme or animation specific initialisation
+	// Initialise function for MorphemeSystem. Any core morpheme or animation specific initialisation
 	// should occur in this functions.
 	void initMorpheme();
 
@@ -37,9 +37,15 @@ public:
 	// Update any networks that are available
 	void update(float timeDelta);
 
-protected:
+	//----------------------------
+	// Get character def
+	CharacterDefBasic* GetCharacterDef();
 
+	//----------------------------
+	// Get character instance
+	CharacterBasic* GetCharacter();
+
+protected:
 	CharacterDefBasic* m_characterDef;   // Store a pointer to a morpheme character definition
 	CharacterBasic* m_characterData;  // Store a pointer to a morpheme character
-
 };

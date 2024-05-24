@@ -126,3 +126,13 @@ void MorphemeSystem::update(float timeDelta)
         m_characterData->update(timeDelta);
     }
 }
+
+CharacterDefBasic* MorphemeSystem::GetCharacterDef()
+{
+    return this->m_characterDef;
+}
+
+CharacterBasic* MorphemeSystem::GetCharacter()
+{
+    return this->m_characterData;
+}

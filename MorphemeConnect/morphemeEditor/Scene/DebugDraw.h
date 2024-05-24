@@ -37,7 +37,6 @@
 #include "../framework.h"
 #include "../extern.h"
 #include "../fromloader/fromloader.h"
-#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
 
 class Camera;
 

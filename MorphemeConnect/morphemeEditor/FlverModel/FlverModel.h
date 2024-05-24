@@ -10,7 +10,6 @@
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 
-#include "../FromSoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../fromloader/fromloader.h"
 
 using namespace cfr;

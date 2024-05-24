@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\AnimLoader.cpp" />
     <ClCompile Include="Application\MorphemeSystem\AssetLoader.cpp" />
     <ClCompile Include="Application\MorphemeSystem\Character.cpp" />
     <ClCompile Include="Application\MorphemeSystem\CharacterController.cpp" />
@@ -195,6 +194,12 @@
     <ClCompile Include="inih\ini.c" />
     <ClCompile Include="inih\INIReader.cpp" />
     <ClCompile Include="MorphemeEditor.cpp" />
+    <ClCompile Include="MorphemeSystem\AnimLoader.cpp" />
+    <ClCompile Include="MorphemeSystem\AssetLoader.cpp" />
+    <ClCompile Include="MorphemeSystem\Character.cpp" />
+    <ClCompile Include="MorphemeSystem\CharacterController.cpp" />
+    <ClCompile Include="MorphemeSystem\CharacterDef.cpp" />
+    <ClCompile Include="MorphemeSystem\MorphemeSystem.cpp" />
     <ClCompile Include="ProcessReader\ProcessReader.cpp" />
     <ClCompile Include="RLog\RDebug\RDebug.cpp" />
     <ClCompile Include="RLog\RLog.cpp" />
@@ -270,6 +275,12 @@
     <ClInclude Include="inih\ini.h" />
     <ClInclude Include="inih\INIReader.h" />
     <ClInclude Include="MorphemeEditor.h" />
+    <ClInclude Include="MorphemeSystem\AnimLoader.h" />
+    <ClInclude Include="MorphemeSystem\AssetLoader.h" />
+    <ClInclude Include="MorphemeSystem\Character.h" />
+    <ClInclude Include="MorphemeSystem\CharacterController.h" />
+    <ClInclude Include="MorphemeSystem\CharacterDef.h" />
+    <ClInclude Include="MorphemeSystem\MorphemeSystem.h" />
     <ClInclude Include="ProcessReader\ProcessReader.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RLog\RDebug\RDebug.h" />

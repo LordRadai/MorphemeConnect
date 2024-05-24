@@ -5,9 +5,9 @@
 #include <vector>
 #include <string>
 
-#include "../framework.h"
-#include "../extern.h"
-#include "../Application/MorphemeSystem/MorphemeSystem.h"
+#include "framework.h"
+#include "extern.h"
+#include "MorphemeSystem/MorphemeSystem.h"
 
 struct EventTrackEditor
 {

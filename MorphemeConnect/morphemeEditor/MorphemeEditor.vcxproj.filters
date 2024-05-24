@@ -24,9 +24,6 @@
     <ClCompile Include="TimeActEditor\TimeActEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Application\MorphemeSystem\AnimLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Application\MorphemeSystem\AssetLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -193,6 +190,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MorphemeEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\AnimLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\AssetLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\CharacterController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\CharacterDef.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeSystem\MorphemeSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -423,6 +438,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\AnimLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\AssetLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\Character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\CharacterController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\CharacterDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeSystem\MorphemeSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

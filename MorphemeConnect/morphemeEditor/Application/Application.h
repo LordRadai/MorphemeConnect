@@ -45,7 +45,7 @@
 #include "../FlverModel/FlverModel.h"
 #include <fbxsdk.h>
 
-#include "MorphemeSystem\MorphemeSystem.h"
+#include "..\MorphemeSystem\MorphemeSystem.h"
 
 using namespace cfr;
 

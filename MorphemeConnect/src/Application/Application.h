@@ -45,6 +45,8 @@
 #include "../FlverModel/FlverModel.h"
 #include "fbxsdk.h"
 
+#include "MorphemeSystem\MorphemeSystem.h"
+
 using namespace cfr;
 
 class Application
@@ -114,15 +116,13 @@ public:
 		bool m_exportModelWithAnims = true;
 		bool m_exportMorphemeRigWithModel = true;
 	} m_fbxExportFlags;
+	
 
-	NMBReader m_nmb;
 	TimeActReader m_tae;
 	BNDReader m_bnd;
 	FlverModel m_model;
 	int m_chrId = -1;
 	std::vector<int> m_flverToMorphemeBoneMap;
-
-	//std::vector<NSAReader> m_animFiles;
 
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;

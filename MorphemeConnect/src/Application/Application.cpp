@@ -146,6 +146,11 @@ void Application::GUIStyle()
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
+void Application::Init()
+{
+	this->m_morphemeSystem.initMorpheme();
+}
+
 void Application::Update()
 {
 	this->m_model.UpdateModel();
@@ -482,6 +487,7 @@ void Application::AssetsWindow()
 			selected_tae_file_idx = -1;
 
 		ImGui::BeginTabBar("assets tab bar");
+		/*
 		if (ImGui::BeginTabItem("NSA"))
 		{
 			if (this->m_nmb.IsInitialised())
@@ -571,6 +577,7 @@ void Application::AssetsWindow()
 
 			ImGui::EndTabItem();
 		}
+		*/
 
 		if (ImGui::BeginTabItem("TimeAct"))
 		{
@@ -755,6 +762,7 @@ void Application::AssetsWindow()
 void Application::EventTrackWindow(int* current_frame, int* first_frame, float* zoom_level, bool* is_expanded)
 {
 	ImGui::Begin("EventTrack");
+	/*
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
@@ -790,7 +798,7 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 			ImGui::EndChild();
 		}
 	}
-
+	*/
 	ImGui::End();
 }
 
@@ -1087,10 +1095,12 @@ void Application::CheckFlags()
 	{
 		this->m_flags.m_saveNmb = false;
 
+		/*
 		if (this->m_nmb.IsInitialised())
 			this->SaveNmbFile();
 		else
 			RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "No NMB file is loaded\n");
+		*/
 	}
 
 	if (this->m_flags.m_saveTae)
@@ -1107,6 +1117,7 @@ void Application::CheckFlags()
 	{
 		this->m_flags.m_saveAll = false;
 
+		/*
 		if (this->m_nmb.IsInitialised())
 		{
 			bool status = m_nmb.SaveToFile(this->m_nmb.GetFilePath());
@@ -1116,6 +1127,7 @@ void Application::CheckFlags()
 			else
 				RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Failed to generate file\n", "NMBReader.cpp");
 		}
+		*/
 
 		if (this->m_tae.m_init)
 		{
@@ -1132,6 +1144,7 @@ void Application::CheckFlags()
 	{
 		this->m_flags.m_exportAll = false;
 
+		/*
 		if (this->m_animFiles.size() == 0)
 			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "Application.cpp", "No animations are loaded");
 
@@ -1160,6 +1173,7 @@ void Application::CheckFlags()
 			if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
 				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export event track to XML for animation %d\n", i);
 		}
+		*/
 	}
 
 	if (this->m_flags.m_exportModel)
@@ -1180,6 +1194,7 @@ void Application::CheckFlags()
 		this->ExportModelToFbx(export_path);
 	}
 
+	/*
 	if (this->m_nmb.IsInitialised() == false)
 	{
 		this->m_eventTrackEditor.Clear();
@@ -1187,6 +1202,7 @@ void Application::CheckFlags()
 		m_eventTrackEditorFlags.m_load = false;
 		m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 	}
+	*/
 
 	if (this->m_eventTrackEditor.m_reload)
 		this->m_eventTrackEditor.ReloadTracks();
@@ -1196,6 +1212,7 @@ void Application::CheckFlags()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
+		/*
 		if ((this->m_nmb.IsInitialised() == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found_et = false;
@@ -1315,6 +1332,7 @@ void Application::CheckFlags()
 
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "\n");
 		}
+		*/
 	}
 
 	if (this->m_tae.m_init == false)
@@ -1441,6 +1459,7 @@ void Application::LoadFile()
 
 						if (filepath.extension() == ".nmb")
 						{
+							/*
 							m_nmb = NMBReader(pszFilePath);
 							
 							if (m_nmb.IsInitialised())
@@ -1556,6 +1575,7 @@ void Application::LoadFile()
 										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
 								}
 							}
+							*/
 						}
 						else if (filepath.extension() == ".tae")
 						{
@@ -1601,6 +1621,7 @@ void Application::LoadFile()
 										}
 									} while (true);
 
+									/*
 									if (found)
 									{
 										filepath_dcx = gamepath;
@@ -1645,6 +1666,7 @@ void Application::LoadFile()
 									}
 									else
 										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
+									*/
 								}
 							}						
 						}
@@ -1700,12 +1722,14 @@ void Application::SaveFile()
 
 						if (filepath.extension() == ".nmb")
 						{
+							/*
 							bool status = m_nmb.SaveToFile(pszOutFilePath);
 
 							if (status)
 								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 							else
 								RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NMBReader.cpp", "Failed to generate NMB file\n");
+							*/
 						}
 						else if (filepath.extension() == ".tae")
 						{
@@ -1764,6 +1788,7 @@ void Application::SaveNmbFile()
 					// Display the file name to the user.
 					if (SUCCEEDED(hr))
 					{
+						/*
 						std::filesystem::path filepath = std::wstring(pszOutFilePath);
 
 						bool status = m_nmb.SaveToFile(pszOutFilePath);
@@ -1772,6 +1797,7 @@ void Application::SaveNmbFile()
 							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Save file %ls (bundles=%d, len=%d)\n", m_nmb.GetOutFilePath(), m_nmb.GetBundleCount(), m_nmb.GetOutFileSize());
 						else
 							RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "NMBReader.cpp", "Failed to generate NMB file\n");
+						*/
 					}
 					pItem->Release();
 				}
@@ -1935,6 +1961,7 @@ inline double GetTimeByAnimFrame(float animLenght, float fps, int frameNum)
 	return (animLenght / fps) * frameNum;
 }
 
+/*
 //Creates FBX animation take from an NSA file input
 bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader* pNMB, NSAReader* pAnimFile, std::string name)
 {
@@ -2056,11 +2083,13 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 
 	return true;
 }
+*/
 
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
 {
 	bool status = true;
 
+	/*
 	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Exporting animation %d (%s)\n", anim_id, export_path.filename().string().c_str());
 
 	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
@@ -2105,6 +2134,7 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	pScene->Destroy(true);
 	pExporter->Destroy(true);
 
+	*/
 	return status;
 }
 
@@ -2138,6 +2168,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
 	{
+		/*
 		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_nmb.GetRig(0));
 
 		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_nmb.GetRig(0), true))
@@ -2146,6 +2177,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 			status = false;
 		}
+		*/
 	}
 	else
 	{

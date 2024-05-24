@@ -222,7 +222,7 @@
       <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -238,7 +238,7 @@
       <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -257,7 +257,7 @@
       <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SupportJustMyCode>false</SupportJustMyCode>
@@ -283,7 +283,7 @@
       <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\include;$(SolutionDir)External\include\zlib;$(SolutionDir)External\include\inih;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <Optimization>Disabled</Optimization>
@@ -1869,6 +1869,18 @@
     <ClCompile Include="morpheme\utils\simpleBundle\src\simpleAnimRuntimeIDtoFilenameLookupBuilder.cpp" />
     <ClCompile Include="morpheme\utils\simpleBundle\src\simpleBundle.cpp" />
     <ClCompile Include="src\Application\Application.cpp" />
+    <ClCompile Include="src\Application\Character\GameAnimLoader.cpp" />
+    <ClCompile Include="src\Application\Character\GameAssetLoader.cpp" />
+    <ClCompile Include="src\Application\Character\GameCharacter.cpp" />
+    <ClCompile Include="src\Application\Character\GameCharacterController.cpp" />
+    <ClCompile Include="src\Application\Character\GameCharacterDef.cpp" />
+    <ClCompile Include="src\Application\Character\GameCharacterManager.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\AnimLoader.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\AssetLoader.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\Character.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\CharacterController.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\CharacterDef.cpp" />
+    <ClCompile Include="src\Application\MorphemeSystem\MorphemeSystem.cpp" />
     <ClCompile Include="src\EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="src\FlverModel\FlverModel.cpp" />
     <ClCompile Include="src\fromloader\cmem.c" />
@@ -3921,6 +3933,18 @@
     <ClInclude Include="morpheme\utils\simpleBundle\include\simpleBundle\simpleAnimRuntimeIDtoFilenameLookupBuilder.h" />
     <ClInclude Include="morpheme\utils\simpleBundle\include\simpleBundle\simpleBundle.h" />
     <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\Application\Character\GameAnimLoader.h" />
+    <ClInclude Include="src\Application\Character\GameAssetLoader.h" />
+    <ClInclude Include="src\Application\Character\GameCharacter.h" />
+    <ClInclude Include="src\Application\Character\GameCharacterController.h" />
+    <ClInclude Include="src\Application\Character\GameCharacterDef.h" />
+    <ClInclude Include="src\Application\Character\GameCharacterManager.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\AnimLoader.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\AssetLoader.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\Character.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\CharacterController.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\CharacterDef.h" />
+    <ClInclude Include="src\Application\MorphemeSystem\MorphemeSystem.h" />
     <ClInclude Include="src\EventTrackEditor\EventTrackEditor.h" />
     <ClInclude Include="src\extern.h" />
     <ClInclude Include="src\FlverModel\FlverModel.h" />

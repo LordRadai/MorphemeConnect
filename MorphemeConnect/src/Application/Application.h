@@ -117,7 +117,7 @@ public:
 		bool m_exportMorphemeRigWithModel = true;
 	} m_fbxExportFlags;
 	
-
+	MorphemeSystem m_morphemeSystem;
 	TimeActReader m_tae;
 	BNDReader m_bnd;
 	FlverModel m_model;
@@ -131,6 +131,7 @@ public:
 	~Application();
 
 	void GUIStyle();
+	void Init();
 	void Update();
 	void RenderGUI(const char* title);
 	void ModelPreviewWindow();

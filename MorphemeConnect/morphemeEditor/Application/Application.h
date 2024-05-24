@@ -43,7 +43,7 @@
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
 #include "../fromloader/fromloader.h"
 #include "../FlverModel/FlverModel.h"
-#include "fbxsdk.h"
+#include <fbxsdk.h>
 
 #include "MorphemeSystem\MorphemeSystem.h"
 
@@ -131,7 +131,7 @@ public:
 	~Application();
 
 	void GUIStyle();
-	void Init();
+	void Initialise();
 	void Update();
 	void RenderGUI(const char* title);
 	void ModelPreviewWindow();

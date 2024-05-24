@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 
-#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
 #include "../framework.h"
 #include "../extern.h"
 
@@ -36,7 +35,7 @@ struct EventTrackEditor
         bool IsEventActive(int event_idx, int frame);
     };
 
-    NodeDef* m_nodeSource;
+    MR::NodeDef* m_nodeSource;
 
     int m_fps = 60;
     int m_animIdx = -1;

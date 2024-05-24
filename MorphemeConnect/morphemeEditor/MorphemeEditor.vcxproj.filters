@@ -1,0 +1,2449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="File di risorse">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\fromloader\src\util\stringio\simple_sjis_table.bin">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="fromloader\src\util\stringio\simple_sjis_table.bin">
+      <Filter>File di risorse</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Application\Application.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventTrackEditor\EventTrackEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlverModel\FlverModel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\binder\bnd\bnd3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\binder\bnd\bnd4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\binder\binder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\dcx\dcx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\flver\flver0\flver0.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\flver\flver2\flver2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\flver\flver2\flver2_helpers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\flver\flver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\mtd\mtd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\formats\paramdef\paramdef.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\endian\endian.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\file\file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\fileio\fileio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\inflate\inflate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\stringio\stringio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\types\types.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\util\validate\validate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\src\open.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\cmem.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fromloader\umem.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\BNDReader\BNDReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\FlverReader\FlverReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\custom\imgui_custom_logic.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\custom\imgui_custom_widget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_demo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_draw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_impl_dx11.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_impl_win32.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_tables.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imsequencer\ImSequencer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inih\ini.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inih\INIReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcessReader\ProcessReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RLog\RDebug\RDebug.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RLog\TextLog\TextLog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RLog\RLog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RMath\RMath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RString\RString.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Camera\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\DebugDraw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaeTemplate\TaeTemplate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimeActEditor\TimeActEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MorphemeConnect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameAnimLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameAssetLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameCharacter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameCharacterController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameCharacterDef.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Character\GameCharacterManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\AnimLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\AssetLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\Character.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\CharacterController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\CharacterDef.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\MorphemeSystem\MorphemeSystem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeActEditor\TimeActEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\AnimLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\AssetLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\Character.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\CharacterController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\CharacterDef.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MorphemeSystem\MorphemeSystem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FlverModel\FlverModel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\binder\bnd\bnd4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\binder\binder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\dcx\dcx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\flver\flver0\flver0.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\flver\flver2\flver2_helpers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\flver\flver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\mtd\mtd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\formats\paramdef\paramdef.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\endian\endian.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\file\file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\fileio\fileio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\inflate\inflate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\stringio\stringio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\types\types.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\util\validate\validate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\src\open.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\cmem.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fromloader\umem.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\custom\imgui_custom_logic.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\custom\imgui_custom_widget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="imsequencer\ImSequencer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="inih\ini.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="inih\INIReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessReader\ProcessReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RLog\RDebug\RDebug.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RLog\TextLog\TextLog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RLog\RLog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RMath\RMath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RString\RString.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Camera\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\DebugDraw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="TaeTemplate\TaeTemplate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="MorphemeEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application\Application.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventTrackEditor\EventTrackEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FlverModel\FlverModel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\common\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bdf\bdf3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bdf\bdf4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bhd\bhd5_0.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bhd\bhd5_1.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bnd\bnd3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\bnd\bnd4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\binder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\binder\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\dcx\dcx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\flver\flver0\flver0.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\flver\flver2\flver2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\flver\flver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\flver\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\mtd\mtd.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\paramdef\paramdef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\formats\stdafx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\endian\endian.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\file\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\fileio\fileio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\inflate\inflate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\math\math.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\stringio\stringio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\types\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\validate\validate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\util\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\src\open.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\cmem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\fromloader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fromloader\umem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\BNDReader\BNDReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\FlverReader\FlverReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Morpheme\ME\TinyXML\tinyxml2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FromsoftFormat\Utils\MemReader\MemReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\custom\imgui_custom_logic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\custom\imgui_custom_widget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imconfig.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_impl_dx11.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_impl_win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_internal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_rectpack.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_textedit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_truetype.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imsequencer\ImSequencer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inih\ini.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inih\INIReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcessReader\ProcessReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RLog\RDebug\RDebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RLog\TextLog\TextLog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RLog\RLog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RMath\RMath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RString\RString.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Camera\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\DebugDraw.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Scene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\StepTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TaeTemplate\TaeTemplate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TimeActEditor\TimeActEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\framework.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MorphemeConnect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\targetver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxalloc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxarch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxdebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxnew.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxstdcompliant.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\arch\fbxtypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxarray.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxbitset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxcharptrset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxcontainerallocators.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxdynamicarray.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxfile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxfolder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxhashmap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxintrusivelist.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmemorypool.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxmultimap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxpair.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxredblacktree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstatus.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstring.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxstringlist.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxtime.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxtimecode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\base\fbxutils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxaffinematrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxdualquaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxmath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxmatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxquaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxtransforms.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxvector2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\math\fbxvector4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxatomic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxclock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxsync.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\sync\fbxthread.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxclassid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxconnectionpoint.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxdatatypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxemitter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxevent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxeventhandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxlistener.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxloadingstrategy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxmanager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxmodule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxobject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxperipheral.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxplugin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxplugincontainer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxproperty.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertydef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertyhandle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertypage.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxpropertytypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxquery.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxqueryevent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingdirectory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingfilename.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxstream.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxsymbol.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxsystemunit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\core\fbxxref.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaanimationelement.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaelement.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaiostream.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladanamespace.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladatokens.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladautils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxreadercollada14.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\collada\fbxwritercollada14.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx5.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx6.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx7.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx5.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx6.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx7.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxbase64coder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxcallbacks.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxexporter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxexternaldocreflistener.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxfiletokens.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxglobalcamerasettings.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxgloballightsettings.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxglobalsettings.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxgobo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbximporter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiobase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiopluginregistry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiosettings.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxiosettingspath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxprogress.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxreader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxstatistics.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxstatisticsfbx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fileio\fbxwriter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurve.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvebase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvefilters.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvenode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalclassic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalstate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevaluator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimlayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimstack.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimutilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacternodename.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacterpose.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraint.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintaim.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintcustom.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintparent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintposition.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintrotation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintscale.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintsinglechainik.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintutils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcontrolset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\constraint\fbxhik2fbxcharacter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshape.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshapechannel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcache.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcachedeffect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamerastereo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcameraswitcher.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcluster.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxdeformer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgenericnode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometrybase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometryweightedmap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayercontainer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlight.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlimitsutilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxline.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlodgroup.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmarker.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnodeattribute.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnull.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbscurve.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbssurface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxopticalreference.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxpatch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxproceduralgeometry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxshape.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskeleton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdeformer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdiv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxtrimnurbssurface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxvertexcachedeformer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\geometry\fbxweightedmapping.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingoperator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingsentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtablebase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtableentry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxconstantentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxfiletexture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationfilter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationutils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayeredtexture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayerentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxoperatorentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxproceduraltexture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxpropertyentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsemanticentryview.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxshadingconventions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacelambert.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerial.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerialutils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacephong.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\shading\fbxtexture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaudio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaudiolayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxaxissystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcollection.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcollectionexclusive.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcontainer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxcontainertemplate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdisplaylayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdocument.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxdocumentinfo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxenvironment.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxgroupname.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxlibrary.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxmediaclip.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectfilter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectmetadata.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxobjectscontainer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxpose.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxreference.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxscene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxselectionnode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxselectionset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxtakeinfo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxthumbnail.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\scene\fbxvideo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxclonemanager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxdeformationsevaluator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxembeddedfilesaccumulator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxgeometryconverter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxmanipulators.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxmaterialconverter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxnamehandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorshaderdependency.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxref.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxrefuserlib.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategybase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx5.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx6.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx7.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyutilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxrootnodeutility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxscenecheckutility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\utils\fbxusernotification.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_def.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_nsbegin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_nsend.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk\fbxsdk_version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\c14n.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\catalog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\chvalid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\debugXML.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\dict.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\DOCBparser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\encoding.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\entities.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\globals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\hash.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\HTMLparser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\HTMLtree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\list.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\nanoftp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\nanohttp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\parser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\parserInternals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\pattern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\relaxng.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\SAX.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\SAX2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\schemasInternals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\schematron.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\threads.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\tree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\uri.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\valid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xinclude.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xlink.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlautomata.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlerror.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlexports.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlIO.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlmemory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlmodule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlreader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlregexp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlsave.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlschemas.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlschemastypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlstring.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlunicode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlversion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlwin32version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xmlwriter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpathInternals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libxml2\libxml\xpointer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\from_json.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\to_chars.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\conversions\to_json.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\binary_reader.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\input_adapters.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\json_sax.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\lexer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\parser.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\input\position_t.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\internal_iterator.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iter_impl.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iteration_proxy.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\iterator_traits.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\json_reverse_iterator.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\iterators\primitive_iterator.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\call_std\begin.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\call_std\end.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\cpp_future.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\detected.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\identity_tag.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\is_sax.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\std_fs.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\type_traits.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\meta\void_t.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\binary_writer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\output_adapters.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\output\serializer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\abi_macros.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\exceptions.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\hash.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\json_pointer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\json_ref.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\macro_scope.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\macro_unscope.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\string_concat.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\string_escape.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\detail\value_t.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley_undef.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\adl_serializer.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\byte_container_with_subtype.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\json.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\json_fwd.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nlohmann\ordered_map.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\alphaindex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\appendable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\basictz.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\brkiter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestream.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestrie.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\bytestriebuilder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\calendar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\caniter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\casemap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\char16ptr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\chariter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\choicfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\coleitr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\coll.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\compactdecimalformat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\curramt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\currpinf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\currunit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\datefmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dbbi.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dcfmtsym.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\decimfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\displayoptions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\docmain.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtfmtsym.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtintrv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtitvfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtitvinf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtptngen.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\dtrule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\edits.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\enumset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\errorcode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fieldpos.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\filteredbrk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fmtable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\format.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\formattednumber.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\formattedvalue.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\fpositer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\gender.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\gregocal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\icudataver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\icuplug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\idna.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\listformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localebuilder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localematcher.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\localpointer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\locdspnm.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\locid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measunit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\measure.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\messagepattern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\msgfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\normalizer2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\normlzr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\nounit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numberformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numberrangeformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\numsys.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\parseerr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\parsepos.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\plurfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\plurrule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ptypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\putil.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbbi.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbnf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rbtz.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\regex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\region.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\reldatefmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\rep.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\resbund.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\schriter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\scientificnumberformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\search.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\selfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simpleformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simplenumberformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\simpletz.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\smpdtfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\sortkey.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\std_string.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\strenum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringoptions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringpiece.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stringtriebuilder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\stsearch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\symtable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tblcoll.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\timezone.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmunit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmutamt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tmutfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\translit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tzfmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tznames.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tzrule.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\tztrans.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubidi.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubiditransform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ubrk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucasemap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uchar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucharstrie.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucharstriebuilder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uchriter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uclean.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv_cb.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnv_err.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucnvsel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucol.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucoleitr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uconfig.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucpmap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucptrie.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucsdet.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ucurr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udata.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udateintervalformat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udatpg.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udisplaycontext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\udisplayoptions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uenum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ufieldpositer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattednumber.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uformattedvalue.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ugender.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uidna.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uiter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uldnames.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ulistformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uloc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ulocdata.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umachine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umisc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umsg.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\umutablecptrie.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unifilt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unifunct.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unimatch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unirepl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uniset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unistr.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unorm.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unorm2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberoptions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumberrangeformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\unumsys.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uobject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\upluralrules.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uregex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uregion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ureldatefmt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\urename.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\urep.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ures.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uscript.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usearch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uset.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usetiter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ushape.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usimplenumberformatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uspoof.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\usprep.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustdio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustream.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustring.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\ustringtrie.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf_old.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf8.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf16.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utf32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utmscale.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utrace.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utrans.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\utypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uvernum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\uversion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\unicode\vtzone.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zlib\zconf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\zlib\zlib.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fbxsdk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameAnimLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameAssetLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameCharacter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameCharacterController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameCharacterDef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Character\GameCharacterManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\AnimLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\AssetLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\Character.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\CharacterController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\CharacterDef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\MorphemeSystem\MorphemeSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeActEditor\TimeActEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\AnimLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\AssetLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\Character.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\CharacterController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\CharacterDef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MorphemeSystem\MorphemeSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Application.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTrackEditor\EventTrackEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FlverModel\FlverModel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\common\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bdf\bdf4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_0.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bhd\bhd5_1.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\bnd\bnd4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\binder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\binder\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\dcx\dcx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\flver\flver0\flver0.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\flver\flver2\flver2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\flver\flver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\flver\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\mtd\mtd.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\paramdef\paramdef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\formats\stdafx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\endian\endian.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\file\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\fileio\fileio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\inflate\inflate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\math\math.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\stringio\stringio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\types\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\validate\validate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\util\include.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\src\open.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\cmem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\fromloader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="fromloader\umem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="FromsoftFormat\Utils\MemReader\MemReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\custom\imgui_custom_logic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\custom\imgui_custom_widget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="imsequencer\ImSequencer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="inih\ini.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="inih\INIReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessReader\ProcessReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RLog\RDebug\RDebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RLog\TextLog\TextLog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RLog\RLog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RMath\RMath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RString\RString.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Camera\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\DebugDraw.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StepTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="TaeTemplate\TaeTemplate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="MorphemeEditor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\MorphemeConnect.rc">
+      <Filter>File di risorse</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

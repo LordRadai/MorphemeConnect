@@ -8,7 +8,7 @@ namespace cfr
 
 		uread(&this->compressedSize,sizeof(int32_t),1,src);
 
-		uread(&this->dataOffset,sizeof(UINT),1,src);
+		uread(&this->dataOffset,sizeof(uint32_t),1,src);
 
 		//file id
 		if(header->rawFormat & 0b01000000)

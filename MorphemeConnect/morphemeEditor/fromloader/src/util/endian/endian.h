@@ -18,7 +18,7 @@ namespace cfr
 
 	uint16_t switchEndian(uint16_t i, bool bigEndian = true);
 	int16_t  switchEndian( int16_t i, bool bigEndian = true);
-	UINT switchEndian(UINT i, bool bigEndian = true);
+	uint32_t switchEndian(uint32_t i, bool bigEndian = true);
 	int32_t  switchEndian( int32_t i, bool bigEndian = true);
 	uint64_t switchEndian(uint64_t i, bool bigEndian = true);
 	int64_t  switchEndian( int64_t i, bool bigEndian = true);

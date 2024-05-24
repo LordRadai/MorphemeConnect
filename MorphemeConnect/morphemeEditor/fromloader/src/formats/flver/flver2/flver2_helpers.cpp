@@ -345,7 +345,7 @@ namespace cfr
 		uint16_t ui16 = 0;
 		 int16_t si16 = 0;
 
-		UINT ui32 = 0;
+		uint32_t ui32 = 0;
 		 int32_t si32 = 0;
 
 		float f1    =  0.0f;

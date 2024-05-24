@@ -118,10 +118,10 @@ namespace cfr {
 			public:
 			char magic[6]; //this was working with size 4 somehow. it shouldn't
 			char endian[2];
-			UINT version = 0;
+			uint32_t version = 0;
 
-			UINT dataOffset = 0;
-			UINT dataLength = 0;
+			uint32_t dataOffset = 0;
+			uint32_t dataLength = 0;
 
 			int32_t dummyCount = 0;
 			int32_t materialCount = 0;
@@ -207,14 +207,14 @@ namespace cfr {
 			public:
 			struct Header
 			{
-				UINT nameOffset = 0;
-				UINT mtdOffset = 0;
+				uint32_t nameOffset = 0;
+				uint32_t mtdOffset = 0;
 
 				int32_t textureCount = 0;
 				int32_t textureIndex = 0;
 
-				UINT flags = 0;
-				UINT gxOffset = 0;
+				uint32_t flags = 0;
+				uint32_t gxOffset = 0;
 
 				int32_t unk18 = 0;
 				int32_t unk1C = 0; //assert(0)
@@ -240,7 +240,7 @@ namespace cfr {
 			public:
 			cfr_vec3 translation = {0.0f,0.0f,0.0f};
 
-			UINT nameOffset = 0;
+			uint32_t nameOffset = 0;
 			int32_t nameLength = 0;
 			wchar_t* name = nullptr;
 
@@ -287,14 +287,14 @@ namespace cfr {
 				int32_t defaultBoneIndex;
 				int32_t boneCount;
 
-				UINT boundingBoxOffset = 0;
-				UINT boneIndicesOffset = 0;
+				uint32_t boundingBoxOffset = 0;
+				uint32_t boneIndicesOffset = 0;
 				
 				int32_t facesetCount;
-				UINT facesetIndicesOffset;
+				uint32_t facesetIndicesOffset;
 
 				int32_t vertexBufferCount;
-				UINT vertexBufferIndicesOffset; //loc of the vertbuffind array
+				uint32_t vertexBufferIndicesOffset; //loc of the vertbuffind array
 			};
 			
 			Mesh::Header header;
@@ -387,14 +387,14 @@ namespace cfr {
 			public:
 			struct Header
 			{
-				UINT flags = 0;
+				uint32_t flags = 0;
 				uint8_t triangleStrip = 0;
 				uint8_t cullBackFaces = 0;
 				/*char unk06;
 				char unk07;*/
 				short unk06 = 0;
 				int32_t vertexIndexCount = 0; //number of indices
-				UINT vertexIndicesOffset = 0;
+				uint32_t vertexIndicesOffset = 0;
 			};
 
 			//only if header.version >= 0x20009
@@ -428,8 +428,8 @@ namespace cfr {
 			public:
 			int32_t unk00 = 0; //0, 1, or 2
 			int32_t structOffset = 0; //seems to be used in PTDE?
-			UINT type = 0;
-			UINT semantic = 0;
+			uint32_t type = 0;
+			uint32_t semantic = 0;
 			int32_t index = 0; //this doesn't seem to be used?
 
 			LayoutMember(UMEM* src);
@@ -445,7 +445,7 @@ namespace cfr {
 				int32_t unk04 = 0; //assert(0)
 				int32_t unk08 = 0; //assert(0)
 
-				UINT membersOffset = 0; //file location for the members
+				uint32_t membersOffset = 0; //file location for the members
 			};
 
 			BufferLayout::Header header;
@@ -471,7 +471,7 @@ namespace cfr {
 				int32_t unk10 = 0; //assert(0)
 				int32_t unk14 = 0; //assert(0)
 
-				UINT verticesLength = 0; //0 in version 20005, non 0 in 20008
+				uint32_t verticesLength = 0; //0 in version 20005, non 0 in 20008
 				int32_t bufferOffset   = 0; //location in flver file
 			};
 			
@@ -485,8 +485,8 @@ namespace cfr {
 		class Texture
 		{
 			public:
-			UINT pathOffset;
-			UINT typeOffset;
+			uint32_t pathOffset;
+			uint32_t typeOffset;
 
 			cfr_vec2 scale;
 

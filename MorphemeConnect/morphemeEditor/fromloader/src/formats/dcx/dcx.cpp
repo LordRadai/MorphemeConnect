@@ -26,8 +26,8 @@ namespace cfr
 		int32_t unk10;     // 0x24 or 0x44
 		int32_t unk14;
 		char dcs[4]; // DCS\0
-		UINT uncompressedSize;
-		UINT   compressedSize;
+		uint32_t uncompressedSize;
+		uint32_t   compressedSize;
 		char dcp[4]; // DCP\0
 		char format[4]; // DFLT, EDGE, KRAK
 		int32_t unk2C; // 0x20

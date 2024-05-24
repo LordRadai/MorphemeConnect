@@ -1,11 +1,10 @@
 #include "EventTrackEditor.h"
 #include "../Application/Application.h"
 
-EventTrackEditor::EventTrack::EventTrack(int signature, int numEvents, int eventId, Event* event, char* name, bool is_discrete)
+EventTrackEditor::EventTrack::EventTrack(int numEvents, int eventId, Event* event, char* name, bool is_discrete)
 {
     this->m_source = NULL;
 
-    this->m_signature = signature;
     this->m_numEvents = numEvents;
     this->m_eventId = eventId;
 
@@ -23,42 +22,38 @@ EventTrackEditor::EventTrack::EventTrack(int signature, int numEvents, int event
     }
 }
 
-EventTrackEditor::EventTrack::EventTrack(MorphemeBundle_EventTrack* src, float len, bool discrete)
+EventTrackEditor::EventTrack::EventTrack(MR::EventTrackDefBase* src, float len)
 {
     this->m_source = src;
-    this->m_signature = src->m_signature;
-    this->m_numEvents = src->m_data->GetNumEvents();
-    this->m_eventId = src->m_data->GetUserData();
-    this->m_name = src->m_data->GetTrackName();
+    this->m_numEvents = src->getNumEvents();
+    this->m_eventId = src->getUserData();
+    this->m_name = src->getTrackName();
+    this->m_discrete = false;
 
-    this->m_discrete = discrete;
+    if (src->getType() == 0)
+        this->m_discrete = true;
 
     this->m_event = new Event[this->m_numEvents];
 
-    for (size_t i = 0; i < src->m_data->GetNumEvents(); i++)
+    MR::EventTrackDefDiscrete* discreteSrc = static_cast<MR::EventTrackDefDiscrete*>(src);
+
+    for (size_t i = 0; i < discreteSrc->getNumEvents(); i++)
     {
-        this->m_event[i].m_frameStart = RMath::TimeToFrame(src->m_data->GetEvent(i)->m_start * len);
-        this->m_event[i].m_duration = RMath::TimeToFrame(src->m_data->GetEvent(i)->m_duration * len);
-        this->m_event[i].m_value = src->m_data->GetEvent(i)->m_userData;
+        this->m_event[i].m_frameStart = RMath::TimeToFrame(discreteSrc->getEvent(i)->getStartTime() * len);
+        this->m_event[i].m_duration = RMath::TimeToFrame(discreteSrc->getEvent(i)->getDuration() * len);
+        this->m_event[i].m_value = discreteSrc->getEvent(i)->getUserData();
     }
 }
 
 void EventTrackEditor::EventTrack::SaveEventTrackData(float len)
-{
-    if (this->m_signature != this->m_source->m_signature)
-    {
-        RDebug::SystemPanic("EventTrackEditor.cpp", "Signature mismach for track %s", this->m_name);
-
-        return;
-    }
-
-    this->m_source->m_data->SetUserData(this->m_eventId);
-    
+{    
     for (int i = 0; i < this->m_numEvents; i++)
     {
-        this->m_source->m_data->GetEvent(i)->m_start = RMath::FrameToTime(this->m_event[i].m_frameStart) / len;
-        this->m_source->m_data->GetEvent(i)->m_duration = RMath::FrameToTime(this->m_event[i].m_duration) / len;
-        this->m_source->m_data->GetEvent(i)->m_userData = this->m_event[i].m_value;
+        MR::EventTrackDefDiscrete* discreteSrc = static_cast<MR::EventTrackDefDiscrete*>(this->m_source);
+
+        discreteSrc->getEvent(i)->setStartTime(RMath::FrameToTime(this->m_event[i].m_frameStart) / len);
+        discreteSrc->getEvent(i)->setDuration(RMath::FrameToTime(this->m_event[i].m_duration) / len);
+        discreteSrc->getEvent(i)->setUserData(this->m_event[i].m_value);
     }
 }
 
@@ -100,13 +95,16 @@ std::string EventTrackEditor::GetEventLabel(int track_idx, int event_idx) const
 
 void EventTrackEditor::AddTrack(int event_id, char* name, bool duration)
 {
+    /*
     MorphemeBundle_EventTrack* new_track = g_morphemeConnect.m_nmb.AddEventTrack(this->m_nodeSource, event_id, name, duration);
 
     RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Added EventTrack %d (%s) (node=%d)\n", new_track->m_signature, name, this->m_nodeSource->m_nodeID);
+    */
 };
 
 void EventTrackEditor::DeleteTrack(int idx)
 {
+    /*
     int delete_signature = this->m_eventTracks[idx].m_signature;
     char delete_name[50];
 
@@ -140,23 +138,30 @@ void EventTrackEditor::DeleteTrack(int idx)
     this->m_reload = true;
 
     RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Deleted track %d (%s) (node=%d)\n", delete_signature, delete_name, this->m_nodeSource->m_nodeID);
+    */
 }
 
 void EventTrackEditor::AddEvent(int track_idx, EventTrack::Event event)
 {
+    /*
     EventTrack* track = &this->m_eventTracks[track_idx];
 
-    track->m_source->m_data->AddEvent(RMath::FrameToTime(event.m_frameStart) / RMath::FrameToTime(this->m_frameMax), RMath::FrameToTime(event.m_duration) / RMath::FrameToTime(this->m_frameMax), event.m_value);
+    MR::EventTrackDefDiscrete* discreteSrc = static_cast<MR::EventTrackDefDiscrete*>(track->m_source);
+
+    discreteSrc->
+    //discreteSrc->a(RMath::FrameToTime(event.m_frameStart) / RMath::FrameToTime(this->m_frameMax), RMath::FrameToTime(event.m_duration) / RMath::FrameToTime(this->m_frameMax), event.m_value);
         
     this->m_reload = true;
 
     RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Added event to track %d (%.3f, %.3f, %d) (node=%d)\n", track->m_signature, RMath::FrameToTime(event.m_frameStart) / RMath::FrameToTime(this->m_frameMax), RMath::FrameToTime(event.m_duration) / RMath::FrameToTime(this->m_frameMax), event.m_value, this->m_nodeSource->m_nodeID);
 
     return;
+    */
 }
 
 void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
 {
+    /*
     EventTrack* track = &this->m_eventTracks[track_idx];
 
     track->m_source->m_data->DeleteEvent(event_idx);
@@ -166,6 +171,7 @@ void EventTrackEditor::DeleteEvent(int track_idx, int event_idx)
     this->m_reload = true;
 
     return;
+    */
 }
 
 void EventTrackEditor::ReloadTracks()
@@ -175,6 +181,7 @@ void EventTrackEditor::ReloadTracks()
     this->m_eventTracks.clear();
     this->SetEditedState(false);
 
+    /*
     if ((g_morphemeConnect.m_nmb.IsInitialised()) && (g_morphemeConnect.m_eventTrackEditorFlags.m_targetAnimIdx != -1))
     {
         bool found = false;
@@ -209,6 +216,7 @@ void EventTrackEditor::ReloadTracks()
             }
         }
     }
+    */
 }
 
 EventTrackEditor::EventTrackEditor() 

@@ -19,17 +19,16 @@ struct EventTrackEditor
             int m_value = 0;
         };
 
-        MorphemeBundle_EventTrack* m_source;
+        MR::EventTrackDefBase* m_source;
 
-        int m_signature;
         int m_numEvents;
         int m_eventId;
         Event* m_event;
         std::string m_name;
         bool m_discrete;
 
-        EventTrack(int signature, int numEvents, int eventId, Event* event, char* name, bool is_discrete);
-        EventTrack(MorphemeBundle_EventTrack* src, float len, bool discrete);
+        EventTrack(int numEvents, int eventId, Event* event, char* name, bool is_discrete);
+        EventTrack(MR::EventTrackDefBase* src, float len);
 
         void SaveEventTrackData(float len);
         bool IsEventActive(int event_idx, int frame);

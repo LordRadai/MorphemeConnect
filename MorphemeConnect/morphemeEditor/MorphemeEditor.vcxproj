@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

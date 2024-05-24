@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;zlib.lib;zlib-md.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;zlib.lib;gameManagement_NoPhysics_debug.lib;morphemeComms2_debug.lib;morphemeCore_debug.lib;morphemeSimpleBundle_debug.lib;NMPlatform_debug.lib;NMRuntimeUtils_debug.lib;d3d11.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,7 +142,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;zlib.lib;zlib-md.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;zlib.lib;gameManagement_NoPhysics_debug.lib;morphemeComms2_debug.lib;morphemeCore_debug.lib;morphemeSimpleBundle_debug.lib;NMPlatform_debug.lib;NMRuntimeUtils_debug.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

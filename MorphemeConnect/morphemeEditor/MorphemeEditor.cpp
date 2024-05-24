@@ -27,6 +27,8 @@ TaeTemplate g_taeTemplate;
 ProcessReader g_frpg2;
 fbxsdk::FbxManager* g_pFbxManager = nullptr;
 
+using namespace fbxsdk;
+
 void initImGui(HWND hwnd)
 {
     // Setup Dear ImGui context

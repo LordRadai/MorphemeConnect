@@ -38,9 +38,6 @@
 #include "../extern.h"
 #include "../framework.h"
 #include "../imsequencer/ImSequencer.h"
-#include "../FromsoftFormat/Morpheme/Morpheme.h"
-#include "../FromsoftFormat/Morpheme/NMBReader/NMBReader.h"
-#include "../FromsoftFormat/Morpheme/NSAReader/NSAReader.h"
 #include "../FromsoftFormat/TimeActReader/TimeActReader.h"
 #include "../FromsoftFormat/BNDReader/BNDReader.h"
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
@@ -125,7 +122,7 @@ public:
 	int m_chrId = -1;
 	std::vector<int> m_flverToMorphemeBoneMap;
 
-	std::vector<NSAReader> m_animFiles;
+	//std::vector<NSAReader> m_animFiles;
 
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;

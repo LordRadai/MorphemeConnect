@@ -17,7 +17,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
-MR::AnimSourceBase* AnimLoaderBasic::requestAnim(const MR::RuntimeAnimAssetID animAssetID, void* userdata, char* animPath)
+MR::AnimSourceBase* AnimLoaderBasic::requestAnim(const MR::RuntimeAnimAssetID animAssetID, void* userdata)
 {
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* info = (MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*)userdata;
   NMP_ASSERT(info);
@@ -29,7 +29,7 @@ MR::AnimSourceBase* AnimLoaderBasic::requestAnim(const MR::RuntimeAnimAssetID an
   //----------------------------
   // Add the file extension to the start of the filename. By default this is hard coded to the ProjectData folder.
   char fullFilename[512];
-  NMP_SPRINTF(fullFilename, 512, "%s/%s", animPath, filename);
+  NMP_SPRINTF(fullFilename, 512, "%s", filename);
 
   const char* format   = info->getFormatType(animAssetID);
 

@@ -1,6 +1,7 @@
 #include "FlverModel.h"
 #include "../framework.h"
 #include "../extern.h"
+#include "utils/MorphemeToDirectX.h"
 
 FlverModel::FlverModel()
 {
@@ -403,7 +404,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 }
 
 //Creates an FbxNode object containing vertices, normals and bone weights using the morpheme rig
-FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> skeletonNodes, MorphemeBundle_Rig* pMorphemeRig, std::vector<int> flverToMorphemeBoneMap, int idx)
+FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> skeletonNodes, MR::AnimRigDef* pMorphemeRig, std::vector<int> flverToMorphemeBoneMap, int idx)
 {
 	if (m_flver == nullptr)
 		return nullptr;
@@ -468,11 +469,12 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 
 			FbxNode* pBoneNode = skeletonNodes[boneIndex];
 
-			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + pMorphemeRig->m_data->GetBoneName(boneIndex) + "_cluster").c_str());
+			FbxCluster* pCluster = FbxCluster::Create(pScene, (mesh_node_name + "_" + pMorphemeRig->getBoneName(boneIndex) + "_cluster").c_str());
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
-			pCluster->SetTransformLinkMatrix(CreateFbxMatrixFromDXMatrix(pMorphemeRig->m_data->GetBoneBindPose(boneIndex)).Inverse());
+			DirectX::XMMATRIX bindPose = NMDX::GetWorldMatrix(*pMorphemeRig->getBindPoseBoneQuat(boneIndex), *pMorphemeRig->getBindPoseBonePos(boneIndex));
+			pCluster->SetTransformLinkMatrix(CreateFbxMatrixFromDXMatrix(bindPose));
 
 			for (int vertexIndex = 0; vertexIndex < vertices.size(); vertexIndex++)
 			{
@@ -543,11 +545,12 @@ FbxNode* CreateFlverBoneNode(FbxScene* pScene, FbxPose* pBindPoses, cfr::FLVER2:
 	return pBoneNode;
 }
 
-FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MorphemeBundle_Rig* pRig, int id)
+FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MR::AnimRigDef* pRig, int id)
 {
-	FbxNode* pBoneNode = FbxNode::Create(pScene, pRig->m_data->GetBoneName(id).c_str());
+	FbxNode* pBoneNode = FbxNode::Create(pScene, pRig->getBoneName(id));
 
-	FbxAMatrix boneTransform = CreateFbxMatrixFromDXMatrix(pRig->m_data->GetBoneBindPose(id));
+	Matrix bonePose = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(id), *pRig->getBindPoseBonePos(id));
+	FbxAMatrix boneTransform = CreateFbxMatrixFromDXMatrix(bonePose);
 	FbxAMatrix rotationMatrix = CreateFbxMatrixFromDXMatrix(DirectX::XMMatrixRotationX(-DirectX::XM_PIDIV2) * DirectX::XMMatrixRotationY(DirectX::XM_PI));
 
 	if (id == 0)
@@ -557,7 +560,7 @@ FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MorphemeB
 	pBoneNode->LclRotation.Set(boneTransform.GetR());
 	pBoneNode->LclScaling.Set(FbxDouble3(1.0, 1.0, 1.0));
 
-	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, pRig->m_data->GetBoneName(id).c_str());
+	FbxSkeleton* pBone = FbxSkeleton::Create(pScene, pRig->getBoneName(id));
 	pBone->SetSkeletonType(FbxSkeleton::eLimbNode);
 	pBone->Color.Set(FbxDouble3(1.0, 0.66, 0.0));
 	pBone->LimbLength = 0.1;
@@ -643,21 +646,21 @@ std::vector<FbxNode*> FlverModel::CreateFbxFlverSkeleton(FbxScene* pScene, FbxPo
 	return boneNodes;
 }
 
-std::vector<FbxNode*> FlverModel::CreateFbxMorphemeSkeleton(FbxScene* pScene, FbxPose* pBindPoses, MorphemeBundle_Rig* pRig)
+std::vector<FbxNode*> FlverModel::CreateFbxMorphemeSkeleton(FbxScene* pScene, FbxPose* pBindPoses, MR::AnimRigDef* pRig)
 {
 	std::vector<FbxNode*> pMorphemeBoneList;
-	pMorphemeBoneList.reserve(pRig->m_data->GetBoneCount());
+	pMorphemeBoneList.reserve(pRig->getNumBones());
 
-	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
+	for (int i = 0; i < pRig->getNumBones(); i++)
 	{
 		FbxNode* pMorphemeBoneNode = CreateMorphemeBoneNode(pScene, pBindPoses, pRig, i);
 
 		pMorphemeBoneList.push_back(pMorphemeBoneNode);
 	}
 
-	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
+	for (int i = 0; i < pRig->getNumBones(); i++)
 	{
-		int boneParentIdx = pRig->m_data->GetHierarchy()->m_parentIDs[i];
+		int boneParentIdx = pRig->getHierarchy()->getParentIndex(i);
 
 		if (boneParentIdx != -1)
 			pMorphemeBoneList[boneParentIdx]->AddChild(pMorphemeBoneList[i]);
@@ -668,7 +671,7 @@ std::vector<FbxNode*> FlverModel::CreateFbxMorphemeSkeleton(FbxScene* pScene, Fb
 	return pMorphemeBoneList;
 }
 
-std::vector<FbxNode*> ConvertFbxSkeletonToFbxRig(FbxScene* pScene, FbxPose* pBindPoses, MorphemeBundle_Rig* pRig)
+std::vector<FbxNode*> ConvertFbxSkeletonToFbxRig(FbxScene* pScene, FbxPose* pBindPoses, MR::AnimRigDef* pRig)
 {
 	FbxNode* pFlverSkeletonRoot = pScene->GetRootNode()->FindChild("Skeleton");
 
@@ -679,18 +682,18 @@ std::vector<FbxNode*> ConvertFbxSkeletonToFbxRig(FbxScene* pScene, FbxPose* pBin
 		pBindPoses->Remove(i);
 
 	std::vector<FbxNode*> pMorphemeBoneList;
-	pMorphemeBoneList.reserve(pRig->m_data->GetBoneCount());
+	pMorphemeBoneList.reserve(pRig->getNumBones());
 
-	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
+	for (int i = 0; i < pRig->getNumBones(); i++)
 	{
 		FbxNode* pMorphemeBoneNode = CreateMorphemeBoneNode(pScene, pBindPoses, pRig, i);
 
 		pMorphemeBoneList.push_back(pMorphemeBoneNode);
 	}
 
-	for (int i = 0; i < pRig->m_data->GetBoneCount(); i++)
+	for (int i = 0; i < pRig->getNumBones(); i++)
 	{
-		int boneParentIdx = pRig->m_data->GetHierarchy()->m_parentIDs[i];
+		int boneParentIdx = pRig->getHierarchy()->getParentIndex(i);
 
 		if (boneParentIdx != -1)
 			pMorphemeBoneList[boneParentIdx]->AddChild(pMorphemeBoneList[i]);

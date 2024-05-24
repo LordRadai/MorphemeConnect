@@ -1900,10 +1900,10 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 	}
 }
 
-inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::Rig* pRig, FlverModel* pFlverModel, int idx)
+inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-	int boneIdx = pRig->GetBoneIndex(boneName);
+	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
 	if (boneIdx == -1)
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
@@ -1912,7 +1912,7 @@ inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::Rig* pRig, FlverModel* pF
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
-void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, FlverModel* pFlverModel)
+void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig, FlverModel* pFlverModel)
 {
 	this->m_flverToMorphemeBoneMap.clear();
 	this->m_flverToMorphemeBoneMap.reserve(pFlverModel->m_flver->header.boneCount);
@@ -1922,7 +1922,7 @@ void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::Rig* pMorphemeRig, Flv
 }
 
 //Adds flver meshes to the scene
-bool CreateFbxModel(Application* pApplication, FbxScene* pScene, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path, MorphemeBundle_Rig* pMorphemeRig, bool useMorphemeRig)
+bool CreateFbxModel(Application* pApplication, FbxScene* pScene, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path, MR::AnimRigDef* pMorphemeRig, bool useMorphemeRig)
 {
 	std::string model_node_name = "c" + std::to_string(pApplication->m_chrId) + "_model";
 
@@ -2148,7 +2148,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 	pExporter->SetFileExportVersion(FBX_2014_00_COMPATIBLE);
 
 	char chr_id_str[20];
-	sprintf(chr_id_str, "c%04d", this->m_chrId);
+	sprintf_s(chr_id_str, "c%04d", this->m_chrId);
 
 	std::string model_out = export_path.string() + std::string(chr_id_str) + ".fbx";
 

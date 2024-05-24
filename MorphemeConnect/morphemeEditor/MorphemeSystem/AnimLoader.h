@@ -34,7 +34,7 @@ public:
   //----------------------------
   // Static animation loading function. This is past to morpheme in the Game::World::initMorpheme() so that it uses this 
   // function when it loads animations.
-  static MR::AnimSourceBase* requestAnim(const MR::RuntimeAnimAssetID animAssetID, void* userdata, char* animPath);
+  static MR::AnimSourceBase* requestAnim(const MR::RuntimeAnimAssetID animAssetID, void* userdata);
 
   //----------------------------
   // Static function used to unload the animations. As with the animation loading function this function is passed to 

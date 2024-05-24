@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -123,6 +123,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;zlib.lib;zlib-md.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,7 +132,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -141,6 +142,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;zlib.lib;zlib-md.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -149,11 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\AssetLoader.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\Character.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\CharacterController.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\CharacterDef.cpp" />
-    <ClCompile Include="Application\MorphemeSystem\MorphemeSystem.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="FlverModel\FlverModel.cpp" />
     <ClCompile Include="fromloader\cmem.c" />
@@ -211,6 +208,7 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="TaeTemplate\TaeTemplate.cpp" />
     <ClCompile Include="TimeActEditor\TimeActEditor.cpp" />
+    <ClCompile Include="utils\MorphemeToDirectX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
@@ -295,6 +293,7 @@
     <ClInclude Include="TaeTemplate\TaeTemplate.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimeActEditor\TimeActEditor.h" />
+    <ClInclude Include="utils\MorphemeToDirectX.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

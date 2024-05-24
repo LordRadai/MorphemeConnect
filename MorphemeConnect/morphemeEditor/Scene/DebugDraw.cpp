@@ -8,6 +8,7 @@
 #include "Scene.h"
 
 #include <algorithm>
+#include "utils/MorphemeToDirectX.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -1358,18 +1359,18 @@ Vector3 CalculateBonePosition(cfr::FLVER2* flver, int bone_id)
     return position;
 }
 
-Vector3 CalculateBonePosition(MR::Rig* rig, int bone_id)
+Vector3 CalculateBonePosition(MR::AnimRigDef* rig, int bone_id)
 {
-    XMMATRIX boneLocalTransform = rig->GetBoneBindPose(bone_id);
+    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(bone_id), *rig->getBindPoseBonePos(bone_id));
 
-    int parentIdx = rig->GetBoneParent(bone_id);
+    int parentIdx = rig->getParentBoneIndex(bone_id);
 
     while (parentIdx != -1)
     {
-        XMMATRIX parentBoneTransform = rig->GetBoneBindPose(parentIdx);
+        XMMATRIX parentBoneTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(parentIdx), *rig->getBindPoseBonePos(parentIdx));
         boneLocalTransform *= parentBoneTransform;
 
-        parentIdx = rig->GetBoneParent(parentIdx);
+        parentIdx = rig->getParentBoneIndex(parentIdx);
     }
 
     boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
@@ -1380,19 +1381,21 @@ Vector3 CalculateBonePosition(MR::Rig* rig, int bone_id)
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel model, MR::Rig* rig)
+    DirectX::XMMATRIX world, FlverModel model, MR::AnimRigDef* rig)
 {
     constexpr float scale = 1.5f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
      
-    for (size_t i = 0; i < rig->GetBoneCount(); i++)
+    for (size_t i = 0; i < rig->getNumBones(); i++)
     {
-        if (rig->GetHierarchy()->m_parentIDs[i] != -1)
+        int parentIndex = rig->getParentBoneIndex(i);
+
+        if (rig->getParentBoneIndex(i))
         {
             Vector3 boneA = CalculateBonePosition(rig, i);
             boneA = Vector3::Transform(boneA, transf);
 
-            Vector3 boneB = CalculateBonePosition(rig, rig->GetHierarchy()->m_parentIDs[i]);
+            Vector3 boneB = CalculateBonePosition(rig, rig->getParentBoneIndex(parentIndex));
             boneB = Vector3::Transform(boneB, transf);
 
             DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);

@@ -274,13 +274,10 @@ void Scene::Render()
         
         if (g_morphemeConnect.m_model.m_loaded)
         {
-            MorphemeBundle_Rig* pRig = nullptr;
-
-            if (g_morphemeConnect.m_nmb.GetRigCount() > 0)
-                pRig = g_morphemeConnect.m_nmb.GetRig(0);
+            MR::AnimRigDef* pRig = nullptr;
 
             if (pRig != nullptr)
-                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, pRig->m_data);
+                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, pRig);
         }
 
         m_batch->End();

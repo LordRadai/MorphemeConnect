@@ -178,7 +178,7 @@ namespace ImSequencer
         static char addTrackName[50] = "MyTrack";
         static bool addTrackIsDuration = false;
 
-        static EventTrack::Event addEvent;
+        //static EventTrack::Event addEvent;
 
         bool delEvent = false;
 
@@ -607,6 +607,7 @@ namespace ImSequencer
                 ImGui::EndPopup();
             }
 
+            /*
             if (addTrack && !reload)
             {
                 popupOpened = true;
@@ -645,11 +646,12 @@ namespace ImSequencer
                 ImGui::EndPopup();
             }
             ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
+            */
 
             if (!reload)
             {
-                if (*currentFrame > 0 && !popupOpened)
-                    addEvent.m_start = RMath::FrameToTime(*currentFrame);
+                //if (*currentFrame > 0 && !popupOpened)
+                    //addEvent.m_start = RMath::FrameToTime(*currentFrame);
 
                 // clipping rect so items bars are not visible in the legend on the left when scrolled
 

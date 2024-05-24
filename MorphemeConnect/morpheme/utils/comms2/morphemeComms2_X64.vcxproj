@@ -23,6 +23,7 @@
     <ProjectGuid>{6759E731-4BC1-4352-28AA-C5583B7EC71F}</ProjectGuid>
     <RootNamespace>morphemeComms2</RootNamespace>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -67,23 +68,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>morphemeComms2_debug</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeComms2\debug\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>morphemeComms2</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeComms2\release\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tool|x64'">
     <TargetName>morphemeComms2_tool_debug</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeComms2\debug_tool\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Tool|x64'">
     <TargetName>morphemeComms2_tool</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeComms2\release_tool\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

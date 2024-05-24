@@ -23,6 +23,7 @@
     <ProjectGuid>{D90ECD48-E518-4965-D5A1-487523A09108}</ProjectGuid>
     <RootNamespace>morphemeCore</RootNamespace>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -67,23 +68,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>morphemeCore_debug</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeCore\debug\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>morphemeCore</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeCore\release\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Target LE64 Debug|x64'">
     <TargetName>morphemeCore_target_LE64_debug</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeCore\target_le64_debug\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Target LE64 Release|x64'">
     <TargetName>morphemeCore_target_LE64</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\morphemeCore\target_le64_release\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

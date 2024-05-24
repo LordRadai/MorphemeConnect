@@ -15,6 +15,7 @@
     <ProjectGuid>{C4E21FB7-6883-456D-8AAA-3306F29276B1}</ProjectGuid>
     <RootNamespace>gameManagement_NoPhysics</RootNamespace>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -41,13 +42,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>gameManagement_NoPhysics_debug</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\gameManagement_NoPhysics\debug\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>gameManagement_NoPhysics</TargetName>
-    <IntDir>..\..\..\obj\x64\vs$(VisualStudioVersion)\gameManagement_NoPhysics\release\</IntDir>
-    <OutDir>..\..\..\lib\x64\vs$(VisualStudioVersion)\</OutDir>
+    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\lib\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

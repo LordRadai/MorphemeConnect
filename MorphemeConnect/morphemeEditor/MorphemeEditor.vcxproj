@@ -304,6 +304,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="fromloader\src\util\stringio\simple_sjis_table.bin" />
+    <None Include="packages.config" />
     <None Include="src\fromloader\src\util\stringio\simple_sjis_table.bin" />
   </ItemGroup>
   <ItemGroup>
@@ -1121,11 +1122,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" />
+    <Import Project="..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets" Condition="Exists('..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets'))" />
   </Target>
 </Project>

@@ -34,8 +34,8 @@ namespace cfr
 					}
 					case(4):
 					{
-						uint32_t i = cfr_bswap32(*(uint32_t*)tmp);
-						memcpy((char*)dest+(o*size),&i,sizeof(uint32_t));
+						UINT i = cfr_bswap32(*(UINT*)tmp);
+						memcpy((char*)dest+(o*size),&i,sizeof(UINT));
 					}
 					case(8):
 					{
@@ -72,7 +72,7 @@ namespace cfr
 			return i;
 	};
 
-	uint32_t switchEndian(uint32_t i, bool bigEndian)
+	UINT switchEndian(UINT i, bool bigEndian)
 	{
 		if(bigEndian)
 			return cfr_bswap32(i);
@@ -115,8 +115,8 @@ namespace cfr
 			}
 			case(32):
 			{
-				uint32_t i = __builtin_bswap32(*(uint32_t*)target);
-				memcpy(target,&i,sizeof(uint32_t));
+				UINT i = __builtin_bswap32(*(UINT*)target);
+				memcpy(target,&i,sizeof(UINT));
 			}
 			case(64):
 			{

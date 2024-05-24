@@ -42,7 +42,7 @@ namespace cfr
 			char unk03 = '\0';
 
 			int32_t compressedSize = 0;
-			uint32_t dataOffset = 0;
+			UINT dataOffset = 0;
 
 			//circumstationally fill these in
 			int32_t id = 0;

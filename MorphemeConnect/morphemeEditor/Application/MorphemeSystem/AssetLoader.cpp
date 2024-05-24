@@ -9,19 +9,16 @@
 // NaturalMotion in writing.
 
 //----------------------------------------------------------------------------------------------------------------------
-#include "GameAssetLoader.h"
+#include "AssetLoader.h"
 
-#include "GameCharacterManager.h"
+#include "MorphemeSystem.h"
 #include "simpleBundle/simpleBundle.h"
 //----------------------------------------------------------------------------------------------------------------------
 
-namespace Game
-{
-
 //----------------------------------------------------------------------------------------------------------------------
 void AssetLoaderBasic::evalBundleRequirements(
-  uint32_t& numRegisteredAssets,
-  uint32_t& numClientAssets,
+  UINT& numRegisteredAssets,
+  UINT& numClientAssets,
   void*     buffer,
   size_t    bufferSize)
 {
@@ -39,7 +36,7 @@ void AssetLoaderBasic::evalBundleRequirements(
   MR::UTILS::SimpleBundleReader bundleReader(buffer, bufferSize);
 
   MR::Manager::AssetType assetType;
-  uint32_t assetID;
+  UINT assetID;
   uint8_t* fileGuid;
   void* asset;
   NMP::Memory::Format assetMemReqs;
@@ -65,10 +62,10 @@ void AssetLoaderBasic::evalBundleRequirements(
 MR::NetworkDef* AssetLoaderBasic::loadBundle(
   void*            bundle,
   size_t           bundleSize,
-  uint32_t*        registeredAssetIDs,
+  UINT*        registeredAssetIDs,
   void**           clientAssets,
-  uint32_t         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
-  uint32_t         NMP_USED_FOR_ASSERTS(numClientAssets),
+  UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
+  UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup)
 {
   animFileLookup = NULL;
@@ -84,7 +81,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   //----------------------------
   // Start parsing the bundle. The simple bundle has been written by the asset compiler and contains various types of 
   // assets like the network definition, rig definitions and animation markup but not the actual animation data.
-  MR::UTILS::SimpleBundleReader bundleReader(bundle, (uint32_t)bundleSize);
+  MR::UTILS::SimpleBundleReader bundleReader(bundle, (UINT)bundleSize);
 
   MR::Manager::AssetType assetType;
   void* asset;
@@ -92,8 +89,8 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   MR::RuntimeAssetID assetID;
   uint8_t* fileGuid = 0;
 
-  uint32_t registeredAssetIndex = 0;
-  uint32_t clientAssetIndex = 0;
+  UINT registeredAssetIndex = 0;
+  UINT clientAssetIndex = 0;
 
   while (bundleReader.readNextAsset(assetType, assetID, fileGuid, asset, assetMemReqs))
   {
@@ -209,16 +206,16 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
 
 //----------------------------------------------------------------------------------------------------------------------
 void AssetLoaderBasic::unLoadBundle(
-  const uint32_t* registeredAssetIDs,
-  uint32_t        numRegisteredAssets,
+  const UINT* registeredAssetIDs,
+  UINT        numRegisteredAssets,
   void* const*    clientAssets,
-  uint32_t        numClientAssets)
+  UINT        numClientAssets)
 {
   //----------------------------
   // Release registered assets but only free the associated memory if the reference count goes to zero.
-  for (uint32_t i = 0; i < numRegisteredAssets; ++i)
+  for (UINT i = 0; i < numRegisteredAssets; ++i)
   {
-    const uint32_t assetId = registeredAssetIDs[i];
+    const UINT assetId = registeredAssetIDs[i];
 
     //----------------------------
     // Unregister and free the asset if it's no longer referenced.
@@ -232,12 +229,8 @@ void AssetLoaderBasic::unLoadBundle(
 
   //----------------------------
   // Free client assets.
-  for (uint32_t i = 0; i < numClientAssets; ++i)
+  for (UINT i = 0; i < numClientAssets; ++i)
   {
     NMP::Memory::memFree(clientAssets[i]);
   }
 }
-
-
-} // namespace Game
-

@@ -49,10 +49,10 @@ namespace DX
         double GetTotalSeconds() const noexcept { return TicksToSeconds(m_totalTicks); }
 
         // Get total number of updates since start of the program.
-        uint32_t GetFrameCount() const noexcept { return m_frameCount; }
+        UINT GetFrameCount() const noexcept { return m_frameCount; }
 
         // Get the current framerate.
-        uint32_t GetFramesPerSecond() const noexcept { return m_framesPerSecond; }
+        UINT GetFramesPerSecond() const noexcept { return m_framesPerSecond; }
 
         // Set whether to use fixed or variable timestep mode.
         void SetFixedTimeStep(bool isFixedTimestep) noexcept { m_isFixedTimeStep = isFixedTimestep; }
@@ -111,7 +111,7 @@ namespace DX
             timeDelta *= TicksPerSecond;
             timeDelta /= static_cast<uint64_t>(m_qpcFrequency.QuadPart);
 
-            const uint32_t lastFrameCount = m_frameCount;
+            const UINT lastFrameCount = m_frameCount;
 
             if (m_isFixedTimeStep)
             {
@@ -178,9 +178,9 @@ namespace DX
         uint64_t m_leftOverTicks;
 
         // Members for tracking the framerate.
-        uint32_t m_frameCount;
-        uint32_t m_framesPerSecond;
-        uint32_t m_framesThisSecond;
+        UINT m_frameCount;
+        UINT m_framesPerSecond;
+        UINT m_framesThisSecond;
         uint64_t m_qpcSecondCounter;
 
         // Members for configuring fixed timestep mode.

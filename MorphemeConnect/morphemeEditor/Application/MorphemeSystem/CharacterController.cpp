@@ -9,14 +9,10 @@
 // NaturalMotion in writing.
 
 //----------------------------------------------------------------------------------------------------------------------
-#include "GameCharacterController.h"
+#include "CharacterController.h"
 
 #include "morpheme/mrCoreTaskIDs.h"
 //----------------------------------------------------------------------------------------------------------------------
-
-namespace Game
-{
-
 
 //----------------------------------------------------------------------------------------------------------------------
 CharacterControllerBasic* CharacterControllerBasic::create()
@@ -96,5 +92,3 @@ m_characterOrientation(NMP::Quat::kIdentity),
 m_net(NULL)
 {
 }
-
-} // namespace Game

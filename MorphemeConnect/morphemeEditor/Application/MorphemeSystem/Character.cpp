@@ -8,17 +8,13 @@
 // person nor used for any purpose not expressly approved by
 // NaturalMotion in writing.
 //----------------------------------------------------------------------------------------------------------------------
-#include "GameCharacter.h"
+#include "Character.h"
 
-#include "GameCharacterManager.h"
+#include "MorphemeSystem.h"
 #include "morpheme/mrBlendOps.h"
 #include "NMPlatform/NMFreelistMemoryAllocator.h"
 //----------------------------------------------------------------------------------------------------------------------
 
-namespace Game
-{
-
-  
 //----------------------------------------------------------------------------------------------------------------------
 CharacterBasic* CharacterBasic::create(CharacterDefBasic* networkDef)
 {
@@ -181,7 +177,7 @@ bool CharacterBasic::init(CharacterDefBasic* characterDef)
   // Set the temporary memory size to 512KB. This should be large enough to cope with most networks for now but to
   // accurately determine the temp memory size used, see FastHeapAllocator::PrintAllocations().
   NMP_STDOUT("Allocate required memory");
-  uint32_t tempDataSize = (512 * 1024);
+  UINT tempDataSize = (512 * 1024);
   NMP::Memory::Format allocatorFormat = NMP::FastHeapAllocator::getMemoryRequirements(tempDataSize, NMP_VECTOR_ALIGNMENT);
   NMP::Memory::Resource resource = NMPMemoryAllocateFromFormat(allocatorFormat);
 
@@ -243,7 +239,7 @@ bool CharacterBasic::init(CharacterDefBasic* characterDef)
   // This buffer is used to store the final output of a network update for later use by other components of the game.
   // The buffer size is chosen to be able to hold any possible network output (the number of bones output in each frame
   // may change with the active animation set).
-  const uint32_t maxBoneCount = networkDef->getMaxBoneCount();
+  const UINT maxBoneCount = networkDef->getMaxBoneCount();
   NMP::Memory::Format bufferFormat = NMP::DataBuffer::getPosQuatMemoryRequirements(maxBoneCount);
   NMP::Memory::Resource bufferResource = NMPMemoryAllocateFromFormat(bufferFormat);
   NMP_ASSERT(bufferResource.ptr);
@@ -285,6 +281,3 @@ bool CharacterBasic::term()
 
   return true;
 }
-
-
-} // namespace Game

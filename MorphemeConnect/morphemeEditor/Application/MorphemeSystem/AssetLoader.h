@@ -16,7 +16,7 @@
 #define GAME_ASSET_LOADER_H
 
 //----------------------------------------------------------------------------------------------------------------------
-#include "GameCharacterDef.h"
+#include "CharacterDef.h"
 //----------------------------------------------------------------------------------------------------------------------
 
 class AssetLoaderBasic
@@ -27,8 +27,8 @@ public:
   // Evaluate the asset requirements for the network stored in a simple bundle. This will allow us to create arrays large
   // enough to store the assets
   static void evalBundleRequirements(
-    uint32_t& numRegisteredAssets,
-    uint32_t& numClientAssets,
+    UINT& numRegisteredAssets,
+    UINT& numClientAssets,
     void*     buffer,
     size_t    bufferSize);
 
@@ -41,10 +41,10 @@ public:
   static MR::NetworkDef* loadBundle(
     void*            bundle,
     size_t           bundleSize,
-    uint32_t*        registeredAssetIDs,
+    UINT*        registeredAssetIDs,
     void**           clientAssets,
-    uint32_t         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
-    uint32_t         NMP_USED_FOR_ASSERTS(numClientAssets),
+    UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
+    UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
     MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup);
 
   //----------------------------
@@ -52,10 +52,10 @@ public:
   // by reusing object count information from the loadBundle() functions but this function has been designed to be
   // self-contained.
   static void unLoadBundle(
-    const uint32_t* registeredAssetIDs,
-    uint32_t        numRegisteredAssets,
+    const UINT* registeredAssetIDs,
+    UINT        numRegisteredAssets,
     void* const*    clientAssets,
-    uint32_t        numClientAssets);
+    UINT        numClientAssets);
 
 };
 

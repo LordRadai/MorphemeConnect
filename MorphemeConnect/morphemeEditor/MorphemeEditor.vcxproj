@@ -5,22 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_new|Win32">
-      <Configuration>Release_new</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_new|x64">
-      <Configuration>Release_new</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_test|Win32">
-      <Configuration>Release_test</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_test|x64">
-      <Configuration>Release_test</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -35,28 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b82e634c-37db-41f9-879a-decbe47dd8d1}</ProjectGuid>
-    <RootNamespace>MorphemeConnect</RootNamespace>
+    <ProjectGuid>{4dc3646c-04eb-48d1-ae1b-6bc65e29fc43}</ProjectGuid>
+    <RootNamespace>morphemeEditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>7.0</WindowsTargetPlatformMinVersion>
-    <ProjectName>morphemeEditor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -74,21 +44,6 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>false</CLRSupport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>false</CLRSupport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -96,7 +51,6 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -106,101 +60,37 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(SolutionDir)\MorphemeConnect\lib\Debug;$(LibraryPath)</LibraryPath>
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
-    <CopyLocalProjectReference>true</CopyLocalProjectReference>
-    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
-    <IncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
-    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Morpheme4Editor_debug</TargetName>
-    <ExternalIncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</ExternalIncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'">
-    <LibraryPath>$(ProjectDir)lib\Debug;$(LibraryPath)</LibraryPath>
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
-    <CopyLocalProjectReference>true</CopyLocalProjectReference>
-    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
-    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
-    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</ExternalIncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'">
-    <LibraryPath>$(ProjectDir)lib\Debug;$(LibraryPath)</LibraryPath>
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
-    <CopyLocalProjectReference>true</CopyLocalProjectReference>
-    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
-    <LinkIncremental />
-    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
-    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</ExternalIncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(SolutionDir)\MorphemeConnect\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
-    <IntDir>$(SolutionDir)\MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
-    <TargetName>Morpheme4Editor</TargetName>
-    <ExternalIncludePath>$(SolutionDir)\MorphemeConnect\include\zlib;$(SolutionDir)\MorphemeConnect\include\;$(IncludePath)</ExternalIncludePath>
+    <OutDir>$(SolutionDir)MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <ExternalIncludePath>$(SolutionDir)MorphemeConnect\include;$(SolutionDir)MorphemeConnect\include\zlib;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)MorphemeConnect\lib\Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)MorphemeConnect\build\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
+    <ExternalIncludePath>$(SolutionDir)MorphemeConnect\include;$(SolutionDir)MorphemeConnect\include\zlib;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)MorphemeConnect\lib\Debug\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -210,11 +100,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -224,88 +114,38 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_new|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <Optimization>Disabled</Optimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_test|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_LOGGER;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <SupportJustMyCode>false</SupportJustMyCode>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <Optimization>MaxSpeed</Optimization>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNING;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MorphemeConnect\morpheme\SDK;$(SolutionDir)\MorphemeConnect\morpheme\SDK\core\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\comms2\include;$(SolutionDir)\MorphemeConnect\morpheme\utils\simpleBundle\include;$(SolutionDir)\MorphemeConnect\common\NMRuntimeUtils\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include;$(SolutionDir)\MorphemeConnect\common\NMPlatform\include\NMPlatform\win32;$(SolutionDir)\MorphemeConnect\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <Optimization>Disabled</Optimization>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\common\NMPlatform\include\NMPlatform\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d11.lib;shlwapi.lib;zlib.lib;libxml2-md.lib;libfbxsdk-md.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="fromloader\src\util\stringio\simple_sjis_table.bin" />
     <None Include="packages.config" />
-    <None Include="src\fromloader\src\util\stringio\simple_sjis_table.bin" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
@@ -339,6 +179,47 @@
     <ClCompile Include="fromloader\umem.c" />
     <ClCompile Include="FromsoftFormat\BNDReader\BNDReader.cpp" />
     <ClCompile Include="FromsoftFormat\FlverReader\FlverReader.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\ME\ExportBinary\ExportBinary.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\ME\ExportXML\ExportXML.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\ME\ExportXML\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribData.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDef.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatGreater.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatInRange.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatLess.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntGreater.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntInRange.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntLess.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationEventFraction.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationFraction.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefFalse.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInDurationEvent.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSubState.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSyncEventRange.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefOnRequest.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\Common\Common.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\EventTrack\EventTrack.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\NetworkDef\NetworkDef.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\NodeDef\NodeDef.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\RigToAnimMap\RigToAnimMap.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\MR\Rig\Rig.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_CharacterControllerDef.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NMBReader\NMBReader.cpp" />
+    <ClCompile Include="FromsoftFormat\Morpheme\NSAReader\NSAReader.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp" />
     <ClCompile Include="FromsoftFormat\TimeActReader\TimeActReader.cpp" />
@@ -364,70 +245,6 @@
     <ClCompile Include="Scene\Camera\Camera.cpp" />
     <ClCompile Include="Scene\DebugDraw.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="src\Application\Application.cpp" />
-    <ClCompile Include="src\Application\Character\GameAnimLoader.cpp" />
-    <ClCompile Include="src\Application\Character\GameAssetLoader.cpp" />
-    <ClCompile Include="src\Application\Character\GameCharacter.cpp" />
-    <ClCompile Include="src\Application\Character\GameCharacterController.cpp" />
-    <ClCompile Include="src\Application\Character\GameCharacterDef.cpp" />
-    <ClCompile Include="src\Application\Character\GameCharacterManager.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\AnimLoader.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\AssetLoader.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\Character.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\CharacterController.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\CharacterDef.cpp" />
-    <ClCompile Include="src\Application\MorphemeSystem\MorphemeSystem.cpp" />
-    <ClCompile Include="src\EventTrackEditor\EventTrackEditor.cpp" />
-    <ClCompile Include="src\FlverModel\FlverModel.cpp" />
-    <ClCompile Include="src\fromloader\cmem.c" />
-    <ClCompile Include="src\fromloader\src\formats\binder\binder.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\binder\bnd\bnd3.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\binder\bnd\bnd4.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\dcx\dcx.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\flver\flver.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\flver\flver0\flver0.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\flver\flver2\flver2.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\flver\flver2\flver2_helpers.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\mtd\mtd.cpp" />
-    <ClCompile Include="src\fromloader\src\formats\paramdef\paramdef.cpp" />
-    <ClCompile Include="src\fromloader\src\open.cpp" />
-    <ClCompile Include="src\fromloader\src\util\endian\endian.cpp" />
-    <ClCompile Include="src\fromloader\src\util\fileio\fileio.cpp" />
-    <ClCompile Include="src\fromloader\src\util\file\file.cpp" />
-    <ClCompile Include="src\fromloader\src\util\inflate\inflate.cpp" />
-    <ClCompile Include="src\fromloader\src\util\stringio\stringio.cpp" />
-    <ClCompile Include="src\fromloader\src\util\types\types.cpp" />
-    <ClCompile Include="src\fromloader\src\util\validate\validate.cpp" />
-    <ClCompile Include="src\fromloader\umem.c" />
-    <ClCompile Include="src\FromsoftFormat\BNDReader\BNDReader.cpp" />
-    <ClCompile Include="src\FromsoftFormat\FlverReader\FlverReader.cpp" />
-    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.cpp" />
-    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.cpp" />
-    <ClCompile Include="src\FromsoftFormat\TimeActReader\TimeActReader.cpp" />
-    <ClCompile Include="src\imgui\custom\imgui_custom_logic.cpp" />
-    <ClCompile Include="src\imgui\custom\imgui_custom_widget.cpp" />
-    <ClCompile Include="src\imgui\imgui.cpp" />
-    <ClCompile Include="src\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\imgui\imgui_draw.cpp" />
-    <ClCompile Include="src\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="src\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="src\imgui\imgui_tables.cpp" />
-    <ClCompile Include="src\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\imsequencer\ImSequencer.cpp" />
-    <ClCompile Include="src\inih\ini.c" />
-    <ClCompile Include="src\inih\INIReader.cpp" />
-    <ClCompile Include="src\MorphemeConnect.cpp" />
-    <ClCompile Include="src\ProcessReader\ProcessReader.cpp" />
-    <ClCompile Include="src\RLog\RDebug\RDebug.cpp" />
-    <ClCompile Include="src\RLog\RLog.cpp" />
-    <ClCompile Include="src\RLog\TextLog\TextLog.cpp" />
-    <ClCompile Include="src\RMath\RMath.cpp" />
-    <ClCompile Include="src\RString\RString.cpp" />
-    <ClCompile Include="src\Scene\Camera\Camera.cpp" />
-    <ClCompile Include="src\Scene\DebugDraw.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\TaeTemplate\TaeTemplate.cpp" />
-    <ClCompile Include="src\TimeActEditor\TimeActEditor.cpp" />
     <ClCompile Include="TaeTemplate\TaeTemplate.cpp" />
     <ClCompile Include="TimeActEditor\TimeActEditor.cpp" />
   </ItemGroup>
@@ -476,6 +293,51 @@
     <ClInclude Include="fromloader\umem.h" />
     <ClInclude Include="FromsoftFormat\BNDReader\BNDReader.h" />
     <ClInclude Include="FromsoftFormat\FlverReader\FlverReader.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\ME\ExportBinary\ExportBinary.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\ME\ExportXML\ExportXML.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\ME\ExportXML\TinyXML\tinyxml2.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\ME\ME.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\Morpheme.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribData.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataBool.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceAnim.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataSourceEventTrack.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataStateMachine.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\AttribDataUnknown.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDef.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatGreater.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatInRange.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterFloatLess.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntGreater.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntInRange.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefControlParameterIntLess.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationEventFraction.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefCrossedDurationFraction.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefDiscreteEventTriggered.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefFalse.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInDurationEvent.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSubState.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefInSyncEventRange.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\AttribData\TransitConditionDef\TransitConditionDefOnRequest.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\CharacterController\CharacterController.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\Common\Common.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\EventTrack\EventTrack.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\MR.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\NetworkDef\NetworkDef.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\NodeDef\NodeDef.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\RigToAnimMap\RigToAnimMap.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\MR\Rig\Rig.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Base.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_CharacterControllerDef.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_EventTrack.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_FileNameLookupTable.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Header.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_NetworkDef.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_Rig.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\MorphemeBundle\MorphemeBundle_RigToAnimMap.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NMBReader\NMBReader.h" />
+    <ClInclude Include="FromsoftFormat\Morpheme\NSAReader\NSAReader.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h" />
     <ClInclude Include="FromsoftFormat\TimeActReader\TimeActReader.h" />
@@ -491,530 +353,6 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="imsequencer\ImSequencer.h" />
-    <ClInclude Include="include\fbxsdk.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxalloc.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxarch.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxdebug.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxnew.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxstdcompliant.h" />
-    <ClInclude Include="include\fbxsdk\core\arch\fbxtypes.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxarray.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxbitset.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxcharptrset.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxcontainerallocators.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxdynamicarray.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxfile.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxfolder.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxhashmap.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxintrusivelist.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxmap.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxmemorypool.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxmultimap.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxpair.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxredblacktree.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxset.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxstatus.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxstring.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxstringlist.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxtime.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxtimecode.h" />
-    <ClInclude Include="include\fbxsdk\core\base\fbxutils.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxclassid.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxconnectionpoint.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxdatatypes.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxemitter.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxevent.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxeventhandler.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxlistener.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxloadingstrategy.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxmanager.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxmodule.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxobject.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxperipheral.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxplugin.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxplugincontainer.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxproperty.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxpropertydef.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxpropertyhandle.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxpropertypage.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxpropertytypes.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxquery.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxqueryevent.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingdirectory.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxscopedloadingfilename.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxstream.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxsymbol.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxsystemunit.h" />
-    <ClInclude Include="include\fbxsdk\core\fbxxref.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxaffinematrix.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxdualquaternion.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxmath.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxmatrix.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxquaternion.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxtransforms.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxvector2.h" />
-    <ClInclude Include="include\fbxsdk\core\math\fbxvector4.h" />
-    <ClInclude Include="include\fbxsdk\core\sync\fbxatomic.h" />
-    <ClInclude Include="include\fbxsdk\core\sync\fbxclock.h" />
-    <ClInclude Include="include\fbxsdk\core\sync\fbxsync.h" />
-    <ClInclude Include="include\fbxsdk\core\sync\fbxthread.h" />
-    <ClInclude Include="include\fbxsdk\fbxsdk_def.h" />
-    <ClInclude Include="include\fbxsdk\fbxsdk_nsbegin.h" />
-    <ClInclude Include="include\fbxsdk\fbxsdk_nsend.h" />
-    <ClInclude Include="include\fbxsdk\fbxsdk_version.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaanimationelement.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaelement.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladaiostream.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladanamespace.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladatokens.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxcolladautils.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxreadercollada14.h" />
-    <ClInclude Include="include\fbxsdk\fileio\collada\fbxwritercollada14.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxbase64coder.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxcallbacks.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxexporter.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxexternaldocreflistener.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxfiletokens.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxglobalcamerasettings.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxgloballightsettings.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxglobalsettings.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxgobo.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbximporter.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxiobase.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxiopluginregistry.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxiosettings.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxiosettingspath.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxprogress.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxreader.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxstatistics.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxstatisticsfbx.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbxwriter.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxio.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx5.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx6.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxreaderfbx7.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx5.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx6.h" />
-    <ClInclude Include="include\fbxsdk\fileio\fbx\fbxwriterfbx7.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurve.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvebase.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvefilters.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimcurvenode.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalclassic.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevalstate.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimevaluator.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimlayer.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimstack.h" />
-    <ClInclude Include="include\fbxsdk\scene\animation\fbxanimutilities.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacter.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacternodename.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcharacterpose.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraint.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintaim.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintcustom.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintparent.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintposition.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintrotation.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintscale.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintsinglechainik.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxconstraintutils.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxcontrolset.h" />
-    <ClInclude Include="include\fbxsdk\scene\constraint\fbxhik2fbxcharacter.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxaudio.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxaudiolayer.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxaxissystem.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxcollection.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxcollectionexclusive.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxcontainer.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxcontainertemplate.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxdisplaylayer.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxdocument.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxdocumentinfo.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxenvironment.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxgroupname.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxlibrary.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxmediaclip.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxobjectfilter.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxobjectmetadata.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxobjectscontainer.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxpose.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxreference.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxscene.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxselectionnode.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxselectionset.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxtakeinfo.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxthumbnail.h" />
-    <ClInclude Include="include\fbxsdk\scene\fbxvideo.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshape.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxblendshapechannel.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcache.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcachedeffect.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamera.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcamerastereo.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcameraswitcher.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxcluster.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxdeformer.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgenericnode.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometry.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometrybase.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxgeometryweightedmap.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayer.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlayercontainer.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlight.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlimitsutilities.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxline.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxlodgroup.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmarker.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxmesh.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnode.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnodeattribute.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnull.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbs.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbscurve.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxnurbssurface.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxopticalreference.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxpatch.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxproceduralgeometry.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxshape.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskeleton.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxskin.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdeformer.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxsubdiv.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxtrimnurbssurface.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxvertexcachedeformer.h" />
-    <ClInclude Include="include\fbxsdk\scene\geometry\fbxweightedmapping.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingoperator.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingsentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtable.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtablebase.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxbindingtableentry.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxconstantentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxfiletexture.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementation.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationfilter.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbximplementationutils.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayeredtexture.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxlayerentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxoperatorentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxproceduraltexture.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxpropertyentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxsemanticentryview.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxshadingconventions.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacelambert.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerial.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacematerialutils.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxsurfacephong.h" />
-    <ClInclude Include="include\fbxsdk\scene\shading\fbxtexture.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxclonemanager.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxdeformationsevaluator.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxembeddedfilesaccumulator.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxgeometryconverter.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxmanipulators.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxmaterialconverter.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxnamehandler.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxprocessor.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxprocessorshaderdependency.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxref.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxprocessorxrefuserlib.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategy.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategybase.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx5.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx6.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyfbx7.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrenamingstrategyutilities.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxrootnodeutility.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxscenecheckutility.h" />
-    <ClInclude Include="include\fbxsdk\utils\fbxusernotification.h" />
-    <ClInclude Include="include\libxml2\libxml\c14n.h" />
-    <ClInclude Include="include\libxml2\libxml\catalog.h" />
-    <ClInclude Include="include\libxml2\libxml\chvalid.h" />
-    <ClInclude Include="include\libxml2\libxml\debugXML.h" />
-    <ClInclude Include="include\libxml2\libxml\dict.h" />
-    <ClInclude Include="include\libxml2\libxml\DOCBparser.h" />
-    <ClInclude Include="include\libxml2\libxml\encoding.h" />
-    <ClInclude Include="include\libxml2\libxml\entities.h" />
-    <ClInclude Include="include\libxml2\libxml\globals.h" />
-    <ClInclude Include="include\libxml2\libxml\hash.h" />
-    <ClInclude Include="include\libxml2\libxml\HTMLparser.h" />
-    <ClInclude Include="include\libxml2\libxml\HTMLtree.h" />
-    <ClInclude Include="include\libxml2\libxml\list.h" />
-    <ClInclude Include="include\libxml2\libxml\nanoftp.h" />
-    <ClInclude Include="include\libxml2\libxml\nanohttp.h" />
-    <ClInclude Include="include\libxml2\libxml\parser.h" />
-    <ClInclude Include="include\libxml2\libxml\parserInternals.h" />
-    <ClInclude Include="include\libxml2\libxml\pattern.h" />
-    <ClInclude Include="include\libxml2\libxml\relaxng.h" />
-    <ClInclude Include="include\libxml2\libxml\SAX.h" />
-    <ClInclude Include="include\libxml2\libxml\SAX2.h" />
-    <ClInclude Include="include\libxml2\libxml\schemasInternals.h" />
-    <ClInclude Include="include\libxml2\libxml\schematron.h" />
-    <ClInclude Include="include\libxml2\libxml\threads.h" />
-    <ClInclude Include="include\libxml2\libxml\tree.h" />
-    <ClInclude Include="include\libxml2\libxml\uri.h" />
-    <ClInclude Include="include\libxml2\libxml\valid.h" />
-    <ClInclude Include="include\libxml2\libxml\xinclude.h" />
-    <ClInclude Include="include\libxml2\libxml\xlink.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlautomata.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlerror.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlexports.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlIO.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlmemory.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlmodule.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlreader.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlregexp.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlsave.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlschemas.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlschemastypes.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlstring.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlunicode.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlversion.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlwin32version.h" />
-    <ClInclude Include="include\libxml2\libxml\xmlwriter.h" />
-    <ClInclude Include="include\libxml2\libxml\xpath.h" />
-    <ClInclude Include="include\libxml2\libxml\xpathInternals.h" />
-    <ClInclude Include="include\libxml2\libxml\xpointer.h" />
-    <ClInclude Include="include\nlohmann\adl_serializer.hpp" />
-    <ClInclude Include="include\nlohmann\byte_container_with_subtype.hpp" />
-    <ClInclude Include="include\nlohmann\detail\abi_macros.hpp" />
-    <ClInclude Include="include\nlohmann\detail\conversions\from_json.hpp" />
-    <ClInclude Include="include\nlohmann\detail\conversions\to_chars.hpp" />
-    <ClInclude Include="include\nlohmann\detail\conversions\to_json.hpp" />
-    <ClInclude Include="include\nlohmann\detail\exceptions.hpp" />
-    <ClInclude Include="include\nlohmann\detail\hash.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\binary_reader.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\input_adapters.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\json_sax.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\lexer.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\parser.hpp" />
-    <ClInclude Include="include\nlohmann\detail\input\position_t.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\internal_iterator.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\iteration_proxy.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\iterator_traits.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\iter_impl.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\json_reverse_iterator.hpp" />
-    <ClInclude Include="include\nlohmann\detail\iterators\primitive_iterator.hpp" />
-    <ClInclude Include="include\nlohmann\detail\json_pointer.hpp" />
-    <ClInclude Include="include\nlohmann\detail\json_ref.hpp" />
-    <ClInclude Include="include\nlohmann\detail\macro_scope.hpp" />
-    <ClInclude Include="include\nlohmann\detail\macro_unscope.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\call_std\begin.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\call_std\end.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\cpp_future.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\detected.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\identity_tag.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\is_sax.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\std_fs.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\type_traits.hpp" />
-    <ClInclude Include="include\nlohmann\detail\meta\void_t.hpp" />
-    <ClInclude Include="include\nlohmann\detail\output\binary_writer.hpp" />
-    <ClInclude Include="include\nlohmann\detail\output\output_adapters.hpp" />
-    <ClInclude Include="include\nlohmann\detail\output\serializer.hpp" />
-    <ClInclude Include="include\nlohmann\detail\string_concat.hpp" />
-    <ClInclude Include="include\nlohmann\detail\string_escape.hpp" />
-    <ClInclude Include="include\nlohmann\detail\value_t.hpp" />
-    <ClInclude Include="include\nlohmann\json.hpp" />
-    <ClInclude Include="include\nlohmann\json_fwd.hpp" />
-    <ClInclude Include="include\nlohmann\ordered_map.hpp" />
-    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley.hpp" />
-    <ClInclude Include="include\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
-    <ClInclude Include="include\unicode\alphaindex.h" />
-    <ClInclude Include="include\unicode\appendable.h" />
-    <ClInclude Include="include\unicode\basictz.h" />
-    <ClInclude Include="include\unicode\brkiter.h" />
-    <ClInclude Include="include\unicode\bytestream.h" />
-    <ClInclude Include="include\unicode\bytestrie.h" />
-    <ClInclude Include="include\unicode\bytestriebuilder.h" />
-    <ClInclude Include="include\unicode\calendar.h" />
-    <ClInclude Include="include\unicode\caniter.h" />
-    <ClInclude Include="include\unicode\casemap.h" />
-    <ClInclude Include="include\unicode\char16ptr.h" />
-    <ClInclude Include="include\unicode\chariter.h" />
-    <ClInclude Include="include\unicode\choicfmt.h" />
-    <ClInclude Include="include\unicode\coleitr.h" />
-    <ClInclude Include="include\unicode\coll.h" />
-    <ClInclude Include="include\unicode\compactdecimalformat.h" />
-    <ClInclude Include="include\unicode\curramt.h" />
-    <ClInclude Include="include\unicode\currpinf.h" />
-    <ClInclude Include="include\unicode\currunit.h" />
-    <ClInclude Include="include\unicode\datefmt.h" />
-    <ClInclude Include="include\unicode\dbbi.h" />
-    <ClInclude Include="include\unicode\dcfmtsym.h" />
-    <ClInclude Include="include\unicode\decimfmt.h" />
-    <ClInclude Include="include\unicode\displayoptions.h" />
-    <ClInclude Include="include\unicode\docmain.h" />
-    <ClInclude Include="include\unicode\dtfmtsym.h" />
-    <ClInclude Include="include\unicode\dtintrv.h" />
-    <ClInclude Include="include\unicode\dtitvfmt.h" />
-    <ClInclude Include="include\unicode\dtitvinf.h" />
-    <ClInclude Include="include\unicode\dtptngen.h" />
-    <ClInclude Include="include\unicode\dtrule.h" />
-    <ClInclude Include="include\unicode\edits.h" />
-    <ClInclude Include="include\unicode\enumset.h" />
-    <ClInclude Include="include\unicode\errorcode.h" />
-    <ClInclude Include="include\unicode\fieldpos.h" />
-    <ClInclude Include="include\unicode\filteredbrk.h" />
-    <ClInclude Include="include\unicode\fmtable.h" />
-    <ClInclude Include="include\unicode\format.h" />
-    <ClInclude Include="include\unicode\formattednumber.h" />
-    <ClInclude Include="include\unicode\formattedvalue.h" />
-    <ClInclude Include="include\unicode\fpositer.h" />
-    <ClInclude Include="include\unicode\gender.h" />
-    <ClInclude Include="include\unicode\gregocal.h" />
-    <ClInclude Include="include\unicode\icudataver.h" />
-    <ClInclude Include="include\unicode\icuplug.h" />
-    <ClInclude Include="include\unicode\idna.h" />
-    <ClInclude Include="include\unicode\listformatter.h" />
-    <ClInclude Include="include\unicode\localebuilder.h" />
-    <ClInclude Include="include\unicode\localematcher.h" />
-    <ClInclude Include="include\unicode\localpointer.h" />
-    <ClInclude Include="include\unicode\locdspnm.h" />
-    <ClInclude Include="include\unicode\locid.h" />
-    <ClInclude Include="include\unicode\measfmt.h" />
-    <ClInclude Include="include\unicode\measunit.h" />
-    <ClInclude Include="include\unicode\measure.h" />
-    <ClInclude Include="include\unicode\messagepattern.h" />
-    <ClInclude Include="include\unicode\msgfmt.h" />
-    <ClInclude Include="include\unicode\normalizer2.h" />
-    <ClInclude Include="include\unicode\normlzr.h" />
-    <ClInclude Include="include\unicode\nounit.h" />
-    <ClInclude Include="include\unicode\numberformatter.h" />
-    <ClInclude Include="include\unicode\numberrangeformatter.h" />
-    <ClInclude Include="include\unicode\numfmt.h" />
-    <ClInclude Include="include\unicode\numsys.h" />
-    <ClInclude Include="include\unicode\parseerr.h" />
-    <ClInclude Include="include\unicode\parsepos.h" />
-    <ClInclude Include="include\unicode\platform.h" />
-    <ClInclude Include="include\unicode\plurfmt.h" />
-    <ClInclude Include="include\unicode\plurrule.h" />
-    <ClInclude Include="include\unicode\ptypes.h" />
-    <ClInclude Include="include\unicode\putil.h" />
-    <ClInclude Include="include\unicode\rbbi.h" />
-    <ClInclude Include="include\unicode\rbnf.h" />
-    <ClInclude Include="include\unicode\rbtz.h" />
-    <ClInclude Include="include\unicode\regex.h" />
-    <ClInclude Include="include\unicode\region.h" />
-    <ClInclude Include="include\unicode\reldatefmt.h" />
-    <ClInclude Include="include\unicode\rep.h" />
-    <ClInclude Include="include\unicode\resbund.h" />
-    <ClInclude Include="include\unicode\schriter.h" />
-    <ClInclude Include="include\unicode\scientificnumberformatter.h" />
-    <ClInclude Include="include\unicode\search.h" />
-    <ClInclude Include="include\unicode\selfmt.h" />
-    <ClInclude Include="include\unicode\simpleformatter.h" />
-    <ClInclude Include="include\unicode\simplenumberformatter.h" />
-    <ClInclude Include="include\unicode\simpletz.h" />
-    <ClInclude Include="include\unicode\smpdtfmt.h" />
-    <ClInclude Include="include\unicode\sortkey.h" />
-    <ClInclude Include="include\unicode\std_string.h" />
-    <ClInclude Include="include\unicode\strenum.h" />
-    <ClInclude Include="include\unicode\stringoptions.h" />
-    <ClInclude Include="include\unicode\stringpiece.h" />
-    <ClInclude Include="include\unicode\stringtriebuilder.h" />
-    <ClInclude Include="include\unicode\stsearch.h" />
-    <ClInclude Include="include\unicode\symtable.h" />
-    <ClInclude Include="include\unicode\tblcoll.h" />
-    <ClInclude Include="include\unicode\timezone.h" />
-    <ClInclude Include="include\unicode\tmunit.h" />
-    <ClInclude Include="include\unicode\tmutamt.h" />
-    <ClInclude Include="include\unicode\tmutfmt.h" />
-    <ClInclude Include="include\unicode\translit.h" />
-    <ClInclude Include="include\unicode\tzfmt.h" />
-    <ClInclude Include="include\unicode\tznames.h" />
-    <ClInclude Include="include\unicode\tzrule.h" />
-    <ClInclude Include="include\unicode\tztrans.h" />
-    <ClInclude Include="include\unicode\ubidi.h" />
-    <ClInclude Include="include\unicode\ubiditransform.h" />
-    <ClInclude Include="include\unicode\ubrk.h" />
-    <ClInclude Include="include\unicode\ucal.h" />
-    <ClInclude Include="include\unicode\ucasemap.h" />
-    <ClInclude Include="include\unicode\ucat.h" />
-    <ClInclude Include="include\unicode\uchar.h" />
-    <ClInclude Include="include\unicode\ucharstrie.h" />
-    <ClInclude Include="include\unicode\ucharstriebuilder.h" />
-    <ClInclude Include="include\unicode\uchriter.h" />
-    <ClInclude Include="include\unicode\uclean.h" />
-    <ClInclude Include="include\unicode\ucnv.h" />
-    <ClInclude Include="include\unicode\ucnvsel.h" />
-    <ClInclude Include="include\unicode\ucnv_cb.h" />
-    <ClInclude Include="include\unicode\ucnv_err.h" />
-    <ClInclude Include="include\unicode\ucol.h" />
-    <ClInclude Include="include\unicode\ucoleitr.h" />
-    <ClInclude Include="include\unicode\uconfig.h" />
-    <ClInclude Include="include\unicode\ucpmap.h" />
-    <ClInclude Include="include\unicode\ucptrie.h" />
-    <ClInclude Include="include\unicode\ucsdet.h" />
-    <ClInclude Include="include\unicode\ucurr.h" />
-    <ClInclude Include="include\unicode\udat.h" />
-    <ClInclude Include="include\unicode\udata.h" />
-    <ClInclude Include="include\unicode\udateintervalformat.h" />
-    <ClInclude Include="include\unicode\udatpg.h" />
-    <ClInclude Include="include\unicode\udisplaycontext.h" />
-    <ClInclude Include="include\unicode\udisplayoptions.h" />
-    <ClInclude Include="include\unicode\uenum.h" />
-    <ClInclude Include="include\unicode\ufieldpositer.h" />
-    <ClInclude Include="include\unicode\uformattable.h" />
-    <ClInclude Include="include\unicode\uformattednumber.h" />
-    <ClInclude Include="include\unicode\uformattedvalue.h" />
-    <ClInclude Include="include\unicode\ugender.h" />
-    <ClInclude Include="include\unicode\uidna.h" />
-    <ClInclude Include="include\unicode\uiter.h" />
-    <ClInclude Include="include\unicode\uldnames.h" />
-    <ClInclude Include="include\unicode\ulistformatter.h" />
-    <ClInclude Include="include\unicode\uloc.h" />
-    <ClInclude Include="include\unicode\ulocdata.h" />
-    <ClInclude Include="include\unicode\umachine.h" />
-    <ClInclude Include="include\unicode\umisc.h" />
-    <ClInclude Include="include\unicode\umsg.h" />
-    <ClInclude Include="include\unicode\umutablecptrie.h" />
-    <ClInclude Include="include\unicode\unifilt.h" />
-    <ClInclude Include="include\unicode\unifunct.h" />
-    <ClInclude Include="include\unicode\unimatch.h" />
-    <ClInclude Include="include\unicode\unirepl.h" />
-    <ClInclude Include="include\unicode\uniset.h" />
-    <ClInclude Include="include\unicode\unistr.h" />
-    <ClInclude Include="include\unicode\unorm.h" />
-    <ClInclude Include="include\unicode\unorm2.h" />
-    <ClInclude Include="include\unicode\unum.h" />
-    <ClInclude Include="include\unicode\unumberformatter.h" />
-    <ClInclude Include="include\unicode\unumberoptions.h" />
-    <ClInclude Include="include\unicode\unumberrangeformatter.h" />
-    <ClInclude Include="include\unicode\unumsys.h" />
-    <ClInclude Include="include\unicode\uobject.h" />
-    <ClInclude Include="include\unicode\upluralrules.h" />
-    <ClInclude Include="include\unicode\uregex.h" />
-    <ClInclude Include="include\unicode\uregion.h" />
-    <ClInclude Include="include\unicode\ureldatefmt.h" />
-    <ClInclude Include="include\unicode\urename.h" />
-    <ClInclude Include="include\unicode\urep.h" />
-    <ClInclude Include="include\unicode\ures.h" />
-    <ClInclude Include="include\unicode\uscript.h" />
-    <ClInclude Include="include\unicode\usearch.h" />
-    <ClInclude Include="include\unicode\uset.h" />
-    <ClInclude Include="include\unicode\usetiter.h" />
-    <ClInclude Include="include\unicode\ushape.h" />
-    <ClInclude Include="include\unicode\usimplenumberformatter.h" />
-    <ClInclude Include="include\unicode\uspoof.h" />
-    <ClInclude Include="include\unicode\usprep.h" />
-    <ClInclude Include="include\unicode\ustdio.h" />
-    <ClInclude Include="include\unicode\ustream.h" />
-    <ClInclude Include="include\unicode\ustring.h" />
-    <ClInclude Include="include\unicode\ustringtrie.h" />
-    <ClInclude Include="include\unicode\utext.h" />
-    <ClInclude Include="include\unicode\utf.h" />
-    <ClInclude Include="include\unicode\utf16.h" />
-    <ClInclude Include="include\unicode\utf32.h" />
-    <ClInclude Include="include\unicode\utf8.h" />
-    <ClInclude Include="include\unicode\utf_old.h" />
-    <ClInclude Include="include\unicode\utmscale.h" />
-    <ClInclude Include="include\unicode\utrace.h" />
-    <ClInclude Include="include\unicode\utrans.h" />
-    <ClInclude Include="include\unicode\utypes.h" />
-    <ClInclude Include="include\unicode\uvernum.h" />
-    <ClInclude Include="include\unicode\uversion.h" />
-    <ClInclude Include="include\unicode\vtzone.h" />
-    <ClInclude Include="include\zlib\zconf.h" />
-    <ClInclude Include="include\zlib\zlib.h" />
     <ClInclude Include="inih\ini.h" />
     <ClInclude Include="inih\INIReader.h" />
     <ClInclude Include="MorphemeEditor.h" />
@@ -1029,106 +367,18 @@
     <ClInclude Include="Scene\DebugDraw.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\StepTimer.h" />
-    <ClInclude Include="src\Application\Application.h" />
-    <ClInclude Include="src\Application\Character\GameAnimLoader.h" />
-    <ClInclude Include="src\Application\Character\GameAssetLoader.h" />
-    <ClInclude Include="src\Application\Character\GameCharacter.h" />
-    <ClInclude Include="src\Application\Character\GameCharacterController.h" />
-    <ClInclude Include="src\Application\Character\GameCharacterDef.h" />
-    <ClInclude Include="src\Application\Character\GameCharacterManager.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\AnimLoader.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\AssetLoader.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\Character.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\CharacterController.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\CharacterDef.h" />
-    <ClInclude Include="src\Application\MorphemeSystem\MorphemeSystem.h" />
-    <ClInclude Include="src\EventTrackEditor\EventTrackEditor.h" />
-    <ClInclude Include="src\extern.h" />
-    <ClInclude Include="src\FlverModel\FlverModel.h" />
-    <ClInclude Include="src\framework.h" />
-    <ClInclude Include="src\fromloader\cmem.h" />
-    <ClInclude Include="src\fromloader\fromloader.h" />
-    <ClInclude Include="src\fromloader\src\common\common.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bdf\bdf3.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bdf\bdf4.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bhd\bhd5_0.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bhd\bhd5_1.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\binder.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bnd\bnd3.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\bnd\bnd4.h" />
-    <ClInclude Include="src\fromloader\src\formats\binder\include.h" />
-    <ClInclude Include="src\fromloader\src\formats\dcx\dcx.h" />
-    <ClInclude Include="src\fromloader\src\formats\flver\flver.h" />
-    <ClInclude Include="src\fromloader\src\formats\flver\flver0\flver0.h" />
-    <ClInclude Include="src\fromloader\src\formats\flver\flver2\flver2.h" />
-    <ClInclude Include="src\fromloader\src\formats\flver\include.h" />
-    <ClInclude Include="src\fromloader\src\formats\include.h" />
-    <ClInclude Include="src\fromloader\src\formats\mtd\mtd.h" />
-    <ClInclude Include="src\fromloader\src\formats\paramdef\paramdef.h" />
-    <ClInclude Include="src\fromloader\src\formats\stdafx.h" />
-    <ClInclude Include="src\fromloader\src\open.h" />
-    <ClInclude Include="src\fromloader\src\util\endian\endian.h" />
-    <ClInclude Include="src\fromloader\src\util\fileio\fileio.h" />
-    <ClInclude Include="src\fromloader\src\util\file\file.h" />
-    <ClInclude Include="src\fromloader\src\util\include.h" />
-    <ClInclude Include="src\fromloader\src\util\inflate\inflate.h" />
-    <ClInclude Include="src\fromloader\src\util\math\math.h" />
-    <ClInclude Include="src\fromloader\src\util\stringio\stringio.h" />
-    <ClInclude Include="src\fromloader\src\util\types\types.h" />
-    <ClInclude Include="src\fromloader\src\util\validate\validate.h" />
-    <ClInclude Include="src\fromloader\umem.h" />
-    <ClInclude Include="src\FromsoftFormat\BNDReader\BNDReader.h" />
-    <ClInclude Include="src\FromsoftFormat\FlverReader\FlverReader.h" />
-    <ClInclude Include="src\FromsoftFormat\Morpheme\ME\TinyXML\tinyxml2.h" />
-    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEvent.h" />
-    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActEvent\TimeActEventData\TimeActEventData.h" />
-    <ClInclude Include="src\FromsoftFormat\TimeActReader\TimeActReader.h" />
-    <ClInclude Include="src\FromsoftFormat\Utils\MemReader\MemReader.h" />
-    <ClInclude Include="src\imgui\custom\imgui_custom_logic.h" />
-    <ClInclude Include="src\imgui\custom\imgui_custom_widget.h" />
-    <ClInclude Include="src\imgui\imconfig.h" />
-    <ClInclude Include="src\imgui\imgui.h" />
-    <ClInclude Include="src\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="src\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="src\imgui\imgui_internal.h" />
-    <ClInclude Include="src\imgui\imstb_rectpack.h" />
-    <ClInclude Include="src\imgui\imstb_textedit.h" />
-    <ClInclude Include="src\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\imsequencer\ImSequencer.h" />
-    <ClInclude Include="src\inih\ini.h" />
-    <ClInclude Include="src\inih\INIReader.h" />
-    <ClInclude Include="src\MorphemeConnect.h" />
-    <ClInclude Include="src\ProcessReader\ProcessReader.h" />
-    <ClInclude Include="src\Resource.h" />
-    <ClInclude Include="src\RLog\RDebug\RDebug.h" />
-    <ClInclude Include="src\RLog\RLog.h" />
-    <ClInclude Include="src\RLog\TextLog\TextLog.h" />
-    <ClInclude Include="src\RMath\RMath.h" />
-    <ClInclude Include="src\RString\RString.h" />
-    <ClInclude Include="src\Scene\Camera\Camera.h" />
-    <ClInclude Include="src\Scene\DebugDraw.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Scene\StepTimer.h" />
-    <ClInclude Include="src\TaeTemplate\TaeTemplate.h" />
-    <ClInclude Include="src\targetver.h" />
-    <ClInclude Include="src\TimeActEditor\TimeActEditor.h" />
     <ClInclude Include="TaeTemplate\TaeTemplate.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimeActEditor\TimeActEditor.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\MorphemeConnect.rc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" />
     <Import Project="..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets" Condition="Exists('..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets'))" />
     <Error Condition="!Exists('..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\directxtk_uwp.2024.2.22.1\build\native\directxtk_uwp.targets'))" />
   </Target>
 </Project>

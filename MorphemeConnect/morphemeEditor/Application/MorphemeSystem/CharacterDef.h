@@ -50,10 +50,10 @@ public:
 
   MR::NetworkDef* getNetworkDef() const { return m_netDef; }
 
-  uint32_t* getRegisteredAssetIDs()  const { return m_registeredAssetIDs; }
+  UINT* getRegisteredAssetIDs()  const { return m_registeredAssetIDs; }
   void**    getClientAssets()        const { return m_clientAssets; }
-  uint32_t  getNumRegisteredAssets() const { return m_numRegisteredAssets; }
-  uint32_t  getNumClientAssets()     const { return m_numClientAssets; }
+  UINT  getNumRegisteredAssets() const { return m_numRegisteredAssets; }
+  UINT  getNumClientAssets()     const { return m_numClientAssets; }
 
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_animFileLookUp; }
 
@@ -84,10 +84,10 @@ protected:
 
   MR::NetworkDef* m_netDef;
 
-  uint32_t* m_registeredAssetIDs;
+  UINT* m_registeredAssetIDs;
   void**    m_clientAssets;
-  uint32_t  m_numRegisteredAssets;
-  uint32_t  m_numClientAssets;
+  UINT  m_numRegisteredAssets;
+  UINT  m_numClientAssets;
 
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* m_animFileLookUp;
 };

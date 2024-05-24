@@ -106,7 +106,7 @@ namespace cfr
 	FLVER2::Bone::Bone(UMEM* src, FLVER2* parent)
 	{
 		uread(&this->translation,sizeof(cfr_vec3),1,src);
-		uread(&this->nameOffset,sizeof(uint32_t),1,src);
+		uread(&this->nameOffset,sizeof(UINT),1,src);
 
 		bool unicode = false;
 		if(parent->header.unicode == 1)
@@ -322,10 +322,10 @@ namespace cfr
 
 	FLVER2::Texture::Texture(UMEM* src, FLVER2* parent)
 	{
-		uread(&this->pathOffset,sizeof(uint32_t),1,src);
+		uread(&this->pathOffset,sizeof(UINT),1,src);
 		this->path = getUniversalString(this->pathOffset,parent->header.unicode,src,&this->pathLength);
 
-		uread(&this->typeOffset,sizeof(uint32_t),1,src);
+		uread(&this->typeOffset,sizeof(UINT),1,src);
 		this->type = getUniversalString(this->typeOffset,parent->header.unicode,src,&this->typeLength);
 
 		uread(&this->scale,sizeof(cfr_vec2),1,src);

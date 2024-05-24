@@ -9,14 +9,11 @@
 // NaturalMotion in writing.
 
 //----------------------------------------------------------------------------------------------------------------------
-#include "GameCharacterDef.h"
+#include "CharacterDef.h"
 
-#include "GameCharacterManager.h"
-#include "GameAssetLoader.h"
+#include "MorphemeSystem.h"
+#include "AssetLoader.h"
 //----------------------------------------------------------------------------------------------------------------------
-
-namespace Game
-{
 
 //----------------------------------------------------------------------------------------------------------------------
 CharacterDefBasic* CharacterDefBasic::create(const char* filename)
@@ -91,7 +88,7 @@ bool CharacterDefBasic::loadAnimations()
 {  
   //----------------------------
   // Load animations listed in this network definition
-  for (uint32_t i = 0; i < m_netDef->getNumAnimSets(); ++i)
+  for (UINT i = 0; i < m_netDef->getNumAnimSets(); ++i)
   {
       m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp);
       /*
@@ -126,7 +123,7 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
 
   //----------------------------
   // Allocate arrays for storing asset information based on the bundle requirements
-  m_registeredAssetIDs = (uint32_t*)NMPMemoryCalloc(m_numRegisteredAssets * sizeof(uint32_t));
+  m_registeredAssetIDs = (UINT*)NMPMemoryCalloc(m_numRegisteredAssets * sizeof(UINT));
   m_clientAssets = (void**)NMPMemoryCalloc(m_numClientAssets * sizeof(void*));
 
   //----------------------------
@@ -158,7 +155,7 @@ bool CharacterDefBasic::term()
 {
   if( m_isLoaded )
   {
-    for (uint32_t i = 0; i < m_netDef->getNumAnimSets(); ++i)
+    for (UINT i = 0; i < m_netDef->getNumAnimSets(); ++i)
     {
       if (!m_netDef->unloadAnimations((MR::AnimSetIndex)i, NULL))
       {
@@ -184,6 +181,3 @@ bool CharacterDefBasic::term()
   // Free any memory that may be allocated in this class here
   return true;
 }
-
-
-} // namespace Game

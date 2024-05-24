@@ -7,6 +7,7 @@
 
 #include "../framework.h"
 #include "../extern.h"
+#include "../Application/MorphemeSystem/MorphemeSystem.h"
 
 struct EventTrackEditor
 {

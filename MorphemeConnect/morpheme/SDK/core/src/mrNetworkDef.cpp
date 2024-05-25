@@ -459,24 +459,26 @@ bool NetworkDef::loadAnimations(AnimSetIndex animSetIndex, void* userdata)
         sourceAnim->fixupRigToAnimMap();
         sourceAnim->setTrajectorySource(NULL);
     }
-
-    if (!animData->isLocated())
+    else
     {
-      AnimType animType = animData->getType();
-      NMP::endianSwap(animType);
-      const MR::Manager::AnimationFormatRegistryEntry* animFormatRegistryEntry =
-        MR::Manager::getInstance().getInstance().findAnimationFormatRegistryEntry(animType);
-      NMP_ASSERT_MSG(animFormatRegistryEntry, "Unable to get AnimationFormatRegistryEntry entry for animation type %d!", animType);
-      animFormatRegistryEntry->m_locateAnimFormatFn(animData);
+        if (!animData->isLocated())
+        {
+            AnimType animType = animData->getType();
+            NMP::endianSwap(animType);
+            const MR::Manager::AnimationFormatRegistryEntry* animFormatRegistryEntry =
+                MR::Manager::getInstance().getInstance().findAnimationFormatRegistryEntry(animType);
+            NMP_ASSERT_MSG(animFormatRegistryEntry, "Unable to get AnimationFormatRegistryEntry entry for animation type %d!", animType);
+            animFormatRegistryEntry->m_locateAnimFormatFn(animData);
+        }
+        sourceAnim->setAnimation(animData);
+
+        sourceAnim->fixupRigToAnimMap();
+
+        //--------------------------
+        // Trajectory channel
+        const TrajectorySourceBase* trajChannelSource = animData->animGetTrajectorySourceData();
+        sourceAnim->setTrajectorySource(trajChannelSource);
     }
-    sourceAnim->setAnimation(animData);
-
-    sourceAnim->fixupRigToAnimMap();
-
-    //--------------------------
-    // Trajectory channel
-    const TrajectorySourceBase* trajChannelSource = animData->animGetTrajectorySourceData();
-    sourceAnim->setTrajectorySource(trajChannelSource);
   }
 
   return true;

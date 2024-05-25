@@ -1459,13 +1459,11 @@ void Application::LoadFile()
 
 						if (filepath.extension() == ".nmb")
 						{
-							/*
-							m_nmb = NMBReader(pszFilePath);
+							m_morphemeSystem.createCharacterDef(filepath.string().c_str());
 							
-							if (m_nmb.IsInitialised())
+							if (m_morphemeSystem.GetCharacterDef()->isLoaded())
 							{
-								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Open file %ls (bundles=%d, len=%d)\n", m_nmb.GetFilePath(), m_nmb.GetBundleCount(), m_nmb.GetFileSize());
-
+								/*
 								this->m_animFiles.clear();
 								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
 
@@ -1482,17 +1480,18 @@ void Application::LoadFile()
 
 									this->m_animFiles.push_back(NSAReader(anim_path));
 								}
+								*/
 
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = -1;
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 
 								this->m_eventTrackEditorFlags.m_edited.clear();
-								this->m_eventTrackEditorFlags.m_edited.reserve(m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
+								this->m_eventTrackEditorFlags.m_edited.reserve(m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getNumAnims());
 
-								for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
+								for (int i = 0; i < m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getNumAnims(); i++)
 									this->m_eventTrackEditorFlags.m_edited.push_back(false);
 
-								this->m_chrId = GetChrIdFromNmbFileName(m_nmb.GetFilePath());
+								this->m_chrId = GetChrIdFromNmbFileName(filepath.c_str());
 
 								if (this->m_chrId != -1)
 								{
@@ -1560,7 +1559,7 @@ void Application::LoadFile()
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0), &this->m_model);
 
 													found_model = true;
 													break;
@@ -1575,7 +1574,6 @@ void Application::LoadFile()
 										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
 								}
 							}
-							*/
 						}
 						else if (filepath.extension() == ".tae")
 						{
@@ -2085,6 +2083,7 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 }
 */
 
+//TODO: Implement
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
 {
 	bool status = true;

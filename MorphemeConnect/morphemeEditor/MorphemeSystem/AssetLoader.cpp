@@ -73,7 +73,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   if (!bundle || !bundleSize)
   {
     NMP_DEBUG_MSG("error: Valid bundle data expected (%p, size=%u)!\n", bundle, bundleSize);
-    return false;
+    return NULL;
   }
 
   //----------------------------

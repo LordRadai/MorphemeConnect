@@ -453,7 +453,7 @@ bool NetworkDef::loadAnimations(AnimSetIndex animSetIndex, void* userdata)
 
     if (animData == NULL)
     {
-        NMP_ASSERT_MSG(animData != NULL, "Unable to load animation!");
+        NMP_MSG("Unable to load animation!");
 
         sourceAnim->setAnimation(NULL);
         sourceAnim->fixupRigToAnimMap();

@@ -118,6 +118,7 @@ public:
 	} m_fbxExportFlags;
 	
 	MorphemeSystem m_morphemeSystem;
+	std::vector<MR::AnimationSourceHandle*> m_anims;
 	TimeActReader m_tae;
 	BNDReader m_bnd;
 	FlverModel m_model;

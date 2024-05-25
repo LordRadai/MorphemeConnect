@@ -2,6 +2,11 @@
 #include "Character.h"
 #include "CharacterDef.h"
 
+#include <vector>
+#include <string>
+
+#include "morpheme/mrAnimationSourceHandle.h"
+
 class MorphemeSystem
 {
 public:
@@ -44,6 +49,8 @@ public:
 	//----------------------------
 	// Get character instance
 	CharacterBasic* GetCharacter();
+
+	MR::AnimationSourceHandle* OpenAnimation(const char* filename);
 
 protected:
 	CharacterDefBasic* m_characterDef;   // Store a pointer to a morpheme character definition

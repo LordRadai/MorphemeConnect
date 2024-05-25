@@ -1463,24 +1463,24 @@ void Application::LoadFile()
 							
 							if (m_morphemeSystem.GetCharacterDef()->isLoaded())
 							{
-								/*
-								this->m_animFiles.clear();
-								this->m_animFiles.reserve(this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries());
+								int animCount = m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getNumAnims();
 
-								for (int i = 0; i < this->m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
+								this->m_anims.clear();
+								this->m_anims.reserve(animCount);
+
+								this->m_morphemeSystem.GetCharacterDef()->loadAnimations();
+
+								for (int i = 0; i < animCount; i++)
 								{
 									std::filesystem::path gamepath = pszFilePath;
 									std::wstring parent_path = gamepath.parent_path();
 
-									std::wstring anim_name = RString::ToWide(this->m_nmb.GetFilenameLookupTable()->GetAnimName(i));
+									std::wstring anim_name = RString::ToWide(this->m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getFilename(i));
 
 									std::wstring anim_path_str = parent_path + L"\\" + anim_name;
 
-									PWSTR anim_path = (wchar_t*)anim_path_str.c_str();
-
-									this->m_animFiles.push_back(NSAReader(anim_path));
+									this->m_anims.push_back(m_morphemeSystem.OpenAnimation(RString::ToNarrow(anim_path_str.c_str()).c_str()));
 								}
-								*/
 
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = -1;
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;

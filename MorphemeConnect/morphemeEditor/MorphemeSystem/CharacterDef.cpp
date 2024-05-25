@@ -90,8 +90,8 @@ bool CharacterDefBasic::loadAnimations()
   // Load animations listed in this network definition
   for (UINT i = 0; i < m_netDef->getNumAnimSets(); ++i)
   {
-      m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp);
-      /*
+    m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp);
+    /*
     if (!m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp))
     {
       return false;

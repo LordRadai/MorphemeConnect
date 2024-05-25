@@ -1397,7 +1397,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
                 Vector3 boneA = CalculateBonePosition(rig, i);
                 boneA = Vector3::Transform(boneA, transf);
 
-                Vector3 boneB = CalculateBonePosition(rig, rig->getParentBoneIndex(parentIndex));
+                Vector3 boneB = CalculateBonePosition(rig, parentIndex);
                 boneB = Vector3::Transform(boneB, transf);
 
                 DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);

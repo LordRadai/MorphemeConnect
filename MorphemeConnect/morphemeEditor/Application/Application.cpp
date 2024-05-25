@@ -1467,9 +1467,6 @@ void Application::LoadFile()
 								return;
 							}
 
-							NMP_STDOUT("\nLoading Animation files:");
-							characterDef->loadAnimations();
-
 							if (characterDef->isLoaded())
 							{
 								NMP_STDOUT("\nPrinting data from CharacterDef:");
@@ -1482,6 +1479,9 @@ void Application::LoadFile()
 								for (uint32_t i = 0; i < rig->getNumBones(); i++)
 									NMP_STDOUT("%s", rig->getBoneName(i));
 							}
+
+							NMP_STDOUT("\nLoading Animation files:");
+							characterDef->loadAnimations();
 
 							NMP_STDOUT("\nCreating Character from CharacterDef:");
 							CharacterBasic* character = CharacterBasic::create(characterDef);

@@ -59,13 +59,16 @@ void AssetLoaderBasic::evalBundleRequirements(
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-MR::NetworkDef* AssetLoaderBasic::loadBundle(
+bool AssetLoaderBasic::loadBundle(
   void*            bundle,
   size_t           bundleSize,
   UINT*        registeredAssetIDs,
   void**           clientAssets,
   UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
   UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
+  MR::NetworkDef*& networkDef,
+  std::vector<MR::AnimRigDef*>& rigs,
+  std::vector<MR::RigToAnimMap*>& rigToAnimMaps,
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup)
 {
   animFileLookup = NULL;
@@ -73,10 +76,8 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   if (!bundle || !bundleSize)
   {
     NMP_DEBUG_MSG("error: Valid bundle data expected (%p, size=%u)!\n", bundle, bundleSize);
-    return NULL;
+    return false;
   }
-
-  MR::NetworkDef* networkDef = NULL;
 
   //----------------------------
   // Start parsing the bundle. The simple bundle has been written by the asset compiler and contains various types of 
@@ -104,7 +105,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
       // Special case for plugin list.
       if (assetType == MR::Manager::kAsset_PluginList)
       {
-        // The basic tutorials only the morpheme core so doesn't have any plugin restrictions
+        // We don't care about plugins. DS2 bundles use no physics
         continue;
       }
 
@@ -157,12 +158,36 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
       // Increment reference count
       MR::Manager::incObjectRefCount(assetID);
 
-      //----------------------------
-      // Special case for the network definition
-      if (assetType == MR::Manager::kAsset_NetworkDef)
+      switch (assetType)
       {
-        NMP_ASSERT(!networkDef);  // We only expect one network definition per bundle
-        networkDef = (MR::NetworkDef*)asset;
+      case MR::Manager::kAsset_Rig:
+          rigs.push_back((MR::AnimRigDef*)asset);
+          break;
+      case MR::Manager::kAsset_RigToAnimMap:
+          rigToAnimMaps.push_back((MR::RigToAnimMap*)asset);
+          break;
+      case MR::Manager::kAsset_EventTrackDiscrete:
+          break;
+      case MR::Manager::kAsset_EventTrackDuration:
+          break;
+      case MR::Manager::kAsset_EventTrackCurve:
+          break;
+      case MR::Manager::kAsset_PhysicsRigDef:
+          break;
+      case MR::Manager::kAsset_CharacterControllerDef:
+          break;
+      case MR::Manager::kAsset_InteractionProxyDef:
+          break;
+      case MR::Manager::kAsset_BodyDef:
+          break;
+      case MR::Manager::kAsset_NetworkDef:
+          NMP_ASSERT(!networkDef);  // We only expect one network definition per bundle
+          networkDef = (MR::NetworkDef*)asset;
+          break;
+      case MR::Manager::kAsset_NetworkPredictionDef:
+          break;
+      default:
+          break;
       }
 
       //----------------------------

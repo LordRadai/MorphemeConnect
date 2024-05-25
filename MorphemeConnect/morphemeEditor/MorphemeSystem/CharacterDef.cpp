@@ -103,6 +103,22 @@ bool CharacterDefBasic::loadAnimations()
   return true;
 }
 
+MR::AnimRigDef* CharacterDefBasic::getAnimRigDef(int idx) const
+{
+    if (idx < m_animRigDefs.size())
+        return m_animRigDefs[idx];
+
+    return nullptr;
+}
+
+MR::RigToAnimMap* CharacterDefBasic::getRigToAnimMap(int idx) const
+{
+    if (idx < m_rigToAnimMaps.size())
+        return m_rigToAnimMaps[idx];
+
+    return nullptr;
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
 {  
@@ -129,13 +145,16 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
   //----------------------------
   // Process the bundle and extract the contents into memory
   NMP_STDOUT("Loading bundle:");
-  m_netDef = AssetLoaderBasic::loadBundle(
+  bool status = AssetLoaderBasic::loadBundle(
                    bundle,
                    bundleSize,
                    m_registeredAssetIDs,
                    m_clientAssets,
                    m_numRegisteredAssets,
                    m_numClientAssets,
+                   m_netDef,
+                   m_animRigDefs,
+                   m_rigToAnimMaps,
                    m_animFileLookUp);
 
   if (!m_netDef)

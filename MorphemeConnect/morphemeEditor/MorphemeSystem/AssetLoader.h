@@ -17,6 +17,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 #include "CharacterDef.h"
+#include <vector>
 //----------------------------------------------------------------------------------------------------------------------
 
 class AssetLoaderBasic
@@ -38,13 +39,16 @@ public:
   // simply fixes up the objects in-place, inside the bundle.
   //
   // This would be replaced with your own bundle loader and unloader if you do not use the simple bundle file format.
-  static MR::NetworkDef* loadBundle(
+  static bool loadBundle(
     void*            bundle,
     size_t           bundleSize,
     UINT*        registeredAssetIDs,
     void**           clientAssets,
     UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
     UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
+    MR::NetworkDef*& networkDef,
+    std::vector<MR::AnimRigDef*> &rigs,
+    std::vector<MR::RigToAnimMap*> &rigToAnimMaps,
     MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup);
 
   //----------------------------

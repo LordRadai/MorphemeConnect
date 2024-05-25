@@ -1385,20 +1385,23 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
 {
     constexpr float scale = 1.5f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
-     
-    for (size_t i = 0; i < rig->getNumBones(); i++)
+    
+    if (rig != nullptr)
     {
-        int parentIndex = rig->getParentBoneIndex(i);
-
-        if (rig->getParentBoneIndex(i))
+        for (size_t i = 0; i < rig->getNumBones(); i++)
         {
-            Vector3 boneA = CalculateBonePosition(rig, i);
-            boneA = Vector3::Transform(boneA, transf);
+            int parentIndex = rig->getParentBoneIndex(i);
 
-            Vector3 boneB = CalculateBonePosition(rig, rig->getParentBoneIndex(parentIndex));
-            boneB = Vector3::Transform(boneB, transf);
+            if (rig->getParentBoneIndex(i))
+            {
+                Vector3 boneA = CalculateBonePosition(rig, i);
+                boneA = Vector3::Transform(boneA, transf);
 
-            DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);
+                Vector3 boneB = CalculateBonePosition(rig, rig->getParentBoneIndex(parentIndex));
+                boneB = Vector3::Transform(boneB, transf);
+
+                DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);
+            }
         }
     }
 

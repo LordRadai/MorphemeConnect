@@ -2168,16 +2168,14 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
 	{
-		/*
-		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_nmb.GetRig(0));
+		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0));
 
-		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_nmb.GetRig(0), true))
+		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0), true))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 
 			status = false;
 		}
-		*/
 	}
 	else
 	{

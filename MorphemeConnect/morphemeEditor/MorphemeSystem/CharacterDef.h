@@ -17,6 +17,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 #include "morpheme/mrDispatcher.h"
 #include "simpleBundle/simpleAnimRuntimeIDtoFilenameLookup.h"
+#include <vector>
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -49,7 +50,8 @@ public:
   bool  isLoaded()  const { return m_isLoaded; }
 
   MR::NetworkDef* getNetworkDef() const { return m_netDef; }
-  MR::AnimRigDef* getAnimRigDef(int idx) const { return m_animRigDef[idx]; }
+  MR::AnimRigDef* getAnimRigDef(int idx) const { return m_animRigDefs[idx]; }
+  MR::RigToAnimMap* getRigToAnimMap(int idx) const { return m_rigToAnimMaps[idx]; }
 
   UINT* getRegisteredAssetIDs()  const { return m_registeredAssetIDs; }
   void**    getClientAssets()        const { return m_clientAssets; }
@@ -83,7 +85,8 @@ protected:
 
   bool  m_isLoaded;
 
-  std::vector<MR::AnimRigDef*> m_animRigDef;
+  std::vector<MR::AnimRigDef*> m_animRigDefs;
+  std::vector<MR::RigToAnimMap*> m_rigToAnimMaps;
   MR::NetworkDef* m_netDef;
 
   UINT* m_registeredAssetIDs;

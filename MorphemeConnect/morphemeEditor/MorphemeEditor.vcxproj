@@ -276,7 +276,7 @@
     <ClInclude Include="MorphemeSystem\CharacterDef.h" />
     <ClInclude Include="MorphemeSystem\MorphemeSystem.h" />
     <ClInclude Include="ProcessReader\ProcessReader.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="resources\resource.h" />
     <ClInclude Include="RLog\RDebug\RDebug.h" />
     <ClInclude Include="RLog\RLog.h" />
     <ClInclude Include="RLog\TextLog\TextLog.h" />
@@ -296,6 +296,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\MorphemeConnect.ico" />
+    <Image Include="resources\morphemeEditor.ico" />
+    <Image Include="resources\small.ico" />
+    <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -212,12 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
-    <ClInclude Include="Application\MorphemeSystem\AnimLoader.h" />
-    <ClInclude Include="Application\MorphemeSystem\AssetLoader.h" />
-    <ClInclude Include="Application\MorphemeSystem\Character.h" />
-    <ClInclude Include="Application\MorphemeSystem\CharacterController.h" />
-    <ClInclude Include="Application\MorphemeSystem\CharacterDef.h" />
-    <ClInclude Include="Application\MorphemeSystem\MorphemeSystem.h" />
     <ClInclude Include="EventTrackEditor\EventTrackEditor.h" />
     <ClInclude Include="extern.h" />
     <ClInclude Include="FlverModel\FlverModel.h" />

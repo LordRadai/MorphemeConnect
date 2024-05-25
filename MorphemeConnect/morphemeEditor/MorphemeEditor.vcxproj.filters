@@ -203,24 +203,6 @@
     <ClInclude Include="TimeActEditor\TimeActEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\AnimLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\AssetLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\Character.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\CharacterController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\CharacterDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MorphemeSystem\MorphemeSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -428,6 +410,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utils\MorphemeToDirectX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="MorphemeSystem\AnimLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -444,9 +429,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MorphemeSystem\MorphemeSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\MorphemeToDirectX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

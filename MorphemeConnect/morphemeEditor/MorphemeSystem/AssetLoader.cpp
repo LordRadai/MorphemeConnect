@@ -90,7 +90,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   UINT registeredAssetIndex = 0;
   UINT clientAssetIndex = 0;
 
-  MR::NetworkDef* netDef;
+  MR::NetworkDef* netDef = NULL;
 
   while (bundleReader.readNextAsset(assetType, assetID, fileGuid, asset, assetMemReqs))
   {

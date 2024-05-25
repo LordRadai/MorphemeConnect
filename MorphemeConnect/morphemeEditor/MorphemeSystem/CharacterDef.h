@@ -50,8 +50,8 @@ public:
   bool  isLoaded()  const { return m_isLoaded; }
 
   MR::NetworkDef* getNetworkDef() const { return m_netDef; }
-  MR::AnimRigDef* getAnimRigDef(int idx) const { return m_animRigDefs[idx]; }
-  MR::RigToAnimMap* getRigToAnimMap(int idx) const { return m_rigToAnimMaps[idx]; }
+  MR::AnimRigDef* getAnimRigDef(int idx) const;
+  MR::RigToAnimMap* getRigToAnimMap(int idx) const;
 
   UINT* getRegisteredAssetIDs()  const { return m_registeredAssetIDs; }
   void**    getClientAssets()        const { return m_clientAssets; }

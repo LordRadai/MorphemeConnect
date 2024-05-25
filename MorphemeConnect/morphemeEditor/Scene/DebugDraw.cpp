@@ -1392,7 +1392,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
         {
             int parentIndex = rig->getParentBoneIndex(i);
 
-            if (rig->getParentBoneIndex(i))
+            if (parentIndex != -1)
             {
                 Vector3 boneA = CalculateBonePosition(rig, i);
                 boneA = Vector3::Transform(boneA, transf);

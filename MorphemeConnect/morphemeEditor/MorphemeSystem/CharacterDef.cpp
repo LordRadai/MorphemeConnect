@@ -23,9 +23,9 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
   CharacterDefBasic* const instance = static_cast<CharacterDefBasic*>(NMPMemoryAlloc(sizeof(CharacterDefBasic)));
   new(instance) CharacterDefBasic();
 
-  const char* parent_path = std::filesystem::path(filename).parent_path().string().c_str();
+  std::filesystem::path filepath(filename);
 
-  strcpy(instance->m_metadata.m_bundleDir, parent_path);
+  strcpy(instance->m_metadata.m_bundleDir, filepath.parent_path().string().c_str());
 
   //----------------------------
   // Load the given bundle file into memory and load the bundle.

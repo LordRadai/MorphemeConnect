@@ -230,7 +230,7 @@ bool AttribDataSourceAnim::setAnimation(AnimSourceBase* anim)
     // Store the memory requirements of the referenced source animation.
     NMP::Memory::Format memReqs = m_anim->getInstanceMemoryRequirements();
     m_animSize = (uint32_t)memReqs.size;
-    NMP_ASSERT((memReqs.size > 0) && (memReqs.alignment > 0) && ((memReqs.alignment & 0xFFFFFFFF) <= NMP_VECTOR_ALIGNMENT));
+    NMP_ASSERT((memReqs.size > 0) && (memReqs.alignment > 0) && (memReqs.alignment <= NMP_VECTOR_ALIGNMENT));
   }
 
   return true;

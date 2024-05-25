@@ -221,15 +221,15 @@ bool SimpleBundleReader::readNextAsset(
     return false;
   }
 
-  NMP_ASSERT((header->m_assetMemReqs.alignment & 0xFFFFFFFF) >= NMP_NATURAL_TYPE_ALIGNMENT);
+  NMP_ASSERT(header->m_assetMemReqs.alignment >= NMP_NATURAL_TYPE_ALIGNMENT);
 
-  if ((header->m_assetMemReqs.alignment & 0xFFFFFFFF) > bufferResource.format.alignment)
+  if (header->m_assetMemReqs.alignment > bufferResource.format.alignment)
   {
     NM_LOG_MESSAGE(
       g_SBLogger,
       SB_MESSAGE_PRIORITY,
       "  The alignment requirements of the asset (%i) can not be greater than the overall alignment of the source file buffer (%i)\n",
-      (header->m_assetMemReqs.alignment & 0xFFFFFFFF),
+      header->m_assetMemReqs.alignment,
       bufferResource.format.alignment);
     return false;
   }
@@ -239,7 +239,7 @@ bool SimpleBundleReader::readNextAsset(
   // buffer left to go before the end) by the header size.  The buffer pointer
   // should be pointing to the first byte of the asset itself.
   bufferResource.increment(sizeof(SimpleBundleHeader));
-  bufferResource.align((header->m_assetMemReqs.alignment & 0xFFFFFFFF));
+  bufferResource.align(header->m_assetMemReqs.alignment);
 
   // Bail out here if the remaining buffer area is less than what the header
   // says this asset should be (meaning: the file is too short and/or the header
@@ -250,7 +250,7 @@ bool SimpleBundleReader::readNextAsset(
     "    Remaining bytes in buffer = %i; Asset size = %i; Asset alignment = %i\n",
     bufferResource.format.size,
     header->m_assetMemReqs.size,
-    (header->m_assetMemReqs.alignment & 0xFFFFFFFF));
+    header->m_assetMemReqs.alignment);
 
   if (bufferResource.format.size < header->m_assetMemReqs.size)
   {

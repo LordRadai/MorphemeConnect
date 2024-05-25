@@ -355,7 +355,10 @@ struct Format
   Format operator * (const uint32_t n) const;
 
   size_t size;
-  size_t alignment;
+  int alignment;
+#ifndef NM_HOST_64_BIT
+  int m_pad;
+#endif
 };
 
 /// Structure to describe a block of memory.

@@ -361,7 +361,7 @@ PredictionModelNDMesh* PredictionModelNDMesh::relocate(PredictionModelDef* targe
 {
   // Header
   NMP::Memory::Format memReqsHdr(sizeof(MR::PredictionModelNDMesh), NMP_NATURAL_TYPE_ALIGNMENT);
-  NMP_ASSERT(NMP_IS_ALIGNED(target, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(target, memReqsHdr.alignment & 0xFFFFFFFF));
   void* ptr = target;
   PredictionModelNDMesh* result = (PredictionModelNDMesh*)NMP::Memory::alignAndIncrement(ptr, memReqsHdr);
 

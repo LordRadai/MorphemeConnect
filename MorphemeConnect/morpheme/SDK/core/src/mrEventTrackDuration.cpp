@@ -2321,7 +2321,7 @@ NMP::Memory::Format EventDurationPool::getMemoryRequirements(uint32_t numEvents)
 {
   NMP::Memory::Format result(sizeof(EventDurationPool), NMP_NATURAL_TYPE_ALIGNMENT);
   NMP::Memory::Format eventsReqs = EventDuration::getMemoryRequirements();
-  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment);
+  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment & 0xFFFFFFFF);
   result += eventsReqs;
   return result;
 }
@@ -2336,7 +2336,7 @@ EventDurationPool* EventDurationPool::init(NMP::Memory::Resource& resource, uint
   resource.increment(format);
 
   format = EventDuration::getMemoryRequirements();
-  format.size = NMP::Memory::align(format.size * numEvents, format.alignment);
+  format.size = NMP::Memory::align(format.size * numEvents, format.alignment & 0xFFFFFFFF);
 
   resource.align(format);
   result->m_eventsPool = (EventDuration*) resource.ptr; ;

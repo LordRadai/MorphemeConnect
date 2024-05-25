@@ -234,7 +234,7 @@ NMP::Memory::Format AttribDataRig::getMemoryRequirements()
 //----------------------------------------------------------------------------------------------------------------------
 AttribDataRig* AttribDataRig::init(NMP::Memory::Resource& resource, AnimRigDef* rig, uint16_t refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
 
   // Placement new the resource to ensure the base constructor is called.
   NMP::Memory::Format memReq = getMemoryRequirements();

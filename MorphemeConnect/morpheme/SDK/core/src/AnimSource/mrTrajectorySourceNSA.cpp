@@ -108,7 +108,7 @@ void TrajectorySourceNSA::relocate()
   if (m_sampledDeltaPosKeys)
   {
     NMP::Memory::Format memReqsPos(sizeof(SampledPosKey) * m_numAnimFrames, NMP_NATURAL_TYPE_ALIGNMENT);
-    data = (uint8_t*) NMP::Memory::align(data, memReqsPos.alignment);
+    data = (uint8_t*) NMP::Memory::align(data, memReqsPos.alignment & 0xFFFFFFFF);
     m_sampledDeltaPosKeys = (SampledPosKey*) data;
     data += memReqsPos.size;
   }
@@ -117,7 +117,7 @@ void TrajectorySourceNSA::relocate()
   if (m_sampledDeltaQuatKeys)
   {
     NMP::Memory::Format memReqsQuat(sizeof(SampledQuatKeyTQA) * m_numAnimFrames, NMP_NATURAL_TYPE_ALIGNMENT);
-    data = (uint8_t*) NMP::Memory::align(data, memReqsQuat.alignment);
+    data = (uint8_t*) NMP::Memory::align(data, memReqsQuat.alignment & 0xFFFFFFFF);
     m_sampledDeltaQuatKeys = (SampledQuatKeyTQA*) data;
     data += memReqsQuat.size;
   }

@@ -262,7 +262,7 @@ void* FreelistMemoryAllocator::memAlloc(size_t size, uint32_t alignment NMP_MEMO
     while (*freelistLink)
     {
       if ((*freelistLink)->freelist->m_entryFormat.size == size &&
-        (*freelistLink)->freelist->m_entryFormat.alignment == alignment)
+          ((*freelistLink)->freelist->m_entryFormat.alignment & 0xFFFFFFFF) == (alignment & 0xFFFFFFFF))
       {
         // This freelist matches!      
         logExternalAlloc((*freelistLink)->freelist->m_entryFormat.size);
@@ -282,10 +282,10 @@ void* FreelistMemoryAllocator::memAlloc(size_t size, uint32_t alignment NMP_MEMO
   }
 
   // If we get here, we didn't find a suitable freelist, so we should create one.
-  NMP::Memory::Format format(size, alignment);
+  NMP::Memory::Format format(size, alignment & 0xFFFFFFFF);
 
   // We need to use the default chunk size to work out how many entries per chunk to go for. 
-  uint32_t entriesPerChunk = m_defaultChunkSize / (uint32_t)NMP::Memory::align(size, alignment);
+  uint32_t entriesPerChunk = m_defaultChunkSize / (uint32_t)NMP::Memory::align(size, alignment & 0xFFFFFFFF);
   if (entriesPerChunk == 0)
     entriesPerChunk = 1;
 

@@ -175,7 +175,7 @@ NM_INLINE BitArray* BitArray::init(NMP::Memory::Resource& resource, const uint32
 NM_INLINE BitArray* BitArray::relocate(void*& ptr)
 {
   NMP::Memory::Format memReqs(sizeof(BitArray), NMP_NATURAL_TYPE_ALIGNMENT);
-  ptr = (void*) NMP::Memory::align(ptr, memReqs.alignment);
+  ptr = (void*) NMP::Memory::align(ptr, memReqs.alignment & 0xFFFFFFFF);
   BitArray* result = (BitArray*) ptr;
 
   NMP_ASSERT(result->m_numBits > 0);

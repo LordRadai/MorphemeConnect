@@ -217,7 +217,7 @@ AttribDataCCOverrideConditions* AttribDataCCOverrideConditions::init(
   NodeID                             nodeID,
   uint16_t                           refCount)
 {
-  NMP_ASSERT(getMemoryRequirements(ccOverrideAttribDef).alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements(ccOverrideAttribDef).alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   NMP::Memory::Format fmt(sizeof(AttribDataCCOverrideConditions), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataCCOverrideConditions* result = (AttribDataCCOverrideConditions*)resource.alignAndIncrement(fmt);
 

@@ -784,13 +784,13 @@ NM_INLINE bool DataBuffer::relocate(void* location)
   // We have to dig out the element descriptors first
   char* ptr =  (char*)(this + 1);
   Memory::Format usedFlagsReq = BitArray::getMemoryRequirements(m_length);
-  ptr = (char*)Memory::align(ptr, usedFlagsReq.alignment);
+  ptr = (char*)Memory::align(ptr, usedFlagsReq.alignment & 0xFFFFFFFF);
   ptr += usedFlagsReq.size;
   ElementDescriptor* elements = (ElementDescriptor*)(Memory::align(ptr, NMP_NATURAL_TYPE_ALIGNMENT));
   Memory::Format elementsReq = Memory::Format(
     sizeof(ElementDescriptor) * m_numElements,
     NMP_NATURAL_TYPE_ALIGNMENT);
-  ptr = (char*)Memory::align(ptr, elementsReq.alignment);
+  ptr = (char*)Memory::align(ptr, elementsReq.alignment & 0xFFFFFFFF);
   ptr += elementsReq.size;
   void** data = (void**)ptr;
 
@@ -873,9 +873,9 @@ NM_INLINE DataBuffer* DataBuffer::copyTo(
 {
   DataBuffer* result;
 
-  NMP_ASSERT(m_memoryReqs.alignment == resource.format.alignment);
+  NMP_ASSERT((m_memoryReqs.alignment & 0xFFFFFFFF) == (resource.format.alignment & 0xFFFFFFFF));
   NMP_ASSERT(resource.format.size == m_memoryReqs.size);
-  NMP_ASSERT(resource.ptr && NMP_IS_ALIGNED(resource.ptr, m_memoryReqs.alignment));
+  NMP_ASSERT(resource.ptr && NMP_IS_ALIGNED(resource.ptr, m_memoryReqs.alignment & 0xFFFFFFFF));
 
   result = (DataBuffer*) resource.ptr;
 
@@ -893,7 +893,7 @@ NM_INLINE DataBuffer* DataBuffer::copyTo(
 {
   NMP_ASSERT(destBuffer);
   NMP_ASSERT(m_memoryReqs.size == destBuffer->m_memoryReqs.size);
-  NMP_ASSERT(m_memoryReqs.alignment == destBuffer->m_memoryReqs.alignment);
+  NMP_ASSERT((m_memoryReqs.alignment) & 0xFFFFFFFF == (destBuffer->m_memoryReqs.alignment) & 0xFFFFFFFF);
 
   Memory::memcpy((void*) destBuffer, this, m_memoryReqs.size);
 

@@ -46,7 +46,7 @@ NMP::FastFreeList* FastFreeList::init(
 
   result->m_chunkFormat += NMP::Memory::Format(
                              result->m_entriesPerChunk * NMP::Memory::align(result->m_entryFormat.size, result->m_entryFormat.alignment),
-                             result->m_entryFormat.alignment);
+                             (result->m_entryFormat.alignment & 0xFFFFFFFF));
 
   result->m_actualCapacity = 0;
 
@@ -64,7 +64,7 @@ NMP::FastFreeList* FastFreeList::init(
 FastFreeList::FreeListChunk* FastFreeList::addChunk(NMP::Memory::Resource resource)
 {
   // Create a new freelist chunk.
-  NMP_ASSERT((resource.format.size >= m_chunkFormat.size) && (resource.format.alignment >= m_chunkFormat.alignment));
+  NMP_ASSERT((resource.format.size >= m_chunkFormat.size) && ((resource.format.alignment & 0xFFFFFFFF) >= m_chunkFormat.alignment));
 
   FreeListChunk* newChunk = (FreeListChunk*)resource.ptr;
   resource.increment(NMP::Memory::Format(sizeof(FreeListChunk), NMP_NATURAL_TYPE_ALIGNMENT));
@@ -90,14 +90,14 @@ FastFreeList::FreeListChunk* FastFreeList::addChunk(NMP::Memory::Resource resour
   resource.align(m_entryFormat);
   newChunk->m_buffer = resource.ptr;
   newChunk->m_bufferEnd = (char*)newChunk->m_buffer +
-                          (NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment) * m_entriesPerChunk);
+                          (NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment & 0xFFFFFFFF) * m_entriesPerChunk);
   newChunk->m_next = NULL;
 
   // Init each free entry element.
   for (uint32_t i = 0; i < m_entriesPerChunk; ++i)
   {
     newChunk->freeEntries[i] =
-      (char*)newChunk->m_buffer + (NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment) * i);
+      (char*)newChunk->m_buffer + (NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment & 0xFFFFFFFF) * i);
   }
 
   // Add the chunk to the end of the list of chunks.

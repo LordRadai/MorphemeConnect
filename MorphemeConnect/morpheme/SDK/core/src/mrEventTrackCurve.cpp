@@ -179,7 +179,7 @@ NMP::Memory::Format SampledCurveEventsBuffer::getMemoryRequirements(uint32_t num
 {
   NMP::Memory::Format result(sizeof(SampledCurveEventsBuffer), NMP_NATURAL_TYPE_ALIGNMENT);
   NMP::Memory::Format eventsReqs = SampledCurveEvent::getMemoryRequirements();
-  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment);
+  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment & 0xFFFFFFFF);
   result += eventsReqs;
   return result;
 }
@@ -199,7 +199,7 @@ SampledCurveEventsBuffer* SampledCurveEventsBuffer::init(NMP::Memory::Resource& 
   if (numEvents > 0)
   {
     format = SampledCurveEvent::getMemoryRequirements();
-    format.size = NMP::Memory::align(format.size * numEvents, format.alignment);
+    format.size = NMP::Memory::align(format.size * numEvents, format.alignment & 0xFFFFFFFF);
 
     resource.align(format);
     result->m_eventSamples = (SampledCurveEvent*) resource.ptr;

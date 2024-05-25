@@ -82,7 +82,7 @@ MR::NetworkDef* readNetworkFromSimpleBundle(
       printf(" Registering asset with id %x\n", assetID);
 
       // Make a copy of the asset.
-      void* assetCopy = NMPMemoryAllocAligned(assetMemReqs.size, assetMemReqs.alignment);
+      void* assetCopy = NMPMemoryAllocAligned(assetMemReqs.size, assetMemReqs.alignment & 0xFFFFFFFF);
       NMP_ASSERT(assetCopy);
       memcpy(assetCopy, asset, assetMemReqs.size);
 
@@ -177,7 +177,7 @@ MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* readAnimIDToFilenameFromSimpleBu
     if (assetType == (MR::Manager::AssetType)MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup::kAsset_SimpleAnimRuntimeIDtoFilenameLookup)
     {
       // Make a copy of the asset.
-      void* assetCopy = NMPMemoryAllocAligned(assetMemReqs.size, assetMemReqs.alignment);
+      void* assetCopy = NMPMemoryAllocAligned(assetMemReqs.size, assetMemReqs.alignment & 0xFFFFFFFF);
       NMP_ASSERT(assetCopy);
       memcpy(assetCopy, asset, assetMemReqs.size);
 

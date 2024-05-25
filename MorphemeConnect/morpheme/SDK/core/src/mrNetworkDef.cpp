@@ -60,7 +60,7 @@ NodeInitDataArrayDef* NodeInitDataArrayDef::init(
 {
   resource.align(NMP::Memory::Format(sizeof(NodeInitDataArrayDef), MR_NODE_INIT_DATA_ALIGNMENT));
   NodeInitDataArrayDef* result = (NodeInitDataArrayDef*)resource.ptr;
-  resource.increment(NMP::Memory::Format(sizeof(NodeInitDataArrayDef), resource.format.alignment));
+  resource.increment(NMP::Memory::Format(sizeof(NodeInitDataArrayDef), resource.format.alignment & 0xFFFFFFFF));
 
   // Init and wipe control param node IDs.
   result->m_nodeInitDataArray = (NodeInitData**)resource.ptr;
@@ -742,7 +742,7 @@ EmittedControlParamsInfo* EmittedControlParamsInfo::init(
   {
     result->m_emittedControlParamsData = NULL;
   }
-  memRes.align(memReqs.alignment);
+  memRes.align(memReqs.alignment & 0xFFFFFFFF);
 
   return result;
 }
@@ -818,7 +818,7 @@ NodeIDsArray* NodeIDsArray::init(
   {
     result->m_nodeIDs = NULL;
   }
-  memRes.align(memReqs.alignment);
+  memRes.align(memReqs.alignment & 0xFFFFFFFF);
 
   return result;
 }

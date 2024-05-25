@@ -383,7 +383,7 @@ bool nodeRetargetUpdateOffsetsAndScaleMessageHandler(const MR::Message& message,
       sizeof(RetargetScaleMessage), NMP_NATURAL_TYPE_ALIGNMENT);
     NMP::Memory::Resource memTracker;
     memTracker.format.size = message.m_dataSize;
-    memTracker.format.alignment = scaleMessageFormat.alignment;
+    memTracker.format.alignment = scaleMessageFormat.alignment & 0xFFFFFFFF;
     memTracker.ptr = const_cast<void*>(message.m_data);
     if (memTracker.format.size == scaleMessageFormat.size)
     {
@@ -427,7 +427,7 @@ bool nodeRetargetUpdateOffsetsAndScaleMessageHandler(const MR::Message& message,
       sizeof(RetargetOffsetsMessageDataPerJoint), NMP_NATURAL_TYPE_ALIGNMENT);
     NMP::Memory::Resource memTracker;
     memTracker.format.size = message.m_dataSize;
-    memTracker.format.alignment = offsetMessageOneJointFormat.alignment;
+    memTracker.format.alignment = offsetMessageOneJointFormat.alignment & 0xFFFFFFFF;
     memTracker.ptr = const_cast<void*>(message.m_data);
     while (memTracker.format.size >= offsetMessageOneJointFormat.size)
     {

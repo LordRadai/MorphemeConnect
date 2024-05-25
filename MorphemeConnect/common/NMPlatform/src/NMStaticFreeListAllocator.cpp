@@ -21,7 +21,7 @@ void* StaticFreeListAllocator::memAlloc(size_t size, uint32_t alignment NMP_MEMO
   for (uint32_t i = 0; i < m_numFreeLists; i++)
   {
     if (m_freeLists[i]->m_entryFormat.size == size &&
-        m_freeLists[i]->m_entryFormat.alignment == alignment)
+        (m_freeLists[i]->m_entryFormat.alignment & 0xFFFFFFFF) == (alignment & 0xFFFFFFFF))
     {
       // We found a suitable freelist
       void* result = m_freeLists[i]->allocateEntry();

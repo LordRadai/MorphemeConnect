@@ -540,7 +540,7 @@ void displayTaskParameterAttribInfo(
       i,
       (void*)(parameters->m_parameters[i].m_attribDataHandle.m_attribData),
       parameters->m_parameters[i].m_attribDataHandle.m_format.size,
-      parameters->m_parameters[i].m_attribDataHandle.m_format.alignment);
+      parameters->m_parameters[i].m_attribDataHandle.m_format.alignment & 0xFFFFFFFF);
   }
 #endif
 }

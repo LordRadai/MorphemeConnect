@@ -122,7 +122,7 @@ AttribDataStateMachineDef* AttribDataStateMachineDef::init(NMP::Memory::Resource
   // Note: This function is used in the asset processing stage. The majority of the initialisation happens outside
   // of this function in the StateMachineNodeBuilder so that the vast majority of this code is not included
   // where not required in the release code.
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataStateMachineDef* result = (AttribDataStateMachineDef*)resource.ptr;
   resource.increment(sizeof(AttribDataStateMachineDef));
@@ -450,7 +450,7 @@ AttribDataStateMachine* AttribDataStateMachine::init(
   NodeID                     smNodeID,
   uint16_t                   refCount)
 {
-  NMP_ASSERT(getMemoryRequirements(stateMachineAttribDef).alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements(stateMachineAttribDef).alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   NMP::Memory::Format fmt(sizeof(AttribDataStateMachine), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataStateMachine* result = (AttribDataStateMachine*)resource.alignAndIncrement(fmt);
 

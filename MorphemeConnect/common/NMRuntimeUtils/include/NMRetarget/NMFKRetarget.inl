@@ -538,7 +538,7 @@ NM_INLINE void FKRetarget::Solver::relocate(void* location)
   NMP::Memory::Resource memTrack;
   memTrack.format = m_memoryRequirements;
   memTrack.ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(memTrack.ptr, memTrack.format.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(memTrack.ptr, memTrack.format.alignment & 0xFFFFFFFF));
 
   // Shell
   NMP::Memory::Format format(sizeof(FKRetarget::Solver), NMP_NATURAL_TYPE_ALIGNMENT);

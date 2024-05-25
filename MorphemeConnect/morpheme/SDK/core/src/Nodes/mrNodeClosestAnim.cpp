@@ -697,7 +697,7 @@ void initSubNetworkEval(
   //---------------------------
   // Create a temporary queue for sub-network evaluation
   NMP::Memory::Format memReqsTempQueue = TaskQueue::getMemoryRequirements();
-  memReqsTempQueue.size = NMP::Memory::align(memReqsTempQueue.size, memReqsTempQueue.alignment);
+  memReqsTempQueue.size = NMP::Memory::align(memReqsTempQueue.size, memReqsTempQueue.alignment & 0xFFFFFFFF);
   NMP::Memory::Resource memResTempQueue = NMPAllocatorAllocateFromFormat(net->getTempMemoryAllocator(), memReqsTempQueue);
   NMP_ASSERT(memResTempQueue.ptr);
   TaskQueue* childEvalQueue = TaskQueue::init(memResTempQueue, net);

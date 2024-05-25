@@ -344,7 +344,7 @@ NMP::Memory::Format TriggeredDiscreteEventsBuffer::getMemoryRequirements(uint32_
 {
   NMP::Memory::Format result(sizeof(TriggeredDiscreteEventsBuffer), NMP_NATURAL_TYPE_ALIGNMENT);
   NMP::Memory::Format eventsReqs = TriggeredDiscreteEvent::getMemoryRequirements();
-  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment);
+  eventsReqs.size = NMP::Memory::align(eventsReqs.size * numEvents, eventsReqs.alignment & 0xFFFFFFFF);
   result += eventsReqs;
   return result;
 }
@@ -363,7 +363,7 @@ TriggeredDiscreteEventsBuffer* TriggeredDiscreteEventsBuffer::init(NMP::Memory::
   if (numEvents > 0)
   {
     format = TriggeredDiscreteEvent::getMemoryRequirements();
-    format.size = NMP::Memory::align(format.size * numEvents, format.alignment);
+    format.size = NMP::Memory::align(format.size * numEvents, format.alignment & 0xFFFFFFFF);
 
     resource.align(format);
     result->m_triggeredEvents = (TriggeredDiscreteEvent*) resource.ptr;

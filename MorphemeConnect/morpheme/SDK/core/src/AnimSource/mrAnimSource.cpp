@@ -198,7 +198,7 @@ AttribDataSourceAnim* AttribDataSourceAnim::init(
   const NMP::Memory::Format&  rigToAnimMapMemoryFormat,
   uint16_t                    refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
 
   // Placement new the resource to ensure the base constructor is called.
   NMP::Memory::Format memReq = getMemoryRequirements();
@@ -230,7 +230,7 @@ bool AttribDataSourceAnim::setAnimation(AnimSourceBase* anim)
     // Store the memory requirements of the referenced source animation.
     NMP::Memory::Format memReqs = m_anim->getInstanceMemoryRequirements();
     m_animSize = (uint32_t)memReqs.size;
-    NMP_ASSERT((memReqs.size > 0) && (memReqs.alignment > 0) && (memReqs.alignment <= NMP_VECTOR_ALIGNMENT));
+    NMP_ASSERT((memReqs.size > 0) && ((memReqs.alignment & 0xFFFFFFFF) > 0) && ((memReqs.alignment & 0xFFFFFFFF) <= NMP_VECTOR_ALIGNMENT));
   }
 
   return true;
@@ -321,7 +321,7 @@ void AttribDataSourceAnim::setTrajectorySource(const TrajectorySourceBase* traje
     // Store the memory requirements of the referenced source trajectory.
     NMP::Memory::Format memReqs = trajectorySource->getInstanceMemoryRequirements();
     m_trajectorySize = (uint32_t)memReqs.size;
-    NMP_ASSERT((memReqs.size > 0) && (memReqs.alignment > 0) && (memReqs.alignment <= NMP_VECTOR_ALIGNMENT));
+    NMP_ASSERT((memReqs.size > 0) && ((memReqs.alignment & 0xFFFFFFFF) > 0) && ((memReqs.alignment & 0xFFFFFFFF) <= NMP_VECTOR_ALIGNMENT));
   }
   else // I don't think this is used if m_sourceTrajectoryChannel == NULL.
   {

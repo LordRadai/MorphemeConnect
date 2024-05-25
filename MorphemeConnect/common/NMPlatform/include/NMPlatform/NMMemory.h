@@ -523,22 +523,22 @@ void memFreeLogging(void* ptr);
 //----------------------------------------------------------------------------------------------------------------------
 NM_FORCEINLINE bool Memory::Format::operator == (const Format& other) const
 {
-  NMP_ASSERT(other.alignment > 0u);
-  return (size == other.size) && (alignment == other.alignment);
+    NMP_ASSERT((other.alignment & 0xFFFFFFFF) > 0u);
+    return (size == other.size) && ((alignment & 0xFFFFFFFF) == (other.alignment & 0xFFFFFFFF));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 NM_FORCEINLINE void Memory::Format::operator += (const Format& other)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(alignment != 0);
-  NMP_ASSERT(other.alignment != 0);
+    NMP_ASSERT((alignment & 0xFFFFFFFF) != 0);
+    NMP_ASSERT((other.alignment & 0xFFFFFFFF) != 0);
 
-  if (other.alignment > alignment)
+    if ((other.alignment & 0xFFFFFFFF) > (alignment & 0xFFFFFFFF))
   {
-    alignment = other.alignment;
+    alignment = other.alignment & 0xFFFFFFFF;
   }
-  size = Memory::align(size, other.alignment);
+  size = Memory::align(size, other.alignment & 0xFFFFFFFF);
   size += other.size;
 }
 
@@ -546,12 +546,12 @@ NM_FORCEINLINE void Memory::Format::operator += (const Format& other)
 NM_FORCEINLINE void Memory::Format::operator *= (const uint32_t n)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(alignment != 0);
+    NMP_ASSERT((alignment & 0xFFFFFFFF) != 0);
 
   if (n == 1)
     return;
 
-  size = Memory::align(size, alignment);  // Pad each element
+  size = Memory::align(size, alignment & 0xFFFFFFFF);  // Pad each element
   size *= n;                              // Calculate the array size required
 }
 
@@ -559,17 +559,17 @@ NM_FORCEINLINE void Memory::Format::operator *= (const uint32_t n)
 NM_FORCEINLINE Memory::Format Memory::Format::operator * (const uint32_t n) const
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(alignment != 0);
+    NMP_ASSERT((alignment & 0xFFFFFFFF) != 0);
 
-  return NMP::Memory::Format(n == 1 ? size : (Memory::align(size, alignment) * n), alignment);
+  return NMP::Memory::Format(n == 1 ? size : (Memory::align(size, alignment & 0xFFFFFFFF) * n), alignment & 0xFFFFFFFF);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 /// Increment format size to be aligned to the alignment value.
 NM_FORCEINLINE void Memory::Format::align()
 {
-  NMP_ASSERT(alignment > 0u);
-  size = Memory::align(size, alignment);
+    NMP_ASSERT((alignment & 0xFFFFFFFF) > 0u);
+  size = Memory::align(size, alignment & 0xFFFFFFFF);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -605,9 +605,9 @@ NM_FORCEINLINE void Memory::Resource::decrement(size_t size)
 NM_FORCEINLINE void Memory::Resource::increment(const Format& incrementFormat)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(incrementFormat.alignment != 0);
+  NMP_ASSERT((incrementFormat.alignment & 0xFFFFFFFF) != 0);
 
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, incrementFormat.alignment)); // Check that we are already appropriately aligned
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, (incrementFormat.alignment & 0xFFFFFFFF))); // Check that we are already appropriately aligned
   increment(incrementFormat.size); // Increment by the appropriate amount
 }
 
@@ -615,9 +615,9 @@ NM_FORCEINLINE void Memory::Resource::increment(const Format& incrementFormat)
 NM_FORCEINLINE void* Memory::Resource::align(const Format& alignFormat)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(alignFormat.alignment != 0);
+    NMP_ASSERT((alignFormat.alignment & 0xFFFFFFFF) != 0);
 
-  size_t alignedAddr = Memory::align(ptr, alignFormat.alignment);
+  size_t alignedAddr = Memory::align(ptr, alignFormat.alignment & 0xFFFFFFFF);
 #ifdef NM_COMPILER_INTEL
   const uint8_t* cptr = (uint8_t*)ptr;
   const uint8_t* nil = 0;
@@ -658,7 +658,7 @@ NM_FORCEINLINE void* Memory::Resource::align(const size_t alignment)
 NM_FORCEINLINE void* Memory::Resource::alignAndIncrement(const Format& formatToIncrement)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(formatToIncrement.alignment != 0);
+    NMP_ASSERT((formatToIncrement.alignment & 0xFFFFFFFF) != 0);
 
   align(formatToIncrement);
   void* ptr_ = ptr;
@@ -727,10 +727,10 @@ NM_FORCEINLINE void* Memory::alignAndIncrement(void*& ptr, const Format& format)
 NM_FORCEINLINE Memory::Resource Memory::allocateFromFormat(const Format& format NMP_MEMORY_TRACKING_DECL)
 {
   // Alignments of zero are not valid
-  NMP_ASSERT(format.alignment != 0);
+    NMP_ASSERT((format.alignment & 0xFFFFFFFF) != 0);
 
   Memory::Resource result;
-  result.ptr = Memory::memAllocAligned(format.size, format.alignment NMP_MEMORY_TRACKING_PASS_THROUGH);
+  result.ptr = Memory::memAllocAligned(format.size, format.alignment & 0xFFFFFFFF NMP_MEMORY_TRACKING_PASS_THROUGH);
   NMP_ASSERT(result.ptr);
   result.format = format;
   return result;

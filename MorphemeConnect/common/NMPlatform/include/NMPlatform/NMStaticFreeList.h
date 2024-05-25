@@ -97,7 +97,7 @@ NMP::StaticFreeList* StaticFreeList::init(
   result->m_memory = (void*)resource.ptr;
 
   // Initialize the array of free entries
-  ptrdiff_t stepSize = NMP::Memory::align(entryFormat.size, entryFormat.alignment);
+  ptrdiff_t stepSize = NMP::Memory::align(entryFormat.size, entryFormat.alignment & 0xFFFFFFFF);
   char* currentPtr = (char*)result->m_memory;
   for (uint32_t i = 0; i < numEntries; i++)
   {
@@ -124,7 +124,7 @@ void* StaticFreeList::allocateEntry()
 //----------------------------------------------------------------------------------------------------------------------
 bool StaticFreeList::memoryIsManagedByFreeList(void* ptr)
 {
-  return ((ptr >= m_memory) && (ptr < ((char*)m_memory + NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment) * m_numEntries)));
+  return ((ptr >= m_memory) && (ptr < ((char*)m_memory + NMP::Memory::align(m_entryFormat.size, m_entryFormat.alignment & 0xFFFFFFFF) * m_numEntries)));
 }
 
 //----------------------------------------------------------------------------------------------------------------------

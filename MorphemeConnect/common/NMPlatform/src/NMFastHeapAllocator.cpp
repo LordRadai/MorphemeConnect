@@ -184,7 +184,7 @@ FastHeapAllocator* FastHeapAllocator::init(NMP::Memory::Resource& resource, uint
   resource.increment(format);
 
   format.size = size;
-  format.alignment = alignment;
+  format.alignment = alignment & 0xFFFFFFFF;
 
   resource.align(format);
   result->initStats();
@@ -216,7 +216,7 @@ FastHeapAllocator* FastHeapAllocator::initChildAllocator(NMP::Memory::Resource& 
   resource.increment(format);
 
   format.size = size;
-  format.alignment = alignment;
+  format.alignment = alignment & 0xFFFFFFFF;
 
   resource.align(format);
   result->initStats();

@@ -162,7 +162,7 @@ MapContainer<K, V>* MapContainer<K, V>::init(
   NMP_ASSERT_MSG(maxEntries, "0-length MapContainer is not allowed");
   NMP_ASSERT_MSG(resource.ptr, "NULL resource passed into MapContainer::init");
   NMP_ASSERT_MSG(resource.format.size, "0-sized resource passed into MapContainer::init");
-  NMP_ASSERT_MSG(resource.format.alignment, "0-aligned resource passed into MapContainer::init");
+  NMP_ASSERT_MSG((resource.format.alignment & 0xFFFFFFFF), "0-aligned resource passed into MapContainer::init");
 
   resource.align(getMemoryRequirements(maxEntries));
   MapContainer<K, V>* result = (MapContainer<K, V>*)resource.ptr;

@@ -638,7 +638,7 @@ AttribDataRigToAnimMap* AttribDataRigToAnimMap::init(
   uint32_t               numRigJoints,
   NMP::Memory::Format&   rigToAnimMapMemoryFormat)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment) & 0xFFFFFFFF == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataRigToAnimMap* result = (AttribDataRigToAnimMap*)resource.ptr;
   resource.increment(sizeof(AttribDataRigToAnimMap));

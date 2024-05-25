@@ -33,7 +33,7 @@ void* LoggingMemoryAllocator::memAlloc(size_t size, uint32_t alignment NMP_MEMOR
   while (index < m_numRecords)
   {
     if (m_currentAllocCount[index].format.size == size &&
-        m_currentAllocCount[index].format.alignment == alignment)
+        (m_currentAllocCount[index].format.alignment & 0xFFFFFFFF) == (alignment & 0xFFFFFFFF))
     {
       break;
     }
@@ -45,7 +45,7 @@ void* LoggingMemoryAllocator::memAlloc(size_t size, uint32_t alignment NMP_MEMOR
   {
     m_currentAllocCount[index].count = 0;
     m_currentAllocCount[index].format.size = size;
-    m_currentAllocCount[index].format.alignment = alignment;
+    m_currentAllocCount[index].format.alignment = (alignment & 0xFFFFFFFF);
 
     m_totalAllocCount[index].count = 0;
     m_totalAllocCount[index].format = m_currentAllocCount[index].format;
@@ -126,7 +126,7 @@ void LoggingMemoryAllocator::printTotalAllocations()
   for (uint32_t i = 0; i < m_numRecords; i++)
   {
     sm_basicLogger.output("%9i, %9i, %8i\n",
-                          m_totalAllocCount[i].format.size, m_totalAllocCount[i].format.alignment, m_totalAllocCount[i].count);
+        m_totalAllocCount[i].format.size, (m_totalAllocCount[i].format.alignment & 0xFFFFFFFF), m_totalAllocCount[i].count);
   }
 }
 
@@ -141,8 +141,8 @@ void LoggingMemoryAllocator::printPeakAllocations()
   for (uint32_t i = 0; i < m_numRecords; i++)
   {
     sm_basicLogger.output("%9i, %9i, %8i\n",
-                          m_maxAllocCount[i].format.size, m_maxAllocCount[i].format.alignment, m_maxAllocCount[i].count);
-    totalBytes += (uint32_t)NMP::Memory::align((uint32_t)m_maxAllocCount[i].format.size, m_maxAllocCount[i].format.alignment) * m_maxAllocCount[i].count;
+        m_maxAllocCount[i].format.size, (m_maxAllocCount[i].format.alignment & 0xFFFFFFFF), m_maxAllocCount[i].count);
+    totalBytes += (uint32_t)NMP::Memory::align((uint32_t)m_maxAllocCount[i].format.size, (m_maxAllocCount[i].format.alignment & 0xFFFFFFFF)) * m_maxAllocCount[i].count;
   }
   sm_basicLogger.output("---------------------------------------------\n"
                         "Peak memory used: %i bytes\n"
@@ -161,8 +161,8 @@ void LoggingMemoryAllocator::printCurrentAllocations()
   for (uint32_t i = 0; i < m_numRecords; i++)
   {
     sm_basicLogger.output("%9i, %9i, %8i\n",
-                          m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment, m_currentAllocCount[i].count);
-    totalBytes += (uint32_t)NMP::Memory::align((uint32_t)m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment) * m_currentAllocCount[i].count;
+                          m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment & 0xFFFFFFFF, m_currentAllocCount[i].count);
+    totalBytes += (uint32_t)NMP::Memory::align((uint32_t)m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment & 0xFFFFFFFF) * m_currentAllocCount[i].count;
   }
   sm_basicLogger.output("---------------------------------------------\n"
                         "Total memory used: %i bytes\n"
@@ -198,8 +198,8 @@ void LoggingMemoryAllocator::calculatePeakAndCurrentUsageTotals(uint32_t& peakBy
   // do the same calculations as done in the print*() fns above, but just return the summed totals
   for (uint32_t i = 0; i < m_numRecords; i++)
   {
-    peakBytes += (uint32_t)NMP::Memory::align((uint32_t)m_maxAllocCount[i].format.size, m_maxAllocCount[i].format.alignment) * m_maxAllocCount[i].count;
-    curBytes += (uint32_t)NMP::Memory::align((uint32_t)m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment) * m_currentAllocCount[i].count;
+    peakBytes += (uint32_t)NMP::Memory::align((uint32_t)m_maxAllocCount[i].format.size, m_maxAllocCount[i].format.alignment & 0xFFFFFFFF) * m_maxAllocCount[i].count;
+    curBytes += (uint32_t)NMP::Memory::align((uint32_t)m_currentAllocCount[i].format.size, m_currentAllocCount[i].format.alignment & 0xFFFFFFFF) * m_currentAllocCount[i].count;
   }
 }
 

@@ -363,7 +363,7 @@ void AttribDataRetargetState::relocate(AttribData *target, void* location)
   result->m_retargetSolver = (NMRU::FKRetarget::Solver*)(((size_t)location) + offset);
   NMP::Memory::Format format = retargetSolver->getInstanceMemoryRequirements();
   retargetSolver->relocate(result->m_retargetSolver);
-  offset += NMP::Memory::align(format.size, format.alignment);
+  offset += NMP::Memory::align(format.size, format.alignment & 0xFFFFFFFF);
 }
 
 

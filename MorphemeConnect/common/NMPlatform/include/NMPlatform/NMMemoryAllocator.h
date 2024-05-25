@@ -198,7 +198,7 @@ NMP::Memory::Resource MemoryAllocator::allocateFromFormat(NMP::Memory::Format fo
 {
   NMP::Memory::Resource result;
   result.format = format;
-  result.ptr = memAlloc(format.size, (uint32_t)format.alignment NMP_MEMORY_TRACKING_PASS_THROUGH);
+  result.ptr = memAlloc(format.size, (uint32_t)format.alignment & 0xFFFFFFFF NMP_MEMORY_TRACKING_PASS_THROUGH);
   NMP_ASSERT(result.ptr);
 
   return result;

@@ -19,7 +19,7 @@
 namespace NMP
 {
   void* mallocWrapped(size_t size) { return _aligned_malloc(size, 16); }
-  void* mallocAlignedWrapped(size_t size, size_t alignment) { return _aligned_malloc(size, alignment); }
+  void* mallocAlignedWrapped(size_t size, size_t alignment) { return _aligned_malloc(size, alignment & 0xFFFFFFFF); }
   void* callocWrapped(size_t size)
   {
     // This has to be done as there is no _aligned_calloc for some odd reason, and we're using _alligned_free.

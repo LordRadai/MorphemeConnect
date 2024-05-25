@@ -2963,7 +2963,7 @@ AttribDataSyncEventTrack* AttribDataSyncEventTrack::init(
   NMP::Memory::Resource& resource,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataSyncEventTrack* result = (AttribDataSyncEventTrack*)resource.ptr;
   resource.increment(sizeof(AttribDataSyncEventTrack));
@@ -3737,7 +3737,7 @@ AttribDataSourceEventTrackSet* AttribDataSourceEventTrackSet::init(
   uint32_t               numDurationEventTracks,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements(numDiscreteEventTracks, numCurveEventTracks, numDurationEventTracks).alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements(numDiscreteEventTracks, numCurveEventTracks, numDurationEventTracks).alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataSourceEventTrackSet* result = (AttribDataSourceEventTrackSet*)resource.ptr;
   resource.increment(sizeof(AttribDataSourceEventTrackSet));
@@ -4590,7 +4590,7 @@ NMP::Memory::Format AttribDataFunctionOperation::getMemoryRequirements()
 //----------------------------------------------------------------------------------------------------------------------
 AttribDataFunctionOperation* AttribDataFunctionOperation::init(NMP::Memory::Resource& resource, OperationType value, uint16_t refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataFunctionOperation* result = (AttribDataFunctionOperation*)resource.ptr;
   resource.increment(sizeof(AttribDataFunctionOperation));
@@ -4641,7 +4641,7 @@ AttribDataArithmeticOperation* AttribDataArithmeticOperation::init(
   OperationType          value,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataArithmeticOperation* result = (AttribDataArithmeticOperation*)resource.ptr;
   resource.increment(sizeof(AttribDataArithmeticOperation));
@@ -4661,7 +4661,7 @@ AttribDataArithmeticOperation* AttribDataArithmeticOperation::init(
   float                  constValue,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataArithmeticOperation* result = (AttribDataArithmeticOperation*)resource.ptr;
   resource.increment(sizeof(AttribDataArithmeticOperation));
@@ -4685,7 +4685,7 @@ AttribDataArithmeticOperation* AttribDataArithmeticOperation::init(
   float                  constZ,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataArithmeticOperation* result = (AttribDataArithmeticOperation*)resource.ptr;
   resource.increment(sizeof(AttribDataArithmeticOperation));
@@ -4778,7 +4778,7 @@ AttribDataSmoothFloatOperation* AttribDataSmoothFloatOperation::init(
   bool                   smoothVel, 
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataSmoothFloatOperation* result = (AttribDataSmoothFloatOperation*)resource.ptr;
   resource.increment(sizeof(AttribDataSmoothFloatOperation));
@@ -4890,7 +4890,7 @@ AttribDataRateOfChangeState* AttribDataRateOfChangeState::init(
   float                  initValue,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataRateOfChangeState* result = (AttribDataRateOfChangeState*)resource.ptr;
   resource.increment(sizeof(AttribDataRateOfChangeState));
@@ -4911,7 +4911,7 @@ AttribDataRateOfChangeState* AttribDataRateOfChangeState::init(
   float                  z,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataRateOfChangeState* result = (AttribDataRateOfChangeState*)resource.ptr;
   resource.increment(sizeof(AttribDataRateOfChangeState));
@@ -5216,7 +5216,7 @@ AttribDataNoiseGenDef* AttribDataNoiseGenDef::init(
   float                  noiseSawFrequency,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataNoiseGenDef* result = (AttribDataNoiseGenDef*) resource.ptr;
   resource.increment(sizeof(AttribDataNoiseGenDef));
@@ -5307,7 +5307,7 @@ AttribDataSwitchDef* AttribDataSwitchDef::init(
   InputSelectionMethod   inputSelectionMethod,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataSwitchDef* result = (AttribDataSwitchDef*) resource.ptr;
   resource.increment(sizeof(AttribDataSwitchDef));
@@ -5369,7 +5369,7 @@ AttribDataRayCastDef* AttribDataRayCastDef::init(
   uint32_t               upAxisIndex,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataRayCastDef* result = (AttribDataRayCastDef*) resource.ptr;
   resource.increment(sizeof(AttribDataRayCastDef));
@@ -5460,7 +5460,7 @@ AttribDataPhysicsObjectPointer* AttribDataPhysicsObjectPointer::init(
   void*                  objectPointer,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPhysicsObjectPointer* result = (AttribDataPhysicsObjectPointer*) resource.ptr;
   resource.increment(sizeof(AttribDataPhysicsObjectPointer));
@@ -5547,7 +5547,7 @@ AttribDataPhysicsSetup* AttribDataPhysicsSetup::init(
   NMP::Memory::Resource& resource,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
 
   NMP::Memory::Format format = getMemoryRequirements();
   AttribDataPhysicsSetup* result = (AttribDataPhysicsSetup*)resource.alignAndIncrement(format);
@@ -5637,7 +5637,7 @@ AttribDataPhysicsSetupPerAnimSet* AttribDataPhysicsSetupPerAnimSet::init(
   NMP::Memory::Resource& resource,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPhysicsSetupPerAnimSet* result = static_cast< AttribDataPhysicsSetupPerAnimSet* >(resource.ptr);
   resource.increment(sizeof(AttribDataPhysicsSetupPerAnimSet));
@@ -5954,7 +5954,7 @@ AttribDataPhysicsInitialisation* AttribDataPhysicsInitialisation::init(
   uint32_t               numAnimationJoints,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements(numAnimationJoints).alignment == MR_TRANSFORM_ATTRIB_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements(numAnimationJoints).alignment & 0xFFFFFFFF) == MR_TRANSFORM_ATTRIB_ALIGNMENT);
   resource.align(MR_TRANSFORM_ATTRIB_ALIGNMENT);
   AttribDataPhysicsInitialisation* result = (AttribDataPhysicsInitialisation*) resource.ptr;
   resource.increment(sizeof(AttribDataPhysicsInitialisation));
@@ -6033,7 +6033,7 @@ AttribDataPhysicsGrouperConfig* AttribDataPhysicsGrouperConfig::init(
   NMP::Memory::Resource& resource,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPhysicsGrouperConfig* result = (AttribDataPhysicsGrouperConfig*) resource.ptr;
   resource.increment(sizeof(AttribDataPhysicsGrouperConfig));
@@ -6123,7 +6123,7 @@ AttribDataTransitDef* AttribDataTransitDef::init(
   bool                      freezeDest,
   uint16_t                  refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataTransitDef* result = (AttribDataTransitDef*)resource.ptr;
   resource.increment(sizeof(AttribDataTransitDef));
@@ -6233,7 +6233,7 @@ AttribDataTransitSyncEventsDef* AttribDataTransitSyncEventsDef::init(
   uint32_t               blendMode,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataTransitSyncEventsDef* result = (AttribDataTransitSyncEventsDef*)resource.ptr;
   resource.increment(sizeof(AttribDataTransitSyncEventsDef));
@@ -6412,7 +6412,7 @@ AttribDataPlaybackPosInit* AttribDataPlaybackPosInit::init(
   int32_t                adjustStartEventIndex,    // Start sync event adjustment value, used independently of m_startValue;
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements().alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements().alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPlaybackPosInit* result = (AttribDataPlaybackPosInit*) resource.ptr;
   resource.increment(sizeof(AttribDataPlaybackPosInit));
@@ -6724,7 +6724,7 @@ void AttribDataBasicUnevenTerrainChain::relocate(AttribData* target, void* locat
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataBasicUnevenTerrainChain), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataBasicUnevenTerrainChain* result = (AttribDataBasicUnevenTerrainChain*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the chain info data
@@ -6828,7 +6828,7 @@ void AttribDataBasicUnevenTerrainIKSetup::relocate(AttribData* target, void* loc
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataBasicUnevenTerrainIKSetup), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataBasicUnevenTerrainIKSetup* result = (AttribDataBasicUnevenTerrainIKSetup*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the chain info data
@@ -6960,7 +6960,7 @@ void AttribDataBasicUnevenTerrainFootLiftingTarget::relocate(AttribData* target,
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataBasicUnevenTerrainFootLiftingTarget), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataBasicUnevenTerrainFootLiftingTarget* result = (AttribDataBasicUnevenTerrainFootLiftingTarget*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the chain info data
@@ -7085,7 +7085,7 @@ void AttribDataBasicUnevenTerrainIKState::relocate(AttribData* target, void* loc
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataBasicUnevenTerrainIKState), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataBasicUnevenTerrainIKState* result = (AttribDataBasicUnevenTerrainIKState*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the chain info data
@@ -7277,7 +7277,7 @@ void AttribDataPredictiveUnevenTerrainPredictionDef::relocate(AttribData* target
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataPredictiveUnevenTerrainPredictionDef), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPredictiveUnevenTerrainPredictionDef* result = (AttribDataPredictiveUnevenTerrainPredictionDef*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the limb info data
@@ -7420,7 +7420,7 @@ void AttribDataPredictiveUnevenTerrainPredictionState::relocate(AttribData* targ
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataPredictiveUnevenTerrainPredictionState), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPredictiveUnevenTerrainPredictionState* result = (AttribDataPredictiveUnevenTerrainPredictionState*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the chain info data
@@ -7601,7 +7601,7 @@ void AttribDataPredictiveUnevenTerrainFootLiftingState::relocate(AttribData* tar
   NMP::Memory::Format memReqsHdr(sizeof(AttribDataPredictiveUnevenTerrainFootLiftingState), MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataPredictiveUnevenTerrainFootLiftingState* result = (AttribDataPredictiveUnevenTerrainFootLiftingState*)target;
   void* ptr = location;
-  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment));
+  NMP_ASSERT(NMP_IS_ALIGNED(ptr, memReqsHdr.alignment & 0xFFFFFFFF));
   ptr = NMP::Memory::increment(ptr, memReqsHdr.size);
 
   // Get the memory requirements for the limb info data
@@ -8047,7 +8047,7 @@ AttribDataEmitMessageOnCPValueDef* AttribDataEmitMessageOnCPValueDef::init(
   uint32_t               numComparisons,
   uint16_t               refCount)
 {
-  NMP_ASSERT(getMemoryRequirements(numComparisons).alignment == MR_ATTRIB_DATA_ALIGNMENT);
+    NMP_ASSERT((getMemoryRequirements(numComparisons).alignment & 0xFFFFFFFF) == MR_ATTRIB_DATA_ALIGNMENT);
   resource.align(MR_ATTRIB_DATA_ALIGNMENT);
   AttribDataEmitMessageOnCPValueDef* result = (AttribDataEmitMessageOnCPValueDef*) resource.ptr;
   resource.increment(sizeof(AttribDataEmitMessageOnCPValueDef));

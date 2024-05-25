@@ -162,7 +162,7 @@ FixedSizeVector<T>* FixedSizeVector<T>::init(
   NMP_ASSERT_MSG(maxEntries, "0-length FixedSizeVector is not allowed");
   NMP_ASSERT_MSG(resource.ptr, "NULL resource passed into FixedSizeVector::init");
   NMP_ASSERT_MSG(resource.format.size, "0-sized resource passed into FixedSizeVector::init");
-  NMP_ASSERT_MSG(resource.format.alignment, "0-aligned resource passed into FixedSizeVector::init");
+  NMP_ASSERT_MSG((resource.format.alignment & 0xFFFFFFFF), "0-aligned resource passed into FixedSizeVector::init");
 
   resource.align(getMemoryRequirements(maxEntries));
   FixedSizeVector<T>* result = (FixedSizeVector<T>*)resource.ptr;

@@ -93,7 +93,7 @@ DataBuffer* DataBuffer::init(
   NMP_ASSERT_MSG(length != 0, "Buffer length must be non-zero");
   NMP_ASSERT_MSG(numElements != 0, "Element count must be non-zero");
   NMP_ASSERT(memoryReqs == getMemoryRequirements(numElements, elements, length));
-  NMP_ASSERT(memoryReqs.alignment == NMP_VECTOR_ALIGNMENT);
+  NMP_ASSERT((memoryReqs.alignment & 0xFFFFFFFF) == NMP_VECTOR_ALIGNMENT);
   NMP_ASSERT(resource.format.size >= memoryReqs.size);
   resource.align(NMP_VECTOR_ALIGNMENT);
   DataBuffer* buffer = (DataBuffer*) resource.ptr;
@@ -196,7 +196,7 @@ DataBuffer* DataBuffer::initPosQuat(
 {
   NMP_ASSERT_MSG(length != 0, "Buffer length must be non-zero");
   NMP_ASSERT(memoryReqs == getPosQuatMemoryRequirements(length));
-  NMP_ASSERT(memoryReqs.alignment == NMP_VECTOR_ALIGNMENT);
+  NMP_ASSERT((memoryReqs.alignment & 0xFFFFFFFF) == NMP_VECTOR_ALIGNMENT);
   NMP_ASSERT(resource.format.size >= memoryReqs.size);
   resource.align(NMP_VECTOR_ALIGNMENT);
   DataBuffer* buffer = (DataBuffer*) resource.ptr;
@@ -304,7 +304,7 @@ DataBuffer* DataBuffer::initPosVelAngVel(
 {
   NMP_ASSERT_MSG(length != 0, "Buffer length must be non-zero");
   NMP_ASSERT(memoryReqs == getPosVelAngVelMemoryRequirements(length));
-  NMP_ASSERT(memoryReqs.alignment == NMP_VECTOR_ALIGNMENT);
+  NMP_ASSERT((memoryReqs.alignment & 0xFFFFFFFF) == NMP_VECTOR_ALIGNMENT);
   NMP_ASSERT(resource.format.size >= memoryReqs.size);
   resource.align(NMP_VECTOR_ALIGNMENT);
   DataBuffer* buffer = (DataBuffer*) resource.ptr;

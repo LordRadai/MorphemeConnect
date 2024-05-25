@@ -181,7 +181,7 @@ VectorContainer<T>* VectorContainer<T>::init(
   NMP_ASSERT_MSG(maxEntries, "0-length VectorContainer is not allowed");
   NMP_ASSERT_MSG(resource.ptr, "NULL resource passed into VectorContainer::init");
   NMP_ASSERT_MSG(resource.format.size, "0-sized resource passed into VectorContainer::init");
-  NMP_ASSERT_MSG(resource.format.alignment, "0-aligned resource passed into VectorContainer::init");
+  NMP_ASSERT_MSG(resource.format.alignment & 0xFFFFFFFF, "0-aligned resource passed into VectorContainer::init");
 
   resource.align(getMemoryRequirements(maxEntries));
   VectorContainer<T>* result = (VectorContainer<T>*)resource.ptr;

@@ -155,7 +155,7 @@ void TrajectorySourceQSA::relocate()
   if (m_sampledDeltaPosKeys != NULL)
   {
     NMP::Memory::Format memReqsPos(sizeof(TrajectoryPosKeyQSA) * m_numAnimFrames, NMP_NATURAL_TYPE_ALIGNMENT);
-    data = (uint8_t*) NMP::Memory::align(data, memReqsPos.alignment);
+    data = (uint8_t*) NMP::Memory::align(data, memReqsPos.alignment & 0xFFFFFFFF);
     m_sampledDeltaPosKeys = (TrajectoryPosKeyQSA*) data;
     data += memReqsPos.size;
   }
@@ -165,7 +165,7 @@ void TrajectorySourceQSA::relocate()
   {
     // Allocate an extra frame to pad SIMD optimizations
     NMP::Memory::Format memReqsQuat(sizeof(TrajectoryQuatKeyQSA) * (m_numAnimFrames + 1), NMP_NATURAL_TYPE_ALIGNMENT);
-    data = (uint8_t*) NMP::Memory::align(data, memReqsQuat.alignment);
+    data = (uint8_t*) NMP::Memory::align(data, memReqsQuat.alignment & 0xFFFFFFFF);
     m_sampledDeltaQuatKeys = (TrajectoryQuatKeyQSA*) data;
     data += memReqsQuat.size;
   }

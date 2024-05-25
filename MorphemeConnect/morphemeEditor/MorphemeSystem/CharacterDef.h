@@ -31,7 +31,7 @@ class CharacterDefBasic
 public:
     struct AnimData
     {
-        char m_bundleDir[255];
+        char m_bundleDir[500];
         MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* m_animFileLookUp;
     };
 

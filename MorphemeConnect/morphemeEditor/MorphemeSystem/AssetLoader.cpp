@@ -59,16 +59,13 @@ void AssetLoaderBasic::evalBundleRequirements(
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool AssetLoaderBasic::loadBundle(
+MR::NetworkDef* AssetLoaderBasic::loadBundle(
   void*            bundle,
   size_t           bundleSize,
   UINT*        registeredAssetIDs,
   void**           clientAssets,
   UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
   UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
-  MR::NetworkDef*& networkDef,
-  std::vector<MR::AnimRigDef*>& rigs,
-  std::vector<MR::RigToAnimMap*>& rigToAnimMaps,
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup)
 {
   animFileLookup = NULL;
@@ -92,6 +89,8 @@ bool AssetLoaderBasic::loadBundle(
 
   UINT registeredAssetIndex = 0;
   UINT clientAssetIndex = 0;
+
+  MR::NetworkDef* netDef;
 
   while (bundleReader.readNextAsset(assetType, assetID, fileGuid, asset, assetMemReqs))
   {
@@ -161,10 +160,8 @@ bool AssetLoaderBasic::loadBundle(
       switch (assetType)
       {
       case MR::Manager::kAsset_Rig:
-          rigs.push_back((MR::AnimRigDef*)asset);
           break;
       case MR::Manager::kAsset_RigToAnimMap:
-          rigToAnimMaps.push_back((MR::RigToAnimMap*)asset);
           break;
       case MR::Manager::kAsset_EventTrackDiscrete:
           break;
@@ -181,8 +178,8 @@ bool AssetLoaderBasic::loadBundle(
       case MR::Manager::kAsset_BodyDef:
           break;
       case MR::Manager::kAsset_NetworkDef:
-          NMP_ASSERT(!networkDef);  // We only expect one network definition per bundle
-          networkDef = (MR::NetworkDef*)asset;
+          NMP_ASSERT(!netDef);  // We only expect one network definition per bundle
+          netDef = (MR::NetworkDef*)asset;
           break;
       case MR::Manager::kAsset_NetworkPredictionDef:
           break;
@@ -226,7 +223,7 @@ bool AssetLoaderBasic::loadBundle(
     }
   }
 
-  return networkDef;
+  return netDef;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

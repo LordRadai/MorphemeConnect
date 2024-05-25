@@ -1459,16 +1459,47 @@ void Application::LoadFile()
 
 						if (filepath.extension() == ".nmb")
 						{
-							m_morphemeSystem.createCharacterDef(filepath.string().c_str());
+							CharacterDefBasic* characterDef = m_morphemeSystem.createCharacterDef(filepath.string().c_str());
 							
+							if (!characterDef)
+							{
+								NMP_STDOUT("\nError: Failed to create Game Character Definition");
+								return;
+							}
+
+							NMP_STDOUT("\nLoading Animation files:");
+							characterDef->loadAnimations();
+
+							if (characterDef->isLoaded())
+							{
+								NMP_STDOUT("\nPrinting data from CharacterDef:");
+								NMP_STDOUT("Number of Node Definitions: %d", characterDef->getNetworkDef()->getNumNodeDefs());
+								NMP_STDOUT("Number of State Machines: %d", characterDef->getNetworkDef()->getNumStateMachines());
+								NMP_STDOUT("Number of Control Parameters: %d", characterDef->getNetworkDef()->getNumControlParameterNodes());
+								NMP_STDOUT("\nList of bones in rig:");
+
+								const MR::AnimRigDef* rig = characterDef->getNetworkDef()->getRig(0);
+								for (uint32_t i = 0; i < rig->getNumBones(); i++)
+									NMP_STDOUT("%s", rig->getBoneName(i));
+							}
+
+							NMP_STDOUT("\nCreating Character from CharacterDef:");
+							CharacterBasic* character = CharacterBasic::create(characterDef);
+
+							if (!character)
+							{
+								NMP_STDOUT("\nError: Failed to create Character");
+								return;
+							}
+
+							this->m_morphemeSystem.registerCharacter(character);
+
 							if (m_morphemeSystem.GetCharacterDef()->isLoaded())
 							{
 								int animCount = m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getNumAnims();
 
 								this->m_anims.clear();
 								this->m_anims.reserve(animCount);
-
-								this->m_morphemeSystem.GetCharacterDef()->loadAnimations();
 
 								for (int i = 0; i < animCount; i++)
 								{
@@ -1559,7 +1590,7 @@ void Application::LoadFile()
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0), &this->m_model);
+													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0), &this->m_model);
 
 													found_model = true;
 													break;
@@ -2167,9 +2198,9 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
 	{
-		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0));
+		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0));
 
-		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0), true))
+		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0), true))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 

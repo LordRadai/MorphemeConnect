@@ -274,7 +274,7 @@ void Scene::Render()
         
         if (g_morphemeConnect.m_model.m_loaded)
         {
-            MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getAnimRigDef(0);
+            MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0);
 
             DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, pRig);
         }

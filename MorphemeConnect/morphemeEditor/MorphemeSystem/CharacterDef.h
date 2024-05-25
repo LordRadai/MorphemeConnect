@@ -18,6 +18,7 @@
 #include "morpheme/mrDispatcher.h"
 #include "simpleBundle/simpleAnimRuntimeIDtoFilenameLookup.h"
 #include <vector>
+#include <filesystem>
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -28,7 +29,12 @@
 class CharacterDefBasic
 {
 public:
-  
+    struct AnimData
+    {
+        char m_bundleDir[255];
+        MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* m_animFileLookUp;
+    };
+
   virtual ~CharacterDefBasic() {};
 
   //----------------------------
@@ -56,14 +62,15 @@ public:
   UINT  getNumRegisteredAssets() const { return m_numRegisteredAssets; }
   UINT  getNumClientAssets()     const { return m_numClientAssets; }
 
-  MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_animFileLookUp; }
+  MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_metadata.m_animFileLookUp; }
+  const char* getBundleFilepath() const { return m_metadata.m_bundleDir; }
 
 protected:
 
   CharacterDefBasic():
     m_isLoaded(false),
     m_netDef(NULL),
-    m_animFileLookUp(NULL),
+    m_metadata{ "", NULL},
     m_registeredAssetIDs(NULL),
     m_clientAssets(NULL),
     m_numRegisteredAssets(0),
@@ -90,7 +97,7 @@ protected:
   UINT  m_numRegisteredAssets;
   UINT  m_numClientAssets;
 
-  MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* m_animFileLookUp;
+  AnimData m_metadata;
 };
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -23,6 +23,10 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
   CharacterDefBasic* const instance = static_cast<CharacterDefBasic*>(NMPMemoryAlloc(sizeof(CharacterDefBasic)));
   new(instance) CharacterDefBasic();
 
+  const char* parent_path = std::filesystem::path(filename).parent_path().string().c_str();
+
+  strcpy(instance->m_metadata.m_bundleDir, parent_path);
+
   //----------------------------
   // Load the given bundle file into memory and load the bundle.
   NMP_STDOUT("Loading: %s", filename);
@@ -90,13 +94,7 @@ bool CharacterDefBasic::loadAnimations()
   // Load animations listed in this network definition
   for (UINT i = 0; i < m_netDef->getNumAnimSets(); ++i)
   {
-    m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp);
-    /*
-    if (!m_netDef->loadAnimations((MR::AnimSetIndex)i, m_animFileLookUp))
-    {
-      return false;
-    }
-    */
+    m_netDef->loadAnimations((MR::AnimSetIndex)i, &m_metadata);
   }
 
   NMP_STDOUT("Animations successfully loaded");
@@ -136,7 +134,7 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
                    m_clientAssets,
                    m_numRegisteredAssets,
                    m_numClientAssets,
-                   m_animFileLookUp);
+                   m_metadata.m_animFileLookUp);
 
   if (!m_netDef)
   {

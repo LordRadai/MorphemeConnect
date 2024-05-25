@@ -64,6 +64,7 @@ public:
 
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_metadata.m_animFileLookUp; }
   const char* getBundleFilepath() const { return m_metadata.m_bundleDir; }
+  const char* getFilename() const { return m_filename; }
 
 protected:
 
@@ -98,6 +99,7 @@ protected:
   UINT  m_numClientAssets;
 
   AnimData m_metadata;
+  char m_filename[255];
 };
 
 //----------------------------------------------------------------------------------------------------------------------

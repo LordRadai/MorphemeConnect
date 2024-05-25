@@ -24,8 +24,10 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
   new(instance) CharacterDefBasic();
 
   std::filesystem::path filepath(filename);
+  std::filesystem::path file_name = filepath.filename();
 
   strcpy(instance->m_metadata.m_bundleDir, filepath.parent_path().string().c_str());
+  strcpy(instance->m_filename, file_name.string().c_str());
 
   //----------------------------
   // Load the given bundle file into memory and load the bundle.

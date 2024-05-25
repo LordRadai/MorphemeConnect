@@ -487,54 +487,61 @@ void Application::AssetsWindow()
 			selected_tae_file_idx = -1;
 
 		ImGui::BeginTabBar("assets tab bar");
-		/*
 		if (ImGui::BeginTabItem("NSA"))
 		{
-			if (this->m_nmb.IsInitialised())
-				ImGui::Text(RString::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
+			CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
-			static ImGuiTextFilter filter;
-			ImGui::Text("Filter:");
-			filter.Draw("##asset searchbar", 340.f);
-
-			if (this->m_nmb.IsInitialised())
+			if (characterDef != nullptr)
 			{
-				ImGui::BeginChild("NSA");
+				if (characterDef->isLoaded())
+					ImGui::Text(characterDef->getFilename());
+
+				static ImGuiTextFilter filter;
+				ImGui::Text("Filter:");
+				filter.Draw("##asset searchbar", 340.f);
+
+				if (characterDef->isLoaded())
 				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_animTable->GetNumEntries(); i++)
+					ImGui::BeginChild("NSA");
 					{
-						std::string anim_name = "";
+						int numAnims = characterDef->getAnimFileLookUp()->getNumAnims();
 
-						if (this->m_eventTrackEditorFlags.m_edited[i])
-							anim_name += "*";
-
-						anim_name += m_nmb.GetAnimationInterface(i)->m_name;
-
-						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.GetAnimationInterface(i)->m_id);
-
-						if (filter.PassFilter(anim_name.c_str()))
+						for (int i = 0; i < numAnims; i++)
 						{
-							ImGui::PushID(i);
-							ImGui::Selectable(anim_name.c_str(), &selected);
+							std::string anim_name = "";
 
-							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+							if (this->m_eventTrackEditorFlags.m_edited[i])
+								anim_name += "*";
+
+							anim_name += this->m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getFilename(i);
+
+							bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == i);
+
+							if (filter.PassFilter(anim_name.c_str()))
 							{
-								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
+								ImGui::PushID(i);
+								ImGui::Selectable(anim_name.c_str(), &selected);
 
-								if (ImGui::IsMouseDoubleClicked(0))
-									this->m_eventTrackEditorFlags.m_load = true;
+								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+								{
+									this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
+									this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
+
+									if (ImGui::IsMouseDoubleClicked(0))
+										this->m_eventTrackEditorFlags.m_load = true;
+								}
+								ImGui::PopID();
 							}
-							ImGui::PopID();
 						}
 					}
+					ImGui::EndChild();
 				}
-				ImGui::EndChild();
 			}
 
 			ImGui::EndTabItem();
 		}
 
+		/*
 		if (ImGui::BeginTabItem("Source XMD"))
 		{
 			if (this->m_nmb.IsInitialised())

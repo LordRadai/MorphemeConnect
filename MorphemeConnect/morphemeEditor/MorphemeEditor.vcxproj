@@ -277,6 +277,7 @@
     <ClInclude Include="MorphemeSystem\MorphemeSystem.h" />
     <ClInclude Include="ProcessReader\ProcessReader.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="RLog\RDebug\RDebug.h" />
     <ClInclude Include="RLog\RLog.h" />
     <ClInclude Include="RLog\TextLog\TextLog.h" />
@@ -290,6 +291,12 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimeActEditor\TimeActEditor.h" />
     <ClInclude Include="utils\MorphemeToDirectX.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="morphemeEditor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\MorphemeConnect.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

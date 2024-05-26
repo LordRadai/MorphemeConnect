@@ -1905,6 +1905,7 @@ inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverMo
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
+//TODO Complete this
 void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig, FlverModel* pFlverModel)
 {
 	this->m_flverToMorphemeBoneMap.clear();

@@ -201,6 +201,9 @@
     <ClCompile Include="AnimSourceInterface\AnimSourceInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AnimPlayer\AnimPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TimeActEditor\TimeActEditor.h">
@@ -435,6 +438,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnimSourceInterface\AnimSourceInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimPlayer\AnimPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

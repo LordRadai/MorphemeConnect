@@ -6,7 +6,7 @@ AnimSourceInterface::AnimSourceInterface()
 {
 }
 
-AnimSourceInterface::AnimSourceInterface(const char* filename, int id)
+AnimSourceInterface::AnimSourceInterface(MR::AnimRigDef* rig, MR::RigToAnimMap* rigToAnimMap, const char* filename, int id)
 {	
     void* animData = NULL;
     int64_t animSize = 0;
@@ -22,6 +22,10 @@ AnimSourceInterface::AnimSourceInterface(const char* filename, int id)
         delete animHandle;
         animHandle = nullptr;
     }
+
+    animHandle->setRigToAnimMap(rigToAnimMap);
+    animHandle->setRig(rig);
+    animHandle->setTime(0.f);
 
 	this->m_animHandle = animHandle;
 	this->m_id = id;

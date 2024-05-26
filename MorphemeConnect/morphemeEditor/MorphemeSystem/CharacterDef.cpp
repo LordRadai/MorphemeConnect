@@ -125,6 +125,7 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
   // Allocate arrays for storing asset information based on the bundle requirements
   m_registeredAssetIDs = (UINT*)NMPMemoryCalloc(m_numRegisteredAssets * sizeof(UINT));
   m_clientAssets = (void**)NMPMemoryCalloc(m_numClientAssets * sizeof(void*));
+  m_rigToAnimMaps.clear();
 
   //----------------------------
   // Process the bundle and extract the contents into memory
@@ -136,6 +137,7 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
                    m_clientAssets,
                    m_numRegisteredAssets,
                    m_numClientAssets,
+                   m_rigToAnimMaps,
                    m_metadata.m_animFileLookUp);
 
   if (!m_netDef)
@@ -182,6 +184,14 @@ bool CharacterDefBasic::term()
   return true;
 }
 
+MR::RigToAnimMap* CharacterDefBasic::getRigToAnimMap(int idx)
+{
+    if (idx < m_rigToAnimMaps.size())
+        return m_rigToAnimMaps[idx];
+
+    return nullptr;
+}
+
 AnimSourceInterface* CharacterDefBasic::getAnimation(int idx)
 {
     if (idx < m_anims.size())
@@ -194,7 +204,7 @@ void CharacterDefBasic::addAnimation(const char* filename)
 {
     int idx = m_anims.size();
 
-    m_anims.push_back(new AnimSourceInterface(filename, idx));
+    m_anims.push_back(new AnimSourceInterface(this->m_netDef->getRig(0), this->m_rigToAnimMaps[0], filename, idx));
 }
 
 void CharacterDefBasic::sortAnimations()

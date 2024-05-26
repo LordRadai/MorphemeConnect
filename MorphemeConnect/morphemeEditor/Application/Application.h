@@ -36,16 +36,17 @@
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
 
-#include "../extern.h"
-#include "../framework.h"
-#include "../imsequencer/ImSequencer.h"
-#include "../FromsoftFormat/TimeActReader/TimeActReader.h"
-#include "../FromsoftFormat/BNDReader/BNDReader.h"
-#include "../FromsoftFormat/FlverReader/FlverReader.h"
-#include "../fromloader/fromloader.h"
-#include "../FlverModel/FlverModel.h"
+#include "extern.h"
+#include "framework.h"
+#include "imsequencer/ImSequencer.h"
+#include "FromsoftFormat/TimeActReader/TimeActReader.h"
+#include "FromsoftFormat/BNDReader/BNDReader.h"
+#include "FromsoftFormat/FlverReader/FlverReader.h"
+#include "fromloader/fromloader.h"
+#include "FlverModel/FlverModel.h"
 
 #include "MorphemeSystem/MorphemeSystem.h"
+#include "AnimPlayer/AnimPlayer.h"
 
 using namespace cfr;
 
@@ -119,6 +120,7 @@ public:
 	
 	MorphemeSystem m_morphemeSystem;
 	TimeActReader m_tae;
+	AnimPlayer m_animPlayer;
 	BNDReader m_bnd;
 	FlverModel m_model;
 	int m_chrId = -1;

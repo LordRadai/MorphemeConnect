@@ -66,6 +66,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
   void**           clientAssets,
   UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
   UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
+  std::vector<MR::RigToAnimMap*>& rigToAnimMaps,
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup)
 {
   animFileLookup = NULL;
@@ -162,6 +163,7 @@ MR::NetworkDef* AssetLoaderBasic::loadBundle(
       case MR::Manager::kAsset_Rig:
           break;
       case MR::Manager::kAsset_RigToAnimMap:
+          rigToAnimMaps.push_back((MR::RigToAnimMap*)asset);
           break;
       case MR::Manager::kAsset_EventTrackDiscrete:
           break;

@@ -645,8 +645,9 @@ namespace ImSequencer
 
                 ImGui::EndPopup();
             }
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
             */
+
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
 
             if (!reload)
             {

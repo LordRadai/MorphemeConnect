@@ -155,7 +155,8 @@ void Application::Update()
 {
 	this->m_model.UpdateModel();
 	this->CheckFlags();
-	this->RenderGUI("MorphemeConnect");
+	this->RenderGUI("morphemeEditor");
+	this->m_animPlayer.Update(1.f / 60.f);
 }
 
 std::string getTaeCategoryTooltip(int category)
@@ -528,6 +529,7 @@ void Application::AssetsWindow()
 								{
 									this->m_eventTrackEditorFlags.m_targetAnimIdx = currentAnim->GetID();
 									this->m_eventTrackEditorFlags.m_selectedAnimIdx = currentAnim->GetID();
+									this->m_animPlayer.SetAnimation(currentAnim);
 
 									if (ImGui::IsMouseDoubleClicked(0))
 										this->m_eventTrackEditorFlags.m_load = true;
@@ -771,11 +773,10 @@ void Application::AssetsWindow()
 void Application::EventTrackWindow(int* current_frame, int* first_frame, float* zoom_level, bool* is_expanded)
 {
 	ImGui::Begin("EventTrack");
-	/*
 	{
 		bool focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
-		if (this->m_nmb.IsInitialised())
+		if (this->m_morphemeSystem.GetCharacterDef() && this->m_morphemeSystem.GetCharacterDef()->isLoaded())
 		{
 			if (ImGui::Button("Load"))
 			{
@@ -798,16 +799,18 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 			}
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(RString::RemoveExtension(m_nmb.GetAnimationInterface(this->m_eventTrackEditor.m_animIdx)->m_sourceName).c_str());
+				ImGui::Text(RString::RemoveExtension(this->m_morphemeSystem.GetCharacterDef()->getAnimation(this->m_eventTrackEditor.m_animIdx)->GetAnimName()).c_str());
 			else
 				ImGui::Text("");
+
+			if (ImGui::Button("Toggle Pause"))
+				this->m_animPlayer.TogglePause();
 
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_eventTrackEditor, current_frame, &this->m_eventTrackEditorFlags.m_selectedTrack, &this->m_eventTrackEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
 			ImGui::EndChild();
 		}
 	}
-	*/
 	ImGui::End();
 }
 
@@ -894,6 +897,9 @@ void Application::TimeActWindow(int* current_frame, int* first_frame, float* zoo
 				ImGui::Text(std::to_string(this->m_timeActEditorFlags.m_taeId).c_str());
 			else
 				ImGui::Text("");
+
+			if (ImGui::Button("Toggle Pause"))
+				this->m_animPlayer.TogglePause();
 
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_timeActEditor, current_frame, &this->m_timeActEditorFlags.m_selectedTrack, &this->m_timeActEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);

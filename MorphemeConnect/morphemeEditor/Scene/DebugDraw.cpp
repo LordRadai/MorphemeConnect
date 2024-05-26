@@ -1359,7 +1359,7 @@ Vector3 CalculateBonePosition(cfr::FLVER2* flver, int bone_id)
     return position;
 }
 
-Vector3 CalculateBonePosition(MR::AnimRigDef* rig, int bone_id)
+Vector3 CalculateBonePosition(const MR::AnimRigDef* rig, int bone_id)
 {
     XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(bone_id), *rig->getBindPoseBonePos(bone_id));
 
@@ -1417,6 +1417,76 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].color.w));
         }
     }
+}
+
+Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const MR::AnimRigDef* rig, int channelId)
+{
+    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
+
+    int parentIdx = rig->getParentBoneIndex(channelId);
+
+    while (parentIdx != -1)
+    {
+        XMMATRIX parentBoneTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[parentIdx].m_quat, animHandle->getChannelData()[parentIdx].m_pos);
+        boneLocalTransform *= parentBoneTransform;
+
+        parentIdx = rig->getParentBoneIndex(parentIdx);
+    }
+
+    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+
+    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
+
+    return position;
+}
+
+void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+    DirectX::XMMATRIX world, FlverModel model, AnimSourceInterface* anim)
+{
+    constexpr float scale = 1.5f;
+    XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
+
+    if (anim != nullptr)
+    {
+        MR::AnimationSourceHandle* animHandle = anim->GetHandle();
+        const MR::AnimRigDef* rig = animHandle->getRig();
+        int boneCount = animHandle->getChannelCount();
+
+        for (size_t i = 0; i < boneCount; i++)
+        {
+            int parentIndex = rig->getParentBoneIndex(i);
+
+            if (parentIndex != -1)
+            {
+                Vector3 boneA = GetAnimatedModelTransforms(animHandle, rig, i);
+                boneA = Vector3::Transform(boneA, transf);
+
+                Vector3 boneB = GetAnimatedModelTransforms(animHandle, rig, parentIndex);
+                boneB = Vector3::Transform(boneB, transf);
+
+                DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
+            }
+            else
+            {
+                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetAnimatedModelTransforms(animHandle, rig, i)), 0.1f, Colors::Red);
+            }
+        }
+    }
+
+    /*
+    for (int i = 0; i < model.m_verts.size(); i += 3)
+    {
+        if (i + 1 < model.m_verts.size() && i + 2 < model.m_verts.size())
+        {
+            VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model.m_verts[i].position, transf), model.m_verts[i].color);
+            VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 1].position, transf), model.m_verts[i + 1].color);;
+            VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 2].position, transf), model.m_verts[i + 2].color);;
+
+            batch->DrawTriangle(v1, v2, v3);
+            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].color.w));
+        }
+    }
+    */
 }
 
 void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)

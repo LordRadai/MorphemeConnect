@@ -5,7 +5,7 @@ class AnimSourceInterface
 {
 public:
 	AnimSourceInterface();
-	AnimSourceInterface(const char* filename, int id);
+	AnimSourceInterface(MR::AnimRigDef* rig, MR::RigToAnimMap* rigToAnimMap, const char* filename, int id);
 	~AnimSourceInterface();
 
 	static bool lessThan(AnimSourceInterface* a, AnimSourceInterface* b);

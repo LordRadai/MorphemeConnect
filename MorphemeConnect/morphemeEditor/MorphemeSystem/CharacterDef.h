@@ -66,6 +66,7 @@ public:
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_metadata.m_animFileLookUp; }
   const char* getBundleFilepath() const { return m_metadata.m_bundleDir; }
   const char* getFilename() const { return m_filename; }
+  MR::RigToAnimMap* getRigToAnimMap(int idx);
   AnimSourceInterface* getAnimation(int idx);
   void addAnimation(const char* filename);
   void sortAnimations();
@@ -95,6 +96,7 @@ protected:
 
   bool  m_isLoaded;
 
+  std::vector<MR::RigToAnimMap*> m_rigToAnimMaps;
   MR::NetworkDef* m_netDef;
 
   UINT* m_registeredAssetIDs;

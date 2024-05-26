@@ -46,6 +46,7 @@ public:
     void**           clientAssets,
     UINT         NMP_USED_FOR_ASSERTS(numRegisteredAssets),
     UINT         NMP_USED_FOR_ASSERTS(numClientAssets),
+    std::vector<MR::RigToAnimMap*>& rigToAnimMaps,
     MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup*& animFileLookup);
 
   //----------------------------

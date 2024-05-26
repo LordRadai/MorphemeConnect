@@ -1442,25 +1442,24 @@ Vector3 GetTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
 Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const MR::AnimRigDef* rig, int channelId)
 {
     XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
-
     int parentIdx = rig->getParentBoneIndex(channelId);
 
     while (parentIdx != -1)
     {
-        XMMATRIX parentBoneTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[parentIdx].m_quat, animHandle->getChannelData()[parentIdx].m_pos);
+        XMMATRIX parentBoneTransform;
+
+        parentBoneTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[parentIdx].m_quat, animHandle->getChannelData()[parentIdx].m_pos);
+        
         boneLocalTransform *= parentBoneTransform;
 
         parentIdx = rig->getParentBoneIndex(parentIdx);
     }
 
-    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+    boneLocalTransform *= Matrix::CreateRotationX(-XM_PIDIV2);
 
-    if (parentIdx == -1)
-        boneLocalTransform *= Matrix::CreateTranslation(GetTrajectoryTransform(animHandle));
+    boneLocalTransform *= Matrix::CreateTranslation(GetTrajectoryTransform(animHandle));
 
-    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
-
-    return position;
+    return Vector3::Transform(Vector3::Zero, boneLocalTransform);
 }
 
 void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
@@ -1480,20 +1479,27 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             int parentIndex = rig->getParentBoneIndex(i);
 
             if (parentIndex != -1)
-            {
+            {                
                 Vector3 boneA = GetAnimatedModelTransforms(animHandle, rig, i);
                 boneA = Vector3::Transform(boneA, transf);
 
                 Vector3 boneB = GetAnimatedModelTransforms(animHandle, rig, parentIndex);
                 boneB = Vector3::Transform(boneB, transf);
 
+                if ((i == rig->getTrajectoryBoneIndex()) || (parentIndex == rig->getTrajectoryBoneIndex()))
+                    continue;
+
+                if ((i == rig->getCharacterRootBoneIndex()) || (parentIndex == rig->getCharacterRootBoneIndex()))
+                {
+                    DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(boneA), 0.05f, Colors::MediumBlue);
+                    continue;
+                }
+
                 DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
             }
-            else
-            {
-                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetTrajectoryTransform(animHandle)), 0.05f, Colors::Red);
-            }
         }
+
+        DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetTrajectoryTransform(animHandle)), 0.05f, Colors::Red);
     }
 
     /*

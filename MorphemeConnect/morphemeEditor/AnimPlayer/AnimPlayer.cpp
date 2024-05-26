@@ -35,6 +35,8 @@ void AnimPlayer::Update(float dt)
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
 {
+	this->Reset();
+
 	this->m_anim = anim;
 }
 

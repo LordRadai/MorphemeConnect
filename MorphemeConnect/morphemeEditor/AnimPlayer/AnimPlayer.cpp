@@ -47,7 +47,7 @@ void AnimPlayer::Reset()
 
 void AnimPlayer::TogglePause()
 {
-	this->m_pause != this->m_pause;
+	this->m_pause = !this->m_pause;
 }
 
 AnimSourceInterface* AnimPlayer::GetAnimation()

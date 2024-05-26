@@ -218,7 +218,6 @@ public:
   bool unfixRigToAnimMap();
 
   void setTrajectorySource(const TrajectorySourceBase* trajectorySource);
-
 public:
   /// This is the actual animation.  Note that this pointer may be NULL if the animation has not yet been loaded.
   AnimSourceBase*             m_anim;

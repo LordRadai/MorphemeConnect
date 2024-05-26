@@ -299,13 +299,16 @@ void Application::RenderGUI(const char* title)
 
 	this->AssetsWindow();
 
-	static int firstFrame = 0;
+	static int firstFrame = this->m_eventTrackEditor.m_frameMin;
 	static bool expanded = true;
 	static int currentFrame = 0;
 	static float zoomLevel = 5.f;
 
 	if (this->m_eventTrackEditorFlags.m_load)
 		this->ResetEventTrackEditor();
+
+	if (!this->m_animPlayer.IsPlaybackPaused())
+		currentFrame = RMath::TimeToFrame(this->m_animPlayer.GetTime());
 
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 
@@ -336,6 +339,8 @@ void Application::RenderGUI(const char* title)
 	ImGui::SetNextWindowSize(ImVec2(200, 500), ImGuiCond_Appearing);
 
 	this->TimeActInfoWindow();
+
+	this->m_animPlayer.SetTime(RMath::FrameToTime(currentFrame));
 }
 
 void Application::ModelPreviewWindow()
@@ -532,10 +537,12 @@ void Application::AssetsWindow()
 								{
 									this->m_eventTrackEditorFlags.m_targetAnimIdx = currentAnim->GetID();
 									this->m_eventTrackEditorFlags.m_selectedAnimIdx = currentAnim->GetID();
-									this->m_animPlayer.SetAnimation(currentAnim);
 
 									if (ImGui::IsMouseDoubleClicked(0))
+									{
+										this->m_animPlayer.SetAnimation(currentAnim);
 										this->m_eventTrackEditorFlags.m_load = true;
+									}
 								}
 								ImGui::PopID();
 							}
@@ -550,51 +557,6 @@ void Application::AssetsWindow()
 
 			ImGui::EndTabItem();
 		}
-
-		/*
-		if (ImGui::BeginTabItem("Source XMD"))
-		{
-			if (this->m_nmb.IsInitialised())
-				ImGui::Text(RString::ToNarrow(this->m_nmb.GetFileName().c_str()).c_str());
-
-			static ImGuiTextFilter filter;
-			ImGui::Text("Filter:");
-			filter.Draw("##asset searchbar", 340.f);
-
-			if (this->m_nmb.IsInitialised())
-			{
-				ImGui::BeginChild("XMD");
-				{
-					for (int i = 0; i < m_nmb.GetFilenameLookupTable()->m_data->m_sourceXmdTable->GetNumEntries(); i++)
-					{
-						std::string anim_name = m_nmb.GetAnimationInterface(i)->m_sourceName;
-
-						bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == m_nmb.GetAnimationInterface(i)->m_id);
-
-						if (filter.PassFilter(anim_name.c_str()))
-						{
-							ImGui::PushID(i);
-							ImGui::Selectable(anim_name.c_str(), &selected);
-
-							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
-							{
-								this->m_eventTrackEditorFlags.m_targetAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
-								this->m_eventTrackEditorFlags.m_selectedAnimIdx = m_nmb.GetAnimationInterface(i)->m_id;
-
-								if (ImGui::IsMouseDoubleClicked(0))
-									this->m_eventTrackEditorFlags.m_load = true;
-							}
-
-							ImGui::PopID();
-						}
-					}
-				}
-				ImGui::EndChild();
-			}
-
-			ImGui::EndTabItem();
-		}
-		*/
 
 		if (ImGui::BeginTabItem("TimeAct"))
 		{
@@ -804,13 +766,17 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No Event Tracks are loaded\n");
 			}
 
+			if (ImGui::Button("Pause"))
+				this->m_animPlayer.SetPause(true);
+			
+			ImGui::SameLine();
+			if (ImGui::Button("Play"))
+				this->m_animPlayer.SetPause(false);
+
 			if (this->m_eventTrackEditor.m_animIdx > -1)
 				ImGui::Text(RString::RemoveExtension(this->m_morphemeSystem.GetCharacterDef()->getAnimation(this->m_eventTrackEditor.m_animIdx)->GetAnimName()).c_str());
 			else
 				ImGui::Text("");
-
-			if (ImGui::Button("Toggle Pause"))
-				this->m_animPlayer.TogglePause();
 
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_eventTrackEditor, current_frame, &this->m_eventTrackEditorFlags.m_selectedTrack, &this->m_eventTrackEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
@@ -899,13 +865,17 @@ void Application::TimeActWindow(int* current_frame, int* first_frame, float* zoo
 					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct track is currently loaded\n");
 			}
 
+			if (ImGui::Button("Pause"))
+				this->m_animPlayer.SetPause(true);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Play"))
+				this->m_animPlayer.SetPause(false);
+
 			if (this->m_timeActEditorFlags.m_taeId > -1)
 				ImGui::Text(std::to_string(this->m_timeActEditorFlags.m_taeId).c_str());
 			else
 				ImGui::Text("");
-
-			if (ImGui::Button("Toggle Pause"))
-				this->m_animPlayer.TogglePause();
 
 			ImGui::BeginChild("sequencer");
 			ImSequencer::Sequencer(&m_timeActEditor, current_frame, &this->m_timeActEditorFlags.m_selectedTrack, &this->m_timeActEditorFlags.m_selectedEvent, is_expanded, focused, first_frame, zoom_level, ImSequencer::EDITOR_EDIT_ALL | ImSequencer::EDITOR_TRACK_ADD | ImSequencer::EDITOR_TRACK_RENAME | ImSequencer::EDITOR_EVENT_ADD | ImSequencer::EDITOR_MARK_ACTIVE_EVENTS);
@@ -1215,15 +1185,13 @@ void Application::CheckFlags()
 		this->ExportModelToFbx(export_path);
 	}
 
-	/*
-	if (this->m_nmb.IsInitialised() == false)
+	if (this->m_morphemeSystem.GetCharacterDef() == nullptr)
 	{
 		this->m_eventTrackEditor.Clear();
 
 		m_eventTrackEditorFlags.m_load = false;
 		m_eventTrackEditorFlags.m_selectedAnimIdx = -1;
 	}
-	*/
 
 	if (this->m_eventTrackEditor.m_reload)
 		this->m_eventTrackEditor.ReloadTracks();
@@ -1233,8 +1201,9 @@ void Application::CheckFlags()
 		this->m_eventTrackEditorFlags.m_load = false;
 		this->m_eventTrackEditor.Clear();
 
-		/*
-		if ((this->m_nmb.IsInitialised() == true) && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
+		CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
+
+		if ((characterDef != nullptr) && characterDef->isLoaded() && (this->m_eventTrackEditorFlags.m_targetAnimIdx != -1))
 		{
 			bool found_et = false;
 			bool found_anim = false;
@@ -1244,105 +1213,100 @@ void Application::CheckFlags()
 			this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = 0.f;
 
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Performing lookup for animation ID %d\n", this->m_eventTrackEditorFlags.m_targetAnimIdx);
+			MR::NetworkDef* netDef = characterDef->getNetworkDef();
+			int numNodes = netDef->getNumNodeDefs();
 
-			for (int idx = 0; idx < this->m_nmb.GetNetworkDef()->m_data->m_numNodes; idx++)
+			for (int idx = 0; idx < numNodes; idx++)
 			{
-				MorphemeBundle_NetworkDef* networkDef = this->m_nmb.GetNetworkDef();
+				MR::NodeDef* node = netDef->getNodeDef(idx);
 
-				NodeDef* node = networkDef->m_data->m_nodes[idx];
-
-				if (node->m_typeID == NodeType_NodeAnimSyncEvents)
+				if (node->getNodeTypeID() == NODE_TYPE_ANIM_EVENTS)
 				{
-					if (networkDef->m_data->m_nodes[idx]->m_attributes[1] != NULL)
+					MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)node->getAttribData(MR::ATTRIB_SEMANTIC_SOURCE_ANIM);
+					MR::AttribDataSourceEventTrackSet* source_tracks = (MR::AttribDataSourceEventTrackSet*)node->getAttribData(MR::ATTRIB_SEMANTIC_SOURCE_EVENT_TRACKS);
+
+					if (source_anim != nullptr && source_anim->m_animAssetID == this->m_eventTrackEditorFlags.m_targetAnimIdx)
 					{
-						MR::AttribDataSourceAnim* source_anim = (MR::AttribDataSourceAnim*)networkDef->m_data->m_nodes[idx]->m_attributes[1]->GetAttribData();
-						MR::AttribDataSourceEventTrack* event_track = (MR::AttribDataSourceEventTrack*)networkDef->m_data->m_nodes[idx]->m_attributes[2]->GetAttribData();
+						found_anim = true;
 
-						if (source_anim->GetAnimID() == this->m_eventTrackEditorFlags.m_targetAnimIdx)
+						RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
+
+						this->m_eventTrackEditor.m_nodeSource = node;
+						this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->m_clipStartFraction * source_anim->m_sourceAnimDuration);
+						this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->m_clipEndFraction * source_anim->m_sourceAnimDuration);
+
+						this->m_eventTrackEditor.m_animIdx = -1;
+
+						for (int i = 0; i < characterDef->getAnimFileLookUp()->getNumAnims(); i++)
 						{
-							found_anim = true;
+							if (characterDef->getAnimation(i)->GetID() == source_anim->m_animAssetID)
+								this->m_eventTrackEditor.m_animIdx = i;
+						}
 
-							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation found after %d steps\n", idx);
-
-							this->m_eventTrackEditor.m_nodeSource = node;
-							this->m_eventTrackEditor.m_frameMin = RMath::TimeToFrame(source_anim->GetClipStart() * source_anim->GetAnimLen());
-							this->m_eventTrackEditor.m_frameMax = RMath::TimeToFrame(source_anim->GetClipEnd() * source_anim->GetAnimLen());
-
-							this->m_eventTrackEditor.m_animIdx = -1;
-
-							for (int i = 0; i < this->m_nmb.GetAnimationCount(); i++)
-							{
-								if (this->m_nmb.GetAnimationInterface(i)->m_id == source_anim->GetAnimID())
-									this->m_eventTrackEditor.m_animIdx = i;
-							}
-
-							this->m_eventTrackEditorFlags.m_lenMult = source_anim->GetAnimLen() / (source_anim->GetClipEnd() - source_anim->GetClipStart());
-
-							int track_count = event_track->GetDiscreteEventTrackSet().m_trackCount + event_track->GetCurveEventTrackSet().m_trackCount + event_track->GetDurationEventTrackSet().m_trackCount;
-
+						if (source_tracks != nullptr)
+						{
+							this->m_eventTrackEditorFlags.m_lenMult = source_anim->m_sourceAnimDuration / (source_anim->m_clipEndFraction - source_anim->m_clipStartFraction);
+							int track_count = source_tracks->m_numDiscreteEventTracks + source_tracks->m_numCurveEventTracks + source_tracks->m_numDurEventTracks;
 							this->m_eventTrackEditor.m_eventTracks.reserve(track_count);
 
-							if (track_count > 0)
+							found_et = true;
+
+							for (int i = 0; i < source_tracks->m_numDiscreteEventTracks; i++)
 							{
-								found_et = true;
+								MR::EventTrackDefDiscrete* source_trackss = source_tracks->m_sourceDiscreteEventTracks[i];
 
-								for (int i = 0; i < event_track->GetDiscreteEventTrackSet().m_trackCount; i++)
+								if (source_trackss)
+									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(source_trackss, this->m_eventTrackEditorFlags.m_lenMult));
+							}
+
+							for (int i = 0; i < source_tracks->m_numCurveEventTracks; i++)
+							{
+								MR::EventTrackDefCurve* source_trackss = source_tracks->m_sourceCurveEventTracks[i];
+
+								if (source_trackss)
+									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(source_trackss, this->m_eventTrackEditorFlags.m_lenMult));
+							}
+
+							for (int i = 0; i < source_tracks->m_numDurEventTracks; i++)
+							{
+								MR::EventTrackDefDuration* source_trackss = source_tracks->m_sourceDurEventTracks[i];
+
+								if (source_trackss)
+									this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(source_trackss, this->m_eventTrackEditorFlags.m_lenMult));
+							}
+
+							this->m_eventTrackEditor.SetEditedState(false);
+
+							if (this->m_tae.m_init)
+							{
+								for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
 								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDiscreteEventTrackSet().m_trackSignatures[i]);
-
-									if (event_tracks)
-										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, true));
-								}
-
-								for (int i = 0; i < event_track->GetCurveEventTrackSet().m_trackCount; i++)
-								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetCurveEventTrackSet().m_trackSignatures[i]);
-
-									if (event_tracks)
-										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
-								}
-
-								for (int i = 0; i < event_track->GetDurationEventTrackSet().m_trackCount; i++)
-								{
-									MorphemeBundle_EventTrack* event_tracks = m_nmb.GetEventTrackBundle(event_track->GetDurationEventTrackSet().m_trackSignatures[i]);
-
-									if (event_tracks)
-										this->m_eventTrackEditor.m_eventTracks.push_back(EventTrackEditor::EventTrack(event_tracks, this->m_eventTrackEditorFlags.m_lenMult, false));
-								}
-
-								this->m_eventTrackEditor.SetEditedState(false);
-
-								if (this->m_tae.m_init)
-								{
-									for (size_t i = 0; i < this->m_eventTrackEditor.m_eventTracks.size(); i++)
+									if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
 									{
-										if (this->m_eventTrackEditor.m_eventTracks[i].m_eventId == 1000)
+										this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
+										this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
+										this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
+
+										this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
+
+										for (size_t j = 0; j < this->m_tae.m_tae.size(); j++)
 										{
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue = this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_value;
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActStart = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_frameStart);
-											this->m_eventTrackEditorFlags.m_eventTrackActionTimeActDuration = RMath::FrameToTime(this->m_eventTrackEditor.m_eventTracks[i].m_event[0].m_duration);
-
-											this->m_timeActEditorFlags.m_taeId = this->m_eventTrackEditorFlags.m_eventTrackActionTimeActValue;
-
-											for (size_t j = 0; j < this->m_tae.m_tae.size(); j++)
-											{
-												if (this->m_tae.m_tae[j].m_id == this->m_timeActEditorFlags.m_taeId)
-													this->m_timeActEditorFlags.m_selectedTimeActIdx = j;
-											}
-
-											this->m_timeActEditorFlags.m_load = true;
-
-											break;
+											if (this->m_tae.m_tae[j].m_id == this->m_timeActEditorFlags.m_taeId)
+												this->m_timeActEditorFlags.m_selectedTimeActIdx = j;
 										}
+
+										this->m_timeActEditorFlags.m_load = true;
+
+										break;
 									}
 								}
+							}
 
-								break;
-							}
-							else
-							{
-								RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->GetAnimID());
-							}
+							break;
+						}
+						else
+						{
+							RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Animation %d has no event tracks associated to it\n", source_anim->m_animAssetID);
 						}
 					}
 				}
@@ -1353,7 +1317,6 @@ void Application::CheckFlags()
 
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "\n");
 		}
-		*/
 	}
 
 	if (this->m_tae.m_init == false)

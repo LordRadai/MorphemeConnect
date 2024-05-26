@@ -178,7 +178,9 @@ namespace ImSequencer
         static char addTrackName[50] = "MyTrack";
         static bool addTrackIsDuration = false;
 
-        //static EventTrack::Event addEvent;
+        static float addEventStart = 0.f;
+        static float addEventDur = 0.f;
+        static int addEventUserData = 0;
 
         bool delEvent = false;
 
@@ -607,7 +609,6 @@ namespace ImSequencer
                 ImGui::EndPopup();
             }
 
-            /*
             if (addTrack && !reload)
             {
                 popupOpened = true;
@@ -621,23 +622,23 @@ namespace ImSequencer
                 ImGui::Text((char*)eventTrackEditor->m_eventTracks[*selectedTrack].m_name.c_str());
                 ImGui::Separator();
 
-                ImGui::InputFloat("Start", &addEvent.m_start, 1.f / 60.f);
+                ImGui::InputFloat("Start", &addEventDur, 1.f / 60.f);
 
-                if (addEvent.m_duration < 0.f)
-                    addEvent.m_duration = 0.f;
+                if (addEventDur < 0.f)
+                    addEventDur = 0.f;
 
                 if (eventTrackEditor->m_eventTracks[*selectedTrack].m_discrete == false)
-                    ImGui::InputFloat("Duration", &addEvent.m_duration, 1.f / 60.f);
+                    ImGui::InputFloat("Duration", &addEventDur, 1.f / 60.f);
                 else
-                    addEvent.m_duration = 0.f;
+                    addEventDur = 0.f;
 
-                *currentFrame = RMath::TimeToFrame(addEvent.m_start);
+                *currentFrame = RMath::TimeToFrame(addEventStart);
 
-                ImGui::InputInt("Value", &addEvent.m_userData);
+                ImGui::InputInt("Value", &addEventUserData);
 
                 if (ImGui::Button("Add Event") || GetAsyncKeyState(VK_RETURN) & 1)
                 {
-                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ RMath::TimeToFrame(addEvent.m_start), RMath::TimeToFrame(addEvent.m_duration), addEvent.m_userData});
+                    eventTrackEditor->AddEvent(*selectedTrack, EventTrackEditor::EventTrack::Event{ RMath::TimeToFrame(addEventStart), RMath::TimeToFrame(addEventDur), addEventUserData});
                     ImGui::CloseCurrentPopup();
 
                     reload = true;
@@ -645,14 +646,13 @@ namespace ImSequencer
 
                 ImGui::EndPopup();
             }
-            */
 
             ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
 
             if (!reload)
             {
-                //if (*currentFrame > 0 && !popupOpened)
-                    //addEvent.m_start = RMath::FrameToTime(*currentFrame);
+                if (*currentFrame > 0 && !popupOpened)
+                    addEventStart = RMath::FrameToTime(*currentFrame);
 
                 // clipping rect so items bars are not visible in the legend on the left when scrolled
 
@@ -1106,6 +1106,24 @@ namespace ImSequencer
                             movingEvent = -1;
                         }
                     }
+                }
+
+                // clip start
+                if (firstFrame)
+                {
+                    static const float cursorWidth = 1.f;
+
+                    float cursorOffset = contentMin.x + legendWidth + (eventTrackEditor->GetFrameMin() - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
+                    draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), IM_COL32(255, 0, 0, 255), cursorWidth);
+                }
+
+                // clip end
+                if (firstFrame)
+                {
+                    static const float cursorWidth = 1.f;
+
+                    float cursorOffset = contentMin.x + legendWidth + (eventTrackEditor->GetFrameMax() - firstFrameUsed) * framePixelWidth - cursorWidth * 0.5f;
+                    draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), IM_COL32(255, 0, 0, 255), cursorWidth);
                 }
 
                 // cursor

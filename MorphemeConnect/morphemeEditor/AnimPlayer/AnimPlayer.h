@@ -12,7 +12,13 @@ public:
 	void Reset();
 	void TogglePause();
 
+	void SetPause(bool status);
+	void SetTime(float time);
+
 	AnimSourceInterface* GetAnimation();
+	bool IsPlaybackPaused();
+	bool IsPlaybackLoop();
+	float GetTime();
 private:
 	AnimSourceInterface* m_anim;
 	float m_time;

@@ -56,7 +56,32 @@ void AnimPlayer::TogglePause()
 	this->m_pause = !this->m_pause;
 }
 
+void AnimPlayer::SetPause(bool status)
+{
+	this->m_pause = status;
+}
+
+void AnimPlayer::SetTime(float time)
+{
+	this->m_time = time;
+}
+
 AnimSourceInterface* AnimPlayer::GetAnimation()
 {
 	return this->m_anim;
+}
+
+bool AnimPlayer::IsPlaybackPaused()
+{
+	return this->m_pause;
+}
+
+bool AnimPlayer::IsPlaybackLoop()
+{
+	return this->m_loop;
+}
+
+float AnimPlayer::GetTime()
+{
+	return this->m_time;
 }

@@ -487,19 +487,19 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 					{
 					case 0:
 						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[0]]] == boneIndex)
-							pCluster->AddControlPointIndex(vertexIndex, weights.mData[0]);
+							pCluster->AddControlPointIndex(vertexIndex, weights[0]);
 						break;
 					case 1:
 						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[1]]] == boneIndex)
-							pCluster->AddControlPointIndex(vertexIndex, weights.mData[1]);
+							pCluster->AddControlPointIndex(vertexIndex, weights[1]);
 						break;
 					case 2:
 						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[2]]] == boneIndex)
-							pCluster->AddControlPointIndex(vertexIndex, weights.mData[2]);
+							pCluster->AddControlPointIndex(vertexIndex, weights[2]);
 						break;
 					case 3:
 						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[3]]] == boneIndex)
-							pCluster->AddControlPointIndex(vertexIndex, weights.mData[3]);
+							pCluster->AddControlPointIndex(vertexIndex, weights[3]);
 						break;
 					}
 				}

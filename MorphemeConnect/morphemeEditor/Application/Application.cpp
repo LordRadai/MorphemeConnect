@@ -1438,6 +1438,8 @@ void Application::LoadFile()
 
 						if (filepath.extension() == ".nmb")
 						{
+							this->m_animPlayer.Reset();
+
 							CharacterDefBasic* characterDef = m_morphemeSystem.createCharacterDef(filepath.string().c_str());
 							
 							if (!characterDef)

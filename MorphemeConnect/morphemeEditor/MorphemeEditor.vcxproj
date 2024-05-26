@@ -81,6 +81,7 @@
     <IntDir>$(SolutionDir)MorphemeConnect\build\$(Platform)\$(Configuration)\</IntDir>
     <ExternalIncludePath>$(SolutionDir)MorphemeConnect\include;$(SolutionDir)MorphemeConnect\include\zlib;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDir)MorphemeConnect\lib\Debug\;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

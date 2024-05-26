@@ -1380,6 +1380,22 @@ Vector3 CalculateBonePosition(const MR::AnimRigDef* rig, int bone_id)
     return position;
 }
 
+Vector3 GetTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
+{
+    NMP::Quat quat;
+    NMP::Vector3 pos;
+
+    animHandle->getTrajectory(quat, pos);
+
+    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(quat, pos);
+
+    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+
+    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
+
+    return position;
+}
+
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
     DirectX::XMMATRIX world, FlverModel model, MR::AnimRigDef* rig)
 {
@@ -1400,11 +1416,19 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
                 Vector3 boneB = CalculateBonePosition(rig, parentIndex);
                 boneB = Vector3::Transform(boneB, transf);
 
+                if ((i == rig->getTrajectoryBoneIndex()) || (parentIndex == rig->getTrajectoryBoneIndex()))
+                {
+                    DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(boneA), 0.05f, Colors::Red);
+                    continue;
+                }
+
+                if ((i == rig->getCharacterRootBoneIndex()) || (parentIndex == rig->getCharacterRootBoneIndex()))
+                {
+                    DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(boneA), 0.05f, Colors::MediumBlue);
+                    continue;
+                }
+
                 DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
-            }
-            else
-            {
-                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(CalculateBonePosition(rig, i)), 0.05f, Colors::Red);
             }
         }
     }
@@ -1421,22 +1445,6 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].color.w));
         }
     }
-}
-
-Vector3 GetTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
-{
-    NMP::Quat quat;
-    NMP::Vector3 pos;
-
-    animHandle->getTrajectory(quat, pos);
-
-    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(quat, pos);
-
-    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
-
-    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
-
-    return position;
 }
 
 Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const MR::AnimRigDef* rig, int channelId)

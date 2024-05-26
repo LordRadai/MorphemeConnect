@@ -231,7 +231,7 @@ std::vector<int*> FlverModel::GetModelMeshBoneIndices(int idx)
 		for (size_t j = 0; j < facesetp->triCount; j++)
 		{
 			int vertexIndex = facesetp->triList[j];
-			int indices[4];
+			int* indices = new int[4];
 
 			indices[0] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 0];
 			indices[1] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 1];
@@ -458,15 +458,11 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 	if (bone_weights.size() > 0)
 		pSkin = FbxSkin::Create(pScene, std::string(mesh_node_name + "_skin").c_str());
 
-	pMesh->AddDeformer(pSkin);
-	pMesh->BuildMeshEdgeArray();
-	pMeshNode->AddNodeAttribute(pMesh);
-
 	if (pSkin != nullptr)
 	{
-		for (int i = 0; i < flverToMorphemeBoneMap.size(); i++)
+		for (int i = 0; i < this->m_flver->meshes[idx].header.boneCount; i++)
 		{
-			int boneIndex = flverToMorphemeBoneMap[i];
+			int boneIndex = flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[i]];
 
 			if (boneIndex == -1)
 				continue;
@@ -477,8 +473,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
-			pCluster->SetTransformMatrix(pMesh->GetNode()->EvaluateGlobalTransform());
-			pCluster->SetTransformLinkMatrix(skeletonNodes[boneIndex]->EvaluateGlobalTransform());
+			pCluster->SetTransformLinkMatrix(skeletonNodes[boneIndex]->EvaluateGlobalTransform().Inverse());
 
 			for (int vertexIndex = 0; vertexIndex < vertices.size(); vertexIndex++)
 			{
@@ -490,19 +485,19 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 					switch (wt)
 					{
 					case 0:
-						if (indices[0] == i)
+						if (flverToMorphemeBoneMap[indices[0]] == i)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[0]);
 						break;
 					case 1:
-						if (indices[1] == i)
+						if (flverToMorphemeBoneMap[indices[1]] == i)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[1]);
 						break;
 					case 2:
-						if (indices[2] == i)
+						if (flverToMorphemeBoneMap[indices[2]] == i)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[2]);
 						break;
 					case 3:
-						if (indices[3] == i)
+						if (flverToMorphemeBoneMap[indices[3]] == i)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[3]);
 						break;
 					}
@@ -512,6 +507,11 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 			pSkin->AddCluster(pCluster);
 		}
 	}
+
+	pMesh->AddDeformer(pSkin);
+	//pMesh->BuildMeshEdgeArray();
+
+	pMeshNode->SetNodeAttribute(pMesh);
 
 	return pMeshNode;
 }
@@ -544,7 +544,6 @@ FbxNode* CreateMorphemeBoneNode(FbxScene* pScene, FbxPose* pBindPoses, MR::AnimR
 	Matrix bonePose = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(id), *pRig->getBindPoseBonePos(id));
 	FbxAMatrix boneTransform = CreateFbxMatrixFromDXMatrix(bonePose);
 	FbxAMatrix rotationMatrix = CreateFbxMatrixFromDXMatrix(DirectX::XMMatrixRotationX(-DirectX::XM_PIDIV2) * DirectX::XMMatrixRotationY(DirectX::XM_PI));
-	rotationMatrix.SetIdentity();
 
 	if (id == 0)
 		boneTransform = boneTransform * rotationMatrix;

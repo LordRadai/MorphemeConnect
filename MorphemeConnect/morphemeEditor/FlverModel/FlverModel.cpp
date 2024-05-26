@@ -458,11 +458,15 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 	if (bone_weights.size() > 0)
 		pSkin = FbxSkin::Create(pScene, std::string(mesh_node_name + "_skin").c_str());
 
+	pMesh->AddDeformer(pSkin);
+	pMesh->BuildMeshEdgeArray();
+	pMeshNode->AddNodeAttribute(pMesh);
+
 	if (pSkin != nullptr)
 	{
-		for (int i = 0; i < pMorphemeRig->getNumBones(); i++)
+		for (int i = 0; i < flverToMorphemeBoneMap.size(); i++)
 		{
-			int boneIndex = i;
+			int boneIndex = flverToMorphemeBoneMap[i];
 
 			if (boneIndex == -1)
 				continue;
@@ -473,8 +477,8 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
-			DirectX::XMMATRIX bindPose = NMDX::GetWorldMatrix(*pMorphemeRig->getBindPoseBoneQuat(boneIndex), *pMorphemeRig->getBindPoseBonePos(boneIndex));
-			pCluster->SetTransformLinkMatrix(CreateFbxMatrixFromDXMatrix(bindPose));
+			pCluster->SetTransformMatrix(pMesh->GetNode()->EvaluateGlobalTransform());
+			pCluster->SetTransformLinkMatrix(skeletonNodes[boneIndex]->EvaluateGlobalTransform());
 
 			for (int vertexIndex = 0; vertexIndex < vertices.size(); vertexIndex++)
 			{
@@ -508,18 +512,6 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 			pSkin->AddCluster(pCluster);
 		}
 	}
-
-	if (pSkin != nullptr)
-	{
-		if (pSkin->GetClusterCount() > 0)
-			pMesh->AddDeformer(pSkin);
-		else
-			pSkin->Destroy();
-	}
-
-	pMesh->BuildMeshEdgeArray();
-
-	pMeshNode->AddNodeAttribute(pMesh);
 
 	return pMeshNode;
 }

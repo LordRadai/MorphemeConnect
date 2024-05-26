@@ -1355,10 +1355,10 @@ void Application::CheckFlags()
 					}
 				}
 				else
-					RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);
+					RDebug::DebuggerOut(g_logLevel, MsgLevel_Info, "Application.cpp", "TimeAct %d not found\n", this->m_timeActEditorFlags.m_taeId);
 			}
 			else
-				RDebug::SystemAlert(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct is loaded\n");			
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Info, "Application.cpp", "No TimeAct is loaded\n");
 		}
 	}
 }

@@ -15,9 +15,39 @@ AnimSourceInterface::AnimSourceInterface(MR::AnimRigDef* rig, MR::RigToAnimMap* 
 
     std::filesystem::path name = std::filesystem::path(filename).filename();
 
+    bool found = false;
+
     if (fileSize > -1)
+    {
         animHandle->openAnimation((unsigned char*)animData, fileSize, "nsa");
-    else
+        found = true;
+    }
+
+    while (true)
+    {
+        if (found)
+            break;
+
+        std::filesystem::path parent_path = std::filesystem::path(filename).parent_path().parent_path().string() + "\\c0001\\";
+
+        for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(parent_path))
+        {
+            std::string filepath = dirEntry.path().string() + "\\" + name.string();
+
+            fileSize = NMP::NMFile::allocAndLoad(filepath.c_str(), &animData, &animSize);
+
+            if (fileSize > -1)
+            {
+                animHandle->openAnimation((unsigned char*)animData, fileSize, "nsa");
+                found = true;
+                break;
+            }
+        }
+
+        break;
+    }
+
+    if (!found)
     {
         delete animHandle;
         animHandle = nullptr;

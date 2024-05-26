@@ -44,7 +44,6 @@ void AnimPlayer::Reset()
 {
 	this->m_anim = nullptr;
 	this->m_time = 0.f;
-	this->m_pause = true;
 }
 
 void AnimPlayer::TogglePause()

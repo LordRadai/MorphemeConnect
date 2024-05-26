@@ -23,9 +23,12 @@ AnimSourceInterface::AnimSourceInterface(MR::AnimRigDef* rig, MR::RigToAnimMap* 
         animHandle = nullptr;
     }
 
-    animHandle->setRigToAnimMap(rigToAnimMap);
-    animHandle->setRig(rig);
-    animHandle->setTime(0.f);
+    if (animHandle != nullptr)
+    {
+        animHandle->setRigToAnimMap(rigToAnimMap);
+        animHandle->setRig(rig);
+        animHandle->setTime(0.f);
+    }
 
 	this->m_animHandle = animHandle;
 	this->m_id = id;

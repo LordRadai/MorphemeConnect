@@ -1400,7 +1400,11 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
                 Vector3 boneB = CalculateBonePosition(rig, parentIndex);
                 boneB = Vector3::Transform(boneB, transf);
 
-                DX::DrawLine(batch, boneA, boneB, Colors::MediumBlue);
+                DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
+            }
+            else
+            {
+                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(CalculateBonePosition(rig, i)), 0.05f, Colors::Red);
             }
         }
     }
@@ -1419,6 +1423,22 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
     }
 }
 
+Vector3 GetTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
+{
+    NMP::Quat quat;
+    NMP::Vector3 pos;
+
+    animHandle->getTrajectory(quat, pos);
+
+    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(quat, pos);
+
+    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+
+    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
+
+    return position;
+}
+
 Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const MR::AnimRigDef* rig, int channelId)
 {
     XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
@@ -1434,6 +1454,9 @@ Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const 
     }
 
     boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
+
+    if (parentIdx == -1)
+        boneLocalTransform *= Matrix::CreateTranslation(GetTrajectoryTransform(animHandle));
 
     Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
 
@@ -1468,7 +1491,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             }
             else
             {
-                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetAnimatedModelTransforms(animHandle, rig, i)), 0.1f, Colors::Red);
+                DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetTrajectoryTransform(animHandle)), 0.05f, Colors::Red);
             }
         }
     }

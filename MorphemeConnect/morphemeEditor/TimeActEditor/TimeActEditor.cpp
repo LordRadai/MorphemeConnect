@@ -56,7 +56,7 @@ TimeActEditor::TimeActEditor()
 {
 	this->m_source = nullptr;
 
-	INIReader reader(".//MorphemeConnect//res//color//timeact.ini");
+	INIReader reader(".//Data//res//color//timeact.ini");
 
 	if (reader.ParseError() < 0) 
 	{

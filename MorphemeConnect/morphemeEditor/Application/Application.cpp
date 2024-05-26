@@ -161,7 +161,7 @@ void Application::Update()
 
 std::string getTaeCategoryTooltip(int category)
 {
-	INIReader reader(".//MorphemeConnect//res//tooltip//timeact//group.ini");
+	INIReader reader(".//Data//res//tooltip//timeact//group.ini");
 	
 	char default_info[255];
 	sprintf_s(default_info, "No specific information is known for this category\n");
@@ -179,7 +179,7 @@ std::string getTaeCategoryTooltip(int category)
 
 std::string getTaeEventTooltip(int event_id)
 {
-	INIReader reader(".//MorphemeConnect//res//tooltip//timeact//event.ini");
+	INIReader reader(".//Data//res//tooltip//timeact//event.ini");
 
 	char default_info[255];
 	sprintf_s(default_info, "No specific information is known for this event\n");
@@ -197,7 +197,7 @@ std::string getTaeEventTooltip(int event_id)
 
 std::string getEventTrackCategoryTooltip(int category)
 {
-	INIReader reader(".//MorphemeConnect//res//tooltip//eventrack//group.ini");
+	INIReader reader(".//Data//res//tooltip//eventrack//group.ini");
 
 	char default_info[255];
 	sprintf_s(default_info, "No specific information is known for this category\n");
@@ -215,7 +215,7 @@ std::string getEventTrackCategoryTooltip(int category)
 
 std::string getEventTrackEventTooltip(int event_id)
 {
-	INIReader reader(".//MorphemeConnect//res//tooltip//eventrack//event.ini");
+	INIReader reader(".//Data//res//tooltip//eventrack//event.ini");
 
 	char default_info[255];
 	sprintf_s(default_info, "No specific information is known for this event\n");

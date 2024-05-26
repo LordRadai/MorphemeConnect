@@ -59,7 +59,7 @@ int APIENTRY main(_In_ HINSTANCE hInstance,
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON)), LoadCursor(nullptr, IDC_ARROW), nullptr, nullptr, MAKEINTRESOURCEW(IDI_ICON),  LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL)) };
+    WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON)), LoadCursor(nullptr, IDC_ARROW), nullptr, nullptr, MAKEINTRESOURCEW(IDI_ICON),  LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SMALL)) };
     ::RegisterClassExW(&wc);
 
     HWND hwnd = ::CreateWindowW(wc.lpszClassName, APPNAME_W, WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
@@ -91,7 +91,7 @@ int APIENTRY main(_In_ HINSTANCE hInstance,
 
     try
     {
-        ifstream jsonSrc(".//MorphemeConnect//res//def//timeact.json");
+        ifstream jsonSrc(".//Data//res//def//timeact.json");
 
         g_taeTemplate = TaeTemplate(jsonSrc);
     }

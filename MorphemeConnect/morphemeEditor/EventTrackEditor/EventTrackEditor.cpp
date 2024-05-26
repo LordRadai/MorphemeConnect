@@ -223,7 +223,7 @@ EventTrackEditor::EventTrackEditor()
 {
     this->m_nodeSource = nullptr;
 
-    INIReader reader(".//MorphemeConnect//res//color//eventrack.ini");
+    INIReader reader(".//Data//res//color//eventrack.ini");
 
     if (reader.ParseError() < 0)
     {

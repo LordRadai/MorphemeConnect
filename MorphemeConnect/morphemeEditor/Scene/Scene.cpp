@@ -65,9 +65,9 @@ void Scene::Initialise(HWND hwnd, IDXGISwapChain* pSwapChain, ID3D11Device* pDev
     m_effect->SetWorld(m_world);
 
     this->m_sprite = std::make_unique<DirectX::SpriteBatch>(this->m_deviceContext);
-    this->m_font = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font.spritefont");
-    this->m_fontBold = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_bold.spritefont");
-    this->m_fontItalic = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//MorphemeConnect//font//font_italic.spritefont");
+    this->m_font = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//Data//font//font.spritefont");
+    this->m_fontBold = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//Data//font//font_bold.spritefont");
+    this->m_fontItalic = std::make_unique<DirectX::SpriteFont>(this->m_device, L".//Data//font//font_italic.spritefont");
 }
 
 void Scene::CreateResources()

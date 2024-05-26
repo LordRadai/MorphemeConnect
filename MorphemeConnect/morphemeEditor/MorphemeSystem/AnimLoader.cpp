@@ -40,14 +40,9 @@ MR::AnimSourceBase* AnimLoaderBasic::requestAnim(const MR::RuntimeAnimAssetID an
   void*    fileBuffer = 0;
   int64_t length      = 0;
 
-  NMP_STDOUT("Loading Animation: %s: ID %d", fullFilename, animAssetID);
   int64_t bytesRead = NMP::NMFile::allocAndLoad(fullFilename, &fileBuffer, &length, NMP_VECTOR_ALIGNMENT);
   if (bytesRead == -1)
   {
-    //----------------------------
-    // Failed to load animation
-    NMP_STDOUT("Failed to Load Animation: %s", fullFilename);
-    //NMP_ASSERT_FAIL();
     return NULL;
   }
 
@@ -61,7 +56,6 @@ MR::AnimSourceBase* AnimLoaderBasic::requestAnim(const MR::RuntimeAnimAssetID an
   {
     //----------------------------
     // Unregistered anim format
-    NMP_STDOUT("Unregistered anim format");
     NMP_ASSERT_FAIL();
     return NULL;
   }
@@ -83,7 +77,6 @@ void AnimLoaderBasic::releaseAnim(
   {
     //----------------------------
     // Free the anim itself.
-    NMP_STDOUT("Freeing animation asset ID %d", animAssetID);
     MR::AnimSourceBase* animSource = (MR::AnimSourceBase*) loadedAnimation;
     animSource->dislocate();
 

@@ -10,13 +10,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 void MorphemeSystem::initMorpheme()
 {
-    NMP_STDOUT("\nInitialising MorphemeSystem");
-
     NMP::Memory::init();
 
     //----------------------------
     // Initialise morpheme library
-    NMP_STDOUT("Initialising Morpheme Library");
     MR::Manager::initMorphemeLib();
 
     //----------------------------
@@ -36,12 +33,9 @@ void MorphemeSystem::initMorpheme()
 
     //----------------------------
     // Initialise animation file handling functions
-    NMP_STDOUT("Setting animation loading/unloading functions");
     MR::Manager::getInstance().setAnimFileHandlingFunctions(
         AnimLoaderBasic::requestAnim,
         AnimLoaderBasic::releaseAnim);
-
-    NMP_STDOUT("Initialisation of MorphemeSystem complete");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,8 +52,6 @@ void MorphemeSystem::termMorpheme()
 {
     if (m_characterData)
     {
-        NMP_STDOUT("Releasing gameCharacterDef");
-
         //----------------------------
         // Once we've finished with the binary file release it.
         CharacterBasic::destroy(m_characterData);
@@ -67,8 +59,6 @@ void MorphemeSystem::termMorpheme()
 
     if (m_characterDef->isLoaded())
     {
-        NMP_STDOUT("Releasing gameCharacterDef");
-
         //----------------------------
         // Once we've finished with the binary file release it.
         CharacterDefBasic::destroy(m_characterDef);
@@ -88,7 +78,6 @@ CharacterDefBasic* MorphemeSystem::createCharacterDef(const char* filename)
     CharacterDefBasic* gameCharacterDef = CharacterDefBasic::create(filename);
     if (!gameCharacterDef || !gameCharacterDef->isLoaded())
     {
-        NMP_STDOUT("gameCharacterDef %s was not loaded successfully.", filename);
         NMP_ASSERT_FAIL();
         return NULL;
     }
@@ -99,8 +88,6 @@ CharacterDefBasic* MorphemeSystem::createCharacterDef(const char* filename)
 //----------------------------------------------------------------------------------------------------------------------
 void MorphemeSystem::registerCharacterDef(CharacterDefBasic* characterDef)
 {
-    NMP_STDOUT("\nRegistering CharacterDef with Game::MorphemeSystem");
-
     //----------------------------
     // store a pointer to the character for use later
     m_characterDef = characterDef;
@@ -109,8 +96,6 @@ void MorphemeSystem::registerCharacterDef(CharacterDefBasic* characterDef)
 //----------------------------------------------------------------------------------------------------------------------
 void MorphemeSystem::registerCharacter(CharacterBasic* characterData)
 {
-    NMP_STDOUT("\nRegistering CharacterData with Game::MorphemeSystem");
-
     //----------------------------
     // store a pointer to the character for use later
     m_characterData = characterData;

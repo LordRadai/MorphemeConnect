@@ -22,7 +22,6 @@ CharacterBasic* CharacterBasic::create(CharacterDefBasic* networkDef)
   // Make sure the networkDef and charCtrl have been initialised
   if(!networkDef)
   {
-    NMP_DEBUG_MSG("error: Invalid Character Definition!");
     return NULL;
   }
 
@@ -33,7 +32,6 @@ CharacterBasic* CharacterBasic::create(CharacterDefBasic* networkDef)
 
   //----------------------------
   // Initialise Game Character, allocate memory etc
-  NMP_STDOUT("Initialise Game Character");
   if (!instance->init(networkDef))
   {
     CharacterBasic::destroy(instance);
@@ -43,7 +41,6 @@ CharacterBasic* CharacterBasic::create(CharacterDefBasic* networkDef)
 
   //----------------------------
   // Create the Game Character Controller and initialise it
-  NMP_STDOUT("Creating Character Controller");
   CharacterControllerBasic* const characterController = CharacterControllerBasic::create();
   if (!characterController)
   {
@@ -64,10 +61,7 @@ CharacterBasic* CharacterBasic::create(CharacterDefBasic* networkDef)
 
   //----------------------
   // Perform an initial update of the network with start time of zero
-  //NMP_STDOUT("Run initial update step");
   //instance->runInitialisingUpdateStep();
-
-  NMP_STDOUT("GameCharacter successfully created");
 
   return instance;
 }
@@ -176,7 +170,6 @@ bool CharacterBasic::init(CharacterDefBasic* characterDef)
   //----------------------------
   // Set the temporary memory size to 512KB. This should be large enough to cope with most networks for now but to
   // accurately determine the temp memory size used, see FastHeapAllocator::PrintAllocations().
-  NMP_STDOUT("Allocate required memory");
   UINT tempDataSize = (512 * 1024);
   NMP::Memory::Format allocatorFormat = NMP::FastHeapAllocator::getMemoryRequirements(tempDataSize, NMP_VECTOR_ALIGNMENT);
   NMP::Memory::Resource resource = NMPMemoryAllocateFromFormat(allocatorFormat);
@@ -206,7 +199,6 @@ bool CharacterBasic::init(CharacterDefBasic* characterDef)
   // Create the network instance.
   //
   // Create and initialise the network instance for this morpheme character instance.
-  NMP_STDOUT("Creating MR::Network");
   m_net = MR::Network::createAndInit(networkDef,
                                 dispatcher,
                                 m_temporaryMemoryAllocator,
@@ -245,8 +237,6 @@ bool CharacterBasic::init(CharacterDefBasic* characterDef)
   NMP_ASSERT(bufferResource.ptr);
 
   m_worldTransforms = NMP::DataBuffer::initPosQuat(bufferResource, bufferFormat, maxBoneCount);
-
-  NMP_STDOUT("Game Character Initialised");
 
   return true;
 }

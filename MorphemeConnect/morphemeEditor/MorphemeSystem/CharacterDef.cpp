@@ -31,7 +31,6 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
 
   //----------------------------
   // Load the given bundle file into memory and load the bundle.
-  NMP_STDOUT("Loading: %s", filename);
 
   //----------------------------
   // In this tutorial we no longer hold bundle information in GameCharacterDef as the unloading is handled
@@ -45,16 +44,12 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
   if (fileSize <= -1)
   {
     NMP_ASSERT_FAIL();
-    NMP_STDOUT("Failed to load file: '%s'", filename);
-    NMP_STDOUT("Perhaps the assets have not been processed.");
 
     return NULL;
   }
   else
   {
     NMP_ASSERT(bundleSize >= fileSize);
-    NMP_STDOUT("Loaded file: '%s", filename);
-    NMP_STDOUT("Initialising GameCharacterDef");
 
     //----------------------------
     // Allocate memory and unpack bundle
@@ -63,10 +58,7 @@ CharacterDefBasic* CharacterDefBasic::create(const char* filename)
       CharacterDefBasic::destroy(instance);
 
       NMP_ASSERT_FAIL();
-      NMP_STDOUT("Failed to initialise gameCharacterDef");
     }
-
-    NMP_STDOUT("GameCharacterDef created");
   }
 
   //----------------------------
@@ -98,8 +90,6 @@ bool CharacterDefBasic::loadAnimations()
   {
     m_netDef->loadAnimations((MR::AnimSetIndex)i, &m_metadata);
   }
-
-  NMP_STDOUT("Animations successfully loaded");
   return true;
 }
 
@@ -108,7 +98,6 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
 {  
   if (!bundle || !bundleSize)
   {
-    NMP_STDOUT("error: Valid bundle expected!");
     return NULL;
   }
 
@@ -129,7 +118,6 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
 
   //----------------------------
   // Process the bundle and extract the contents into memory
-  NMP_STDOUT("Loading bundle:");
   m_netDef = AssetLoaderBasic::loadBundle(
                    bundle,
                    bundleSize,
@@ -142,10 +130,8 @@ bool CharacterDefBasic::init(void* bundle, size_t bundleSize)
 
   if (!m_netDef)
   {
-    NMP_STDOUT("error: Failed to unpack the bundle!");
     return false;
   }
-  NMP_STDOUT("Bundle successfully loaded");
 
   m_isLoaded = true;
 

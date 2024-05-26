@@ -1441,35 +1441,14 @@ void Application::LoadFile()
 							CharacterDefBasic* characterDef = m_morphemeSystem.createCharacterDef(filepath.string().c_str());
 							
 							if (!characterDef)
-							{
-								NMP_STDOUT("\nError: Failed to create Game Character Definition");
 								return;
-							}
 
-							if (characterDef->isLoaded())
-							{
-								NMP_STDOUT("\nPrinting data from CharacterDef:");
-								NMP_STDOUT("Number of Node Definitions: %d", characterDef->getNetworkDef()->getNumNodeDefs());
-								NMP_STDOUT("Number of State Machines: %d", characterDef->getNetworkDef()->getNumStateMachines());
-								NMP_STDOUT("Number of Control Parameters: %d", characterDef->getNetworkDef()->getNumControlParameterNodes());
-								NMP_STDOUT("\nList of bones in rig:");
-
-								const MR::AnimRigDef* rig = characterDef->getNetworkDef()->getRig(0);
-								for (uint32_t i = 0; i < rig->getNumBones(); i++)
-									NMP_STDOUT("%s", rig->getBoneName(i));
-							}
-
-							NMP_STDOUT("\nLoading Animation files:");
 							characterDef->loadAnimations();
 
-							NMP_STDOUT("\nCreating Character from CharacterDef:");
 							CharacterBasic* character = CharacterBasic::create(characterDef);
 
 							if (!character)
-							{
-								NMP_STDOUT("\nError: Failed to create Character");
 								return;
-							}
 
 							this->m_morphemeSystem.registerCharacter(character);
 
@@ -1628,7 +1607,6 @@ void Application::LoadFile()
 										}
 									} while (true);
 
-									/*
 									if (found)
 									{
 										filepath_dcx = gamepath;
@@ -1661,7 +1639,10 @@ void Application::LoadFile()
 
 													found_model = true;
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_nmb.GetRig(0)->m_data, &this->m_model);
+													CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
+
+													if (characterDef)
+														this->CreateMorphemeRigBoneToFlverBoneMap(characterDef->getNetworkDef()->getRig(0), &this->m_model);
 
 													break;
 												}
@@ -1673,7 +1654,6 @@ void Application::LoadFile()
 									}
 									else
 										RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Could not find Game folder\n");
-									*/
 								}
 							}						
 						}

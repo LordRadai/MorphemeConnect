@@ -1428,7 +1428,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
                     continue;
                 }
 
-                DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
+                DX::DrawLine(batch, boneA, boneB, Colors::Orange);
             }
         }
     }
@@ -1503,7 +1503,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
                     continue;
                 }
 
-                DX::DrawLine(batch, boneA, boneB, Colors::LightBlue);
+                DX::DrawLine(batch, boneA, boneB, Colors::Orange);
             }
         }
 

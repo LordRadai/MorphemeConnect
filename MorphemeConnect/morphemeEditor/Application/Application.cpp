@@ -538,11 +538,8 @@ void Application::AssetsWindow()
 									this->m_eventTrackEditorFlags.m_targetAnimIdx = currentAnim->GetID();
 									this->m_eventTrackEditorFlags.m_selectedAnimIdx = currentAnim->GetID();
 
-									if (ImGui::IsMouseDoubleClicked(0))
-									{
-										this->m_animPlayer.SetAnimation(currentAnim);
-										this->m_eventTrackEditorFlags.m_load = true;
-									}
+									this->m_animPlayer.SetAnimation(currentAnim);
+									this->m_eventTrackEditorFlags.m_load = true;
 								}
 								ImGui::PopID();
 							}
@@ -717,9 +714,7 @@ void Application::AssetsWindow()
 							{
 								this->m_timeActEditorFlags.m_taeId = this->m_tae.m_tae[i].m_id;
 								this->m_timeActEditorFlags.m_selectedTimeActIdx = i;
-
-								if (ImGui::IsMouseDoubleClicked(0))
-									this->m_timeActEditorFlags.m_load = true;
+								this->m_timeActEditorFlags.m_load = true;
 							}
 
 							ImGui::PopID();

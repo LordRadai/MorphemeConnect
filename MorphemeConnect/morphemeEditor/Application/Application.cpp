@@ -1893,9 +1893,37 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 	}
 }
 
-inline int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
+DirectX::XMMATRIX GetBoneTransform(cfr::FLVER2* flver, int bone_id)
+{
+	DirectX::XMMATRIX transform = DirectX::XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
+	transform *= DirectX::XMMatrixRotationX(flver->bones[bone_id].rot.x);
+	transform *= DirectX::XMMatrixRotationZ(flver->bones[bone_id].rot.z);
+	transform *= DirectX::XMMatrixRotationY(flver->bones[bone_id].rot.y);
+	transform *= DirectX::XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
+
+	return transform;
+}
+
+int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
+{
+	int boneIdx = -1;
+	Matrix flvTransform = GetBoneTransform(pFlverModel->m_flver, idx);
+
+	for (size_t i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
+	{
+		Matrix nmTransform = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(i), *pRig->getBindPoseBonePos(i)) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
+
+		if (nmTransform == flvTransform)
+			boneIdx = i;
+	}
+
+	return boneIdx;
+}
+
+int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
+
 	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
 	if (boneIdx == -1)

@@ -473,7 +473,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 			pCluster->SetLink(pBoneNode);
 			pCluster->SetLinkMode(FbxCluster::eTotalOne);
 
-			pCluster->SetTransformLinkMatrix(skeletonNodes[boneIndex]->EvaluateGlobalTransform().Inverse());
+			pCluster->SetTransformLinkMatrix(skeletonNodes[boneIndex]->EvaluateGlobalTransform());
 
 			for (int vertexIndex = 0; vertexIndex < vertices.size(); vertexIndex++)
 			{
@@ -485,19 +485,19 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 					switch (wt)
 					{
 					case 0:
-						if (flverToMorphemeBoneMap[indices[0]] == i)
+						if (flverToMorphemeBoneMap[indices[0]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[0]);
 						break;
 					case 1:
-						if (flverToMorphemeBoneMap[indices[1]] == i)
+						if (flverToMorphemeBoneMap[indices[1]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[1]);
 						break;
 					case 2:
-						if (flverToMorphemeBoneMap[indices[2]] == i)
+						if (flverToMorphemeBoneMap[indices[2]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[2]);
 						break;
 					case 3:
-						if (flverToMorphemeBoneMap[indices[3]] == i)
+						if (flverToMorphemeBoneMap[indices[3]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[3]);
 						break;
 					}
@@ -509,7 +509,6 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 	}
 
 	pMesh->AddDeformer(pSkin);
-	//pMesh->BuildMeshEdgeArray();
 
 	pMeshNode->SetNodeAttribute(pMesh);
 

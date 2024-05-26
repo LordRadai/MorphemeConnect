@@ -49,6 +49,7 @@ public:
   uint32_t getChannelCount() const;
   const NMP::PosQuat* getChannelData() const;
   void getTrajectory(NMP::Quat& orientation, NMP::Vector3& translation) const;
+  MR::AnimSourceBase* getAnimation() const { return m_animation; }
 
 private:
   void clear();

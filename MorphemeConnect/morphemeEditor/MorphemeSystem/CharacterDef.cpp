@@ -186,6 +186,17 @@ AnimSourceInterface* CharacterDefBasic::getAnimation(int idx)
     return nullptr;
 }
 
+AnimSourceInterface* CharacterDefBasic::getAnimationById(int id)
+{
+    for (size_t i = 0; i < this->m_anims.size(); i++)
+    {
+        if (this->m_anims[i]->GetID() == id)
+            return this->m_anims[i];
+    }
+
+    return nullptr;
+}
+
 void CharacterDefBasic::addAnimation(const char* filename)
 {
     int idx = m_anims.size();

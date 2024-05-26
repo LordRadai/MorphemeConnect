@@ -68,6 +68,7 @@ public:
   const char* getFilename() const { return m_filename; }
   MR::RigToAnimMap* getRigToAnimMap(int idx);
   AnimSourceInterface* getAnimation(int idx);
+  AnimSourceInterface* getAnimationById(int id);
   void addAnimation(const char* filename);
   void sortAnimations();
 

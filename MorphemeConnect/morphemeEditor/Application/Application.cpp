@@ -1,8 +1,9 @@
 #include "Application.h"
-#include "../extern.h"
-#include "../framework.h"
-#include "../Scene/Scene.h"
-
+#include "extern.h"
+#include "framework.h"
+#include "Scene/Scene.h"
+#include "morpheme/AnimSource/mrAnimSourceNSA.h"
+#include "utils/MorphemeToDirectX.h"
 #include <Shlwapi.h>
 #include <filesystem>
 
@@ -264,9 +265,7 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-#ifdef _DEBUG
 				if (ImGui::MenuItem("Export All", NULL, &this->m_flags.m_exportAll)) { this->m_flags.m_exportAll = true; }
-#endif
 				if (ImGui::MenuItem("Export Model", NULL, &this->m_flags.m_exportModel)) { this->m_flags.m_exportModel = true; }
 
 				ImGui::EndMenu();
@@ -1130,36 +1129,41 @@ void Application::CheckFlags()
 	{
 		this->m_flags.m_exportAll = false;
 
-		/*
-		if (this->m_animFiles.size() == 0)
-			RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "Application.cpp", "No animations are loaded");
+		CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
-		std::wstring out_path = L".//Export";
-
-		wchar_t chr_id_str[50];
-		swprintf_s(chr_id_str, L"c%04d", this->m_chrId);
-
-		out_path += L"//" + std::wstring(chr_id_str) + L"//";
-
-		std::filesystem::create_directories(out_path);
-
-		PWSTR export_path = (wchar_t*)out_path.c_str();
-
-		if (!this->ExportModelToFbx(export_path))
-			RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
-
-		for (int i = 0; i < this->m_animFiles.size(); i++)
+		if (characterDef)
 		{
-			std::filesystem::path anim_out = std::filesystem::path(RString::ToNarrow(export_path) + "//Animations//" + this->m_nmb.GetSourceAnimName(i)).replace_extension(".fbx");
-			std::filesystem::create_directories(anim_out.parent_path());
+			int numAnims = characterDef->getAnimFileLookUp()->getNumAnims();
 
-			if (!this->ExportAnimationToFbx(anim_out, i))
-				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export animation %d\n", i);
+			if (numAnims == 0)
+				RDebug::SystemAlert(g_logLevel, MsgLevel_Warn, "Application.cpp", "No animations are loaded");
 
-			if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
-				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export event track to XML for animation %d\n", i);
+			std::wstring out_path = L".//Export";
+
+			wchar_t chr_id_str[50];
+			swprintf_s(chr_id_str, L"c%04d", this->m_chrId);
+
+			out_path += L"//" + std::wstring(chr_id_str) + L"//";
+
+			std::filesystem::create_directories(out_path);
+
+			PWSTR export_path = (wchar_t*)out_path.c_str();
+
+			if (!this->ExportModelToFbx(export_path))
+				RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
+
+			for (int i = 0; i < numAnims; i++)
+			{
+				std::filesystem::path anim_out = std::filesystem::path(RString::ToNarrow(export_path) + "Animations//" + RString::RemovePathAndExtension(characterDef->getAnimFileLookUp()->getSourceFilename(i)) + ".fbx");
+				std::filesystem::create_directories(anim_out.parent_path());
+
+				if (!this->ExportAnimationToFbx(anim_out, i))
+					RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export animation %d\n", i);
+
+				//if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
+					//RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export event track to XML for animation %d\n", i);
+			}
 		}
-		*/
 	}
 
 	if (this->m_flags.m_exportModel)
@@ -1950,12 +1954,39 @@ inline double GetTimeByAnimFrame(float animLenght, float fps, int frameNum)
 	return (animLenght / fps) * frameNum;
 }
 
-/*
-//Creates FBX animation take from an NSA file input
-bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader* pNMB, NSAReader* pAnimFile, std::string name)
+FbxAMatrix ConvertToFbxAMatrix(const DirectX::SimpleMath::Matrix& dxMatrix)
 {
-	if (!pAnimFile->m_init)
+	// Create an FbxAMatrix to store the converted values
+	FbxAMatrix fbxMatrix;
+
+	// DirectX::SimpleMath::Matrix stores elements in row-major order
+	// FbxAMatrix stores elements in column-major order
+
+	// Set elements in FbxAMatrix (column-major order)
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			fbxMatrix[i][j] = dxMatrix.m[i][j];
+		}
+	}
+
+	return fbxMatrix;
+}
+
+//Creates FBX animation take from an NSA file input
+bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, AnimSourceInterface* pAnim, std::string name)
+{
+	MR::AnimationSourceHandle* animHandle = pAnim->GetHandle();
+
+	if (animHandle == nullptr)
 		return false;
+
+	MR::AnimSourceNSA* animSourceNSA = (MR::AnimSourceNSA*)animHandle->getAnimation();
+
+	if (animSourceNSA->getType() != ANIM_TYPE_NSA)
+	{
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Unsupported animation format");
+		return false;
+	}
 
 	const char* cStrName = name.c_str();
 
@@ -1967,8 +1998,8 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 	FbxTime start;
 	start.SetSecondDouble(0.0);
 
-	float animSampleRate = pAnimFile->m_header.m_fps;
-	float animDuration = pAnimFile->m_header.m_duration;
+	float animSampleRate = animSourceNSA->getSampleFrequency();
+	float animDuration = animSourceNSA->getDuration(animSourceNSA);
 
 	FbxTime end;
 	end.SetSecondDouble(animDuration);
@@ -1976,8 +2007,8 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 	FbxTimeSpan timeSpan = FbxTimeSpan(start, end);
 	pAnimStack->SetLocalTimeSpan(timeSpan);
 
-	int keyframeCount = pAnimFile->m_header.m_fps * animDuration;
-	int boneCount = pSkeleton.size();
+	int keyframeCount = animSampleRate * animDuration;
+	int boneCount = animHandle->getChannelCount();
 
 	for (int boneIdx = 0; boneIdx < boneCount; boneIdx++)
 	{
@@ -1991,10 +2022,6 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 		FbxAnimCurve* curveRY = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
 		FbxAnimCurve* curveRZ = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
 
-		FbxAnimCurve* curveSX = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
-		FbxAnimCurve* curveSY = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
-		FbxAnimCurve* curveSZ = pBone->LclScaling.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
-
 		curveTX->KeyModifyBegin();
 		curveTY->KeyModifyBegin();
 		curveTZ->KeyModifyBegin();
@@ -2003,58 +2030,43 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 		curveRY->KeyModifyBegin();
 		curveRZ->KeyModifyBegin();
 
-		curveSX->KeyModifyBegin();
-		curveSY->KeyModifyBegin();
-		curveSZ->KeyModifyBegin();
-
 		for (int frame = 0; frame < keyframeCount; frame++)
 		{
 			int keyIndex;
 
-			FbxTime keyTime;
-			keyTime.SetSecondDouble(GetTimeByAnimFrame(animDuration, animSampleRate, frame));
+			float animTime = GetTimeByAnimFrame(animDuration, animSampleRate, frame);
+			FbxAMatrix transform = ConvertToFbxAMatrix(pAnim->GetTransformAtTime(animTime, boneIdx));
 
-			DirectX::SimpleMath::Vector3 translation = pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_translation;
+			FbxTime keyTime;
+			keyTime.SetSecondDouble(animTime);
+
+			FbxVector4 translation = transform.GetT();
 
 			keyIndex = curveTX->KeyAdd(keyTime);
-			curveTX->KeySetValue(keyIndex, translation.x);
+			curveTX->KeySetValue(keyIndex, translation[0]);
 			curveTX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
 			keyIndex = curveTY->KeyAdd(keyTime);
-			curveTY->KeySetValue(keyIndex, translation.y);
+			curveTY->KeySetValue(keyIndex, translation[1]);
 			curveTY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
 			keyIndex = curveTZ->KeyAdd(keyTime);
-			curveTZ->KeySetValue(keyIndex, translation.z);
+			curveTZ->KeySetValue(keyIndex, translation[2]);
 			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
-			DirectX::SimpleMath::Vector3 rotationEuler = RMath::ConvertQuatToEulerAngles(pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_rotation);
+			FbxVector4 rotation = transform.GetR();
 
 			keyIndex = curveRX->KeyAdd(keyTime);
-			curveRX->KeySetValue(keyIndex, rotationEuler.x);
+			curveRX->KeySetValue(keyIndex, rotation[0]);
 			curveRX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
 			keyIndex = curveRY->KeyAdd(keyTime);
-			curveRY->KeySetValue(keyIndex, rotationEuler.y);
+			curveRY->KeySetValue(keyIndex, rotation[1]);
 			curveRY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 
 			keyIndex = curveRZ->KeyAdd(keyTime);
-			curveRZ->KeySetValue(keyIndex, rotationEuler.z);
+			curveRZ->KeySetValue(keyIndex, rotation[2]);
 			curveRZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			DirectX::SimpleMath::Vector3 scale = pAnimFile->m_boneKeyframes[boneIdx].m_frames[frame].m_scale;
-
-			keyIndex = curveSX->KeyAdd(keyTime);
-			curveSX->KeySetValue(keyIndex, scale.x);
-			curveSX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveSY->KeyAdd(keyTime);
-			curveSY->KeySetValue(keyIndex, scale.y);
-			curveSY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveSZ->KeyAdd(keyTime);
-			curveSZ->KeySetValue(keyIndex, scale.z);
-			curveSZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
 		}
 
 		curveTX->KeyModifyEnd();
@@ -2064,22 +2076,18 @@ bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, NMBReader*
 		curveRX->KeyModifyEnd();
 		curveRY->KeyModifyEnd();
 		curveRZ->KeyModifyEnd();
-
-		curveSX->KeyModifyEnd();
-		curveSY->KeyModifyEnd();
-		curveSZ->KeyModifyEnd();
 	}
 
 	return true;
 }
-*/
 
 //TODO: Implement
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
 {
 	bool status = true;
 
-	/*
+	CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
+
 	RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Exporting animation %d (%s)\n", anim_id, export_path.filename().string().c_str());
 
 	FbxExporter* pExporter = FbxExporter::Create(g_pFbxManager, "");
@@ -2099,23 +2107,23 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
 	pBindPoses->SetIsBindPose(true);
 
-	std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_nmb.GetRig(0));
+	MR::AnimRigDef* rig = characterDef->getNetworkDef()->getRig(0);
+
+	std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, rig);
+
+	if (!CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id)))
+	{
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+		status = false;
+	}
 
 	if (this->m_fbxExportFlags.m_exportModelWithAnims)
 	{
-		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, export_path, this->m_nmb.GetRig(0), true))
+		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, export_path, rig, true))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
 		}
-	}
-
-	this->m_animFiles[anim_id].InitKeyframes(this->m_nmb.GetRigToAnimMap(0)->m_data);
-
-	if (!CreateFbxTake(pScene, pMorphemeRig, &this->m_nmb, &this->m_animFiles[anim_id], this->m_nmb.GetFilenameLookupTable()->GetAnimTake(anim_id)))
-	{
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
-		status = false;
 	}
 
 	pScene->AddPose(pBindPoses);
@@ -2124,7 +2132,6 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	pScene->Destroy(true);
 	pExporter->Destroy(true);
 
-	*/
 	return status;
 }
 

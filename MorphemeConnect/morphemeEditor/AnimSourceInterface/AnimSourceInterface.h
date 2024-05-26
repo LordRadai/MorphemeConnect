@@ -1,5 +1,8 @@
 #pragma once
 #include "morpheme/mrAnimationSourceHandle.h"
+#include <SimpleMath.h>
+
+using namespace DirectX::SimpleMath;
 
 class AnimSourceInterface
 {
@@ -14,6 +17,9 @@ public:
 	const char* GetAnimName() const { return this->m_animName; };
 	MR::AnimationSourceHandle* GetHandle() const { return this->m_animHandle; }
 
+	Matrix GetTransformAtTime(float time, int channelId);
+	Vector3 GetTransformPosAtTime(float time, int channelId);
+	Quaternion GetTransformQuatAtTime(float time, int channelId);
 private:
 	MR::AnimationSourceHandle* m_animHandle;
 	int m_id;

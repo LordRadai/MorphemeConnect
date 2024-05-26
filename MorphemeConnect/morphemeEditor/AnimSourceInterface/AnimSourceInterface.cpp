@@ -1,6 +1,7 @@
 #include "AnimSourceInterface.h"
 #include <string>
 #include <filesystem>
+#include "utils/MorphemeToDirectX.h"
 
 AnimSourceInterface::AnimSourceInterface()
 {
@@ -73,4 +74,51 @@ AnimSourceInterface::~AnimSourceInterface()
 bool AnimSourceInterface::lessThan(AnimSourceInterface* a, AnimSourceInterface* b)
 {
     return std::string(a->m_animName) < std::string(b->m_animName);
+}
+
+Matrix AnimSourceInterface::GetTransformAtTime(float time, int channelId)
+{
+    MR::AnimationSourceHandle* animHandle = this->m_animHandle;
+    animHandle->setTime(time);
+
+    Matrix transform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
+
+    if (channelId == 0)
+        transform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
+
+    return transform;
+}
+
+Vector3 AnimSourceInterface::GetTransformPosAtTime(float time, int channelId)
+{
+    MR::AnimationSourceHandle* animHandle = this->m_animHandle;
+    animHandle->setTime(time);
+
+    if (channelId == animHandle->getRig()->getTrajectoryBoneIndex())
+    {
+        NMP::Vector3 trajPos;
+        NMP::Quat trajRot;
+        animHandle->getTrajectory(trajRot, trajPos);
+
+        return NMDX::CreateFrom(trajPos);
+    }
+
+    return NMDX::CreateFrom(animHandle->getChannelData()[channelId].m_pos);
+}
+
+Quaternion AnimSourceInterface::GetTransformQuatAtTime(float time, int channelId)
+{
+    MR::AnimationSourceHandle* animHandle = this->m_animHandle;
+    animHandle->setTime(time);
+
+    if (channelId == animHandle->getRig()->getTrajectoryBoneIndex())
+    {
+        NMP::Vector3 trajPos;
+        NMP::Quat trajRot;
+        animHandle->getTrajectory(trajRot, trajPos);
+
+        return NMDX::CreateFrom(trajRot);
+    }
+
+    return NMDX::CreateFrom(animHandle->getChannelData()[channelId].m_quat);
 }

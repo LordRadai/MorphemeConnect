@@ -513,9 +513,11 @@ void Application::AssetsWindow()
 							if (this->m_eventTrackEditorFlags.m_edited[i])
 								anim_name += "*";
 
-							anim_name += this->m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getFilename(i);
+							AnimSourceInterface* currentAnim = this->m_morphemeSystem.GetCharacterDef()->getAnimation(i);
 
-							bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == i);
+							anim_name += currentAnim->GetAnimName();
+
+							bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == currentAnim->GetID());
 
 							if (filter.PassFilter(anim_name.c_str()))
 							{
@@ -524,8 +526,8 @@ void Application::AssetsWindow()
 
 								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 								{
-									this->m_eventTrackEditorFlags.m_targetAnimIdx = i;
-									this->m_eventTrackEditorFlags.m_selectedAnimIdx = i;
+									this->m_eventTrackEditorFlags.m_targetAnimIdx = currentAnim->GetID();
+									this->m_eventTrackEditorFlags.m_selectedAnimIdx = currentAnim->GetID();
 
 									if (ImGui::IsMouseDoubleClicked(0))
 										this->m_eventTrackEditorFlags.m_load = true;
@@ -1505,9 +1507,6 @@ void Application::LoadFile()
 							{
 								int animCount = m_morphemeSystem.GetCharacterDef()->getAnimFileLookUp()->getNumAnims();
 
-								this->m_anims.clear();
-								this->m_anims.reserve(animCount);
-
 								for (int i = 0; i < animCount; i++)
 								{
 									std::filesystem::path gamepath = pszFilePath;
@@ -1517,8 +1516,10 @@ void Application::LoadFile()
 
 									std::wstring anim_path_str = parent_path + L"\\" + anim_name;
 
-									this->m_anims.push_back(m_morphemeSystem.OpenAnimation(RString::ToNarrow(anim_path_str.c_str()).c_str()));
+									characterDef->addAnimation(RString::ToNarrow(anim_path_str.c_str()).c_str());
 								}
+
+								characterDef->sortAnimations();
 
 								this->m_eventTrackEditorFlags.m_targetAnimIdx = -1;
 								this->m_eventTrackEditorFlags.m_selectedAnimIdx = -1;

@@ -49,9 +49,6 @@ public:
 	//----------------------------
 	// Get character instance
 	CharacterBasic* GetCharacter();
-
-	MR::AnimationSourceHandle* OpenAnimation(const char* filename);
-
 protected:
 	CharacterDefBasic* m_characterDef;   // Store a pointer to a morpheme character definition
 	CharacterBasic* m_characterData;  // Store a pointer to a morpheme character

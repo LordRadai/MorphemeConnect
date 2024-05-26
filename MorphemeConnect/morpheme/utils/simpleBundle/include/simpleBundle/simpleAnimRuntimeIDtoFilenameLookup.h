@@ -76,6 +76,8 @@ public:
   uint32_t    getCRC(uint32_t id) const;
   const char* getFilename(uint32_t id) const;
   const char* getFormatType(uint32_t id) const;
+  const char* getSourceFilename(uint32_t id) const;
+  const char* getTakeName(uint32_t id) const;
   uint32_t    getNumAnims() const;
 
 protected:

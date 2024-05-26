@@ -181,3 +181,23 @@ bool CharacterDefBasic::term()
   // Free any memory that may be allocated in this class here
   return true;
 }
+
+AnimSourceInterface* CharacterDefBasic::getAnimation(int idx)
+{
+    if (idx < m_anims.size())
+        return m_anims[idx];
+
+    return nullptr;
+}
+
+void CharacterDefBasic::addAnimation(const char* filename)
+{
+    int idx = m_anims.size();
+
+    m_anims.push_back(new AnimSourceInterface(filename, idx));
+}
+
+void CharacterDefBasic::sortAnimations()
+{
+    std::sort(m_anims.begin(), m_anims.end(), AnimSourceInterface::lessThan);
+}

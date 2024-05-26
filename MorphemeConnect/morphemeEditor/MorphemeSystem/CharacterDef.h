@@ -19,6 +19,7 @@
 #include "simpleBundle/simpleAnimRuntimeIDtoFilenameLookup.h"
 #include <vector>
 #include <filesystem>
+#include "AnimSourceInterface/AnimSourceInterface.h"
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -65,6 +66,9 @@ public:
   MR::UTILS::SimpleAnimRuntimeIDtoFilenameLookup* getAnimFileLookUp() const { return m_metadata.m_animFileLookUp; }
   const char* getBundleFilepath() const { return m_metadata.m_bundleDir; }
   const char* getFilename() const { return m_filename; }
+  AnimSourceInterface* getAnimation(int idx);
+  void addAnimation(const char* filename);
+  void sortAnimations();
 
 protected:
 
@@ -100,6 +104,8 @@ protected:
 
   AnimData m_metadata;
   char m_filename[255];
+
+  std::vector<AnimSourceInterface*> m_anims;
 };
 
 //----------------------------------------------------------------------------------------------------------------------

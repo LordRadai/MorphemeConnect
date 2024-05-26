@@ -12,6 +12,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <fbxsdk.h>
 
 #include "PrimitiveBatch.h"
 #include "VertexTypes.h"
@@ -43,9 +44,8 @@
 #include "../FromsoftFormat/FlverReader/FlverReader.h"
 #include "../fromloader/fromloader.h"
 #include "../FlverModel/FlverModel.h"
-#include <fbxsdk.h>
 
-#include "..\MorphemeSystem\MorphemeSystem.h"
+#include "MorphemeSystem/MorphemeSystem.h"
 
 using namespace cfr;
 
@@ -118,7 +118,6 @@ public:
 	} m_fbxExportFlags;
 	
 	MorphemeSystem m_morphemeSystem;
-	std::vector<MR::AnimationSourceHandle*> m_anims;
 	TimeActReader m_tae;
 	BNDReader m_bnd;
 	FlverModel m_model;

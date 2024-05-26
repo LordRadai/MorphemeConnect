@@ -134,22 +134,3 @@ CharacterBasic* MorphemeSystem::GetCharacter()
 {
     return this->m_characterData;
 }
-
-MR::AnimationSourceHandle* MorphemeSystem::OpenAnimation(const char* filename)
-{
-    void* animData = NULL;
-    int64_t animSize = 0;
-
-    //----------------------------
-    // Load binary bundle into memory
-    int64_t fileSize = NMP::NMFile::allocAndLoad(filename, &animData, &animSize);
-    MR::AnimationSourceHandle* animHandle = new MR::AnimationSourceHandle;
-
-    if (fileSize > -1)
-    {
-        animHandle->openAnimation((unsigned char*)animData, fileSize, "nsa");
-        return animHandle;
-    }
-
-    return nullptr;
-}

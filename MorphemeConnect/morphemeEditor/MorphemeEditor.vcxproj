@@ -152,6 +152,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimSourceInterface\AnimSourceInterface.cpp" />
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
     <ClCompile Include="FlverModel\FlverModel.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="utils\MorphemeToDirectX.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimSourceInterface\AnimSourceInterface.h" />
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="EventTrackEditor\EventTrackEditor.h" />
     <ClInclude Include="extern.h" />

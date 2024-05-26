@@ -152,6 +152,18 @@ const char* SimpleAnimRuntimeIDtoFilenameLookup::getFormatType(uint32_t id) cons
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+const char* SimpleAnimRuntimeIDtoFilenameLookup::getSourceFilename(uint32_t id) const
+{
+	return m_animIDSourceFilenamesTable->getStringForID(id);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+const char* SimpleAnimRuntimeIDtoFilenameLookup::getTakeName(uint32_t id) const
+{
+	return m_animIDSourceTakenamesTable->getStringForID(id);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 uint32_t SimpleAnimRuntimeIDtoFilenameLookup::getCRC(uint32_t id) const
 {
   NMP_ASSERT_MSG(id < m_animIDFilenamesTable->getNumEntries(), "Invalid usage: index %u out of bounds!", id);

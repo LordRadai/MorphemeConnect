@@ -488,7 +488,7 @@ void Application::AssetsWindow()
 			selected_tae_file_idx = -1;
 
 		ImGui::BeginTabBar("assets tab bar");
-		if (ImGui::BeginTabItem("NSA"))
+		if (ImGui::BeginTabItem("Animations"))
 		{
 			CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
@@ -514,11 +514,14 @@ void Application::AssetsWindow()
 							if (this->m_eventTrackEditorFlags.m_edited[i])
 								anim_name += "*";
 
-							AnimSourceInterface* currentAnim = this->m_morphemeSystem.GetCharacterDef()->getAnimation(i);
+							AnimSourceInterface* currentAnim = characterDef->getAnimation(i);
 
-							anim_name += currentAnim->GetAnimName();
+							anim_name += RString::RemovePathAndExtension(characterDef->getAnimFileLookUp()->getSourceFilename(currentAnim->GetID()));
 
 							bool selected = (this->m_eventTrackEditorFlags.m_selectedAnimIdx == currentAnim->GetID());
+
+							if (currentAnim->GetHandle() == nullptr)
+								ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
 
 							if (filter.PassFilter(anim_name.c_str()))
 							{
@@ -536,6 +539,9 @@ void Application::AssetsWindow()
 								}
 								ImGui::PopID();
 							}
+
+							if (currentAnim->GetHandle() == nullptr)
+								ImGui::PopStyleColor();
 						}
 					}
 					ImGui::EndChild();

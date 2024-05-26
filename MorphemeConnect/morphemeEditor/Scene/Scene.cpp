@@ -274,7 +274,7 @@ void Scene::Render()
         
         if (g_morphemeConnect.m_model.m_loaded)
         {
-            if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr)
+            if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr && g_morphemeConnect.m_animPlayer.GetAnimation()->GetHandle() != nullptr)
                 DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_model.m_position), g_morphemeConnect.m_model, g_morphemeConnect.m_animPlayer.GetAnimation());
             else
             {

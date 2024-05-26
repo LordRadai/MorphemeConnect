@@ -33,6 +33,11 @@ std::string RString::RemoveExtension(std::string filename)
 	return filename.substr(0, lastdot);
 }
 
+std::string RString::RemovePathAndExtension(std::string filename)
+{
+	return std::filesystem::path(RemoveExtension(filename).c_str()).filename().string();
+}
+
 std::string RString::Replace(std::string str, std::string substr, std::string replacement)
 {
 	std::string new_str;

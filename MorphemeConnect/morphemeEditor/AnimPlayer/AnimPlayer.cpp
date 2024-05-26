@@ -17,6 +17,11 @@ void AnimPlayer::Update(float dt)
 	if (this->m_anim == nullptr)
 		return;
 
+	MR::AnimationSourceHandle* animHandle = this->m_anim->GetHandle();
+
+	if (animHandle == nullptr)
+		return;
+
 	if (!this->m_pause)
 	{
 		this->m_time += dt;
@@ -30,7 +35,7 @@ void AnimPlayer::Update(float dt)
 		}
 	}
 
-	this->m_anim->GetHandle()->setTime(this->m_time);
+	animHandle->setTime(this->m_time);
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)

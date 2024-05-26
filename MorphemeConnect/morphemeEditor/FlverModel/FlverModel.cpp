@@ -406,6 +406,7 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 //Creates an FbxNode object containing vertices, normals and bone weights using the morpheme rig
 FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> skeletonNodes, MR::AnimRigDef* pMorphemeRig, std::vector<int> flverToMorphemeBoneMap, int idx)
 {
+
 	if (m_flver == nullptr)
 		return nullptr;
 
@@ -485,19 +486,19 @@ FbxNode* FlverModel::CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> 
 					switch (wt)
 					{
 					case 0:
-						if (flverToMorphemeBoneMap[indices[0]] == boneIndex)
+						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[0]]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[0]);
 						break;
 					case 1:
-						if (flverToMorphemeBoneMap[indices[1]] == boneIndex)
+						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[1]]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[1]);
 						break;
 					case 2:
-						if (flverToMorphemeBoneMap[indices[2]] == boneIndex)
+						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[2]]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[2]);
 						break;
 					case 3:
-						if (flverToMorphemeBoneMap[indices[3]] == boneIndex)
+						if (flverToMorphemeBoneMap[this->m_flver->meshes[idx].boneIndices[indices[3]]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights.mData[3]);
 						break;
 					}

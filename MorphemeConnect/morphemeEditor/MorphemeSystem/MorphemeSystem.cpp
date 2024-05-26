@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 void MorphemeSystem::initMorpheme()
 {
-    NMP_STDOUT("\nInitialising Game::MorphemeSystem");
+    NMP_STDOUT("\nInitialising MorphemeSystem");
 
     NMP::Memory::init();
 
@@ -41,11 +41,11 @@ void MorphemeSystem::initMorpheme()
         AnimLoaderBasic::requestAnim,
         AnimLoaderBasic::releaseAnim);
 
-    NMP_STDOUT("Initialisation of Game::MorphemeSystem complete");
+    NMP_STDOUT("Initialisation of MorphemeSystem complete");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-// Unload any data stored in this Game::CharacterManager, including Game::CharacterDefs that have been loaded and unload the memory
+// Unload any data stored in this MorphemeSystem, including CharacterDefs that have been loaded and unload the memory
 // they store.
 //
 // Note that this isn't exactly robust - if we load bundle A and bundle B, and both contain the same rig, the rig will

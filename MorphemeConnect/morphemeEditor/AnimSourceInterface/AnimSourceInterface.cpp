@@ -91,11 +91,11 @@ Matrix AnimSourceInterface::GetTransformAtTime(float time, int channelId)
 
         transform = NMDX::GetWorldMatrix(trajRot, trajPos);
 
-        transform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
+        //transform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
     }
 
-    if (channelId == animHandle->getRig()->getCharacterRootBoneIndex())
-        transform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
+    //if (channelId == animHandle->getRig()->getCharacterRootBoneIndex())
+        //transform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
 
     return transform;
 }

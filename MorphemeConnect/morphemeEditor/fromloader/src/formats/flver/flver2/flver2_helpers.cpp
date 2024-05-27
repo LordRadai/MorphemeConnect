@@ -891,7 +891,8 @@ namespace cfr
 		uclose(dstBitangents);
 		uclose(dstColors);*/
 
-		this->meshes[meshIndex].vertexData = vd;
+		if ((vd->positions[0] != vd->positions[1]) && (vd->positions[1] != vd->positions[2]) && (vd->positions[0] != vd->positions[2]))
+			this->meshes[meshIndex].vertexData = vd;
 	};
 
 	void FLVER2::getVertexDataOrdered(int meshIndex, int uvCount, int colorCount, int tanCount, int vertCount)

@@ -147,7 +147,6 @@ FbxNode* FBXTranslator::CreateModelFbxMesh(FbxScene* pScene, FlverModel* pFlverM
 	FbxNode* pMeshNode = FbxNode::Create(pScene, mesh_node_name.c_str());
 
 	FbxMesh* pMesh = FbxMesh::Create(pScene, std::string(mesh_node_name + "_mesh").c_str());
-
 	pMesh->CreateLayer();
 
 	//Add vertices
@@ -184,7 +183,10 @@ FbxNode* FBXTranslator::CreateModelFbxMesh(FbxScene* pScene, FlverModel* pFlverM
 
 	//Add bone weights
 	std::vector<FbxVector4> bone_weights = pFlverModel->GetModelMeshBoneWeights(idx);
-	std::vector<int*> bone_indices = pFlverModel->GetModelMeshBoneIndices(idx);
+	std::vector<int*> bone_indices;
+
+	bone_indices.reserve(bone_weights.size());
+	pFlverModel->GetModelMeshBoneIndices(bone_indices, idx);
 
 	if (bone_weights.size() > 0)
 		pSkin = FbxSkin::Create(pScene, std::string(mesh_node_name + "_skin").c_str());
@@ -240,7 +242,7 @@ FbxNode* FBXTranslator::CreateModelFbxMesh(FbxScene* pScene, FlverModel* pFlverM
 	}
 
 	pMesh->AddDeformer(pSkin);
-
+	pMesh->BuildMeshEdgeArray();
 	pMeshNode->SetNodeAttribute(pMesh);
 
 	return pMeshNode;

@@ -1919,11 +1919,24 @@ int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel
 
 int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
+	if (idx == -1)
+		return -1;
+
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
 	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());;
 
 	if (boneIdx == -1)
+	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
+
+		int newIdx = pFlverModel->m_flver->bones[idx].previousSiblingIndex;
+
+		if (newIdx != -1)
+		{
+			//int nextSibling = pFlverModel->m_flver->bones[parentIdx].childIndex;
+			boneIdx = GetMorphemeRigBoneIndexByFlverBoneIndex(pRig, pFlverModel, newIdx);
+		}
+	}
 
 	return boneIdx;
 }
@@ -1968,13 +1981,19 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	}
 
 	FbxScene* pScene = FbxScene::Create(g_pFbxManager, export_path.string().c_str());
-	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::OpenGL);
+	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::eMax);
 	pScene->GetGlobalSettings().SetSystemUnit(FbxSystemUnit::m);
 
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
 	pBindPoses->SetIsBindPose(true);
 
 	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
+
+	if (!FBXTranslator::CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id)))
+	{
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+		status = false;
+	}
 
 	if (this->m_fbxExportFlags.m_exportModelWithAnims)
 	{
@@ -1983,12 +2002,6 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
 		}
-	}
-
-	if (!FBXTranslator::CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id)))
-	{
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
-		status = false;
 	}
 
 	pScene->AddPose(pBindPoses);
@@ -2022,7 +2035,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 	}
 
 	FbxScene* pScene = FbxScene::Create(g_pFbxManager, chr_id_str);
-	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::OpenGL);
+	pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::eMax);
 	pScene->GetGlobalSettings().SetSystemUnit(FbxSystemUnit::m);
 
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");

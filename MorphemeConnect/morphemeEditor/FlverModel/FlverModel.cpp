@@ -193,15 +193,13 @@ std::vector<FbxVector4> FlverModel::GetModelMeshBoneWeights(int idx)
 }
 
 //Gets the bone indices for the FLVER mesh at index idx
-std::vector<int*> FlverModel::GetModelMeshBoneIndices(int idx)
+void FlverModel::GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx)
 {
-	std::vector<int*> weightIndices;
-
 	if (m_flver == nullptr)
-		return weightIndices;
+		return;
 
 	if (idx > m_flver->header.meshCount)
-		return weightIndices;
+		return;
 
 	cfr::FLVER2::Mesh* mesh = &m_flver->meshes[idx];
 
@@ -238,11 +236,11 @@ std::vector<int*> FlverModel::GetModelMeshBoneIndices(int idx)
 			indices[2] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 2];
 			indices[3] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 3];
 
-			weightIndices.push_back(indices);
+			buffer.push_back(indices);
 		}
 	}
 
-	return weightIndices;
+	return;
 }
 
 //Gets all the model vertices for all the meshes and stores them into m_verts

@@ -38,7 +38,7 @@ public:
 	std::vector<FbxVector4> GetModelMeshVertices(int idx, bool flip);
 	std::vector<FbxVector4> GetModelMeshNormals(int idx, bool flip);
 	std::vector<FbxVector4> GetModelMeshBoneWeights(int idx);
-	std::vector<int*> GetModelMeshBoneIndices(int idx);
+	void GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx);
 
 	void GetModelVertices();
 	void UpdateModel();

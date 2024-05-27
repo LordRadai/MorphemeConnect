@@ -204,6 +204,9 @@
     <ClCompile Include="AnimPlayer\AnimPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FBXTranslator\FBXTranslator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TimeActEditor\TimeActEditor.h">
@@ -444,6 +447,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnimPlayer\AnimPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXTranslator\FBXTranslator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

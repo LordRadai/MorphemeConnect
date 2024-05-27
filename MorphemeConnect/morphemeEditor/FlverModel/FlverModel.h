@@ -39,10 +39,8 @@ public:
 	std::vector<FbxVector4> GetModelMeshNormals(int idx, bool flip);
 	std::vector<FbxVector4> GetModelMeshBoneWeights(int idx);
 	std::vector<int*> GetModelMeshBoneIndices(int idx);
-	FbxNode* CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> skeletonNodes, int idx);
-	FbxNode* CreateModelFbxMesh(FbxScene* pScene, std::vector<FbxNode*> skeletonNodes, MR::AnimRigDef* pMorphemeRig, std::vector<int> flverToMorphemeBoneMap, int idx);
-	std::vector<FbxNode*> CreateFbxFlverSkeleton(FbxScene* pScene, FbxPose* pBindPoses);
-	std::vector<FbxNode*> CreateFbxMorphemeSkeleton(FbxScene* pScene, FbxPose* pBindPoses, MR::AnimRigDef* pRig);
+
 	void GetModelVertices();
 	void UpdateModel();
+	int GetBoneIndexFromName(const char* name);
 };

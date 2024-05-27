@@ -157,6 +157,7 @@
     <ClCompile Include="AnimSourceInterface\AnimSourceInterface.cpp" />
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="EventTrackEditor\EventTrackEditor.cpp" />
+    <ClCompile Include="FBXTranslator\FBXTranslator.cpp" />
     <ClCompile Include="FlverModel\FlverModel.cpp" />
     <ClCompile Include="fromloader\cmem.c" />
     <ClCompile Include="fromloader\src\formats\binder\binder.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="EventTrackEditor\EventTrackEditor.h" />
     <ClInclude Include="extern.h" />
+    <ClInclude Include="FBXTranslator\FBXTranslator.h" />
     <ClInclude Include="FlverModel\FlverModel.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="fromloader\cmem.h" />

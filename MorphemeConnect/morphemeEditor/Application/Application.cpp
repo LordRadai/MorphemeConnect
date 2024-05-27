@@ -6,6 +6,7 @@
 #include "utils/MorphemeToDirectX.h"
 #include <Shlwapi.h>
 #include <filesystem>
+#include "FBXTranslator/FBXTranslator.h"
 
 std::vector<std::wstring> getTaeFileListFromChrId(std::wstring tae_path, std::wstring m_chrId)
 {
@@ -1923,8 +1924,7 @@ int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel
 int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-
-	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
+	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());;
 
 	if (boneIdx == -1)
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
@@ -1932,185 +1932,33 @@ int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pF
 	return boneIdx;
 }
 
-//Creates an anim map from the flver model bone to the morpheme rig and saves it in m_flverToMorphemeBoneMap
-//TODO Complete this
+int GetFlverBoneIDByMorphemeBoneID(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
+{
+	std::string boneName = pRig->getBoneName(idx);
+	int flverIdx = pFlverModel->GetBoneIndexFromName(boneName.c_str());
+
+	if (flverIdx == -1)
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the flver rig\n", boneName.c_str());
+
+	return flverIdx;
+}
+
+//Creates an anim map from the flver model bone to the morpheme rig and saves it in m_morphemeToFlverRigMap
 void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig, FlverModel* pFlverModel)
 {
-	this->m_flverToMorphemeBoneMap.clear();
-	this->m_flverToMorphemeBoneMap.reserve(pFlverModel->m_flver->header.boneCount);
+	this->m_morphemeToFlverRigMap.clear();
+	this->m_morphemeToFlverRigMap.reserve(pMorphemeRig->getNumBones());
+
+	for (int i = 0; i < pMorphemeRig->getNumBones(); i++)
+		this->m_morphemeToFlverRigMap.push_back(GetFlverBoneIDByMorphemeBoneID(pMorphemeRig, pFlverModel, i));
+
+	this->m_flverToMorphemeRigMap.clear();
+	this->m_flverToMorphemeRigMap.reserve(pFlverModel->m_flver->header.boneCount);
 
 	for (int i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
+		this->m_flverToMorphemeRigMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
 }
 
-//Adds flver meshes to the scene
-bool CreateFbxModel(Application* pApplication, FbxScene* pScene, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path, MR::AnimRigDef* pMorphemeRig, bool useMorphemeRig)
-{
-	std::string model_node_name = "c" + std::to_string(pApplication->m_chrId) + "_model";
-
-	FbxNode* pModelNode = FbxNode::Create(pScene, model_node_name.c_str());
-	pScene->GetRootNode()->AddChild(pModelNode);
-
-	std::vector<FbxNode*> pMeshNodesList;
-
-	pMeshNodesList.reserve(pApplication->m_model.m_flver->header.meshCount);
-
-	for (int i = 0; i < pApplication->m_model.m_flver->header.meshCount; i++)
-	{
-		FbxNode* pMeshNode = nullptr;
-
-		if (!useMorphemeRig || pMorphemeRig == nullptr)
-			pMeshNode = pApplication->m_model.CreateModelFbxMesh(pScene, pBoneList, i);
-		else
-			pMeshNode = pApplication->m_model.CreateModelFbxMesh(pScene, pBoneList, pMorphemeRig, pApplication->m_flverToMorphemeBoneMap, i);
-
-		if (pMeshNode != nullptr)
-		{
-			pModelNode->AddChild(pMeshNode);
-			pBindPoses->Add(pMeshNode, FbxAMatrix());
-
-			pMeshNodesList.push_back(pMeshNode);
-		}
-		else
-			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create MeshNode object for mesh %d (file=%s)\n", i, export_path.filename().c_str());
-	}
-	
-	return true;
-}
-
-inline double GetTimeByAnimFrame(float animLenght, float fps, int frameNum)
-{
-	return (animLenght / fps) * frameNum;
-}
-
-FbxAMatrix ConvertToFbxAMatrix(const DirectX::SimpleMath::Matrix& dxMatrix)
-{
-	// Create an FbxAMatrix to store the converted values
-	FbxAMatrix fbxMatrix;
-
-	// DirectX::SimpleMath::Matrix stores elements in row-major order
-	// FbxAMatrix stores elements in column-major order
-
-	// Set elements in FbxAMatrix (column-major order)
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			fbxMatrix[i][j] = dxMatrix.m[i][j];
-		}
-	}
-
-	return fbxMatrix;
-}
-
-//Creates FBX animation take from an NSA file input
-bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, AnimSourceInterface* pAnim, std::string name)
-{
-	MR::AnimationSourceHandle* animHandle = pAnim->GetHandle();
-
-	if (animHandle == nullptr)
-		return false;
-
-	MR::AnimSourceNSA* animSourceNSA = (MR::AnimSourceNSA*)animHandle->getAnimation();
-
-	if (animSourceNSA->getType() != ANIM_TYPE_NSA)
-	{
-		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Unsupported animation format");
-		return false;
-	}
-
-	const char* cStrName = name.c_str();
-
-	FbxAnimStack* pAnimStack = FbxAnimStack::Create(pScene, cStrName);
-	FbxAnimLayer* pAnimBaseLayer = FbxAnimLayer::Create(pScene, cStrName);
-
-	pAnimStack->AddMember(pAnimBaseLayer);
-
-	FbxTime start;
-	start.SetSecondDouble(0.0);
-
-	float animSampleRate = animSourceNSA->getSampleFrequency();
-	float animDuration = animSourceNSA->getDuration(animSourceNSA);
-
-	FbxTime end;
-	end.SetSecondDouble(animDuration);
-
-	FbxTimeSpan timeSpan = FbxTimeSpan(start, end);
-	pAnimStack->SetLocalTimeSpan(timeSpan);
-
-	int keyframeCount = animSampleRate * animDuration;
-	int boneCount = animHandle->getChannelCount();
-
-	for (int boneIdx = 0; boneIdx < boneCount; boneIdx++)
-	{
-		FbxNode* pBone = pSkeleton[boneIdx];
-
-		FbxAnimCurve* curveTX = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
-		FbxAnimCurve* curveTY = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
-		FbxAnimCurve* curveTZ = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
-
-		FbxAnimCurve* curveRX = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
-		FbxAnimCurve* curveRY = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
-		FbxAnimCurve* curveRZ = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
-
-		curveTX->KeyModifyBegin();
-		curveTY->KeyModifyBegin();
-		curveTZ->KeyModifyBegin();
-
-		curveRX->KeyModifyBegin();
-		curveRY->KeyModifyBegin();
-		curveRZ->KeyModifyBegin();
-
-		for (int frame = 0; frame < keyframeCount; frame++)
-		{
-			int keyIndex;
-
-			float animTime = GetTimeByAnimFrame(animDuration, animSampleRate, frame);
-			FbxAMatrix transform = ConvertToFbxAMatrix(pAnim->GetTransformAtTime(animTime, boneIdx));
-
-			FbxTime keyTime;
-			keyTime.SetSecondDouble(animTime);
-
-			FbxVector4 translation = transform.GetT();
-
-			keyIndex = curveTX->KeyAdd(keyTime);
-			curveTX->KeySetValue(keyIndex, translation[0]);
-			curveTX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveTY->KeyAdd(keyTime);
-			curveTY->KeySetValue(keyIndex, translation[1]);
-			curveTY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveTZ->KeyAdd(keyTime);
-			curveTZ->KeySetValue(keyIndex, translation[2]);
-			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			FbxVector4 rotation = transform.GetR();
-
-			keyIndex = curveRX->KeyAdd(keyTime);
-			curveRX->KeySetValue(keyIndex, rotation[0]);
-			curveRX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveRY->KeyAdd(keyTime);
-			curveRY->KeySetValue(keyIndex, rotation[1]);
-			curveRY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-
-			keyIndex = curveRZ->KeyAdd(keyTime);
-			curveRZ->KeySetValue(keyIndex, rotation[2]);
-			curveRZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
-		}
-
-		curveTX->KeyModifyEnd();
-		curveTY->KeyModifyEnd();
-		curveTZ->KeyModifyEnd();
-
-		curveRX->KeyModifyEnd();
-		curveRY->KeyModifyEnd();
-		curveRZ->KeyModifyEnd();
-	}
-
-	return true;
-}
-
-//TODO: Implement
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
 {
 	bool status = true;
@@ -2136,23 +1984,21 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
 	pBindPoses->SetIsBindPose(true);
 
-	MR::AnimRigDef* rig = characterDef->getNetworkDef()->getRig(0);
-
-	std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, rig);
-
-	if (!CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id)))
-	{
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
-		status = false;
-	}
+	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
 
 	if (this->m_fbxExportFlags.m_exportModelWithAnims)
 	{
-		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, export_path, rig, true))
+		if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, this->m_chrId, pBindPoses, pMorphemeRig, export_path))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
 		}
+	}
+
+	if (!FBXTranslator::CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id), this->m_morphemeToFlverRigMap))
+	{
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+		status = false;
 	}
 
 	pScene->AddPose(pBindPoses);
@@ -2192,27 +2038,15 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
 	pBindPoses->SetIsBindPose(true);
 
-	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
+	CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
+
+	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
+
+	if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_morphemeToFlverRigMap))
 	{
-		std::vector<FbxNode*> pMorphemeRig = this->m_model.CreateFbxMorphemeSkeleton(pScene, pBindPoses, this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0));
+		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 
-		if (!CreateFbxModel(this, pScene, pBindPoses, pMorphemeRig, model_out, this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0), true))
-		{
-			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
-
-			status = false;
-		}
-	}
-	else
-	{
-		std::vector<FbxNode*> pFlverSkeleton = this->m_model.CreateFbxFlverSkeleton(pScene, pBindPoses);
-
-		if (!CreateFbxModel(this, pScene, pBindPoses, pFlverSkeleton, model_out, nullptr, false))
-		{
-			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
-
-			status = false;
-		}
+		status = false;
 	}
 
 	pScene->AddPose(pBindPoses);

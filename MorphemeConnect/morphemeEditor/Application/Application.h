@@ -124,7 +124,8 @@ public:
 	BNDReader m_bnd;
 	FlverModel m_model;
 	int m_chrId = -1;
-	std::vector<int> m_flverToMorphemeBoneMap;
+	std::vector<int> m_morphemeToFlverRigMap;
+	std::vector<int> m_flverToMorphemeRigMap;
 
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;

@@ -2042,7 +2042,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
 
-	if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_morphemeToFlverRigMap))
+	if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_flverToMorphemeRigMap))
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 

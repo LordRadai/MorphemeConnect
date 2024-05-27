@@ -249,15 +249,15 @@ void Application::RenderGUI(const char* title)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open...", NULL, false)) { this->m_flags.m_loadFile = true; }
+			if (ImGui::MenuItem("Open...")) { this->m_flags.m_loadFile = true; }
 
 			ImGui::Separator();
 
 			if (ImGui::BeginMenu("Save"))
 			{
-				//if (ImGui::MenuItem("Save NMB", NULL, false)) { this->m_flags.m_saveNmb = true; }
-				if (ImGui::MenuItem("Save TAE", NULL, false)) { this->m_flags.m_saveTae = true; }
-				//if (ImGui::MenuItem("Save All", NULL, false)) { this->m_flags.m_saveAll = true; }
+				//if (ImGui::MenuItem("Save NMB")) { this->m_flags.m_saveNmb = true; }
+				if (ImGui::MenuItem("Save TAE")) { this->m_flags.m_saveTae = true; }
+				//if (ImGui::MenuItem("Save All")) { this->m_flags.m_saveAll = true; }
 
 				ImGui::EndMenu();
 			}
@@ -266,7 +266,7 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-				if (ImGui::MenuItem("Export model and animations", NULL, false))
+				if (ImGui::MenuItem("Export model and animations"))
 					this->m_flags.m_exportAll = true;
 
 				if (ImGui::MenuItem("Export model"))

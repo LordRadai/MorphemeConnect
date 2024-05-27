@@ -266,8 +266,44 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-				if (ImGui::MenuItem("Export All", NULL, &this->m_flags.m_exportAll)) { this->m_flags.m_exportAll = true; }
-				if (ImGui::MenuItem("Export Model", NULL, &this->m_flags.m_exportModel)) { this->m_flags.m_exportModel = true; }
+				if (ImGui::Button("Export All"))
+					ImGui::OpenPopup("export_anims_options");
+
+				if (ImGui::Button("Export Model"))
+					ImGui::OpenPopup("export_model_options");
+
+				if (ImGui::BeginPopup("export_model_options"))
+				{
+					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
+
+					if (ImGui::Button("Export"))
+					{
+						this->m_flags.m_exportModel = true;
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::Button("Cancel"))
+						ImGui::CloseCurrentPopup();
+
+					ImGui::EndPopup();
+				}
+
+				if (ImGui::BeginPopup("export_anims_options"))
+				{
+					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
+					ImGui::Checkbox("Add model", &this->m_fbxExportFlags.m_exportModelWithAnims);
+
+					if (ImGui::Button("Export"))
+					{
+						this->m_flags.m_exportAll = true;
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::Button("Cancel"))
+						ImGui::CloseCurrentPopup();
+
+					ImGui::EndPopup();
+				}
 
 				ImGui::EndMenu();
 			}
@@ -950,16 +986,6 @@ void Application::SettingsWindow()
 	}
 #endif
 
-	if (ImGui::BeginTabItem("Export Settings"))
-	{
-		ImGui::Checkbox("Export morpheme rig with flver model", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
-
-#ifdef _DEBUG
-		ImGui::Checkbox("Export model with animations", &this->m_fbxExportFlags.m_exportModelWithAnims);
-#endif
-		ImGui::EndTabItem();
-	}
-
 	if (ImGui::BeginTabItem("EventTrack Editor Colors"))
 	{
 		ImGui::ColorEdit4("Track", (float*)&this->m_eventTrackEditor.m_colors.m_trackColor);
@@ -1150,15 +1176,18 @@ void Application::CheckFlags()
 
 			PWSTR export_path = (wchar_t*)out_path.c_str();
 
-			if (!this->ExportModelToFbx(export_path))
-				RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
-
+			if (this->m_fbxExportFlags.m_exportModelWithAnims)
+			{
+				if (!this->ExportModelToFbx(export_path))
+					RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Failed to export FBX model (chrId=c%04d)\n", this->m_chrId);
+			}
+			
 			for (int i = 0; i < numAnims; i++)
 			{
 				std::filesystem::path anim_out = std::filesystem::path(RString::ToNarrow(export_path) + "Animations//" + RString::RemovePathAndExtension(characterDef->getAnimFileLookUp()->getSourceFilename(i)) + ".fbx");
 				std::filesystem::create_directories(anim_out.parent_path());
 
-				if (!this->ExportAnimationToFbx(anim_out, i))
+				if (!this->ExportAnimationToFbx(anim_out, i, this->m_fbxExportFlags.m_exportMorphemeRigWithModel == false))
 					RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to export animation %d\n", i);
 
 				//if (!this->m_nmb.ExportEventTrackToXML(export_path, i))
@@ -1959,7 +1988,7 @@ void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeR
 		this->m_flverToMorphemeRigMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
 }
 
-bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
+bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id, bool useFlver)
 {
 	bool status = true;
 
@@ -1984,21 +2013,43 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 	FbxPose* pBindPoses = FbxPose::Create(pScene, "BindPoses");
 	pBindPoses->SetIsBindPose(true);
 
-	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
-
-	if (this->m_fbxExportFlags.m_exportModelWithAnims)
+	if (useFlver)
 	{
-		if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, this->m_chrId, pBindPoses, pMorphemeRig, export_path))
+		std::vector<FbxNode*> pFlverRig = FBXTranslator::CreateFbxFlverSkeleton(pScene, &this->m_model, pBindPoses);
+
+		if (this->m_fbxExportFlags.m_exportModelWithAnims)
 		{
-			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+			if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, this->m_chrId, pBindPoses, pFlverRig, export_path))
+			{
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+				status = false;
+			}
+		}
+
+		if (!FBXTranslator::CreateFbxTake(pScene, pFlverRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id), this->m_morphemeToFlverRigMap))
+		{
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
 		}
 	}
-
-	if (!FBXTranslator::CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id), this->m_morphemeToFlverRigMap))
+	else
 	{
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
-		status = false;
+		std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
+
+		if (this->m_fbxExportFlags.m_exportModelWithAnims)
+		{
+			if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, export_path, this->m_flverToMorphemeRigMap))
+			{
+				RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+				status = false;
+			}
+		}
+
+		if (!FBXTranslator::CreateFbxTake(pScene, pMorphemeRig, characterDef->getAnimationById(anim_id), characterDef->getAnimFileLookUp()->getTakeName(anim_id)))
+		{
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX anim take (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
+			status = false;
+		}
 	}
 
 	pScene->AddPose(pBindPoses);
@@ -2040,13 +2091,27 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
-	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
-
-	if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_flverToMorphemeRigMap))
+	if (this->m_fbxExportFlags.m_exportMorphemeRigWithModel)
 	{
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+		std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
 
-		status = false;
+		if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_flverToMorphemeRigMap))
+		{
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+
+			status = false;
+		}
+	}
+	else
+	{
+		std::vector<FbxNode*> pFlverRig = FBXTranslator::CreateFbxFlverSkeleton(pScene, &this->m_model, pBindPoses);
+
+		if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, this->m_chrId, pBindPoses, pFlverRig, model_out))
+		{
+			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
+
+			status = false;
+		}
 	}
 
 	pScene->AddPose(pBindPoses);

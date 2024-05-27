@@ -302,7 +302,7 @@ FbxNode* FBXTranslator::CreateModelFbxMesh(FbxScene* pScene, FlverModel* pFlverM
 
 	if (pSkin != nullptr)
 	{
-		for (int i = 0; i < pRig->getNumBones(); i++)
+		for (int i = 0; i < pFlverModel->m_flver->meshes[idx].header.boneCount; i++)
 		{
 			int boneIndex = flverToMorphemeRigMap[pFlverModel->m_flver->meshes[idx].boneIndices[i]];
 
@@ -449,6 +449,119 @@ bool FBXTranslator::CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkele
 	for (int morphemeBoneIdx = 0; morphemeBoneIdx < boneCount; morphemeBoneIdx++)
 	{
 		int boneIndex = morphemeToFlverRigMap[morphemeBoneIdx];
+
+		if (boneIndex == -1)
+			continue;
+
+		FbxNode* pBone = pSkeleton[boneIndex];
+
+		FbxAnimCurve* curveTX = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+		FbxAnimCurve* curveTY = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+		FbxAnimCurve* curveTZ = pBone->LclTranslation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+
+		FbxAnimCurve* curveRX = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+		FbxAnimCurve* curveRY = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+		FbxAnimCurve* curveRZ = pBone->LclRotation.GetCurve(pAnimBaseLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+
+		curveTX->KeyModifyBegin();
+		curveTY->KeyModifyBegin();
+		curveTZ->KeyModifyBegin();
+
+		curveRX->KeyModifyBegin();
+		curveRY->KeyModifyBegin();
+		curveRZ->KeyModifyBegin();
+
+		for (int frame = 0; frame < keyframeCount; frame++)
+		{
+			int keyIndex;
+
+			float animTime = GetTimeByAnimFrame(animDuration, animSampleRate, frame);
+			FbxAMatrix transform = ConvertToFbxAMatrix(pAnim->GetTransformAtTime(animTime, morphemeBoneIdx));
+
+			FbxTime keyTime;
+			keyTime.SetSecondDouble(animTime);
+
+			FbxVector4 translation = transform.GetT();
+
+			keyIndex = curveTX->KeyAdd(keyTime);
+			curveTX->KeySetValue(keyIndex, translation[0]);
+			curveTX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveTY->KeyAdd(keyTime);
+			curveTY->KeySetValue(keyIndex, translation[1]);
+			curveTY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveTZ->KeyAdd(keyTime);
+			curveTZ->KeySetValue(keyIndex, translation[2]);
+			curveTZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			FbxVector4 rotation = transform.GetR();
+
+			keyIndex = curveRX->KeyAdd(keyTime);
+			curveRX->KeySetValue(keyIndex, rotation[0]);
+			curveRX->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveRY->KeyAdd(keyTime);
+			curveRY->KeySetValue(keyIndex, rotation[1]);
+			curveRY->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+
+			keyIndex = curveRZ->KeyAdd(keyTime);
+			curveRZ->KeySetValue(keyIndex, rotation[2]);
+			curveRZ->KeySetInterpolation(keyIndex, FbxAnimCurveDef::eInterpolationLinear);
+		}
+
+		curveTX->KeyModifyEnd();
+		curveTY->KeyModifyEnd();
+		curveTZ->KeyModifyEnd();
+
+		curveRX->KeyModifyEnd();
+		curveRY->KeyModifyEnd();
+		curveRZ->KeyModifyEnd();
+	}
+
+	return true;
+}
+
+bool FBXTranslator::CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, AnimSourceInterface* pAnim, std::string name)
+{
+	MR::AnimationSourceHandle* animHandle = pAnim->GetHandle();
+
+	if (animHandle == nullptr)
+		return false;
+
+	MR::AnimSourceNSA* animSourceNSA = (MR::AnimSourceNSA*)animHandle->getAnimation();
+
+	if (animSourceNSA->getType() != ANIM_TYPE_NSA)
+	{
+		RDebug::SystemAlert(g_logLevel, MsgLevel_Error, "Application.cpp", "Unsupported animation format");
+		return false;
+	}
+
+	const char* cStrName = name.c_str();
+
+	FbxAnimStack* pAnimStack = FbxAnimStack::Create(pScene, cStrName);
+	FbxAnimLayer* pAnimBaseLayer = FbxAnimLayer::Create(pScene, cStrName);
+
+	pAnimStack->AddMember(pAnimBaseLayer);
+
+	FbxTime start;
+	start.SetSecondDouble(0.0);
+
+	float animSampleRate = animSourceNSA->getSampleFrequency();
+	float animDuration = animSourceNSA->getDuration(animSourceNSA);
+
+	FbxTime end;
+	end.SetSecondDouble(animDuration);
+
+	FbxTimeSpan timeSpan = FbxTimeSpan(start, end);
+	pAnimStack->SetLocalTimeSpan(timeSpan);
+
+	int keyframeCount = animSampleRate * animDuration;
+	int boneCount = animHandle->getChannelCount();
+
+	for (int morphemeBoneIdx = 0; morphemeBoneIdx < boneCount; morphemeBoneIdx++)
+	{
+		int boneIndex = morphemeBoneIdx;
 
 		if (boneIndex == -1)
 			continue;

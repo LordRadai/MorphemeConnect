@@ -10,6 +10,7 @@ namespace FBXTranslator
 	std::vector<FbxNode*> CreateFbxFlverSkeleton(FbxScene* pScene, FlverModel* pFlverModel, FbxPose* pBindPoses);
 	std::vector<FbxNode*> CreateFbxMorphemeSkeleton(FbxScene* pScene, MR::AnimRigDef* pRig, FbxPose* pBindPoses);
 	bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, AnimSourceInterface* pAnim, std::string name, std::vector<int> morphemeToFlverRigMap);
+	bool CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkeleton, AnimSourceInterface* pAnim, std::string name);
 	bool CreateFbxModel(FbxScene* pScene, FlverModel* pFlverModel, int chrId, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path);
 	bool CreateFbxModel(FbxScene* pScene, FlverModel* pFlverModel, MR::AnimRigDef* pRig, int chrId, FbxPose* pBindPoses, std::vector<FbxNode*> pBoneList, std::filesystem::path export_path, std::vector<int> flverToMorphemeRigMap);
 }

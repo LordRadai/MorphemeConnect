@@ -1929,13 +1929,7 @@ int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pF
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
 
-		int newIdx = pFlverModel->m_flver->bones[idx].previousSiblingIndex;
-
-		if (newIdx != -1)
-		{
-			//int nextSibling = pFlverModel->m_flver->bones[parentIdx].childIndex;
-			boneIdx = GetMorphemeRigBoneIndexByFlverBoneIndex(pRig, pFlverModel, newIdx);
-		}
+		boneIdx = GetMorphemeRigBoneIndexByFlverBoneIndex(pRig, pFlverModel, pFlverModel->m_flver->bones[idx].previousSiblingIndex);
 	}
 
 	return boneIdx;

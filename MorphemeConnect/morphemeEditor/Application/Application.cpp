@@ -266,10 +266,10 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-				if (ImGui::MenuItem("Export model and animations"))
+				if (ImGui::MenuItem("Export Animations"))
 					this->m_flags.m_exportAll = true;
 
-				if (ImGui::MenuItem("Export model"))
+				if (ImGui::MenuItem("Export Model"))
 					this->m_flags.m_exportModel = true;
 
 				ImGui::EndMenu();

@@ -266,45 +266,25 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-				if (ImGui::MenuItem("Export All"))
-					ImGui::OpenPopup("export_anims_options");
-
-				if (ImGui::MenuItem("Export Model"))
-					ImGui::OpenPopup("export_model_options");
-
-				if (ImGui::BeginPopup("export_model_options"))
-				{
-					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
-
-					if (ImGui::Button("Export"))
-					{
-						this->m_flags.m_exportModel = true;
-						ImGui::CloseCurrentPopup();
-					}
-
-					ImGui::SameLine();
-					if (ImGui::Button("Cancel"))
-						ImGui::CloseCurrentPopup();
-
-					ImGui::EndPopup();
-				}
-
-				if (ImGui::BeginPopup("export_anims_options"))
+				if (ImGui::BeginMenu("Export All"))
 				{
 					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
 					ImGui::Checkbox("Add model", &this->m_fbxExportFlags.m_exportModelWithAnims);
 
-					ImGui::SameLine();
 					if (ImGui::Button("Export"))
-					{
 						this->m_flags.m_exportAll = true;
-						ImGui::CloseCurrentPopup();
-					}
 
-					if (ImGui::Button("Cancel"))
-						ImGui::CloseCurrentPopup();
+					ImGui::EndMenu();
+				}
 
-					ImGui::EndPopup();
+				if (ImGui::BeginMenu("Export Model"))
+				{
+					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
+
+					if (ImGui::Button("Export"))
+						this->m_flags.m_exportModel = true;
+
+					ImGui::EndMenu();
 				}
 
 				ImGui::EndMenu();

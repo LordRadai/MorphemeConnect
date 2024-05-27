@@ -323,7 +323,7 @@ bool FBXTranslator::CreateFbxTake(FbxScene* pScene, std::vector<FbxNode*> pSkele
 	FbxTime start;
 	start.SetSecondDouble(0.0);
 
-	float animSampleRate = animSourceNSA->getSampleFrequency();
+	float animSampleRate = 60;
 	float animDuration = animSourceNSA->getDuration(animSourceNSA);
 
 	FbxTime end;

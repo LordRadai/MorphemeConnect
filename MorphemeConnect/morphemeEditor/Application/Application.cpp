@@ -266,10 +266,10 @@ void Application::RenderGUI(const char* title)
 
 			if (ImGui::BeginMenu("Export"))
 			{
-				if (ImGui::Button("Export All"))
+				if (ImGui::MenuItem("Export All"))
 					ImGui::OpenPopup("export_anims_options");
 
-				if (ImGui::Button("Export Model"))
+				if (ImGui::MenuItem("Export Model"))
 					ImGui::OpenPopup("export_model_options");
 
 				if (ImGui::BeginPopup("export_model_options"))
@@ -282,6 +282,7 @@ void Application::RenderGUI(const char* title)
 						ImGui::CloseCurrentPopup();
 					}
 
+					ImGui::SameLine();
 					if (ImGui::Button("Cancel"))
 						ImGui::CloseCurrentPopup();
 
@@ -293,6 +294,7 @@ void Application::RenderGUI(const char* title)
 					ImGui::Checkbox("Use morpheme rig", &this->m_fbxExportFlags.m_exportMorphemeRigWithModel);
 					ImGui::Checkbox("Add model", &this->m_fbxExportFlags.m_exportModelWithAnims);
 
+					ImGui::SameLine();
 					if (ImGui::Button("Export"))
 					{
 						this->m_flags.m_exportAll = true;

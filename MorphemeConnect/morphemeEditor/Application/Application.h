@@ -154,7 +154,7 @@ public:
 	void SaveTaeFile();
 
 	bool ExportModelToFbx(std::filesystem::path export_path);
-	bool ExportAnimationToFbx(std::filesystem::path export_path, int anim_id, bool useFlver);
+	bool ExportAnimationToFbx(std::filesystem::path export_path, int anim_id);
 	bool ExportToXMD(PWSTR export_path);
 	bool ExportToFbxTest(PWSTR export_path);
 

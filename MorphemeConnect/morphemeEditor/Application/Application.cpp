@@ -1923,14 +1923,24 @@ int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pF
 		return -1;
 
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());;
+
+	if (boneName == "L_ForeTwist")
+		boneName = "L_Forearm";
+	else if (boneName == "R_ForeTwist")
+		boneName = "R_Forearm";
+	else if (boneName == "LUpArmTwist")
+		boneName = "L_UpperArm";
+	else if (boneName == "RUpArmTwist")
+		boneName = "R_UpperArm";
+	else if (boneName == "RThighTwist")
+		boneName = "R_Thigh";
+	else if (boneName == "LThighTwist")
+		boneName = "L_Thigh";
+
+	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
 	if (boneIdx == -1)
-	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
-
-		boneIdx = GetMorphemeRigBoneIndexByFlverBoneIndex(pRig, pFlverModel, pFlverModel->m_flver->bones[idx].previousSiblingIndex);
-	}
 
 	return boneIdx;
 }

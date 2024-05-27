@@ -1946,7 +1946,7 @@ void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeR
 	this->m_morphemeToFlverRigMap.reserve(pFlverModel->m_flver->header.boneCount);
 
 	for (int i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-		this->m_morphemeToFlverRigMap.push_back(GetFlverBoneIDByMorphemeBoneID(pMorphemeRig, pFlverModel, i));
+		this->m_morphemeToFlverRigMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
 }
 
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)

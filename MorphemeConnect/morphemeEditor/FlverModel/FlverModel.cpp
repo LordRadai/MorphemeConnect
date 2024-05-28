@@ -268,7 +268,7 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
 
-	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
+	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);;
 
 	return boneLocalTransform;
 }
@@ -287,7 +287,7 @@ Matrix ComputeNmBoneBindPoseGlobalTransform(MR::AnimationSourceHandle* animHandl
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
 
-	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
+	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
 
 	return boneLocalTransform;
 }

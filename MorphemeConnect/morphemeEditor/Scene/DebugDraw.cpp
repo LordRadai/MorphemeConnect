@@ -1491,7 +1491,6 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
         //DX::DrawSphere(batch, model->m_boneTransforms[rootBoneIdx], 0.05f, Colors::Red);
     }
 
-    /*
     for (size_t meshIdx = 0; meshIdx < model->m_verts.size(); meshIdx++)
     {
         for (int i = 0; i < model->m_verts[meshIdx].size(); i += 3)
@@ -1507,7 +1506,6 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             }
         }
     }
-    */
 }
 
 void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)

@@ -4,52 +4,12 @@
 #include "RLog/RLog.h"
 #include "extern.h"
 
-DirectX::XMMATRIX GetBoneTransform(cfr::FLVER2* flver, int bone_id)
-{
-	DirectX::XMMATRIX transform = DirectX::XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
-	transform *= DirectX::XMMatrixRotationX(flver->bones[bone_id].rot.x);
-	transform *= DirectX::XMMatrixRotationZ(flver->bones[bone_id].rot.z);
-	transform *= DirectX::XMMatrixRotationY(flver->bones[bone_id].rot.y);
-	transform *= DirectX::XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
-
-	return transform;
-}
-
-int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
-{
-	int boneIdx = -1;
-	Matrix flvTransform = GetBoneTransform(pFlverModel->m_flver, idx);
-
-	for (size_t i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-	{
-		Matrix nmTransform = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(i), *pRig->getBindPoseBonePos(i)) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
-
-		if (nmTransform == flvTransform)
-			boneIdx = i;
-	}
-
-	return boneIdx;
-}
-
 int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
 	if (idx == -1)
 		return -1;
 
 	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-
-	if (boneName == "L_ForeTwist")
-		boneName = "L_Forearm";
-	else if (boneName == "R_ForeTwist")
-		boneName = "R_Forearm";
-	else if (boneName == "LUpArmTwist")
-		boneName = "L_UpperArm";
-	else if (boneName == "RUpArmTwist")
-		boneName = "R_UpperArm";
-	else if (boneName == "RThighTwist")
-		boneName = "R_Thigh";
-	else if (boneName == "LThighTwist")
-		boneName = "L_Thigh";
 
 	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
@@ -87,9 +47,7 @@ void AnimPlayer::Update(float dt)
 	if (this->m_anim == nullptr)
 		return;
 
-	MR::AnimationSourceHandle* animHandle = this->m_anim->GetHandle();
-
-	if (animHandle == nullptr)
+	if (this->m_anim->GetHandle() == nullptr)
 		return;
 
 	if (!this->m_pause)
@@ -105,17 +63,10 @@ void AnimPlayer::Update(float dt)
 		}
 	}
 
-	animHandle->setTime(this->m_time);
-
-	std::vector<Matrix> boneTransforms;
-	boneTransforms.reserve(animHandle->getChannelCount());
-
-	for (size_t i = 0; i < animHandle->getChannelCount(); i++)
-		boneTransforms.push_back(NMDX::GetWorldMatrix(animHandle->getChannelData()[i].m_quat, animHandle->getChannelData()[i].m_pos));
+	this->m_anim->GetHandle()->setTime(this->m_time);
 
 	this->m_model.UpdateModel();
-
-	this->m_model.Animate(boneTransforms, this->m_morphemeToFlverBoneMap);
+	this->m_model.Animate(this->m_anim->GetHandle(), this->m_morphemeToFlverBoneMap);
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
@@ -127,6 +78,7 @@ void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
 
 void AnimPlayer::Reset()
 {
+	this->SetModel(this->m_model);
 	this->m_anim = nullptr;
 	this->m_time = 0.f;
 }
@@ -149,6 +101,7 @@ void AnimPlayer::SetTime(float time)
 void AnimPlayer::SetModel(FlverModel model)
 {
 	this->m_model = model;
+	this->m_model.GetModelData();
 }
 
 AnimSourceInterface* AnimPlayer::GetAnimation()

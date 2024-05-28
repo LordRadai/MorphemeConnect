@@ -275,7 +275,7 @@ void Scene::Render()
         if (g_morphemeConnect.m_animPlayer.GetModel()->m_loaded)
         {
             if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr && g_morphemeConnect.m_animPlayer.GetAnimation()->GetHandle() != nullptr)
-                DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_animPlayer.GetModel()->m_position), *g_morphemeConnect.m_animPlayer.GetModel(), g_morphemeConnect.m_animPlayer.GetAnimation());
+                DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_animPlayer.GetModel()->m_position), g_morphemeConnect.m_animPlayer.GetModel(), g_morphemeConnect.m_animPlayer.GetAnimation());
             else
             {
                 MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0);

@@ -39,7 +39,12 @@ public:
 	DirectX::SimpleMath::Vector3 m_focusPoint = DirectX::SimpleMath::Vector3::Zero;
 
 	FLVER2* m_flver = nullptr;
-	std::vector<SkinnedVertex> m_verts;
+	std::vector<std::vector<Vector3>> m_verts;
+	std::vector<std::vector<SkinnedVertex>> m_vertBindPose;
+	std::vector<Matrix> m_boneTransforms;
+	std::vector<Matrix> m_boneBindPose;
+	std::vector<Matrix> m_morphemeBoneTransforms;
+	std::vector<Matrix> m_morphemeBoneBindPose;
 
 	FlverModel();
 	FlverModel(UMEM* umem);
@@ -54,5 +59,5 @@ public:
 	void UpdateModel();
 	int GetBoneIndexFromName(const char* name);
 
-	void Animate(std::vector<Matrix> boneTransforms, std::vector<int> morphemeToFlverBoneMap);
+	void Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> morphemeToFlverBoneMap);
 };

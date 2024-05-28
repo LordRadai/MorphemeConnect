@@ -65,16 +65,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HWND hwnd = ::CreateWindowW(wc.lpszClassName, APPNAME_W, WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
 #ifdef _CONSOLE
-    //AllocConsole();
+    AllocConsole();
 
-    //FILE* fDummy;
-    //freopen_s(&fDummy, "CONOUT$", "w", stdout);
-    //freopen_s(&fDummy, "CONOUT$", "w", stderr);
-    //freopen_s(&fDummy, "CONIN$", "r", stdin);
-    //std::cout.clear();
-    //std::clog.clear();
-    //std::cerr.clear();
-    //std::cin.clear();
+    FILE* fDummy;
+    freopen_s(&fDummy, "CONOUT$", "w", stdout);
+    freopen_s(&fDummy, "CONOUT$", "w", stderr);
+    freopen_s(&fDummy, "CONIN$", "r", stdin);
+    std::cout.clear();
+    std::clog.clear();
+    std::cerr.clear();
+    std::cin.clear();
 #endif
 
     // Initialize Direct3D

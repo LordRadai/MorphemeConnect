@@ -1549,7 +1549,7 @@ void Application::LoadFile()
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->m_animPlayer.CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0));
+													this->m_animPlayer.CreateFlverToMorphemeBoneMap(this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0));
 
 													found_model = true;
 													break;
@@ -1644,7 +1644,7 @@ void Application::LoadFile()
 													CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
 													if (characterDef)
-														this->m_animPlayer.CreateMorphemeRigBoneToFlverBoneMap(characterDef->getNetworkDef()->getRig(0));
+														this->m_animPlayer.CreateFlverToMorphemeBoneMap(characterDef->getNetworkDef()->getRig(0));
 
 													break;
 												}
@@ -1924,7 +1924,7 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 
 	if (this->m_fbxExportFlags.m_exportModelWithAnims)
 	{
-		if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, export_path, this->m_animPlayer.GetMorphemeToFlverBoneMap()))
+		if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, export_path, this->m_animPlayer.GetFlverToMorphemeBoneMap()))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
@@ -1972,7 +1972,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
 
-	if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_animPlayer.GetMorphemeToFlverBoneMap()))
+	if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_animPlayer.GetFlverToMorphemeBoneMap()))
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 

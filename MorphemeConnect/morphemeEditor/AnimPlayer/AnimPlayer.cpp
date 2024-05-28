@@ -66,7 +66,7 @@ void AnimPlayer::Update(float dt)
 	this->m_anim->GetHandle()->setTime(this->m_time);
 
 	this->m_model.UpdateModel();
-	this->m_model.Animate(this->m_anim->GetHandle(), this->m_morphemeToFlverBoneMap);
+	this->m_model.Animate(this->m_anim->GetHandle(), this->m_flverToMorphemeBoneMap);
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
@@ -129,17 +129,17 @@ FlverModel* AnimPlayer::GetModel()
 	return &this->m_model;
 }
 
-std::vector<int> AnimPlayer::GetMorphemeToFlverBoneMap()
+std::vector<int> AnimPlayer::GetFlverToMorphemeBoneMap()
 {
-	return this->m_morphemeToFlverBoneMap;
+	return this->m_flverToMorphemeBoneMap;
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_morphemeToFlverRigMap
-void AnimPlayer::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig)
+void AnimPlayer::CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig)
 {
-	this->m_morphemeToFlverBoneMap.clear();
-	this->m_morphemeToFlverBoneMap.reserve(this->m_model.m_flver->header.boneCount);
+	this->m_flverToMorphemeBoneMap.clear();
+	this->m_flverToMorphemeBoneMap.reserve(this->m_model.m_flver->header.boneCount);
 
 	for (int i = 0; i < this->m_model.m_flver->header.boneCount; i++)
-		this->m_morphemeToFlverBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, &this->m_model, i));
+		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, &this->m_model, i));
 }

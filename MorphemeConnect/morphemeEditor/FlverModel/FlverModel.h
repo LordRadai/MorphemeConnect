@@ -59,5 +59,5 @@ public:
 	void UpdateModel();
 	int GetBoneIndexFromName(const char* name);
 
-	void Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> morphemeToFlverBoneMap);
+	void Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorpheme);
 };

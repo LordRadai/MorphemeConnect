@@ -22,9 +22,9 @@ public:
 	bool IsPlaybackLoop();
 	float GetTime();
 	FlverModel* GetModel();
-	std::vector<int> GetMorphemeToFlverBoneMap();
+	std::vector<int> GetFlverToMorphemeBoneMap();
 
-	void CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig);
+	void CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig);
 
 private:
 	AnimSourceInterface* m_anim;
@@ -32,5 +32,5 @@ private:
 	bool m_pause;
 	bool m_loop;
 	FlverModel m_model;
-	std::vector<int> m_morphemeToFlverBoneMap;
+	std::vector<int> m_flverToMorphemeBoneMap;
 };

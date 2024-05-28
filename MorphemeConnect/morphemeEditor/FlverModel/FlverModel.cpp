@@ -454,7 +454,7 @@ int FlverModel::GetBoneIndexFromName(const char* name)
 	return -1;
 }
 
-void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> morphemeToFlverBoneMap)
+void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorpheme)
 {
 	const MR::AnimRigDef* rig = animHandle->getRig();
 
@@ -468,7 +468,7 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 
 	for (size_t i = 0; i < this->m_flver->header.boneCount; i++)
 	{
-		int morphemeBoneIdx = morphemeToFlverBoneMap[i];
+		int morphemeBoneIdx = flverToMorpheme[i];
 
 		Matrix transform = this->m_boneBindPose[i];
 

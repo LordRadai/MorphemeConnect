@@ -399,6 +399,10 @@ void FlverModel::Animate(std::vector<Matrix> boneTransforms, std::vector<int> mo
 		for (size_t j = 0; j < 4; j++)
 		{
 			int boneID = morphemeToFlverBoneMap[this->m_verts[i].bone_indices[j]];
+
+			if (boneID == -1)
+				continue;
+
 			float weight = this->m_verts[i].bone_weights[j];
 
 			Vector3 transformedPos = Vector3::Transform(Vector3(this->m_verts[i].m_pos.position), boneTransforms[boneID]);

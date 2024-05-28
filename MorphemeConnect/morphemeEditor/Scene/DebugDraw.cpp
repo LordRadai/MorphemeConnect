@@ -1510,20 +1510,18 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
         DX::DrawSphere(batch, DirectX::XMMatrixTranslationFromVector(GetTrajectoryTransform(animHandle)), 0.05f, Colors::Red);
     }
 
-    /*
     for (int i = 0; i < model.m_verts.size(); i += 3)
     {
         if (i + 1 < model.m_verts.size() && i + 2 < model.m_verts.size())
         {
-            VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model.m_verts[i].position, transf), model.m_verts[i].color);
-            VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 1].position, transf), model.m_verts[i + 1].color);;
-            VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 2].position, transf), model.m_verts[i + 2].color);;
+            VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model.m_verts[i].m_pos.position, transf), model.m_verts[i].m_pos.color);
+            VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 1].m_pos.position, transf), model.m_verts[i + 1].m_pos.color);;
+            VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_verts[i + 2].m_pos.position, transf), model.m_verts[i + 2].m_pos.color);;
 
             batch->DrawTriangle(v1, v2, v3);
-            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].color.w));
+            DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_verts[i].m_pos.color.w));
         }
     }
-    */
 }
 
 void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)

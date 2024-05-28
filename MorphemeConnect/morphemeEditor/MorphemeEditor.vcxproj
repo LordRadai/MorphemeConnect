@@ -141,7 +141,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)MorphemeConnect\morpheme\utils\comms2\include\;$(SolutionDir)MorphemeConnect\morpheme\utils\simpleBundle\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\core\include\;$(SolutionDir)MorphemeConnect\morpheme\SDK\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\;$(SolutionDir)MorphemeConnect\common\NMPlatform\include\NMPlatform\win32\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

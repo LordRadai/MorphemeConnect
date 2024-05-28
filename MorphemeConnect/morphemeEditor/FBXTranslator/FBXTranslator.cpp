@@ -218,19 +218,19 @@ FbxNode* FBXTranslator::CreateModelFbxMesh(FbxScene* pScene, FlverModel* pFlverM
 					switch (wt)
 					{
 					case 0:
-						if (morphemeToFlverBoneMap[pFlverModel->m_flver->meshes[idx].boneIndices[indices[0]]] == boneIndex)
+						if (morphemeToFlverBoneMap[indices[0]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights[0]);
 						break;
 					case 1:
-						if (morphemeToFlverBoneMap[pFlverModel->m_flver->meshes[idx].boneIndices[indices[1]]] == boneIndex)
+						if (morphemeToFlverBoneMap[indices[1]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights[1]);
 						break;
 					case 2:
-						if (morphemeToFlverBoneMap[pFlverModel->m_flver->meshes[idx].boneIndices[indices[2]]] == boneIndex)
+						if (morphemeToFlverBoneMap[indices[2]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights[2]);
 						break;
 					case 3:
-						if (morphemeToFlverBoneMap[pFlverModel->m_flver->meshes[idx].boneIndices[indices[3]]] == boneIndex)
+						if (morphemeToFlverBoneMap[indices[3]] == boneIndex)
 							pCluster->AddControlPointIndex(vertexIndex, weights[3]);
 						break;
 					}

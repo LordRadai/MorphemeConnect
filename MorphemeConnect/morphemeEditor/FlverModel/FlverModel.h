@@ -18,6 +18,16 @@ using namespace cfr;
 class FlverModel
 {
 public:
+	struct SkinnedVertex
+	{
+		DirectX::VertexPositionColor m_pos;
+		float bone_weights[4];
+		int bone_indices[4];
+
+		SkinnedVertex() {}
+		SkinnedVertex(Vector3 pos, float* weights, int* bone_indices);
+	};
+
 	struct Settings
 	{
 		bool m_xray = false;
@@ -29,7 +39,7 @@ public:
 	DirectX::SimpleMath::Vector3 m_focusPoint = DirectX::SimpleMath::Vector3::Zero;
 
 	FLVER2* m_flver = nullptr;
-	std::vector<DirectX::VertexPositionColor> m_verts;
+	std::vector<SkinnedVertex> m_verts;
 
 	FlverModel();
 	FlverModel(UMEM* umem);
@@ -40,7 +50,9 @@ public:
 	std::vector<FbxVector4> GetModelMeshBoneWeights(int idx);
 	void GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx);
 
-	void GetModelVertices();
+	void GetModelData();
 	void UpdateModel();
 	int GetBoneIndexFromName(const char* name);
+
+	void Animate(std::vector<Matrix> boneTransforms, std::vector<int> morphemeToFlverBoneMap);
 };

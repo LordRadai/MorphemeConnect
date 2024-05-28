@@ -155,7 +155,6 @@ void Application::Initialise()
 
 void Application::Update()
 {
-	this->m_model.UpdateModel();
 	this->CheckFlags();
 	this->RenderGUI("morphemeEditor");
 	this->m_animPlayer.Update(1.f / 60.f);
@@ -357,7 +356,7 @@ void Application::ModelPreviewWindow()
 
 			if (ImGui::BeginMenu("View"))
 			{
-				if (ImGui::MenuItem("Xray", NULL, &this->m_model.m_settings.m_xray)) { this->m_model.m_settings.m_xray != this->m_model.m_settings.m_xray; }
+				if (ImGui::MenuItem("Xray", NULL, &this->m_animPlayer.GetModel()->m_settings.m_xray)) { this->m_animPlayer.GetModel()->m_settings.m_xray != this->m_animPlayer.GetModel()->m_settings.m_xray; }
 
 				ImGui::EndMenu();
 			}
@@ -1546,11 +1545,11 @@ void Application::LoadFile()
 													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
 													FLVER2 flver_model = FLVER2(umem);
 
-													this->m_model = FlverModel(umem);
+													this->m_animPlayer.SetModel(FlverModel(umem));
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
-													this->CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0), &this->m_model);
+													this->m_animPlayer.CreateMorphemeRigBoneToFlverBoneMap(this->m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0));
 
 													found_model = true;
 													break;
@@ -1636,7 +1635,7 @@ void Application::LoadFile()
 													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
 													FLVER2 flver_model = FLVER2(umem);
 
-													this->m_model = FlverModel(umem);
+													this->m_animPlayer.SetModel(FlverModel(umem));
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
@@ -1645,7 +1644,7 @@ void Application::LoadFile()
 													CharacterDefBasic* characterDef = this->m_morphemeSystem.GetCharacterDef();
 
 													if (characterDef)
-														this->CreateMorphemeRigBoneToFlverBoneMap(characterDef->getNetworkDef()->getRig(0), &this->m_model);
+														this->m_animPlayer.CreateMorphemeRigBoneToFlverBoneMap(characterDef->getNetworkDef()->getRig(0));
 
 													break;
 												}
@@ -1890,82 +1889,6 @@ void Application::SetTimeActCurrentFrameFromEventTrack(int* current_frame_tae, i
 	}
 }
 
-DirectX::XMMATRIX GetBoneTransform(cfr::FLVER2* flver, int bone_id)
-{
-	DirectX::XMMATRIX transform = DirectX::XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
-	transform *= DirectX::XMMatrixRotationX(flver->bones[bone_id].rot.x);
-	transform *= DirectX::XMMatrixRotationZ(flver->bones[bone_id].rot.z);
-	transform *= DirectX::XMMatrixRotationY(flver->bones[bone_id].rot.y);
-	transform *= DirectX::XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
-
-	return transform;
-}
-
-int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
-{
-	int boneIdx = -1;
-	Matrix flvTransform = GetBoneTransform(pFlverModel->m_flver, idx);
-
-	for (size_t i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-	{
-		Matrix nmTransform = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(i), *pRig->getBindPoseBonePos(i)) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
-
-		if (nmTransform == flvTransform)
-			boneIdx = i;
-	}
-
-	return boneIdx;
-}
-
-int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
-{
-	if (idx == -1)
-		return -1;
-
-	std::string boneName = RString::ToNarrow(pFlverModel->m_flver->bones[idx].name);
-
-	if (boneName == "L_ForeTwist")
-		boneName = "L_Forearm";
-	else if (boneName == "R_ForeTwist")
-		boneName = "R_Forearm";
-	else if (boneName == "LUpArmTwist")
-		boneName = "L_UpperArm";
-	else if (boneName == "RUpArmTwist")
-		boneName = "R_UpperArm";
-	else if (boneName == "RThighTwist")
-		boneName = "R_Thigh";
-	else if (boneName == "LThighTwist")
-		boneName = "L_Thigh";
-
-	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
-
-	if (boneIdx == -1)
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the morpheme rig\n", boneName.c_str());
-
-	return boneIdx;
-}
-
-int GetFlverBoneIDByMorphemeBoneID(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
-{
-	std::string boneName = pRig->getBoneName(idx);
-	int flverIdx = pFlverModel->GetBoneIndexFromName(boneName.c_str());
-
-	if (flverIdx == -1)
-		RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Bone %s does not exist in the flver rig\n", boneName.c_str());
-
-	return flverIdx;
-}
-
-//Creates an anim map from the flver model bone to the morpheme rig and saves it in m_morphemeToFlverRigMap
-void Application::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig, FlverModel* pFlverModel)
-{
-	this->m_morphemeToFlverRigMap.clear();
-	this->m_morphemeToFlverRigMap.reserve(pFlverModel->m_flver->header.boneCount);
-
-	for (int i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-		this->m_morphemeToFlverRigMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, pFlverModel, i));
-}
-
 bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int anim_id)
 {
 	bool status = true;
@@ -2001,7 +1924,7 @@ bool Application::ExportAnimationToFbx(std::filesystem::path export_path, int an
 
 	if (this->m_fbxExportFlags.m_exportModelWithAnims)
 	{
-		if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, export_path, this->m_morphemeToFlverRigMap))
+		if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, export_path, this->m_animPlayer.GetMorphemeToFlverBoneMap()))
 		{
 			RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (animId=%d, chrId=c%04d)\n", anim_id, this->m_chrId);
 			status = false;
@@ -2049,7 +1972,7 @@ bool Application::ExportModelToFbx(std::filesystem::path export_path)
 
 	std::vector<FbxNode*> pMorphemeRig = FBXTranslator::CreateFbxMorphemeSkeleton(pScene, characterDef->getNetworkDef()->getRig(0), pBindPoses);
 
-	if (!FBXTranslator::CreateFbxModel(pScene, &this->m_model, characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_morphemeToFlverRigMap))
+	if (!FBXTranslator::CreateFbxModel(pScene, this->m_animPlayer.GetModel(), characterDef->getNetworkDef()->getRig(0), this->m_chrId, pBindPoses, pMorphemeRig, model_out, this->m_animPlayer.GetMorphemeToFlverBoneMap()))
 	{
 		RDebug::DebuggerOut(g_logLevel, MsgLevel_Error, "Failed to create FBX model/skeleton (chrId=c%04d)\n", this->m_chrId);
 

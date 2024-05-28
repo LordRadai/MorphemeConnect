@@ -122,9 +122,7 @@ public:
 	TimeActReader m_tae;
 	AnimPlayer m_animPlayer;
 	BNDReader m_bnd;
-	FlverModel m_model;
 	int m_chrId = -1;
-	std::vector<int> m_morphemeToFlverRigMap;
 
 	EventTrackEditor m_eventTrackEditor;
 	TimeActEditor m_timeActEditor;
@@ -163,6 +161,4 @@ public:
 
 	void ResetEventTrackEditor();
 	void ResetTimeActEditor();
-
-	void CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig, FlverModel* pFlverModel);
 };

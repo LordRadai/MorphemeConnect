@@ -3,6 +3,17 @@
 #include "../extern.h"
 #include "utils/MorphemeToDirectX.h"
 
+FlverModel::SkinnedVertex::SkinnedVertex(Vector3 pos, float* weights, int* bone_indices)
+{
+	this->m_pos = DirectX::VertexPositionColor(pos, DirectX::Colors::Gray);
+	
+	for (size_t i = 0; i < 4; i++)
+	{
+		this->bone_indices[i] = bone_indices[i];
+		this->bone_weights[i] = weights[i];
+	}
+}
+
 FlverModel::FlverModel()
 {
 	this->m_position = DirectX::SimpleMath::Vector3::Zero;
@@ -23,7 +34,7 @@ FlverModel::FlverModel(UMEM* umem)
 
 	this->m_focusPoint = this->m_position + DirectX::SimpleMath::Vector3(0, focus_y, 0);
 
-	this->GetModelVertices();
+	this->GetModelData();
 
 	this->m_loaded = true;
 }
@@ -231,10 +242,10 @@ void FlverModel::GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx)
 			int vertexIndex = facesetp->triList[j];
 			int* indices = new int[4];
 
-			indices[0] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 0];
-			indices[1] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 1];
-			indices[2] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 2];
-			indices[3] = mesh->vertexData->bone_indices[(vertexIndex * 4) + 3];
+			indices[0] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 0]];
+			indices[1] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 1]];
+			indices[2] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 2]];
+			indices[3] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 3]];
 
 			buffer.push_back(indices);
 		}
@@ -244,14 +255,12 @@ void FlverModel::GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx)
 }
 
 //Gets all the model vertices for all the meshes and stores them into m_verts
-void FlverModel::GetModelVertices()
+void FlverModel::GetModelData()
 {
 	this->m_verts.clear();
 
 	if (m_flver == nullptr)
 		return;
-
-	DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(0.7f, 0.7f, 0.7f, 1.f);
 
 	for (int i = 0; i < m_flver->header.meshCount; i++)
 	{
@@ -292,37 +301,67 @@ void FlverModel::GetModelVertices()
 			{
 				int vertexIndex = facesetp->triList[j];
 
+				float weights[4];
+
+				weights[0] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 0];
+				weights[1] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 1];
+				weights[2] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 2];
+				weights[3] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 3];
+
+				int indices[4];
+			
+				indices[0] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 0]];
+				indices[1] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 1]];
+				indices[2] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 2]];
+				indices[3] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 3]];
+
 				float x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
 				float y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
 				float z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
 
 				DirectX::SimpleMath::Vector3 pos = DirectX::SimpleMath::Vector3(x, y, z);
 
-				DirectX::VertexPositionColor v1 = DirectX::VertexPositionColor(pos, color);
-
-				this->m_verts.push_back(v1);
+				this->m_verts.push_back(SkinnedVertex(pos, weights, indices));
 
 				vertexIndex = facesetp->triList[j + 1];
 
+				weights[0] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 0];
+				weights[1] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 1];
+				weights[2] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 2];
+				weights[3] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 3];
+
+				indices[0] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 0]];
+				indices[1] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 1]];
+				indices[2] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 2]];
+				indices[3] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 3]];
+
 				x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
 				y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
 				z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
 
 				pos = DirectX::SimpleMath::Vector3(x, y, z);
 
-				DirectX::VertexPositionColor v2 = DirectX::VertexPositionColor(pos, color);
-				this->m_verts.push_back(v2);
+				this->m_verts.push_back(SkinnedVertex(pos, weights, indices));
 
 				vertexIndex = facesetp->triList[j + 2];
 
+				weights[0] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 0];
+				weights[1] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 1];
+				weights[2] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 2];
+				weights[3] = mesh->vertexData->bone_weights[(vertexIndex * 4) + 3];
+
+				indices[0] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 0]];
+				indices[1] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 1]];
+				indices[2] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 2]];
+				indices[3] = mesh->boneIndices[mesh->vertexData->bone_indices[(vertexIndex * 4) + 3]];
+
 				x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
 				y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
 				z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
 
 				pos = DirectX::SimpleMath::Vector3(x, y, z);
 
-				DirectX::VertexPositionColor v3 = DirectX::VertexPositionColor(pos, color);
-				this->m_verts.push_back(v3);
+				this->m_verts.push_back(SkinnedVertex(pos, weights, indices));
 			}
 		}
 	}
@@ -339,7 +378,7 @@ void FlverModel::UpdateModel()
 		color = DirectX::SimpleMath::Vector4(0.7f, 0.7f, 0.7f, 0.f);
 
 	for (int i = 0; i < this->m_verts.size(); i++)
-		m_verts[i].color = color;
+		m_verts[i].m_pos.color = color;
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)
@@ -351,4 +390,19 @@ int FlverModel::GetBoneIndexFromName(const char* name)
 	}
 
 	return -1;
+}
+
+void FlverModel::Animate(std::vector<Matrix> boneTransforms, std::vector<int> morphemeToFlverBoneMap)
+{
+	for (size_t i = 0; i < this->m_verts.size(); i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			int boneID = morphemeToFlverBoneMap[this->m_verts[i].bone_indices[j]];
+			float weight = this->m_verts[i].bone_weights[j];
+
+			Vector3 transformedPos = Vector3::Transform(Vector3(this->m_verts[i].m_pos.position), boneTransforms[boneID]);
+			this->m_verts[i].m_pos.position = Vector3(transformedPos.x * weight, transformedPos.y * weight, transformedPos.z * weight);
+		}
+	}
 }

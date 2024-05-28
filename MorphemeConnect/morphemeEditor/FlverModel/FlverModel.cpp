@@ -483,6 +483,7 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 
 	std::vector<Matrix> boneRelativeTransforms;
 	boneRelativeTransforms.reserve(this->m_flver->header.boneCount);
+
 	for (size_t i = 0; i < this->m_flver->header.boneCount; i++)
 		boneRelativeTransforms.push_back(this->m_boneBindPose[i].Invert() * this->m_boneTransforms[i]);
 

@@ -4,33 +4,6 @@
 #include "RLog/RLog.h"
 #include "extern.h"
 
-DirectX::XMMATRIX GetBoneTransform(cfr::FLVER2* flver, int bone_id)
-{
-	DirectX::XMMATRIX transform = DirectX::XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
-	transform *= DirectX::XMMatrixRotationX(flver->bones[bone_id].rot.x);
-	transform *= DirectX::XMMatrixRotationZ(flver->bones[bone_id].rot.z);
-	transform *= DirectX::XMMatrixRotationY(flver->bones[bone_id].rot.y);
-	transform *= DirectX::XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
-
-	return transform;
-}
-
-int GetMorphemeRigBoneIndexByFlverBoneTransform(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
-{
-	int boneIdx = -1;
-	Matrix flvTransform = GetBoneTransform(pFlverModel->m_flver, idx);
-
-	for (size_t i = 0; i < pFlverModel->m_flver->header.boneCount; i++)
-	{
-		Matrix nmTransform = NMDX::GetWorldMatrix(*pRig->getBindPoseBoneQuat(i), *pRig->getBindPoseBonePos(i)) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI);
-
-		if (nmTransform == flvTransform)
-			boneIdx = i;
-	}
-
-	return boneIdx;
-}
-
 int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pFlverModel, int idx)
 {
 	if (idx == -1)
@@ -50,6 +23,10 @@ int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pF
 		boneName = "R_Thigh";
 	else if (boneName == "LThighTwist")
 		boneName = "L_Thigh";
+	else if (boneName == "LCalfTwist")
+		boneName = "L_Calf";
+	else if (boneName == "RCalfTwist")
+		boneName = "R_Calf";
 
 	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
@@ -76,6 +53,7 @@ AnimPlayer::AnimPlayer()
 	this->m_time = 0.f;
 	this->m_pause = true;
 	this->m_loop = true;
+	this->m_model = nullptr;
 }
 
 AnimPlayer::~AnimPlayer()
@@ -96,26 +74,22 @@ void AnimPlayer::Update(float dt)
 	{
 		this->m_time += dt;
 
-		if (this->m_time > this->m_anim->GetHandle()->getDuration())
+		if (this->m_time > animHandle->getDuration())
 		{
 			if (this->m_loop)
 				this->m_time = 0.f;
 			else
-				this->m_time = this->m_anim->GetHandle()->getDuration();
+				this->m_time = animHandle->getDuration();
 		}
 	}
 
 	animHandle->setTime(this->m_time);
 
-	std::vector<Matrix> boneTransforms;
-	boneTransforms.reserve(animHandle->getChannelCount());
-
-	for (size_t i = 0; i < animHandle->getChannelCount(); i++)
-		boneTransforms.push_back(NMDX::GetWorldMatrix(animHandle->getChannelData()[i].m_quat, animHandle->getChannelData()[i].m_pos));
-
-	this->m_model.UpdateModel();
-
-	this->m_model.Animate(boneTransforms, this->m_morphemeToFlverBoneMap);
+	if (this->m_model != nullptr)
+	{
+		this->m_model->Animate(animHandle, this->m_flverToMorphemeBoneMap);
+		this->m_model->UpdateModel();
+	}
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
@@ -127,6 +101,7 @@ void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
 
 void AnimPlayer::Reset()
 {
+	this->SetModel(this->m_model);
 	this->m_anim = nullptr;
 	this->m_time = 0.f;
 }
@@ -146,9 +121,12 @@ void AnimPlayer::SetTime(float time)
 	this->m_time = time;
 }
 
-void AnimPlayer::SetModel(FlverModel model)
+void AnimPlayer::SetModel(FlverModel* model)
 {
 	this->m_model = model;
+
+	if (model != nullptr)
+		this->m_model->GetModelData();
 }
 
 AnimSourceInterface* AnimPlayer::GetAnimation()
@@ -173,20 +151,29 @@ float AnimPlayer::GetTime()
 
 FlverModel* AnimPlayer::GetModel()
 {
-	return &this->m_model;
+	return this->m_model;
 }
 
-std::vector<int> AnimPlayer::GetMorphemeToFlverBoneMap()
+std::vector<int> AnimPlayer::GetFlverToMorphemeBoneMap()
 {
-	return this->m_morphemeToFlverBoneMap;
+	return this->m_flverToMorphemeBoneMap;
 }
 
 //Creates an anim map from the flver model bone to the morpheme rig and saves it in m_morphemeToFlverRigMap
-void AnimPlayer::CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig)
+void AnimPlayer::CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig)
 {
-	this->m_morphemeToFlverBoneMap.clear();
-	this->m_morphemeToFlverBoneMap.reserve(this->m_model.m_flver->header.boneCount);
+	this->m_flverToMorphemeBoneMap.clear();
+	this->m_flverToMorphemeBoneMap.reserve(this->m_model->m_flver->header.boneCount);
 
-	for (int i = 0; i < this->m_model.m_flver->header.boneCount; i++)
-		this->m_morphemeToFlverBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, &this->m_model, i));
+	for (int i = 0; i < this->m_model->m_flver->header.boneCount; i++)
+		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, this->m_model, i));
+}
+
+int AnimPlayer::GetFlverBoneIndexByMorphemeBoneIndex(int idx)
+{
+	for (size_t i = 0; i < this->m_flverToMorphemeBoneMap.size(); i++)
+	{
+		if (this->m_flverToMorphemeBoneMap[i] == idx)
+			return i;
+	}
 }

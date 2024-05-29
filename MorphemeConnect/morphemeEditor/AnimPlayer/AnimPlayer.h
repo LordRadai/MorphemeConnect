@@ -15,22 +15,23 @@ public:
 	void SetAnimation(AnimSourceInterface* anim);
 	void SetPause(bool status);
 	void SetTime(float time);
-	void SetModel(FlverModel model);
+	void SetModel(FlverModel* model);
 
 	AnimSourceInterface* GetAnimation();
 	bool IsPlaybackPaused();
 	bool IsPlaybackLoop();
 	float GetTime();
 	FlverModel* GetModel();
-	std::vector<int> GetMorphemeToFlverBoneMap();
+	std::vector<int> GetFlverToMorphemeBoneMap();
 
-	void CreateMorphemeRigBoneToFlverBoneMap(MR::AnimRigDef* pMorphemeRig);
+	void CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig);
+	int GetFlverBoneIndexByMorphemeBoneIndex(int idx);
 
 private:
 	AnimSourceInterface* m_anim;
 	float m_time;
 	bool m_pause;
 	bool m_loop;
-	FlverModel m_model;
-	std::vector<int> m_morphemeToFlverBoneMap;
+	FlverModel* m_model;
+	std::vector<int> m_flverToMorphemeBoneMap;
 };

@@ -288,8 +288,6 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
 
-	boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
-
 	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
 
 	return boneLocalTransform;
@@ -485,7 +483,7 @@ void FlverModel::UpdateModel()
 		for (size_t j = 0; j < this->m_vertBindPose[i].size(); j++)
 			m_vertBindPose[i][j].m_pos.color = color;
 
-	this->m_focusPoint = Vector3::Transform(Vector3::Zero, this->m_boneTransforms[this->GetBoneIndexFromName("Master")] * Matrix::CreateScale(1.5f));
+	this->m_focusPoint = Vector3::Transform(this->m_position, Matrix::CreateScale(this->m_scale));
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)
@@ -540,6 +538,8 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 		this->m_morphemeBoneBindPose.push_back(ComputeNmBoneBindPoseGlobalTransform(animHandle->getRig(), i));
 		this->m_morphemeBoneTransforms.push_back(ComputeNmBoneGlobalTransform(animHandle, i));
 	}
+
+	this->m_position = Vector3::Transform(Vector3::Zero, GetNmTrajectoryTransform(animHandle) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2));
 
 	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
 	this->m_boneTransforms = this->m_boneBindPose;

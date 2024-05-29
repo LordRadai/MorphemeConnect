@@ -46,6 +46,7 @@ public:
 	std::vector<Matrix> m_boneBindPose;
 	std::vector<Matrix> m_morphemeBoneTransforms;
 	std::vector<Matrix> m_morphemeBoneBindPose;
+	float m_scale = 1.5;
 
 	FlverModel();
 	FlverModel(UMEM* umem);

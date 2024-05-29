@@ -277,12 +277,12 @@ void Scene::Render()
         if (model && model->m_loaded)
         {
             if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr && g_morphemeConnect.m_animPlayer.GetAnimation()->GetHandle() != nullptr)
-                DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(model->m_position), &g_morphemeConnect.m_animPlayer);
+                DX::DrawAnimatedModel(this->m_batch.get(), Matrix::CreateTranslation(model->m_position) * Matrix::CreateScale(model->m_scale), &g_morphemeConnect.m_animPlayer);
             else
             {
                 MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0);
 
-                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(model->m_position), *g_morphemeConnect.m_animPlayer.GetModel(), pRig);
+                DX::DrawFlverModel(this->m_batch.get(), Matrix::CreateTranslation(model->m_position) * Matrix::CreateScale(model->m_scale), *g_morphemeConnect.m_animPlayer.GetModel(), pRig);
             }
         }
 

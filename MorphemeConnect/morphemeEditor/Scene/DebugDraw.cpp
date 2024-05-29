@@ -1390,7 +1390,9 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
 
         for (size_t i = 0; i < boneCount; i++)
         {
-            if ((i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
+            int morphemeBoneIdx = animPlayer->GetFlverToMorphemeBoneMap()[i];
+
+            if ((morphemeBoneIdx == -1) || (i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
                 continue;
 
             int parentIndex = model->m_flver->bones[i].parentIndex;

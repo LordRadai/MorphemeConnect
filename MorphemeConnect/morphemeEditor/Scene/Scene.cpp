@@ -288,6 +288,18 @@ void Scene::Render()
 
         m_batch->End();
 
+        /*
+        if (model && model->m_loaded)
+        {
+            m_sprite.get()->Begin();
+
+            for (size_t i = 0; i < model->m_boneTransforms.size(); i++)
+                DX::AddWorldSpaceText(m_sprite.get(), m_font.get(), RString::ToNarrow(model->m_flver->bones[i].name), Vector3::Transform(Vector3::Zero, model->m_boneTransforms[i] * Matrix::CreateScale(1.5f)), Matrix::Identity, this->m_camera, Colors::White);
+        
+            m_sprite.get()->End();
+        }
+        */
+
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,
             m_offscreenRenderTarget.Get(), 0,
             DXGI_FORMAT_B8G8R8A8_UNORM);

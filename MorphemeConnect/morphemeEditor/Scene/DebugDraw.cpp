@@ -1328,74 +1328,6 @@ void XM_CALLCONV DX::Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionCo
     }
 }
 
-XMMATRIX GetFlverBoneTransform(cfr::FLVER2* flver, int bone_id)
-{
-    XMMATRIX transform = XMMatrixScaling(flver->bones[bone_id].scale.x, flver->bones[bone_id].scale.y, flver->bones[bone_id].scale.z);
-    transform *= XMMatrixRotationX(flver->bones[bone_id].rot.x);
-    transform *= XMMatrixRotationZ(flver->bones[bone_id].rot.z);
-    transform *= XMMatrixRotationY(flver->bones[bone_id].rot.y);
-    transform *= XMMatrixTranslation(flver->bones[bone_id].translation.x, flver->bones[bone_id].translation.y, flver->bones[bone_id].translation.z);
-
-    return transform;
-}
-
-Vector3 CalculateBonePosition(cfr::FLVER2* flver, int bone_id)
-{
-    XMMATRIX boneLocalTransform = GetFlverBoneTransform(flver, bone_id);
-
-    cfr::FLVER2::Bone bone = flver->bones[bone_id];
-    while (bone.parentIndex != -1)
-    {
-        XMMATRIX parentBoneTransform = GetFlverBoneTransform(flver, bone.parentIndex);
-        boneLocalTransform *= parentBoneTransform;
-
-        bone = flver->bones[bone.parentIndex];
-    }
-
-    boneLocalTransform *= XMMatrixRotationY(XM_PI);
-
-    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
-
-    return position;
-}
-
-Vector3 CalculateBonePosition(const MR::AnimRigDef* rig, int bone_id)
-{
-    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(bone_id), *rig->getBindPoseBonePos(bone_id));
-
-    int parentIdx = rig->getParentBoneIndex(bone_id);
-
-    while (parentIdx != -1)
-    {
-        XMMATRIX parentBoneTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(parentIdx), *rig->getBindPoseBonePos(parentIdx));
-        boneLocalTransform *= parentBoneTransform;
-
-        parentIdx = rig->getParentBoneIndex(parentIdx);
-    }
-
-    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
-
-    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
-
-    return position;
-}
-
-Vector3 GetTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
-{
-    NMP::Quat quat;
-    NMP::Vector3 pos;
-
-    animHandle->getTrajectory(quat, pos);
-
-    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(quat, pos);
-
-    boneLocalTransform *= XMMatrixRotationX(-XM_PIDIV2);
-
-    Vector3 position = Vector3::Transform(Vector3(0, 0, 0), boneLocalTransform);
-
-    return position;
-}
-
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
     DirectX::XMMATRIX world, FlverModel model, MR::AnimRigDef* rig)
 {
@@ -1436,29 +1368,6 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
             }
         }
     }
-}
-
-Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const MR::AnimRigDef* rig, int channelId)
-{
-    XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
-    int parentIdx = rig->getParentBoneIndex(channelId);
-
-    while (parentIdx != -1)
-    {
-        XMMATRIX parentBoneTransform;
-
-        parentBoneTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[parentIdx].m_quat, animHandle->getChannelData()[parentIdx].m_pos);
-        
-        boneLocalTransform *= parentBoneTransform;
-
-        parentIdx = rig->getParentBoneIndex(parentIdx);
-    }
-
-    boneLocalTransform *= Matrix::CreateRotationX(-XM_PIDIV2);
-
-    boneLocalTransform *= Matrix::CreateTranslation(GetTrajectoryTransform(animHandle));
-
-    return Vector3::Transform(Vector3::Zero, boneLocalTransform);
 }
 
 void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,

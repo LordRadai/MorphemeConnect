@@ -541,8 +541,6 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 		this->m_morphemeBoneTransforms.push_back(ComputeNmBoneGlobalTransform(animHandle, i));
 	}
 
-	//this->m_position = Vector3::Transform(Vector3::Zero, GetNmTrajectoryTransform(animHandle) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2));
-
 	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
 	this->m_boneTransforms = this->m_boneBindPose;
 

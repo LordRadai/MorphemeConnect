@@ -529,8 +529,8 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 
 			if (childIndex != -1)
 			{
-				int siblingIndex = this->m_flver->bones[childIndex].nextSiblingIndex;
 				this->m_boneTransforms[childIndex] = this->m_boneBindPose[childIndex] * (Matrix::CreateReflection(Plane(Vector3::Right)) * morphemeRelativeTransform);
+				int siblingIndex = this->m_flver->bones[childIndex].nextSiblingIndex;
 
 				while (siblingIndex != -1)
 				{

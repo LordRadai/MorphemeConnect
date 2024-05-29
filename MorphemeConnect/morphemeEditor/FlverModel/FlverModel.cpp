@@ -485,7 +485,7 @@ void FlverModel::UpdateModel()
 		for (size_t j = 0; j < this->m_vertBindPose[i].size(); j++)
 			m_vertBindPose[i][j].m_pos.color = color;
 
-	//this->m_focusPoint = this->m_position;
+	this->m_focusPoint = Vector3::Transform(Vector3::Zero, this->m_boneTransforms[this->GetBoneIndexFromName("Root")]);
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)

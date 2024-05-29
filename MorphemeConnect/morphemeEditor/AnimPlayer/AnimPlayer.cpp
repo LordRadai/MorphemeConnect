@@ -107,7 +107,9 @@ void AnimPlayer::SetTime(float time)
 void AnimPlayer::SetModel(FlverModel* model)
 {
 	this->m_model = model;
-	this->m_model->GetModelData();
+
+	if (model != nullptr)
+		this->m_model->GetModelData();
 }
 
 AnimSourceInterface* AnimPlayer::GetAnimation()

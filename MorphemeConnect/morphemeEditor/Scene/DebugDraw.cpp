@@ -1385,10 +1385,14 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
         const MR::AnimRigDef* rig = animHandle->getRig();
         int boneCount = model->m_boneTransforms.size();
 
-        int rootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
+        int trajectoryBoneIndex = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
+        int characterRootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getCharacterRootBoneIndex());
 
         for (size_t i = 0; i < boneCount; i++)
         {
+            if ((i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
+                continue;
+
             int parentIndex = model->m_flver->bones[i].parentIndex;
 
             if (parentIndex != -1)
@@ -1400,7 +1404,8 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             }
         }
 
-        DX::DrawSphere(batch, model->m_boneTransforms[rootBoneIdx], 0.05f, Colors::Red);
+        DX::DrawSphere(batch, model->m_boneTransforms[characterRootBoneIdx], 0.03f, Colors::MediumBlue);
+        DX::DrawSphere(batch, model->m_boneTransforms[trajectoryBoneIndex], 0.03f, Colors::Red);
     }
 
     for (size_t meshIdx = 0; meshIdx < model->m_verts.size(); meshIdx++)

@@ -254,16 +254,36 @@ void FlverModel::GetModelMeshBoneIndices(std::vector<int*>& buffer, int idx)
 	return;
 }
 
+Matrix GetNmTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
+{
+	NMP::Vector3 pos;
+	NMP::Quat rot;
+
+	animHandle->getTrajectory(rot, pos);
+
+	return NMDX::GetWorldMatrix(rot, pos);
+}
+
+Matrix GetNmBoneTranform(MR::AnimationSourceHandle* animHandle, int channelId)
+{
+	return NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
+}
+
 Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int channelId)
 {
 	const MR::AnimRigDef* rig = animHandle->getRig();
+	DirectX::XMMATRIX boneLocalTransform = GetNmBoneTranform(animHandle, channelId);
 
-	DirectX::XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(animHandle->getChannelData()[channelId].m_quat, animHandle->getChannelData()[channelId].m_pos);
 	int parentIdx = rig->getParentBoneIndex(channelId);
 
-	while (parentIdx != -1)
+	while ((parentIdx != -1 && parentIdx) != rig->getTrajectoryBoneIndex())
 	{
-		boneLocalTransform *= NMDX::GetWorldMatrix(animHandle->getChannelData()[parentIdx].m_quat, animHandle->getChannelData()[parentIdx].m_pos);
+		Matrix parentTransform = GetNmBoneTranform(animHandle, parentIdx);
+
+		if (parentIdx == 1)
+			parentTransform = GetNmTrajectoryTransform(animHandle);
+
+		boneLocalTransform *= parentTransform;
 
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
@@ -273,10 +293,8 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 	return boneLocalTransform;
 }
 
-Matrix ComputeNmBoneBindPoseGlobalTransform(MR::AnimationSourceHandle* animHandle, int channelId)
+Matrix ComputeNmBoneBindPoseGlobalTransform(const MR::AnimRigDef* rig, int channelId)
 {
-	const MR::AnimRigDef* rig = animHandle->getRig();
-
 	DirectX::XMMATRIX boneLocalTransform = NMDX::GetWorldMatrix(*rig->getBindPoseBoneQuat(channelId), *rig->getBindPoseBonePos(channelId));
 	int parentIdx = rig->getParentBoneIndex(channelId);
 
@@ -508,7 +526,7 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 	this->m_morphemeBoneBindPose.clear();
 	for (size_t i = 0; i < animHandle->getChannelCount(); i++)
 	{
-		this->m_morphemeBoneBindPose.push_back(ComputeNmBoneBindPoseGlobalTransform(animHandle, i));
+		this->m_morphemeBoneBindPose.push_back(ComputeNmBoneBindPoseGlobalTransform(animHandle->getRig(), i));
 		this->m_morphemeBoneTransforms.push_back(ComputeNmBoneGlobalTransform(animHandle, i));
 	}
 

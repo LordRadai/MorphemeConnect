@@ -1374,7 +1374,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
     DirectX::XMMATRIX world, AnimPlayer* animPlayer)
 {
     constexpr float scale = 1.5f;
-    XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
+    Matrix transf = Matrix::CreateScale(scale) * world;
 
     AnimSourceInterface* anim = animPlayer->GetAnimation();
     FlverModel* model = animPlayer->GetModel();
@@ -1406,8 +1406,8 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             }
         }
 
-        DX::DrawSphere(batch, model->m_boneTransforms[characterRootBoneIdx], 0.03f, Colors::MediumBlue);
-        DX::DrawSphere(batch, model->m_boneTransforms[trajectoryBoneIndex], 0.03f, Colors::Red);
+        DX::DrawSphere(batch, model->m_boneTransforms[characterRootBoneIdx] * transf, 0.03f, Colors::MediumBlue);
+        DX::DrawSphere(batch, model->m_boneTransforms[trajectoryBoneIndex] * transf, 0.03f, Colors::Red);
     }
 
     for (size_t meshIdx = 0; meshIdx < model->m_verts.size(); meshIdx++)

@@ -266,7 +266,7 @@ Matrix GetNmTrajectoryTransform(MR::AnimationSourceHandle* animHandle)
 
 	animHandle->getTrajectory(rot, pos);
 
-	return NMDX::GetWorldMatrix(rot, pos);
+	return NMDX::GetWorldMatrix(rot, pos) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
 }
 
 Matrix GetNmBoneTranform(MR::AnimationSourceHandle* animHandle, int channelId)
@@ -288,7 +288,7 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
 
-	boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
+	//boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
 
 	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
 
@@ -542,6 +542,8 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 		this->m_morphemeBoneBindPose.push_back(ComputeNmBoneBindPoseGlobalTransform(animHandle->getRig(), i));
 		this->m_morphemeBoneTransforms.push_back(ComputeNmBoneGlobalTransform(animHandle, i));
 	}
+
+	this->m_position = Vector3::Transform(Vector3::Zero, GetNmTrajectoryTransform(animHandle));
 
 	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
 	this->m_boneTransforms = this->m_boneBindPose;

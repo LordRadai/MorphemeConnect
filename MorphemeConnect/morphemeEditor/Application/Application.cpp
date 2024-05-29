@@ -1545,7 +1545,7 @@ void Application::LoadFile()
 													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
 													FLVER2 flver_model = FLVER2(umem);
 
-													this->m_animPlayer.SetModel(FlverModel(umem));
+													this->m_animPlayer.SetModel(new FlverModel(umem));
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 
@@ -1635,7 +1635,7 @@ void Application::LoadFile()
 													UMEM* umem = uopenMem(m_bnd.m_files[i].m_data, m_bnd.m_files[i].m_uncompressedSize);
 													FLVER2 flver_model = FLVER2(umem);
 
-													this->m_animPlayer.SetModel(FlverModel(umem));
+													this->m_animPlayer.SetModel(new FlverModel(umem));
 
 													RDebug::DebuggerOut(g_logLevel, MsgLevel_Debug, "Loaded model %s\n", filename.c_str());
 

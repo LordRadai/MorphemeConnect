@@ -143,7 +143,7 @@ namespace DX
         DirectX::XMMATRIX world, FlverModel model, MR::AnimRigDef* rig);
 
     void XM_CALLCONV DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-        DirectX::XMMATRIX world, FlverModel* model, AnimSourceInterface* anim);
+        DirectX::XMMATRIX world, AnimPlayer* animPlayer);
     
     void XM_CALLCONV AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags);
     

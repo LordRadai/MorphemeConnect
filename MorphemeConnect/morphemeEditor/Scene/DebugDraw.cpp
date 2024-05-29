@@ -1462,10 +1462,14 @@ Vector3 GetAnimatedModelTransforms(MR::AnimationSourceHandle* animHandle, const 
 }
 
 void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel* model, AnimSourceInterface* anim)
+    DirectX::XMMATRIX world, AnimPlayer* animPlayer)
 {
     constexpr float scale = 1.5f;
     XMMATRIX transf = XMMatrixScaling(scale, scale, scale);
+
+    AnimSourceInterface* anim = animPlayer->GetAnimation();
+    FlverModel* model = animPlayer->GetModel();
+    std::vector<int> morphemeToFlverBoneMap = animPlayer->GetFlverToMorphemeBoneMap();
 
     if (anim != nullptr)
     {
@@ -1473,7 +1477,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
         const MR::AnimRigDef* rig = animHandle->getRig();
         int boneCount = model->m_boneTransforms.size();
 
-        int rootBoneIdx = rig->getTrajectoryBoneIndex();
+        int rootBoneIdx = morphemeToFlverBoneMap[rig->getTrajectoryBoneIndex()];
 
         for (size_t i = 0; i < boneCount; i++)
         {
@@ -1488,7 +1492,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
             }
         }
 
-        //DX::DrawSphere(batch, model->m_boneTransforms[rootBoneIdx], 0.05f, Colors::Red);
+        DX::DrawSphere(batch, model->m_boneTransforms[rootBoneIdx], 0.05f, Colors::Red);
     }
 
     for (size_t meshIdx = 0; meshIdx < model->m_verts.size(); meshIdx++)

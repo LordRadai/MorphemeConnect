@@ -36,6 +36,7 @@ AnimPlayer::AnimPlayer()
 	this->m_time = 0.f;
 	this->m_pause = true;
 	this->m_loop = true;
+	this->m_model = nullptr;
 }
 
 AnimPlayer::~AnimPlayer()
@@ -47,26 +48,31 @@ void AnimPlayer::Update(float dt)
 	if (this->m_anim == nullptr)
 		return;
 
-	if (this->m_anim->GetHandle() == nullptr)
+	MR::AnimationSourceHandle* animHandle = this->m_anim->GetHandle();
+
+	if (animHandle == nullptr)
 		return;
 
 	if (!this->m_pause)
 	{
 		this->m_time += dt;
 
-		if (this->m_time > this->m_anim->GetHandle()->getDuration())
+		if (this->m_time > animHandle->getDuration())
 		{
 			if (this->m_loop)
 				this->m_time = 0.f;
 			else
-				this->m_time = this->m_anim->GetHandle()->getDuration();
+				this->m_time = animHandle->getDuration();
 		}
 	}
 
-	this->m_anim->GetHandle()->setTime(this->m_time);
+	animHandle->setTime(this->m_time);
 
-	this->m_model.UpdateModel();
-	this->m_model.Animate(this->m_anim->GetHandle(), this->m_flverToMorphemeBoneMap);
+	if (this->m_model != nullptr)
+	{
+		this->m_model->UpdateModel();
+		this->m_model->Animate(animHandle, this->m_flverToMorphemeBoneMap);
+	}
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)
@@ -98,10 +104,10 @@ void AnimPlayer::SetTime(float time)
 	this->m_time = time;
 }
 
-void AnimPlayer::SetModel(FlverModel model)
+void AnimPlayer::SetModel(FlverModel* model)
 {
 	this->m_model = model;
-	this->m_model.GetModelData();
+	this->m_model->GetModelData();
 }
 
 AnimSourceInterface* AnimPlayer::GetAnimation()
@@ -126,7 +132,7 @@ float AnimPlayer::GetTime()
 
 FlverModel* AnimPlayer::GetModel()
 {
-	return &this->m_model;
+	return this->m_model;
 }
 
 std::vector<int> AnimPlayer::GetFlverToMorphemeBoneMap()
@@ -138,8 +144,8 @@ std::vector<int> AnimPlayer::GetFlverToMorphemeBoneMap()
 void AnimPlayer::CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig)
 {
 	this->m_flverToMorphemeBoneMap.clear();
-	this->m_flverToMorphemeBoneMap.reserve(this->m_model.m_flver->header.boneCount);
+	this->m_flverToMorphemeBoneMap.reserve(this->m_model->m_flver->header.boneCount);
 
-	for (int i = 0; i < this->m_model.m_flver->header.boneCount; i++)
-		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, &this->m_model, i));
+	for (int i = 0; i < this->m_model->m_flver->header.boneCount; i++)
+		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, this->m_model, i));
 }

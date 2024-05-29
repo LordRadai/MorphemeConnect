@@ -458,8 +458,6 @@ void FlverModel::UpdateModel()
 	for (int i = 0; i < this->m_vertBindPose.size(); i++)
 		for (size_t j = 0; j < this->m_vertBindPose[i].size(); j++)
 			m_vertBindPose[i][j].m_pos.color = color;
-
-	this->m_boneTransforms = ComputeGlobalFlverRigTransform(this->m_flver);
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)

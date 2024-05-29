@@ -222,7 +222,7 @@ void Scene::Update()
     this->m_view = this->m_camera.m_view;
     this->m_proj = this->m_camera.m_proj;
 
-    if (g_morphemeConnect.m_animPlayer.GetModel()->m_loaded)
+    if (g_morphemeConnect.m_animPlayer.GetModel() && g_morphemeConnect.m_animPlayer.GetModel()->m_loaded)
         this->m_camera.SetTarget(g_morphemeConnect.m_animPlayer.GetModel()->m_focusPoint);
 
     this->CreateResources();
@@ -272,15 +272,17 @@ void Scene::Render()
         
         DX::DrawOriginMarker(this->m_batch.get(), Matrix::Identity, 0.5f, Colors::DarkCyan);
         
-        if (g_morphemeConnect.m_animPlayer.GetModel()->m_loaded)
+        FlverModel* model = g_morphemeConnect.m_animPlayer.GetModel();
+
+        if (model && model->m_loaded)
         {
             if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr && g_morphemeConnect.m_animPlayer.GetAnimation()->GetHandle() != nullptr)
-                DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_animPlayer.GetModel()->m_position), g_morphemeConnect.m_animPlayer.GetModel(), g_morphemeConnect.m_animPlayer.GetAnimation());
+                DX::DrawAnimatedModel(this->m_batch.get(), XMMatrixTranslationFromVector(model->m_position), &g_morphemeConnect.m_animPlayer);
             else
             {
                 MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0);
 
-                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(g_morphemeConnect.m_animPlayer.GetModel()->m_position), *g_morphemeConnect.m_animPlayer.GetModel(), pRig);
+                DX::DrawFlverModel(this->m_batch.get(), XMMatrixTranslationFromVector(model->m_position), *g_morphemeConnect.m_animPlayer.GetModel(), pRig);
             }
         }
 

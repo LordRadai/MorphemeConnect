@@ -15,7 +15,7 @@ public:
 	void SetAnimation(AnimSourceInterface* anim);
 	void SetPause(bool status);
 	void SetTime(float time);
-	void SetModel(FlverModel model);
+	void SetModel(FlverModel* model);
 
 	AnimSourceInterface* GetAnimation();
 	bool IsPlaybackPaused();
@@ -31,6 +31,6 @@ private:
 	float m_time;
 	bool m_pause;
 	bool m_loop;
-	FlverModel m_model;
+	FlverModel* m_model;
 	std::vector<int> m_flverToMorphemeBoneMap;
 };

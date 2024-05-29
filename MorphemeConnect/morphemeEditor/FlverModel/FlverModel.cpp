@@ -88,10 +88,14 @@ std::vector<FbxVector4> FlverModel::GetModelMeshVertices(int idx, bool flip)
 			float y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
 			float z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
 
+			Vector3 pos(x, y, z);
+
+			pos = Vector3::Transform(pos, Matrix::CreateRotationX(DirectX::XM_PIDIV2) * Matrix::CreateRotationY(DirectX::XM_PI));
+
 			if (!flip)
-				vertices.push_back(FbxVector4(x, y, z));
+				vertices.push_back(FbxVector4(pos.x, pos.y, pos.z));
 			else
-				vertices.push_back(FbxVector4(x, y, -z));
+				vertices.push_back(FbxVector4(pos.x, pos.y, -pos.z));
 		}
 	}
 

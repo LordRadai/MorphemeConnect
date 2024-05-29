@@ -288,9 +288,9 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
 
-	//boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
-
 	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
+
+	boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
 
 	return boneLocalTransform;
 }

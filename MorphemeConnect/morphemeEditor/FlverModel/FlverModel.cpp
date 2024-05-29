@@ -276,7 +276,7 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 
 	int parentIdx = rig->getParentBoneIndex(channelId);
 
-	while ((parentIdx != -1 && parentIdx) != rig->getTrajectoryBoneIndex())
+	while ((parentIdx != -1) && (parentIdx != rig->getTrajectoryBoneIndex()))
 	{
 		Matrix parentTransform = GetNmBoneTranform(animHandle, parentIdx);
 

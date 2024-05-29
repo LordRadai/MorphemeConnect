@@ -276,17 +276,19 @@ Matrix ComputeNmBoneGlobalTransform(MR::AnimationSourceHandle* animHandle, int c
 
 	int parentIdx = rig->getParentBoneIndex(channelId);
 
-	while ((parentIdx != -1) && (parentIdx != rig->getTrajectoryBoneIndex()))
+	while (parentIdx != -1)
 	{
 		Matrix parentTransform = GetNmBoneTranform(animHandle, parentIdx);
 
-		if (parentIdx == 1)
-			parentTransform = GetNmTrajectoryTransform(animHandle);
+		//if (parentIdx == 1)
+			//parentTransform = GetNmTrajectoryTransform(animHandle);
 
 		boneLocalTransform *= parentTransform;
 
 		parentIdx = rig->getParentBoneIndex(parentIdx);
 	}
+
+	boneLocalTransform *= GetNmTrajectoryTransform(animHandle);
 
 	boneLocalTransform *= Matrix::CreateRotationX(-DirectX::XM_PIDIV2);
 

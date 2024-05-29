@@ -25,6 +25,7 @@ public:
 	std::vector<int> GetFlverToMorphemeBoneMap();
 
 	void CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig);
+	int GetFlverBoneIndexByMorphemeBoneIndex(int idx);
 
 private:
 	AnimSourceInterface* m_anim;

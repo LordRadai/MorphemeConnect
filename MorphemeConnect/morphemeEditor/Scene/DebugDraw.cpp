@@ -1378,7 +1378,6 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
 
     AnimSourceInterface* anim = animPlayer->GetAnimation();
     FlverModel* model = animPlayer->GetModel();
-    std::vector<int> morphemeToFlverBoneMap = animPlayer->GetFlverToMorphemeBoneMap();
 
     if (anim != nullptr)
     {
@@ -1386,7 +1385,7 @@ void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPo
         const MR::AnimRigDef* rig = animHandle->getRig();
         int boneCount = model->m_boneTransforms.size();
 
-        int rootBoneIdx = morphemeToFlverBoneMap[rig->getTrajectoryBoneIndex()];
+        int rootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
 
         for (size_t i = 0; i < boneCount; i++)
         {

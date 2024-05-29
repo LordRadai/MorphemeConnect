@@ -151,3 +151,12 @@ void AnimPlayer::CreateFlverToMorphemeBoneMap(MR::AnimRigDef* pMorphemeRig)
 	for (int i = 0; i < this->m_model->m_flver->header.boneCount; i++)
 		this->m_flverToMorphemeBoneMap.push_back(GetMorphemeRigBoneIndexByFlverBoneIndex(pMorphemeRig, this->m_model, i));
 }
+
+int AnimPlayer::GetFlverBoneIndexByMorphemeBoneIndex(int idx)
+{
+	for (size_t i = 0; i < this->m_flverToMorphemeBoneMap.size(); i++)
+	{
+		if (this->m_flverToMorphemeBoneMap[i] == idx)
+			return i;
+	}
+}

@@ -480,6 +480,10 @@ void FlverModel::UpdateModel()
 	for (int i = 0; i < this->m_vertBindPose.size(); i++)
 		for (size_t j = 0; j < this->m_vertBindPose[i].size(); j++)
 			m_vertBindPose[i][j].m_pos.color = color;
+
+	int trajectoryIndex = this->GetBoneIndexFromName("Character");
+
+	this->m_focusPoint = Vector3::Transform(Vector3::Zero, this->m_boneTransforms[trajectoryIndex]);
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)

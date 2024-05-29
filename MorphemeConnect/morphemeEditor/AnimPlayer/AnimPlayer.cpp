@@ -23,6 +23,10 @@ int GetMorphemeRigBoneIndexByFlverBoneIndex(MR::AnimRigDef* pRig, FlverModel* pF
 		boneName = "R_Thigh";
 	else if (boneName == "LThighTwist")
 		boneName = "L_Thigh";
+	else if (boneName == "LCalfTwist")
+		boneName = "L_Calf";
+	else if (boneName == "RCalfTwist")
+		boneName = "R_Calf";
 
 	int boneIdx = pRig->getBoneIndexFromName(boneName.c_str());
 
@@ -83,8 +87,8 @@ void AnimPlayer::Update(float dt)
 
 	if (this->m_model != nullptr)
 	{
-		this->m_model->UpdateModel();
 		this->m_model->Animate(animHandle, this->m_flverToMorphemeBoneMap);
+		this->m_model->UpdateModel();
 	}
 }
 

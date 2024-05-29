@@ -771,7 +771,7 @@ void Application::EventTrackWindow(int* current_frame, int* first_frame, float* 
 				this->m_animPlayer.SetPause(false);
 
 			if (this->m_eventTrackEditor.m_animIdx > -1)
-				ImGui::Text(RString::RemoveExtension(this->m_morphemeSystem.GetCharacterDef()->getAnimation(this->m_eventTrackEditor.m_animIdx)->GetAnimName()).c_str());
+				ImGui::Text(this->m_animPlayer.GetAnimation()->GetAnimName());
 			else
 				ImGui::Text("");
 

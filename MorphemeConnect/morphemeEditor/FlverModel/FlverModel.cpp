@@ -5,7 +5,7 @@
 
 FlverModel::SkinnedVertex::SkinnedVertex(Vector3 pos, Vector3 normal, float* weights, int* bone_indices)
 {
-	this->m_pos = DirectX::VertexPositionColor(pos, DirectX::Colors::Gray);
+	this->m_pos = DirectX::VertexPositionColor(pos, Vector4(0.7f, 0.7f, 0.7f, 1.f));
 	this->m_normal = normal;
 
 	for (size_t i = 0; i < 4; i++)

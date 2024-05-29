@@ -510,7 +510,7 @@ void Application::AssetsWindow()
 
 				if (characterDef->isLoaded())
 				{
-					ImGui::BeginChild("NSA");
+					ImGui::BeginChild("anim_list");
 					{
 						int numAnims = characterDef->getAnimFileLookUp()->getNumAnims();
 

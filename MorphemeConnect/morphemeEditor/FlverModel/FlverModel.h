@@ -21,11 +21,12 @@ public:
 	struct SkinnedVertex
 	{
 		DirectX::VertexPositionColor m_pos;
+		Vector3 m_normal;
 		float bone_weights[4];
 		int bone_indices[4];
 
 		SkinnedVertex() {}
-		SkinnedVertex(Vector3 pos, float* weights, int* bone_indices);
+		SkinnedVertex(Vector3 pos, Vector3 normal, float* weights, int* bone_indices);
 	};
 
 	struct Settings
@@ -59,5 +60,5 @@ public:
 	void UpdateModel();
 	int GetBoneIndexFromName(const char* name);
 
-	void Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorpheme);
+	void Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorphemeBoneMap);
 };

@@ -3,10 +3,11 @@
 #include "../extern.h"
 #include "utils/MorphemeToDirectX.h"
 
-FlverModel::SkinnedVertex::SkinnedVertex(Vector3 pos, float* weights, int* bone_indices)
+FlverModel::SkinnedVertex::SkinnedVertex(Vector3 pos, Vector3 normal, float* weights, int* bone_indices)
 {
 	this->m_pos = DirectX::VertexPositionColor(pos, DirectX::Colors::Gray);
-	
+	this->m_normal = normal;
+
 	for (size_t i = 0; i < 4; i++)
 	{
 		this->bone_indices[i] = bone_indices[i];
@@ -448,9 +449,15 @@ void FlverModel::GetModelData()
 				float y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
 				float z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
 
-				DirectX::SimpleMath::Vector3 pos = DirectX::SimpleMath::Vector3(x, y, z);
+				Vector3 pos = DirectX::SimpleMath::Vector3(x, y, z);
 
-				meshSkinnedVertices.push_back(SkinnedVertex(pos, weights, indices));
+				float norm_x = mesh->vertexData->positions[(vertexIndex * 3) + 0];
+				float norm_y = mesh->vertexData->positions[(vertexIndex * 3) + 2];
+				float norm_z = mesh->vertexData->positions[(vertexIndex * 3) + 1];
+
+				Vector3 normal(norm_x, norm_y, norm_z);
+
+				meshSkinnedVertices.push_back(SkinnedVertex(pos, normal, weights, indices));
 				meshVertices.push_back(Vector3::Zero);
 			}
 		}
@@ -515,10 +522,11 @@ Matrix GetNmRelativeTransform(MR::AnimationSourceHandle* animHandle, int idx)
 	return transform;
 }
 
-void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorpheme)
+void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorphemeBoneMap)
 {
 	const MR::AnimRigDef* rig = animHandle->getRig();
 
+	//Store morpheme global bind pose and animation transforms
 	this->m_morphemeBoneTransforms.clear();
 	this->m_morphemeBoneBindPose.clear();
 	for (size_t i = 0; i < animHandle->getChannelCount(); i++)
@@ -527,11 +535,12 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 		this->m_morphemeBoneTransforms.push_back(ComputeNmBoneGlobalTransform(animHandle, i));
 	}
 
+	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
 	this->m_boneTransforms = this->m_boneBindPose;
 
 	for (size_t i = 0; i < this->m_flver->header.boneCount; i++)
 	{
-		int morphemeBoneIdx = flverToMorpheme[i];
+		int morphemeBoneIdx = flverToMorphemeBoneMap[i];
 
 		if (morphemeBoneIdx != -1)
 		{

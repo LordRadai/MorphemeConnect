@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "StepTimer.h"
-#include "../Application/Application.h"
+#include "Application/Application.h"
+#include "MorphemeSystem/MorphemeSystem.h"
 
 using namespace DirectX;
 using namespace SimpleMath;
@@ -10,6 +11,23 @@ namespace
 {
     constexpr UINT MSAA_COUNT = 4;
     constexpr UINT MSAA_QUALITY = 0;
+}
+
+TextItem::TextItem(std::string text, Matrix world, DirectX::XMVECTORF32 color)
+{
+    this->m_position = world;
+    this->m_text = text;
+    this->m_color = color;
+
+    this->m_depth = 0.f;
+}
+
+inline bool TextItem::operator<(TextItem text)
+{
+    if (text.m_depth > this->m_depth)
+        return false;
+
+    return true;
 }
 
 Scene::Scene()
@@ -243,6 +261,8 @@ void Scene::Clear()
     // Set the viewport.
     D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(this->m_width), static_cast<float>(this->m_height), 0.f, 1.f };
     this->m_deviceContext->RSSetViewports(1, &viewport);
+
+    this->m_texts.clear();
 }
 
 void Scene::Render()
@@ -268,37 +288,22 @@ void Scene::Render()
 
         m_batch->Begin();
 
-        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::Gray);
-        
+        DX::DrawGrid(this->m_batch.get(), this->m_settings.m_gridScale * Vector3::UnitX, this->m_settings.m_gridScale * Vector3::UnitZ, Vector3::Zero, 100, 100, Colors::Gray);      
         DX::DrawOriginMarker(this->m_batch.get(), Matrix::Identity, 0.5f, Colors::DarkCyan);
         
-        FlverModel* model = g_morphemeConnect.m_animPlayer.GetModel();
+        CharacterDefBasic* characterDef = g_morphemeConnect.m_morphemeSystem.GetCharacterDef();
 
-        if (model && model->m_loaded)
-        {
-            if (g_morphemeConnect.m_animPlayer.GetAnimation() != nullptr && g_morphemeConnect.m_animPlayer.GetAnimation()->GetHandle() != nullptr)
-                DX::DrawAnimatedModel(this->m_batch.get(), Matrix::CreateTranslation(model->m_position) * Matrix::CreateScale(model->m_scale), &g_morphemeConnect.m_animPlayer);
-            else
-            {
-                MR::AnimRigDef* pRig = g_morphemeConnect.m_morphemeSystem.GetCharacterDef()->getNetworkDef()->getRig(0);
-
-                DX::DrawFlverModel(this->m_batch.get(), Matrix::CreateTranslation(model->m_position) * Matrix::CreateScale(model->m_scale), *g_morphemeConnect.m_animPlayer.GetModel(), pRig);
-            }
-        }
+        if (characterDef != nullptr)
+            this->DrawFlverModel(&g_morphemeConnect.m_animPlayer, characterDef->getNetworkDef()->getRig(0));
 
         m_batch->End();
 
-        /*
-        if (model && model->m_loaded)
-        {
-            m_sprite.get()->Begin();
+        m_sprite.get()->Begin();
 
-            for (size_t i = 0; i < model->m_boneTransforms.size(); i++)
-                DX::AddWorldSpaceText(m_sprite.get(), m_font.get(), RString::ToNarrow(model->m_flver->bones[i].name), Vector3::Transform(Vector3::Zero, model->m_boneTransforms[i] * Matrix::CreateScale(1.5f)), Matrix::Identity, this->m_camera, Colors::White);
-        
-            m_sprite.get()->End();
-        }
-        */
+        for (size_t i = 0; i < this->m_texts.size(); i++)
+            DX::AddWorldSpaceText(m_sprite.get(), m_font.get(), this->m_texts[i].m_text, Vector3::Zero, this->m_texts[i].m_position, this->m_camera, this->m_texts[i].m_color);
+
+        m_sprite.get()->End();
 
         context->ResolveSubresource(this->m_renderTargetTextureViewport, 0,
             m_offscreenRenderTarget.Get(), 0,
@@ -310,4 +315,50 @@ void Scene::SetRenderResolution(int width, int height)
 {
     this->m_width = (std::max)(width, 1);
     this->m_height = (std::max)(height, 1);
+}
+
+void Scene::AddText(std::string text, Matrix position, DirectX::XMVECTORF32 color)
+{
+    this->m_texts.push_back(TextItem(text, position, color));
+}
+
+void Scene::DrawFlverModel(AnimPlayer* animPlayer, MR::AnimRigDef* rig)
+{
+    FlverModel* model = animPlayer->GetModel();
+
+    if (model == nullptr)
+        return;
+
+    Matrix world = Matrix::CreateTranslation(model->m_position) * Matrix::CreateScale(model->m_scale);    
+
+    int boneCount = model->m_boneTransforms.size();
+
+    int trajectoryBoneIndex = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
+    int characterRootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getCharacterRootBoneIndex());
+
+    for (size_t i = 0; i < boneCount; i++)
+    {
+        if (model->m_settings.m_showBoneNames)
+            this->AddText(RString::ToNarrow(model->m_flver->bones[i].name), model->m_boneTransforms[i] * world);
+
+        int morphemeBoneIdx = animPlayer->GetFlverToMorphemeBoneMap()[i];
+
+        if ((morphemeBoneIdx == -1) || (i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
+            continue;
+
+        int parentIndex = model->m_flver->bones[i].parentIndex;
+
+        if (parentIndex != -1)
+        {
+            Vector3 boneA = Vector3::Transform(Vector3::Zero, model->m_boneTransforms[i] * world);
+            Vector3 boneB = Vector3::Transform(Vector3::Zero, model->m_boneTransforms[parentIndex] * world);
+
+            DX::DrawLine(this->m_batch.get(), boneA, boneB, Colors::Orange);
+        }
+    }
+
+    DX::DrawSphere(this->m_batch.get(), model->m_boneTransforms[characterRootBoneIdx] * world, 0.03f, Colors::MediumBlue);
+    DX::DrawSphere(this->m_batch.get(), model->m_boneTransforms[trajectoryBoneIndex] * world, 0.03f, Colors::Red);
+
+    DX::DrawFlverModel(this->m_batch.get(), world, model);
 }

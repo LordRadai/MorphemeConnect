@@ -357,6 +357,7 @@ void Application::ModelPreviewWindow()
 			if (ImGui::BeginMenu("View"))
 			{
 				if (ImGui::MenuItem("Xray", NULL, &this->m_animPlayer.GetModel()->m_settings.m_xray)) { this->m_animPlayer.GetModel()->m_settings.m_xray != this->m_animPlayer.GetModel()->m_settings.m_xray; }
+				if (ImGui::MenuItem("Show Bone Names", NULL, &this->m_animPlayer.GetModel()->m_settings.m_showBoneNames)) { this->m_animPlayer.GetModel()->m_settings.m_showBoneNames != this->m_animPlayer.GetModel()->m_settings.m_showBoneNames; }
 
 				ImGui::EndMenu();
 			}
@@ -1438,7 +1439,7 @@ void Application::LoadFile()
 
 						if (filepath.extension() == ".nmb")
 						{
-							this->m_animPlayer.Reset();
+							this->m_animPlayer.Clear();
 
 							CharacterDefBasic* characterDef = m_morphemeSystem.createCharacterDef(filepath.string().c_str());
 							

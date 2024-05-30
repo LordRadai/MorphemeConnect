@@ -384,6 +384,7 @@ void FlverModel::GetModelData()
 		return;
 
 	this->m_boneBindPose = ComputeGlobalFlverRigTransform(this->m_flver);
+	this->m_boneTransforms = this->m_boneBindPose;
 
 	this->m_verts.reserve(m_flver->header.meshCount);
 	this->m_vertBindPose.reserve(m_flver->header.meshCount);
@@ -465,8 +466,9 @@ void FlverModel::GetModelData()
 		}
 
 		this->m_vertBindPose.push_back(meshSkinnedVertices);
-		this->m_verts.push_back(meshVertices);
 	}
+
+	this->m_verts = this->m_vertBindPose;
 }
 
 void FlverModel::UpdateModel()
@@ -558,6 +560,13 @@ void ApplyTransform(std::vector<Matrix>& buffer, FLVER2* flv, std::vector<Matrix
 
 void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorphemeBoneMap)
 {
+	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
+	this->m_boneTransforms = this->m_boneBindPose;
+	this->m_verts = this->m_vertBindPose;
+
+	if (animHandle == nullptr)
+		return;
+
 	const MR::AnimRigDef* rig = animHandle->getRig();
 
 	//Store morpheme global bind pose and animation transforms
@@ -570,9 +579,6 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 	}
 
 	this->m_position = Vector3::Transform(Vector3::Zero, GetNmTrajectoryTransform(animHandle) * Matrix::CreateRotationX(-DirectX::XM_PIDIV2));
-
-	//We initialise the final transforms to the flver bind pose so we can skip bones unhandled by morpheme in the next loop
-	this->m_boneTransforms = this->m_boneBindPose;
 
 	for (size_t i = 0; i < this->m_flver->header.boneCount; i++)
 	{
@@ -587,6 +593,7 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 		}
 	}
 
+	//Compute the relative transform to the flver bind pose. This will be used to transform model meshes in the skinning process
 	std::vector<Matrix> boneRelativeTransforms;
 	boneRelativeTransforms.reserve(this->m_flver->header.boneCount);
 
@@ -609,7 +616,7 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 				newPos += Vector3::Transform(this->m_vertBindPose[meshIdx][vertexIndex].m_pos.position, boneRelativeTransforms[boneID]) * weights[wt];
 			}
 
-			this->m_verts[meshIdx][vertexIndex] = newPos;
+			this->m_verts[meshIdx][vertexIndex].m_pos.position = newPos;
 		}
 	}
 }

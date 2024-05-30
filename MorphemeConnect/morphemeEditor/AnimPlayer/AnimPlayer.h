@@ -8,6 +8,7 @@ public:
 	AnimPlayer();
 	~AnimPlayer();
 	
+	void Clear();
 	void Update(float dt);
 	void Reset();
 	void TogglePause();

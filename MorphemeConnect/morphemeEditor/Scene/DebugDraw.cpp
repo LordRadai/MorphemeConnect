@@ -1329,93 +1329,20 @@ void XM_CALLCONV DX::Draw3DArc(DirectX::PrimitiveBatch<DirectX::VertexPositionCo
 }
 
 void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, FlverModel model, MR::AnimRigDef* rig)
-{    
-    if (rig != nullptr)
-    {
-        for (size_t i = 0; i < model.m_boneBindPose.size(); i++)
-        {
-            int parentIndex = model.m_flver->bones[i].parentIndex;
-
-            if (parentIndex != -1)
-            {
-                Vector3 boneA = Vector3::Transform(Vector3::Zero, model.m_boneBindPose[i]);
-                boneA = Vector3::Transform(boneA, world);
-
-                Vector3 boneB = Vector3::Transform(Vector3::Zero, model.m_boneBindPose[parentIndex]);
-                boneB = Vector3::Transform(boneB, world);
-
-                DX::DrawLine(batch, boneA, boneB, Colors::Orange);
-            }
-        }
-    }
-
-    for (size_t meshIdx = 0; meshIdx < model.m_vertBindPose.size(); meshIdx++)
-    {
-        for (int i = 0; i < model.m_vertBindPose[meshIdx].size(); i += 3)
-        {
-            if (i + 1 < model.m_vertBindPose[meshIdx].size() && i + 2 < model.m_vertBindPose[meshIdx].size())
-            {
-                VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model.m_vertBindPose[meshIdx][i].m_pos.position, world), model.m_vertBindPose[meshIdx][i].m_pos.color);
-                VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model.m_vertBindPose[meshIdx][i + 1].m_pos.position, world), model.m_vertBindPose[meshIdx][i + 1].m_pos.color);;
-                VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model.m_vertBindPose[meshIdx][i + 2].m_pos.position, world), model.m_vertBindPose[meshIdx][i + 2].m_pos.color);;
-
-                batch->DrawTriangle(v1, v2, v3);
-                DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model.m_vertBindPose[meshIdx][i].m_pos.color.w));
-            }
-        }
-    }
-}
-
-void XM_CALLCONV DX::DrawAnimatedModel(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
-    DirectX::XMMATRIX world, AnimPlayer* animPlayer)
+    DirectX::XMMATRIX world, FlverModel* model)
 {
-    AnimSourceInterface* anim = animPlayer->GetAnimation();
-    FlverModel* model = animPlayer->GetModel();
-
-    if (anim != nullptr)
-    {
-        MR::AnimationSourceHandle* animHandle = anim->GetHandle();
-        const MR::AnimRigDef* rig = animHandle->getRig();
-        int boneCount = model->m_boneTransforms.size();
-
-        int trajectoryBoneIndex = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
-        int characterRootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getCharacterRootBoneIndex());
-
-        for (size_t i = 0; i < boneCount; i++)
-        {
-            int morphemeBoneIdx = animPlayer->GetFlverToMorphemeBoneMap()[i];
-
-            if ((morphemeBoneIdx == -1) || (i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
-                continue;
-
-            int parentIndex = model->m_flver->bones[i].parentIndex;
-
-            if (parentIndex != -1)
-            {         
-                Vector3 boneA = Vector3::Transform(Vector3::Zero, model->m_boneTransforms[i] * world);
-                Vector3 boneB = Vector3::Transform(Vector3::Zero, model->m_boneTransforms[parentIndex] * world);
-
-                DX::DrawLine(batch, boneA, boneB, Colors::Orange);
-            }
-        }
-
-        DX::DrawSphere(batch, model->m_boneTransforms[characterRootBoneIdx] * world, 0.03f, Colors::MediumBlue);
-        DX::DrawSphere(batch, model->m_boneTransforms[trajectoryBoneIndex] * world, 0.03f, Colors::Red);
-    }
-
     for (size_t meshIdx = 0; meshIdx < model->m_verts.size(); meshIdx++)
     {
         for (int i = 0; i < model->m_verts[meshIdx].size(); i += 3)
         {
             if (i + 1 < model->m_verts[meshIdx].size() && i + 2 < model->m_verts[meshIdx].size())
             {
-                VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i], world), model->m_vertBindPose[meshIdx][i].m_pos.color);
-                VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i + 1], world), model->m_vertBindPose[meshIdx][i + 1].m_pos.color);;
-                VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i + 2], world), model->m_vertBindPose[meshIdx][i + 2].m_pos.color);;
+                VertexPositionColor v1 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i].m_pos.position, world), model->m_verts[meshIdx][i].m_pos.color);
+                VertexPositionColor v2 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i + 1].m_pos.position, world), model->m_verts[meshIdx][i + 1].m_pos.color);;
+                VertexPositionColor v3 = VertexPositionColor(Vector3::Transform(model->m_verts[meshIdx][i + 2].m_pos.position, world), model->m_verts[meshIdx][i + 2].m_pos.color);;
 
                 batch->DrawTriangle(v1, v2, v3);
-                DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model->m_vertBindPose[meshIdx][i].m_pos.color.w));
+                DX::DrawTriangle(batch, Vector3(v1.position), Vector3(v2.position), Vector3(v3.position), Vector4(0.f, 0.f, 0.f, 0.5f * model->m_verts[meshIdx][i].m_pos.color.w));
             }
         }
     }

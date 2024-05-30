@@ -28,6 +28,17 @@ namespace DX
 	}
 }
 
+struct TextItem
+{
+	std::string m_text;
+	Matrix m_position;
+	DirectX::XMVECTORF32 m_color;
+	float m_depth;
+
+	TextItem(std::string text, Matrix world, DirectX::XMVECTORF32 color);
+	inline bool operator<(TextItem text);
+};
+
 class Scene
 {
 public:
@@ -70,6 +81,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_offscreenRenderTargetSRV;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilSRV;
 
+	std::vector<TextItem> m_texts;
+
 	Scene();
 	~Scene();
 
@@ -79,4 +92,6 @@ public:
 	void Clear();
 	void Render();
 	void SetRenderResolution(int width, int height);
+	void AddText(std::string text, Matrix position, DirectX::XMVECTORF32 color = DirectX::Colors::White);
+	void DrawFlverModel(AnimPlayer* animPlayer, MR::AnimRigDef* rig);
 };

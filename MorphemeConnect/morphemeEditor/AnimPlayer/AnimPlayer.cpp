@@ -43,12 +43,28 @@ AnimPlayer::~AnimPlayer()
 {
 }
 
+void AnimPlayer::Clear()
+{
+	if (this->m_model)
+		delete this->m_model;
+
+	this->m_model = nullptr;
+
+	this->Reset();
+}
+
 void AnimPlayer::Update(float dt)
 {
-	if (this->m_anim == nullptr)
-		return;
+	MR::AnimationSourceHandle* animHandle = nullptr;
 
-	MR::AnimationSourceHandle* animHandle = this->m_anim->GetHandle();
+	if (this->m_anim)
+		animHandle = this->m_anim->GetHandle();
+
+	if (this->m_model != nullptr)
+	{
+		this->m_model->Animate(animHandle, this->m_flverToMorphemeBoneMap);
+		this->m_model->UpdateModel();
+	}
 
 	if (animHandle == nullptr)
 		return;
@@ -67,12 +83,6 @@ void AnimPlayer::Update(float dt)
 	}
 
 	animHandle->setTime(this->m_time);
-
-	if (this->m_model != nullptr)
-	{
-		this->m_model->Animate(animHandle, this->m_flverToMorphemeBoneMap);
-		this->m_model->UpdateModel();
-	}
 }
 
 void AnimPlayer::SetAnimation(AnimSourceInterface* anim)

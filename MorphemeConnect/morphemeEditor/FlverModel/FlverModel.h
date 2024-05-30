@@ -32,15 +32,16 @@ public:
 	struct Settings
 	{
 		bool m_xray = false;
+		bool m_showBoneNames = false;
 	} m_settings;
 
 	bool m_loaded = false;
 
-	DirectX::SimpleMath::Vector3 m_position = DirectX::SimpleMath::Vector3::Zero;
-	DirectX::SimpleMath::Vector3 m_focusPoint = DirectX::SimpleMath::Vector3::Zero;
+	Vector3 m_position = Vector3::Zero;
+	Vector3 m_focusPoint = Vector3::Zero;
 
 	FLVER2* m_flver = nullptr;
-	std::vector<std::vector<Vector3>> m_verts;
+	std::vector<std::vector<SkinnedVertex>> m_verts;
 	std::vector<std::vector<SkinnedVertex>> m_vertBindPose;
 	std::vector<Matrix> m_boneTransforms;
 	std::vector<Matrix> m_boneBindPose;

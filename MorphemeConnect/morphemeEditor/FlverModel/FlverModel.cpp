@@ -528,8 +528,10 @@ Matrix GetNmRelativeTransform(MR::AnimationSourceHandle* animHandle, int idx)
 
 void ApplyTransform(std::vector<Matrix>& buffer, FLVER2* flv, std::vector<Matrix> bindPose, Matrix transform, int boneID)
 {
+	//Transform the bone
 	buffer[boneID] = bindPose[boneID] * transform;
 
+	//Transform all sibling of the current bone
 	int siblingIndex = flv->bones[boneID].nextSiblingIndex;
 
 	while (siblingIndex != -1)
@@ -538,6 +540,7 @@ void ApplyTransform(std::vector<Matrix>& buffer, FLVER2* flv, std::vector<Matrix
 		siblingIndex = flv->bones[siblingIndex].nextSiblingIndex;
 	}
 
+	//Transforms all the children of the current bone
 	int childIndex = flv->bones[boneID].childIndex;
 
 	if (childIndex != -1)
@@ -550,8 +553,6 @@ void ApplyTransform(std::vector<Matrix>& buffer, FLVER2* flv, std::vector<Matrix
 			buffer[siblingIndex] = bindPose[siblingIndex] * transform;
 			siblingIndex = flv->bones[siblingIndex].nextSiblingIndex;
 		}
-
-		//childIndex = flv->bones[childIndex].childIndex;
 	}
 }
 

@@ -1414,7 +1414,7 @@ void XM_CALLCONV DX::AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::Sp
 
     float baseDistance = 5.f;
 
-    float distance = Vector3::Distance(cam.m_position, position);
+    float distance = Vector3::Distance(cam.m_position, Vector3::Transform(position, world));
 
     float scale = std::fmin(baseDistance / distance, 1.f);
 

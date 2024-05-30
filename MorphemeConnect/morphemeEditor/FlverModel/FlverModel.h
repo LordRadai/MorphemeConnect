@@ -32,7 +32,10 @@ public:
 	struct Settings
 	{
 		bool m_xray = false;
-		bool m_showBoneNames = false;
+		bool m_drawDummyPolygons = false;
+		bool m_sceneExplorer = false;
+		int m_selectedBone = -1;
+		int m_selectedDummy = -1;
 	} m_settings;
 
 	bool m_loaded = false;
@@ -47,6 +50,7 @@ public:
 	std::vector<Matrix> m_boneBindPose;
 	std::vector<Matrix> m_morphemeBoneTransforms;
 	std::vector<Matrix> m_morphemeBoneBindPose;
+	std::vector<Matrix> m_dummyPolygons;
 	float m_scale = 1.5;
 
 	FlverModel();

@@ -354,13 +354,22 @@ void Application::ModelPreviewWindow()
 		{
 			if (ImGui::MenuItem("Settings", NULL, &this->m_windowStates.m_previewSettings)) { this->m_windowStates.m_previewSettings != this->m_windowStates.m_previewSettings; }
 
-			if (ImGui::BeginMenu("View"))
+			FlverModel* model = this->m_animPlayer.GetModel();
+			if (model)
 			{
-				if (ImGui::MenuItem("Xray", NULL, &this->m_animPlayer.GetModel()->m_settings.m_xray)) { this->m_animPlayer.GetModel()->m_settings.m_xray != this->m_animPlayer.GetModel()->m_settings.m_xray; }
-				if (ImGui::MenuItem("Show Bone Names", NULL, &this->m_animPlayer.GetModel()->m_settings.m_showBoneNames)) { this->m_animPlayer.GetModel()->m_settings.m_showBoneNames != this->m_animPlayer.GetModel()->m_settings.m_showBoneNames; }
+				if (ImGui::BeginMenu("Scene"))
+				{
+					if (ImGui::MenuItem("Hide Model", NULL, &model->m_settings.m_xray)) { model->m_settings.m_xray != model->m_settings.m_xray; }
+					if (ImGui::MenuItem("Show Dummies", NULL, &model->m_settings.m_drawDummyPolygons)) { model->m_settings.m_drawDummyPolygons != model->m_settings.m_drawDummyPolygons; }
+					if (ImGui::MenuItem("Scene Explorer", NULL, &model->m_settings.m_sceneExplorer)) { model->m_settings.m_xray != model->m_settings.m_sceneExplorer; }
 
-				ImGui::EndMenu();
+					ImGui::EndMenu();
+				}
+
+				if (model->m_settings.m_sceneExplorer)
+					this->PreviewSceneExplorerWindow();
 			}
+
 			ImGui::EndMenuBar();
 		}
 
@@ -1032,6 +1041,107 @@ void Application::PreviewDebugManagerWindow()
 	}
 	ImGui::EndTabBar();
 	
+	ImGui::End();
+}
+
+void SkeletonInspectorTreeNode(FLVER2* flv, int boneID, int& selected_id)
+{
+	if (boneID == -1)
+		return;
+
+	int childIndex = flv->bones[boneID].childIndex;
+
+	if (childIndex == -1)
+	{
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+		if (selected_id == boneID)
+			node_flags |= ImGuiTreeNodeFlags_Selected;
+
+		ImGui::TreeNodeEx(RString::ToNarrow(flv->bones[boneID].name).c_str(), node_flags);
+
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			selected_id = boneID;
+	}
+	else
+	{
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+		if (selected_id == boneID)
+			node_flags |= ImGuiTreeNodeFlags_Selected;
+
+		bool open = ImGui::TreeNodeEx(RString::ToNarrow(flv->bones[boneID].name).c_str(), node_flags);
+
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			selected_id = boneID;
+
+		if (open)
+		{
+			int siblingIndex = childIndex;
+
+			while (siblingIndex != -1)
+			{
+				SkeletonInspectorTreeNode(flv, siblingIndex, selected_id);
+
+				siblingIndex = flv->bones[siblingIndex].nextSiblingIndex;
+			}
+
+			ImGui::TreePop();
+		}
+	}
+}
+
+void Application::PreviewSceneExplorerWindow()
+{
+	FlverModel* model = this->m_animPlayer.GetModel();
+
+	ImGui::SetNextWindowSize(ImVec2(400, 500), ImGuiCond_Appearing);
+
+	ImGui::Begin("Scene Explorer", &model->m_settings.m_sceneExplorer);
+
+	if (ImGui::TreeNode("Skeleton"))
+	{
+		ImGui::BeginChild("skeleton_inspector", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetWindowSize().y / 3));
+
+		int boneID = 0;
+
+		while (boneID != -1)
+		{
+			SkeletonInspectorTreeNode(model->m_flver, boneID, model->m_settings.m_selectedBone);
+
+			boneID = model->m_flver->bones[boneID].nextSiblingIndex;
+		}
+
+		ImGui::EndChild();
+
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Dummy Polygons"))
+	{
+		ImGui::BeginChild("dummy_inspector", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetWindowSize().y / 3));
+
+		for (size_t i = 0; i < model->m_flver->header.dummyCount; i++)
+		{
+			std::string dummy_name = "Dmy_" + std::to_string(model->m_flver->dummies[i].referenceID);
+
+			bool selected = (model->m_settings.m_selectedDummy == i);
+
+			if (ImGui::Selectable(dummy_name.c_str(), selected))
+				model->m_settings.m_selectedDummy = i;
+		}
+
+		ImGui::EndChild();
+
+		ImGui::TreePop();
+	}
+
+	if (ImGui::IsMouseDoubleClicked(0))
+	{
+		model->m_settings.m_selectedDummy = -1;
+		model->m_settings.m_selectedBone = -1;
+	}
+
 	ImGui::End();
 }
 

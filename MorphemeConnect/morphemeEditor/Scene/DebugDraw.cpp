@@ -1348,6 +1348,27 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
     }
 }
 
+void XM_CALLCONV DX::DrawReferenceFrame(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* batch,
+    DirectX::XMMATRIX world)
+{
+    Vector3 up_start, up_end;
+    Vector3 forward_start, forward_end;
+    Vector3 right_start, right_end;
+
+    up_start = Vector3::Zero;
+    up_end = Vector3::Up / 10.f;
+
+    forward_start = Vector3::Zero;
+    forward_end = Vector3::Forward / 10.f;
+
+    right_start = Vector3::Zero;
+    right_end = Vector3::Right / 10.f;
+
+    DX::DrawLine(batch, Vector3::Transform(up_start, world), Vector3::Transform(up_end, world), Colors::Green);
+    DX::DrawLine(batch, Vector3::Transform(forward_start, world), Vector3::Transform(forward_end, world), Colors::Blue);
+    DX::DrawLine(batch, Vector3::Transform(right_start, world), Vector3::Transform(right_end, world), Colors::Red);
+}
+
 void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, float scale, DirectX::XMVECTORF32 color, TextFlags flags)
 {
     DirectX::SimpleMath::Vector2 pos = position;
@@ -1391,14 +1412,11 @@ void XM_CALLCONV DX::AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::Sp
 
     auto clip = DirectX::XMVector3Project(text_world, 0, 0, cam.m_width, cam.m_height, cam.m_nearZ, cam.m_farZ, cam.m_proj, cam.m_view, Matrix::Identity);
 
-    float baseWidth = 1920.f;
-    float baseHeight = 1080.f;
+    float baseDistance = 5.f;
 
-    float scaleX = cam.m_width / baseWidth;
-    float scaleY = cam.m_height / baseHeight;
+    float distance = Vector3::Distance(cam.m_position, position);
 
-    // Use the smaller scale to maintain aspect ratio
-    float scale = std::fmin(scaleX, scaleY);
+    float scale = std::fmin(baseDistance / distance, 1.f);
 
-    AddOverlayText(sprite, font, text, clip, 0.01f, scale * 1.5f, color, TextFlags_Shadow);
+    AddOverlayText(sprite, font, text, clip, 0.01f, scale, color, TextFlags_Shadow);
 }

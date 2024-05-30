@@ -142,6 +142,7 @@ public:
 	void TimeActInfoWindow();
 	void SettingsWindow();
 	void PreviewDebugManagerWindow();
+	void PreviewSceneExplorerWindow();
 
 	void CheckFlags();
 

@@ -486,6 +486,19 @@ void FlverModel::UpdateModel()
 			m_vertBindPose[i][j].m_pos.color = color;
 
 	this->m_focusPoint = Vector3::Transform(this->m_position, Matrix::CreateScale(this->m_scale));
+
+	this->m_dummyPolygons.clear();
+	this->m_dummyPolygons.reserve(this->m_flver->header.dummyCount);
+	for (size_t i = 0; i < this->m_flver->header.dummyCount; i++)
+	{
+		Vector3 dummyPos(this->m_flver->dummies[i].position.x, this->m_flver->dummies[i].position.y, this->m_flver->dummies[i].position.z);
+		Vector3 dummyUp(this->m_flver->dummies[i].upward.x, this->m_flver->dummies[i].upward.y, this->m_flver->dummies[i].upward.z);
+		Vector3 dummyForward(this->m_flver->dummies[i].forward.x, this->m_flver->dummies[i].forward.y, this->m_flver->dummies[i].forward.z);
+
+		Matrix dummyLocalTransform = Matrix::CreateWorld(dummyPos, dummyUp, dummyForward);
+
+		this->m_dummyPolygons.push_back(dummyLocalTransform * this->m_boneTransforms[this->m_flver->dummies[i].dummyBoneIndex]);
+	}
 }
 
 int FlverModel::GetBoneIndexFromName(const char* name)

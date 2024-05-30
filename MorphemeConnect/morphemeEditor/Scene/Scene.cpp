@@ -336,11 +336,32 @@ void Scene::DrawFlverModel(AnimPlayer* animPlayer, MR::AnimRigDef* rig)
     int trajectoryBoneIndex = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getTrajectoryBoneIndex());
     int characterRootBoneIdx = animPlayer->GetFlverBoneIndexByMorphemeBoneIndex(rig->getCharacterRootBoneIndex());
 
+    if (model->m_settings.m_selectedBone != -1)
+    {
+        DX::DrawSphere(this->m_batch.get(), model->m_boneTransforms[model->m_settings.m_selectedBone] * world, 0.03f, Colors::MediumAquamarine);
+        this->AddText(RString::ToNarrow(model->m_flver->bones[model->m_settings.m_selectedBone].name).c_str(), model->m_boneTransforms[model->m_settings.m_selectedBone] * world);
+    }
+
+    if (model->m_settings.m_drawDummyPolygons)
+    {
+        for (size_t i = 0; i < model->m_flver->header.dummyCount; i++)
+        {
+            std::string dummy_name = "Dmy_" + std::to_string(model->m_flver->dummies[i].referenceID);
+
+            DX::DrawReferenceFrame(this->m_batch.get(), model->m_dummyPolygons[i] * world);
+            this->AddText(dummy_name.c_str(), model->m_dummyPolygons[i] * world);
+        }
+    }
+    else if (model->m_settings.m_selectedDummy != -1)
+    {
+        std::string dummy_name = "Dmy_" + std::to_string(model->m_flver->dummies[model->m_settings.m_selectedDummy].referenceID);
+
+        DX::DrawReferenceFrame(this->m_batch.get(), model->m_dummyPolygons[model->m_settings.m_selectedDummy] * world);
+        this->AddText(dummy_name.c_str(), model->m_dummyPolygons[model->m_settings.m_selectedDummy] * world);
+    }
+
     for (size_t i = 0; i < boneCount; i++)
     {
-        if (model->m_settings.m_showBoneNames)
-            this->AddText(RString::ToNarrow(model->m_flver->bones[i].name), model->m_boneTransforms[i] * world);
-
         int morphemeBoneIdx = animPlayer->GetFlverToMorphemeBoneMap()[i];
 
         if ((morphemeBoneIdx == -1) || (i == trajectoryBoneIndex) || (i == characterRootBoneIdx))
@@ -360,5 +381,6 @@ void Scene::DrawFlverModel(AnimPlayer* animPlayer, MR::AnimRigDef* rig)
     DX::DrawSphere(this->m_batch.get(), model->m_boneTransforms[characterRootBoneIdx] * world, 0.03f, Colors::MediumBlue);
     DX::DrawSphere(this->m_batch.get(), model->m_boneTransforms[trajectoryBoneIndex] * world, 0.03f, Colors::Red);
 
-    DX::DrawFlverModel(this->m_batch.get(), world, model);
+    if (!model->m_settings.m_xray)
+        DX::DrawFlverModel(this->m_batch.get(), world, model);
 }

@@ -1348,7 +1348,7 @@ void XM_CALLCONV DX::DrawFlverModel(DirectX::PrimitiveBatch<DirectX::VertexPosit
     }
 }
 
-void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, DirectX::XMVECTORF32 color, TextFlags flags)
+void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector2 position, float depth, float scale, DirectX::XMVECTORF32 color, TextFlags flags)
 {
     DirectX::SimpleMath::Vector2 pos = position;
     DirectX::SimpleMath::Vector2 text_size = font->MeasureString(text.c_str());
@@ -1360,9 +1360,9 @@ void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::Sprit
         shadow_origin = DirectX::SimpleMath::Vector2(font->MeasureString(text.c_str())) / 2.f;
 
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
     }
 
     if (flags & TextFlags_Outline)
@@ -1370,16 +1370,16 @@ void XM_CALLCONV DX::AddOverlayText(DirectX::SpriteBatch* sprite, DirectX::Sprit
         shadow_origin = DirectX::SimpleMath::Vector2(font->MeasureString(text.c_str())) / 2.f;
 
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(1.f, 1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(-1.f, 1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(-1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(-1.f, -1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
         font->DrawString(sprite, text.c_str(),
-            position + DirectX::SimpleMath::Vector2(1.f, -1.f), DirectX::Colors::Black, 0.f, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+            position + DirectX::SimpleMath::Vector2(1.f, -1.f), DirectX::Colors::Black, 0.f, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
     }
 
-    font->DrawString(sprite, text.c_str(), position, color, 0, origin, { 1.0, 1.0, 1.0, 1.0 }, DirectX::DX11::SpriteEffects_None, depth);
+    font->DrawString(sprite, text.c_str(), position, color, 0, origin, Vector3(scale, scale, scale), DirectX::DX11::SpriteEffects_None, depth);
 }
 
 void XM_CALLCONV DX::AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::SpriteFont* font, std::string text, DirectX::SimpleMath::Vector3 position, DirectX::XMMATRIX world, Camera cam, DirectX::XMVECTORF32 color)
@@ -1391,5 +1391,14 @@ void XM_CALLCONV DX::AddWorldSpaceText(DirectX::SpriteBatch* sprite, DirectX::Sp
 
     auto clip = DirectX::XMVector3Project(text_world, 0, 0, cam.m_width, cam.m_height, cam.m_nearZ, cam.m_farZ, cam.m_proj, cam.m_view, Matrix::Identity);
 
-    AddOverlayText(sprite, font, text, clip, 0.01f, color, TextFlags_Shadow);
+    float baseWidth = 1920.f;
+    float baseHeight = 1080.f;
+
+    float scaleX = cam.m_width / baseWidth;
+    float scaleY = cam.m_height / baseHeight;
+
+    // Use the smaller scale to maintain aspect ratio
+    float scale = std::fmin(scaleX, scaleY);
+
+    AddOverlayText(sprite, font, text, clip, 0.01f, scale * 1.5f, color, TextFlags_Shadow);
 }

@@ -526,6 +526,35 @@ Matrix GetNmRelativeTransform(MR::AnimationSourceHandle* animHandle, int idx)
 	return transform;
 }
 
+void ApplyTransform(std::vector<Matrix>& buffer, FLVER2* flv, std::vector<Matrix> bindPose, Matrix transform, int boneID)
+{
+	buffer[boneID] = bindPose[boneID] * transform;
+
+	int siblingIndex = flv->bones[boneID].nextSiblingIndex;
+
+	while (siblingIndex != -1)
+	{
+		buffer[siblingIndex] = bindPose[siblingIndex] * transform;
+		siblingIndex = flv->bones[siblingIndex].nextSiblingIndex;
+	}
+
+	int childIndex = flv->bones[boneID].childIndex;
+
+	if (childIndex != -1)
+	{
+		buffer[childIndex] = bindPose[childIndex] * transform;
+		siblingIndex = flv->bones[childIndex].nextSiblingIndex;
+
+		while (siblingIndex != -1)
+		{
+			buffer[siblingIndex] = bindPose[siblingIndex] * transform;
+			siblingIndex = flv->bones[siblingIndex].nextSiblingIndex;
+		}
+
+		//childIndex = flv->bones[childIndex].childIndex;
+	}
+}
+
 void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int> flverToMorphemeBoneMap)
 {
 	const MR::AnimRigDef* rig = animHandle->getRig();
@@ -550,22 +579,10 @@ void FlverModel::Animate(MR::AnimationSourceHandle* animHandle, std::vector<int>
 
 		if (morphemeBoneIdx != -1)
 		{
+			//Take the morpheme animation transform relative to the morpheme bind pose, mirror it on the ZY plane, and then apply them to the flver bind pose. Propagate to all children of the current bone
 			Matrix morphemeRelativeTransform = (this->m_morphemeBoneBindPose[morphemeBoneIdx].Invert() * this->m_morphemeBoneTransforms[morphemeBoneIdx]);
-			this->m_boneTransforms[i] = this->m_boneBindPose[i] * (Matrix::CreateReflection(Plane(Vector3::Right)) * morphemeRelativeTransform);
-		
-			int childIndex = this->m_flver->bones[i].childIndex;
 
-			if (childIndex != -1)
-			{
-				this->m_boneTransforms[childIndex] = this->m_boneBindPose[childIndex] * (Matrix::CreateReflection(Plane(Vector3::Right)) * morphemeRelativeTransform);
-				int siblingIndex = this->m_flver->bones[childIndex].nextSiblingIndex;
-
-				while (siblingIndex != -1)
-				{
-					this->m_boneTransforms[siblingIndex] = this->m_boneBindPose[siblingIndex] * (Matrix::CreateReflection(Plane(Vector3::Right)) * morphemeRelativeTransform);
-					siblingIndex = this->m_flver->bones[siblingIndex].nextSiblingIndex;
-				}
-			}
+			ApplyTransform(this->m_boneTransforms, this->m_flver, this->m_boneBindPose, (Matrix::CreateReflection(Plane(Vector3::Right)) * morphemeRelativeTransform), i);
 		}
 	}
 
